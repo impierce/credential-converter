@@ -1,0 +1,12 @@
+[package]
+name = "impierce-mapper"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+clap = "4.5.4"
+dotenvy = { version = "0.15.7", features = ["clap"] }
+serde = { version = "1.0.197", features = ["serde_derive"] }
+serde_json = "1.0.115"
