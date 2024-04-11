@@ -6,7 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = "4.5.4"
+clap = { version = "4.5.4", features = ["derive"] }
 dotenvy = { version = "0.15.7", features = ["clap"] }
+jsonschema = "0.17.1"
+reqwest = { version = "0.12.3", features = ["json"] }
 serde = { version = "1.0.197", features = ["serde_derive"] }
 serde_json = "1.0.115"
+tokio = { version = "1.37.0", features = ["rt-multi-thread", "macros"] }

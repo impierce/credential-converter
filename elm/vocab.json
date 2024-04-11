@@ -1,0 +1,1396 @@
+{
+  "@context": {
+    "adms": "http://www.w3.org/ns/adms#",
+    "clv": "http://data.europa.eu/m8g",
+    "cred": "https://www.w3.org/2018/credentials#",
+    "dc": "http://purl.org/dc/terms/",
+    "eap": "http://data.europa.eu/snb/model/ap/edc-generic-full/",
+    "elm": "http://data.europa.eu/snb/model/elm/",
+    "evc": "http://data.europa.eu/snb/model/w3c/vc/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "locn": "http://www.w3.org/ns/locn#",
+    "org": "http://www.w3.org/ns/org#",
+    "person": "http://www.w3.org/ns/person#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "rov": "http://www.w3.org/ns/regorg#",
+    "shacl": "http://www.w3.org/ns/shacl#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "eap:CountryRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Country restriction",
+      "rdfs:label": "Country restriction",
+      "shacl:property": {
+        "@id": "_:N7621efb9b21c42aca87cf8dce8ba9ff5"
+      }
+    },
+    {
+      "@id": "_:N7621efb9b21c42aca87cf8dce8ba9ff5",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://publications.europa.eu/resource/authority/country"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:ClaimTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Claim Type restriction",
+      "rdfs:label": "Claim Type restriction",
+      "shacl:property": {
+        "@id": "_:N309c04c8dea647f4b7316cc1f0948f0c"
+      }
+    },
+    {
+      "@id": "_:N309c04c8dea647f4b7316cc1f0948f0c",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/claim-type/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "@type": "http://www.w3.org/2002/07/owl#Ontology",
+      "dc:created": {
+        "@type": "xsd:date",
+        "@value": "2021-09-25"
+      },
+      "dc:description": {
+        "@language": "en",
+        "@value": "EDC constraints for the controlled vocabularies used by EDC application profile, provides the constraints on controlled vocabularies used."
+      },
+      "dc:license": {
+        "@id": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      "dc:modified": {
+        "@type": "xsd:date",
+        "@value": "2023-07-06"
+      },
+      "dc:publisher": {
+        "@id": "http://publications.europa.eu/resource/authority/corporate-body/DEMP"
+      },
+      "dc:title": {
+        "@language": "en",
+        "@value": "SHACL constraints for the controlled vocabularies used by European Digital Credentials application profile"
+      },
+      "http://creativecommons.org/ns#attributionURL": {
+        "@id": "http://ec.europa.eu/"
+      },
+      "http://www.w3.org/2002/07/owl#imports": {
+        "@id": "http://data.europa.eu/snb/model/ap/edc-generic-no-cv"
+      },
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.2.0",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "This document specifies the set SHACL constraints on classes and properties used in the EDC application profile, with respect to the controlled vocabularies used."
+      },
+      "rdfs:label": {
+        "@language": "en",
+        "@value": "Controlled Vocabularies SHACL constraints for EDC Application Profile"
+      }
+    },
+    {
+      "@id": "eap:LegalIdentifierShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N51831c7c061d461a8010da9168f519b8"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:LegalIdentifier"
+      }
+    },
+    {
+      "@id": "_:N51831c7c061d461a8010da9168f519b8",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "spatial"
+      },
+      "shacl:node": {
+        "@id": "eap:CountryRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:spatial"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EuropeanDigitalCredentialTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "European Digital Credential Type restriction",
+      "rdfs:label": "European Digital Credential Type restriction",
+      "shacl:property": {
+        "@id": "_:N5d940188ab9e4a57b502be7002ebdc6b"
+      }
+    },
+    {
+      "@id": "_:N5d940188ab9e4a57b502be7002ebdc6b",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/credential/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:WebResourceShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N4484871029dd439f898e5f868971c963"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:WebResource"
+      }
+    },
+    {
+      "@id": "_:N4484871029dd439f898e5f868971c963",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "language"
+      },
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:LearningEntitlementStatusRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Learning Entitlement Status restriction",
+      "rdfs:label": "Learning Entitlement Status restriction",
+      "shacl:property": {
+        "@id": "_:N18995331a7564d93abbe6a72cba9d352"
+      }
+    },
+    {
+      "@id": "_:N18995331a7564d93abbe6a72cba9d352",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/entitlement-status/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningOutcomeShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:N0f0203e0bde04c6eaa3f21929192c8f9"
+        },
+        {
+          "@id": "_:N516621aa786e452794b2189d717cab6d"
+        },
+        {
+          "@id": "_:Ne6e5868a1a354d88bffc176592eb155a"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:LearningOutcome"
+      }
+    },
+    {
+      "@id": "_:N0f0203e0bde04c6eaa3f21929192c8f9",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "related ESCO skill(s)"
+      },
+      "shacl:node": {
+        "@id": "eap:EscoSkillRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:relatedESCOSkill"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N516621aa786e452794b2189d717cab6d",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "reusability level"
+      },
+      "shacl:node": {
+        "@id": "eap:ReusabilityLevelRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:reusabilityLevel"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Ne6e5868a1a354d88bffc176592eb155a",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "type"
+      },
+      "shacl:node": {
+        "@id": "eap:LearningOutcomeTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:type"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:LearningOutcomeTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Learning Outcome Type restriction",
+      "rdfs:label": "Learning Outcome Type restriction",
+      "shacl:property": {
+        "@id": "_:Nce69f9b2d535471db1b57059d01d2140"
+      }
+    },
+    {
+      "@id": "_:Nce69f9b2d535471db1b57059d01d2140",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/skill-type/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:ClaimShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N9027a2b2ad49453893a47d95c19528dd"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:Claim"
+      }
+    },
+    {
+      "@id": "_:N9027a2b2ad49453893a47d95c19528dd",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "type"
+      },
+      "shacl:node": {
+        "@id": "eap:ClaimTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:type"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EQFLevelRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "EQF Level restriction",
+      "rdfs:label": "EQF Level restriction",
+      "shacl:property": {
+        "@id": "_:Ndb2be5c8b35745608f3f71413a64faae"
+      }
+    },
+    {
+      "@id": "_:Ndb2be5c8b35745608f3f71413a64faae",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/eqf/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningAchievementSpecificationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:N908cd3ca2c7343d69af89d6349df122c"
+        },
+        {
+          "@id": "_:Nb827eb12bf2e4a8eae9a8ddb55f6753d"
+        },
+        {
+          "@id": "_:N6b0364062b9840d8915bee59dbda3a39"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:LearningAchievementSpecification"
+      }
+    },
+    {
+      "@id": "_:N908cd3ca2c7343d69af89d6349df122c",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "learning setting"
+      },
+      "shacl:node": {
+        "@id": "eap:LearningSettingRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:learningSetting"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Nb827eb12bf2e4a8eae9a8ddb55f6753d",
+      "shacl:name": "language",
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N6b0364062b9840d8915bee59dbda3a39",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "thematic area"
+      },
+      "shacl:node": {
+        "@id": "eap:ThematicAreaRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:ISCEDFCode"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:ReusabilityLevelRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Reusability Level restriction",
+      "rdfs:label": "Reusability Level restriction",
+      "shacl:property": {
+        "@id": "_:N5093ca022266456ea129c51e90fb6aab"
+      }
+    },
+    {
+      "@id": "_:N5093ca022266456ea129c51e90fb6aab",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/skill-reuse-level/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:AmountShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N584beefb28594a2db1300f10878effb6"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:Amount"
+      }
+    },
+    {
+      "@id": "_:N584beefb28594a2db1300f10878effb6",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "unit"
+      },
+      "shacl:node": {
+        "@id": "eap:AmountUnitRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:unit"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:QualificationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:N75ecc993b3fe4ed39682cf4f7ddb39fa"
+        },
+        {
+          "@id": "_:N32a51297653a40e3952b571a9b2087eb"
+        },
+        {
+          "@id": "_:N63cdb8ea5eb14451ab413435cc3da209"
+        },
+        {
+          "@id": "_:Ndfb6815c887145f6919be73f3446604d"
+        },
+        {
+          "@id": "_:N7b366b5161374ff7b9ead35b9729f9f2"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:Qualification"
+      }
+    },
+    {
+      "@id": "_:N75ecc993b3fe4ed39682cf4f7ddb39fa",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "NQF level"
+      },
+      "shacl:node": {
+        "@id": "eap:NQFLevelRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:NQFLevel"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N32a51297653a40e3952b571a9b2087eb",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "EQF level"
+      },
+      "shacl:node": {
+        "@id": "eap:EQFLevelRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:EQFLevel"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N63cdb8ea5eb14451ab413435cc3da209",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "learning setting"
+      },
+      "shacl:node": {
+        "@id": "eap:LearningSettingRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:learningSetting"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Ndfb6815c887145f6919be73f3446604d",
+      "shacl:name": "language",
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N7b366b5161374ff7b9ead35b9729f9f2",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "thematic area"
+      },
+      "shacl:node": {
+        "@id": "eap:ThematicAreaRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:ISCEDFCode"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EscoOccupationRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "ESCO Occupation restriction",
+      "rdfs:label": "ESCO Occupation restriction",
+      "shacl:property": {
+        "@id": "_:N031ecb73fd554ccd9601f247db302425"
+      }
+    },
+    {
+      "@id": "_:N031ecb73fd554ccd9601f247db302425",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/esco/concept-scheme/occupations"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:AddressShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N590e0d814f36483aa0cea712a977f13e"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:Address"
+      }
+    },
+    {
+      "@id": "_:N590e0d814f36483aa0cea712a977f13e",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "country"
+      },
+      "shacl:node": {
+        "@id": "eap:CountryRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:countryCode"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:VerificationCheckShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:Nc69b7354d01a46b58a2a01d152ca2592"
+        },
+        {
+          "@id": "_:N1880b24f549840439459545565c38b82"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:VerificationCheck"
+      }
+    },
+    {
+      "@id": "_:Nc69b7354d01a46b58a2a01d152ca2592",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "verification status"
+      },
+      "shacl:node": {
+        "@id": "eap:VerificationCheckStatusRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:verificationStatus"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N1880b24f549840439459545565c38b82",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "type"
+      },
+      "shacl:node": {
+        "@id": "eap:VerificationCheckTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:type"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:LearningAssessmentSpecificationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:Ne6a3b80f5dfe42078cb9e6a159743e97"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:LearningAssessmentSpecification"
+      }
+    },
+    {
+      "@id": "_:Ne6a3b80f5dfe42078cb9e6a159743e97",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "language"
+      },
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:AccreditationTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Accreditation Type restriction",
+      "rdfs:label": "Accreditation Type restriction",
+      "shacl:property": {
+        "@id": "_:N159f78aced974bc3a9d01e966e115537"
+      }
+    },
+    {
+      "@id": "_:N159f78aced974bc3a9d01e966e115537",
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/accreditation/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:VerificationCheckStatusRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Verification Check Status restriction",
+      "rdfs:label": "Verification Check Status restriction",
+      "shacl:property": {
+        "@id": "_:N39ddf95183c342f89fe9398e444cb53c"
+      }
+    },
+    {
+      "@id": "_:N39ddf95183c342f89fe9398e444cb53c",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/verification-status/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:AccreditationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:Nb52694f40a0e45cbbe2aedc0263cd28f"
+        },
+        {
+          "@id": "_:N00e667d75dca4ef3bbb671f038f523d0"
+        },
+        {
+          "@id": "_:Nf4bea7b8324b402a98458ff4d74ca9c5"
+        },
+        {
+          "@id": "_:Nb4ca9aec6e964943a79185778d2182c2"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:Accreditation"
+      }
+    },
+    {
+      "@id": "_:Nb52694f40a0e45cbbe2aedc0263cd28f",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "accredited in jurisdiction"
+      },
+      "shacl:node": {
+        "@id": "eap:JurisdictionRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:limitJurisdiction"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N00e667d75dca4ef3bbb671f038f523d0",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "accredited for EQF level"
+      },
+      "shacl:node": {
+        "@id": "eap:EQFLevelRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:limitEQFLevel"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Nf4bea7b8324b402a98458ff4d74ca9c5",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "accredited for thematic area"
+      },
+      "shacl:node": {
+        "@id": "eap:ThematicAreaRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:limitField"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Nb4ca9aec6e964943a79185778d2182c2",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "type"
+      },
+      "shacl:node": {
+        "@id": "eap:AccreditationTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:type"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:PersonShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N0b67ce123b1c45f8905981e20406298d"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:Person"
+      }
+    },
+    {
+      "@id": "_:N0b67ce123b1c45f8905981e20406298d",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "citizenship"
+      },
+      "shacl:node": {
+        "@id": "eap:CountryRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:citizenshipCountry"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EvidenceTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Evidence Type restriction",
+      "rdfs:label": "Evidence Type restriction",
+      "shacl:property": {
+        "@id": "_:N6ddc80e9024746c283a3bef70c9d80df"
+      }
+    },
+    {
+      "@id": "_:N6ddc80e9024746c283a3bef70c9d80df",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/evidence-type/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:ThematicAreaRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Thematic Area restriction",
+      "rdfs:label": "Thematic Area restriction",
+      "shacl:property": {
+        "@id": "_:N48fbc8e004a046edb6a3005cf8e238da"
+      }
+    },
+    {
+      "@id": "_:N48fbc8e004a046edb6a3005cf8e238da",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/isced-f/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:NQFLevelRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "NQF Level restriction",
+      "rdfs:label": "NQF Level restriction",
+      "shacl:property": {
+        "@id": "_:N13ce7a421ad7481db14290f4a3a4e618"
+      }
+    },
+    {
+      "@id": "_:N13ce7a421ad7481db14290f4a3a4e618",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/qdr/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningActivitySpecificationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:Nd0f6c13aa4614b4f96cc11a2c8f5ff81"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:LearningActivitySpecification"
+      }
+    },
+    {
+      "@id": "_:Nd0f6c13aa4614b4f96cc11a2c8f5ff81",
+      "shacl:name": "language",
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EscoSkillRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "ESCO Skill restriction",
+      "rdfs:label": "ESCO Skill restriction",
+      "shacl:property": {
+        "@id": "_:N5efe554cc9f243afb507a256b5ebbbff"
+      }
+    },
+    {
+      "@id": "_:N5efe554cc9f243afb507a256b5ebbbff",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/esco/concept-scheme/skills"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:DisplayParameterCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:N678ea8a14f854a0ba08cbc845199dd3a"
+        },
+        {
+          "@id": "_:N926a7136af324561852e77a133385e09"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:DisplayParameter"
+      }
+    },
+    {
+      "@id": "_:N678ea8a14f854a0ba08cbc845199dd3a",
+      "shacl:minCount": 1,
+      "shacl:name": "available language",
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:language"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N926a7136af324561852e77a133385e09",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": "primary language",
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:primaryLanguage"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:JurisdictionRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Jurisdiction restriction",
+      "rdfs:label": "Jurisdiction restriction",
+      "shacl:property": {
+        "@id": "_:N397e8517aa174c0b978d4f45f1a9953b"
+      }
+    },
+    {
+      "@id": "_:N397e8517aa174c0b978d4f45f1a9953b",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://publications.europa.eu/resource/authority/atu"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningOpportunityShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:Ne72c9cb1d8e74028abd26a07985dd7a0"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:LearningOpportunity"
+      }
+    },
+    {
+      "@id": "_:Ne72c9cb1d8e74028abd26a07985dd7a0",
+      "shacl:maxCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "default language"
+      },
+      "shacl:node": {
+        "@id": "eap:LanguageRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:defaultLanguage"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:EvidenceShapeCV",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": {
+        "@language": "en",
+        "@value": "The evidence of the verifiable credential. It contains information about the process which resulted in the issuance of the verifiable credential."
+      },
+      "shacl:property": {
+        "@id": "_:N0913ea200ddb4994b73e008b2f1828b3"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:Evidence"
+      }
+    },
+    {
+      "@id": "_:N0913ea200ddb4994b73e008b2f1828b3",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": "type",
+      "shacl:node": {
+        "@id": "eap:EvidenceTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "dc:type"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:LanguageRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Language restriction",
+      "rdfs:label": "Language restriction",
+      "shacl:property": {
+        "@id": "_:N279a1e3322ff4ee6b0f39a920f5efb0f"
+      }
+    },
+    {
+      "@id": "_:N279a1e3322ff4ee6b0f39a920f5efb0f",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://publications.europa.eu/resource/authority/language"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:VerificationCheckTypeRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Verification Check Type restriction",
+      "rdfs:label": "Verification Check Type restriction",
+      "shacl:property": {
+        "@id": "_:Nc4cec6e0ad9548b08a2c9038fedf0f32"
+      }
+    },
+    {
+      "@id": "_:Nc4cec6e0ad9548b08a2c9038fedf0f32",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/verification/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningSettingRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Learning Setting restriction",
+      "rdfs:label": "Learning Setting restriction",
+      "shacl:property": {
+        "@id": "_:N035bd798941c48acbbb187d6ed8dbcbf"
+      }
+    },
+    {
+      "@id": "_:N035bd798941c48acbbb187d6ed8dbcbf",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://data.europa.eu/snb/learning-setting/25831c2"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:LearningEntitlementSpecificationShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": [
+        {
+          "@id": "_:N7a7b639ed08f48eebd515119a9a7b4c1"
+        },
+        {
+          "@id": "_:N24cb009ac35a483b8b863d8d2344b7be"
+        },
+        {
+          "@id": "_:Nfe5cfe1668904e0bbc98b3186db3490f"
+        }
+      ],
+      "shacl:targetClass": {
+        "@id": "elm:LearningEntitlementSpecification"
+      }
+    },
+    {
+      "@id": "_:N7a7b639ed08f48eebd515119a9a7b4c1",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "related occupation"
+      },
+      "shacl:node": {
+        "@id": "eap:EscoOccupationRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:limitOccupation"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:N24cb009ac35a483b8b863d8d2344b7be",
+      "shacl:maxCount": 1,
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "status"
+      },
+      "shacl:node": {
+        "@id": "eap:LearningEntitlementStatusRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:entitlementStatus"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "_:Nfe5cfe1668904e0bbc98b3186db3490f",
+      "shacl:name": {
+        "@language": "en",
+        "@value": "valid within"
+      },
+      "shacl:node": {
+        "@id": "eap:JurisdictionRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:limitJurisdiction"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    },
+    {
+      "@id": "eap:AmountUnitRestriction",
+      "@type": "shacl:NodeShape",
+      "rdfs:comment": "Amount Unit restriction",
+      "rdfs:label": "Amount Unit restriction",
+      "shacl:property": {
+        "@id": "_:Nd97acb8a283b42fb8f4e53922d560fcf"
+      }
+    },
+    {
+      "@id": "_:Nd97acb8a283b42fb8f4e53922d560fcf",
+      "shacl:class": {
+        "@id": "skos:ConceptScheme"
+      },
+      "shacl:hasValue": {
+        "@id": "http://publications.europa.eu/resource/authority/currency"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "skos:inScheme"
+      }
+    },
+    {
+      "@id": "eap:EuropeanDigitalCredentialShapeCV",
+      "@type": "shacl:NodeShape",
+      "shacl:property": {
+        "@id": "_:N618a379263d14dc4b4891082dbc6b830"
+      },
+      "shacl:targetClass": {
+        "@id": "elm:EuropeanDigitalCredential"
+      }
+    },
+    {
+      "@id": "_:N618a379263d14dc4b4891082dbc6b830",
+      "shacl:minCount": 1,
+      "shacl:name": {
+        "@language": "en",
+        "@value": "credential profile"
+      },
+      "shacl:node": {
+        "@id": "eap:EuropeanDigitalCredentialTypeRestriction"
+      },
+      "shacl:nodeKind": {
+        "@id": "shacl:IRI"
+      },
+      "shacl:path": {
+        "@id": "elm:credentialProfiles"
+      },
+      "shacl:severity": {
+        "@id": "shacl:Violation"
+      }
+    }
+  ]
+}
