@@ -1,5 +1,8 @@
 use jsonschema::JSONSchema;
-use std::{fs::{self, File}, io};
+use std::{
+    fs::{self, File},
+    io,
+};
 
 use crate::ValidateArgs;
 

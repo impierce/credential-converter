@@ -42,8 +42,7 @@ pub fn json_example(path: &str) -> serde_json::Value {
     serde_json::from_reader(file).expect("could not parse json")
 }
 
-fn mapper(json_path: &str, csv_path: &str, target_format: &str) 
-{
+fn mapper(json_path: &str, csv_path: &str, target_format: &str) {
     // Read the CSV file into a matrix
     let csv_matrix = parse_csv_to_matrix(csv_path);
     let json_value = json_example(json_path);
@@ -53,7 +52,7 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str)
         "type": [target_format],
     });
     let new_json_value = new_json_value.as_object_mut().unwrap();
-    
+
     if let Some(obj) = json_value.as_object() {
         if let Some(_type) = obj.get("type") {
             // Unsure if schema title will always be findable like this, will be clarified after more introduction to the DESM tools.
@@ -65,12 +64,10 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str)
                     new_json_value.insert(row[2].clone(), obj.get(&row[1]).unwrap().clone());
                 }
             }
-        }
-        else {
+        } else {
             println!("No type field found in JSON");
         }
-    }
-    else {
+    } else {
         println!("JSON is not an object");
     }
 
@@ -84,5 +81,9 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str)
 ///////////     MAIN     ///////////
 
 fn main() {
-    mapper("test.json", "test_equivProps.csv", "Credential Transparency Description Language (CTDL)")
+    mapper(
+        "test.json",
+        "test_equivProps.csv",
+        "Credential Transparency Description Language (CTDL)",
+    )
 }
