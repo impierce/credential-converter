@@ -61,10 +61,24 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str) {
             if csv_checker(_type[1].as_str().unwrap(), target_format, &csv_matrix) {
                 println!("Mapping exists");
                 for field in obj {
-                    for row in &csv_matrix {
-                        if _type[1] == row[0] && row[3] == target_format && *field.0 == row[1] {
-                            println!("Found mapping: {:?}\nFor: {:?}", row, field);
-                            new_json_value.insert(row[2].clone(), field.1.clone());
+                    if field.1.is_object() {
+                        println!("Found object ----------------------- {:?}", field);
+                        for sub_field in field.1.as_object().unwrap() {
+                            for row in &csv_matrix {
+                                if _type[1] == row[0] && row[3] == target_format && *sub_field.0 == row[1] {
+                                    println!("Found mapping: {:?}\nFor: {:?}", row, sub_field);
+                                    new_json_value.insert(row[2].clone(), sub_field.1.clone());
+                                }
+                            }
+                        println!("End of object -----------------------");
+                        }
+                    }
+                    else {
+                        for row in &csv_matrix {
+                            if _type[1] == row[0] && row[3] == target_format && *field.0 == row[1] {
+                                println!("Found mapping: {:?}\nFor: {:?}", row, field);
+                                new_json_value.insert(row[2].clone(), field.1.clone());
+                            }
                         }
                     }
                 }
