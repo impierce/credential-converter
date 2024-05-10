@@ -58,11 +58,18 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str) {
             // Unsure if schema title will always be findable like this, will be clarified after more introduction to the DESM tools.
             // Assuming the schtitle represents the Json Format, this methodology works for OBv3.
             println!("schTitle1: {:?}", _type);
-            for row in &csv_matrix {
-                if _type[1] == row[0] && row[3] == target_format {
-                    println!("Found mapping: {:?}", row);
-                    new_json_value.insert(row[2].clone(), obj.get(&row[1]).unwrap().clone());
+            if csv_checker(_type[1].as_str().unwrap(), target_format, &csv_matrix) {
+                println!("Mapping exists");
+                for field in obj {
+                    for row in &csv_matrix {
+                        if _type[1] == row[0] && row[3] == target_format && *field.0 == row[1] {
+                            println!("Found mapping: {:?}\nFor: {:?}", row, field);
+                            new_json_value.insert(row[2].clone(), field.1.clone());
+                        }
+                    }
                 }
+            } else {
+                println!("Mapping does not exist");
             }
         } else {
             println!("No type field found in JSON");
@@ -71,7 +78,7 @@ fn mapper(json_path: &str, csv_path: &str, target_format: &str) {
         println!("JSON is not an object");
     }
 
-    println!("New JSON: {:?}", new_json_value);
+    println!("\n\nNew JSON: {:?}", new_json_value);
 
     let new_path = format!("target/{}.json", target_format);
     let json_file = File::create(new_path).expect("Unable to create file");
