@@ -2,3 +2,4 @@ jsonPath1,schTitle1,field1,jsonPath2,schTitle2,label2,
 $,User,phone,$,Person,phoneNumber
 $,User,firstName,$,Person,firstName
 $,User,lastName,$,Person,lastName
+$,User,credentialCount,$,Person,credentialCount

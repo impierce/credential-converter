@@ -22,7 +22,7 @@ async fn main() -> io::Result<()> {
 #[derive(Debug)]
 pub struct MappingRule {
     src_json_path: String,
-    src_schema_object: String,
+    src_schema_type: String,
     src_schema_field: String,
     target_json_path: String,
     target_schema_object: String,
@@ -46,7 +46,7 @@ async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
 
         let mapping_rule = MappingRule {
             src_json_path: columns[0].to_string(),
-            src_schema_object: columns[1].to_string(),
+            src_schema_type: columns[1].to_string(),
             src_schema_field: columns[2].to_string(),
             target_json_path: columns[3].to_string(),
             target_schema_object: columns[4].to_string(),
@@ -93,7 +93,7 @@ async fn mapper(json_path: &str, csv_path: &str, target_format: &str) -> io::Res
     if let serde_json::Value::Object(src) = json_value {
         println!("Source value: {:?}", src);
 
-        traverse_tree::traverse_tree(src, &mut target, &mapping_data, "$");
+        traverse_tree::traverse_source(&src, &mut target, &mapping_data, "$");
     } else {
         // Throw some error
         panic!("Gaat mis");

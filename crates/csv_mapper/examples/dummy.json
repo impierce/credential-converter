@@ -2,5 +2,6 @@
     "phone": "06 - 12345678",
     "firstName": "Barry",
     "lastName": "Badpak",
+    "credentialCount": 4,
     "type": "User"
 }
