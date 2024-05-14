@@ -9,6 +9,7 @@ edition = "2021"
 
 [workspace.dependencies]
 serde = { version = "1", features = ["serde_derive"] }
+tokio = { version = "1", features = ["full"] }
 serde_json = "1"
 
 [dependencies]
@@ -16,6 +17,6 @@ clap = { version = "4", features = ["derive"] }
 dotenvy = { version = "0.15", features = ["clap"] }
 jsonschema = "0.17"
 reqwest = { version = "0.12", features = ["json"] }
-tokio = { version = "1", features = ["full"] }
+tokio = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
