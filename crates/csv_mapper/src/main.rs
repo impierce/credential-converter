@@ -1,71 +1,68 @@
-use serde_json::json;
+use mapping_data::MappingData;
+use serde_json::Value;
 use std::{
     collections::HashMap,
-    io::Read,
     path::{Path, PathBuf},
 };
 use tokio::{fs, io};
 
+use crate::mapping_data::MappingRule;
+
+mod mapping_data;
 mod traverse_tree;
 
-/// Key: the JSON source path, Value: mapping rules
-pub type MappingData = HashMap<String, Vec<MappingRule>>;
-
-///////////     MAIN     ///////////
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    let res = mapper("examples/dummy.json", "example-mapper.csv", "TODO").await;
+    //let res = mapper("examples/dummy.json", "example-mapper.csv", "TODO").await;
 
-    res
+    generate_json_paths().await;
+
+    Ok(())
 }
 
-#[derive(Debug)]
-pub struct MappingRule {
-    src_json_path: String,
-    src_schema_type: String,
-    src_schema_field: String,
-    target_json_path: String,
-    target_schema_object: String,
-    target_schema_field: String,
-}
+async fn generate_json_paths() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
-///////////     FUNCTIONS     ///////////
+    let elm_cred = root.join("examples/francisco-cruz.json");
+
+    let value = read_json(elm_cred).await.unwrap();
+
+    if let Value::Object(obj) = value {
+        let mut out = Vec::new();
+        traverse_tree::store_all_json_paths(&obj, "$".to_string(), &mut out);
+        //println!("{out:?}");
+        let res: Vec<_> = out.into_iter().map(|(k, v)| format!("{k}, {v}")).collect();
+
+        let _ = fs::write(root.join("target/json_paths.txt"), res.join("\n")).await;
+    }
+}
 
 async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
     let csv_string = fs::read_to_string(csv_path).await?;
 
-    let mut csv_data: MappingData = HashMap::new();
+    let mut rules = Vec::new();
 
     for row in csv_string.lines().skip(1) {
         let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
 
         assert!(
-            columns.len() == 6,
-            "Invalid CSV format (may only contain 6 items per row)"
+            columns.len() == 3,
+            "Invalid CSV format (may only contain 3 items per row)"
         );
 
         let mapping_rule = MappingRule {
-            src_json_path: columns[0].to_string(),
-            src_schema_type: columns[1].to_string(),
-            src_schema_field: columns[2].to_string(),
-            target_json_path: columns[3].to_string(),
-            target_schema_object: columns[4].to_string(),
-            target_schema_field: columns[5].to_string(),
+            src_path: columns[0].to_string(),
+            target_path: columns[1].to_string(),
+            transformation: columns[2].to_string(),
         };
 
-        let json_path_mappings = csv_data.get_mut(&mapping_rule.src_json_path);
-
-        if let Some(mappings) = json_path_mappings {
-            mappings.push(mapping_rule);
-        } else {
-            csv_data.insert(mapping_rule.src_json_path.to_string(), vec![mapping_rule]);
-        }
+        rules.push(mapping_rule);
     }
 
-    Ok(csv_data)
+    Ok(MappingData::new(rules))
 }
 
-async fn json_example(path: PathBuf) -> serde_json::Result<serde_json::Value> {
+async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     let file_path = Path::new(&path);
     let file = fs::File::open(file_path)
         .await
@@ -73,12 +70,12 @@ async fn json_example(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     serde_json::from_reader(file.try_into_std().unwrap())
 }
 
-async fn mapper(json_path: &str, csv_path: &str, target_format: &str) -> io::Result<()> {
+async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
     // Read the CSV file into a matrix
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     let mapping_data = parse_csv(root.join(csv_path)).await?;
-    let json_value = json_example(root.join(json_path)).await;
+    let json_value = read_json(root.join(json_path)).await;
 
     // TODO handle errors gracefully.
     if let Err(err) = json_value {
@@ -89,17 +86,18 @@ async fn mapper(json_path: &str, csv_path: &str, target_format: &str) -> io::Res
 
     println!("CSV: {:?}", mapping_data);
 
-    let mut target = serde_json::Map::new();
     if let serde_json::Value::Object(src) = json_value {
         println!("Source value: {:?}", src);
 
-        traverse_tree::traverse_source(&src, &mut target, &mapping_data, "$");
+        let mut target = serde_json::Map::new();
+
+        //traverse_tree::traverse_source(&src, &mut target, &mapping_data);
+
+        println!("Target value: {:?}", target);
     } else {
         // Throw some error
         panic!("Gaat mis");
     }
-
-    println!("Target value: {:?}", target);
 
     // initializing the json object with the correct* type field
     // *still needs further tailoring to be a 100% correct depending on what `target_format` is passed
@@ -156,4 +154,17 @@ async fn mapper(json_path: &str, csv_path: &str, target_format: &str) -> io::Res
     //serde_json::to_writer_pretty(json_file, &new_json_value).expect("Unable to write to file");
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn create_json_paths() {
+        //let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+
+        //let elm_cred =
+    }
 }

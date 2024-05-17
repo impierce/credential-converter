@@ -1,67 +1,85 @@
-use serde_json::{Map, Value};
+use std::str::FromStr;
 
 use crate::{MappingData, MappingRule};
+use jsonpath_rust::{JsonPathFinder, JsonPathInst, JsonPathQuery, JsonPathValue};
+use serde_json::{Map, Value};
 
 /// Source object, target object
-pub fn traverse_source(
+
+pub type JsonPathKV = Vec<(String, String)>;
+
+pub fn store_all_json_paths(
     src_obj: &Map<String, Value>,
-    tgt_obj: &mut Map<String, Value>,
-    mapping_data: &MappingData,
-    current_path: &str,
+    json_path: String,
+    out: &mut JsonPathKV,
 ) {
-    let rules = mapping_data.get(current_path).unwrap();
-
-    for rule in rules.iter() {
-        let field_value = src_obj.get(&rule.src_schema_field);
-        let schema_value = &rule.src_schema_type;
-
-        if let Some(value) = field_value {
-            if value.is_string() || value.is_number() || value.is_boolean() {
-                // Direct mapping
-                insert_into_target(tgt_obj, value, rule, "$");
-                continue;
-            }
+    fn traverse_array(arr: &Vec<Value>, json_path: String, out: &mut JsonPathKV) {
+        for (i, value) in arr.iter().enumerate() {
+            let new_path = format!("{json_path}[:{i}]");
 
             match value {
-                Value::Object(src_obj) => {
-                    traverse_source(src_obj, tgt_obj, mapping_data, &rule.src_schema_field);
+                Value::Bool(b) => out.push((new_path, b.to_string())),
+                Value::Number(n) => out.push((new_path, n.to_string())),
+                Value::String(s) => out.push((new_path, s.to_string())),
+                Value::Object(obj) => store_all_json_paths(obj, new_path, out),
+                Value::Array(arr) => traverse_array(arr, new_path, out),
+                Value::Null => {
+                    // todo
                 }
-                Value::Array(arr) => {
-                    for item in arr.iter() {
-                        if let Value::Object(src_obj) = item {
-                            traverse_source(src_obj, tgt_obj, mapping_data, &rule.src_schema_field);
-                        }
-                    }
-                }
-                _ => {}
             }
+        }
+    }
 
-            insert_target_type(tgt_obj, &rule.target_schema_object);
-        } else {
-            panic!("missing field error");
+    for item in src_obj.iter() {
+        if item.0 == "@context" {
+            continue;
+        }
+
+        let json_path = format!("{json_path}.{}", item.0);
+
+        match item.1 {
+            Value::Bool(b) => out.push((json_path, b.to_string())),
+            Value::Number(n) => out.push((json_path, n.to_string())),
+            Value::String(s) => out.push((json_path, s.to_string())),
+            Value::Object(obj) => store_all_json_paths(obj, json_path, out),
+            Value::Array(arr) => traverse_array(arr, json_path, out),
+            Value::Null => {
+                //todo
+            }
         }
     }
 }
 
-fn insert_target_type(tgt_obj: &mut Map<String, Value>, type_str: &str) {
-    tgt_obj.insert(
+pub fn traverse_source(
+    src_obj: Value,
+    tgt_obj: &mut Map<String, Value>,
+    mapping_data: &MappingData,
+) {
+    let box_val = Box::new(src_obj);
+
+    for rule in mapping_data.iter() {
+        //let p = JsonPathInst::from_str(&rule.src_path).unwrap();
+        //let pf = JsonPathFinder::new(&box_val, Box::new(p));
+
+        ////.find()
+        //if let Ok(src_val) = pf.find() {
+            //insert_into_target(tgt_obj, src_val, rule, 0);
+        //}
+    }
+}
+
+fn insert_type(obj: &mut Map<String, Value>, type_str: &str) {
+    obj.insert(
         "type".to_string(),
         serde_json::to_value(type_str.to_string()).unwrap(),
     );
 }
 
 fn insert_into_target(
-    target_obj: &mut Map<String, Value>,
-    value: &Value,
+    tgt_obj: &mut Map<String, Value>,
+    value: Value,
     rule: &MappingRule,
-    current_path: &str,
+    current_segment: usize,
 ) {
-    if rule.target_json_path == current_path {
-        // Apply directly
-        target_obj.insert(rule.target_schema_field.to_string(), value.clone());
-    } else {
-        // recursive action
-        // If object with type exist use it
-        // otherwise create
-    }
+    //
 }
