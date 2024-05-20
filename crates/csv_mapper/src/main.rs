@@ -1,12 +1,15 @@
+use crate::mapping_data::MappingRule;
+use digital_credential_data_models::common::{traits::*, GenPaths, OneOrMany};
 use mapping_data::MappingData;
 use serde_json::Value;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
 };
-use tokio::{fs, io};
-
-use crate::mapping_data::MappingRule;
+use tokio::{
+    fs,
+    io::{self},
+};
 
 mod mapping_data;
 mod traverse_tree;
@@ -16,8 +19,38 @@ async fn main() -> io::Result<()> {
     //let res = mapper("examples/dummy.json", "example-mapper.csv", "TODO").await;
 
     generate_json_paths().await;
+    add_schema_paths().await;
 
     Ok(())
+}
+
+#[derive(GenPaths)]
+pub struct Address {
+    pub street: String,
+    pub number: usize,
+    pub province: Province,
+}
+
+#[derive(GenPaths)]
+pub struct Province {
+    pub name: String,
+    pub code: String,
+}
+
+#[derive(GenPaths)]
+pub struct School {
+    pub name: String,
+    pub level: String,
+}
+
+#[derive(GenPaths)]
+pub struct Person {
+    pub name: String,
+    pub sur_name: String,
+    pub age: usize,
+    pub address: Address,
+    pub synonyms: Vec<String>,
+    pub schools: Option<OneOrMany<School>>,
 }
 
 async fn generate_json_paths() {
@@ -30,11 +63,26 @@ async fn generate_json_paths() {
     if let Value::Object(obj) = value {
         let mut out = Vec::new();
         traverse_tree::store_all_json_paths(&obj, "$".to_string(), &mut out);
-        //println!("{out:?}");
         let res: Vec<_> = out.into_iter().map(|(k, v)| format!("{k}, {v}")).collect();
 
-        let _ = fs::write(root.join("target/json_paths.txt"), res.join("\n")).await;
+        let _ = fs::write(root.join("target/json_paths.csv"), res.join("\n")).await;
     }
+}
+
+async fn add_schema_paths() {
+    let mut schema_types = HashMap::new();
+    Person::add_schema_types(&mut schema_types);
+
+    let mut lines = vec![];
+
+    for (_, data) in schema_types.iter() {
+        for row in data.iter() {
+            lines.push(row.to_string());
+        }
+    }
+
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let _ = fs::write(root.join("target/schema.csv"), lines.join("\n")).await;
 }
 
 async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
