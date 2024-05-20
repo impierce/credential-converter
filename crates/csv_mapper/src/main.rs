@@ -1,5 +1,6 @@
 use crate::mapping_data::MappingRule;
 use digital_credential_data_models::common::{traits::*, GenPaths, OneOrMany};
+use env_logger::Env;
 use mapping_data::MappingData;
 use serde_json::Value;
 use std::{
@@ -17,6 +18,7 @@ mod traverse_tree;
 #[tokio::main]
 async fn main() -> io::Result<()> {
     //let res = mapper("examples/dummy.json", "example-mapper.csv", "TODO").await;
+    init_env_vars();
 
     generate_json_paths().await;
     add_schema_paths().await;
@@ -24,29 +26,39 @@ async fn main() -> io::Result<()> {
     Ok(())
 }
 
-#[derive(GenPaths)]
+#[derive(GenPaths, serde::Deserialize)]
+pub struct LatLng {
+    pub lat: f32,
+    pub lng: f32,
+}
+
+#[derive(GenPaths, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Address {
     pub street: String,
     pub number: usize,
     pub province: Province,
+    pub lat_lng: LatLng,
 }
 
-#[derive(GenPaths)]
+#[derive(GenPaths, serde::Deserialize)]
 pub struct Province {
     pub name: String,
     pub code: String,
 }
 
-#[derive(GenPaths)]
+#[derive(GenPaths, Debug, serde::Deserialize)]
 pub struct School {
     pub name: String,
     pub level: String,
 }
 
-#[derive(GenPaths)]
+#[derive(GenPaths, serde::Deserialize)]
 pub struct Person {
     pub name: String,
-    pub sur_name: String,
+
+    #[serde(rename = "surName", default)]
+    pub sur_name: Option<String>,
     pub age: usize,
     pub address: Address,
     pub synonyms: Vec<String>,
@@ -67,6 +79,23 @@ async fn generate_json_paths() {
 
         let _ = fs::write(root.join("target/json_paths.csv"), res.join("\n")).await;
     }
+}
+
+fn init_env_vars() {
+    // load environment variables from .env file
+    //dotenv().expect(".env file not found");
+
+    // The `Env` lets us tweak what the environment
+    // variables to read are and what the default value is if they're missing
+    let env = Env::default()
+        .filter_or(env_key("LOG_LEVEL"), "debug")
+        .write_style_or(env_key("LOG_STYLE"), "always");
+
+    env_logger::init_from_env(env);
+}
+
+fn env_key(key: &str) -> String {
+    format!("IMP_MAPPER_{}", key)
 }
 
 async fn add_schema_paths() {
@@ -118,6 +147,7 @@ async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     serde_json::from_reader(file.try_into_std().unwrap())
 }
 
+#[allow(unused)]
 async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
     // Read the CSV file into a matrix
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -202,17 +232,4 @@ async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Re
     //serde_json::to_writer_pretty(json_file, &new_json_value).expect("Unable to write to file");
 
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-
-    use super::*;
-
-    #[test]
-    fn create_json_paths() {
-        //let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-
-        //let elm_cred =
-    }
 }
