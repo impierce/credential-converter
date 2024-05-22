@@ -31,10 +31,9 @@ fn env_key(key: &str) -> String {
     format!("IMP_MAPPER_{}", key)
 }
 
-pub async fn generate_json_paths() {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-
-    let elm_cred = root.join("examples/francisco-cruz.json");
+pub async fn generate_json_paths(path: &str) {
+    let root = PathBuf::from(std::env::current_dir().unwrap());
+    let elm_cred = root.join(path);
 
     let value = read_json(elm_cred).await.unwrap();
 
