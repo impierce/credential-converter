@@ -25,7 +25,7 @@ async fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn generate_json_paths() {
+pub async fn generate_json_paths() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
     let elm_cred = root.join("examples/francisco-cruz.json");
@@ -73,7 +73,7 @@ async fn add_schema_paths() {
     let _ = fs::write(root.join("target/schema.csv"), lines.join("\n")).await;
 }
 
-async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
+pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
     let csv_string = fs::read_to_string(csv_path).await?;
 
     let mut rules = Vec::new();
@@ -107,7 +107,7 @@ async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
 }
 
 #[allow(unused)]
-async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
+pub async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
     // Read the CSV file into a matrix
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 

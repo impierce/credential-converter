@@ -1,3 +1,1 @@
-/target
-/csv_mapper/target
-/src/cli/target
+target/

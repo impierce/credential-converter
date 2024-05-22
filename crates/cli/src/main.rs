@@ -1,6 +1,7 @@
 use std::{io::{self, Write}, path::Path};
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("\n\n~~~~~   Welcom to the 'OpenBadges-ELM Mapper' command line interface!   ~~~~~\n\n");
 
     let path_input  = prompt_input_path("Please enter the path to the JSON file you would like to map,\nFor relative paths, the current directory is ");
@@ -10,6 +11,7 @@ fn main() {
     // This makes the next prompt unnecessary. Still debatable how to inform the user of this automatic deduction.
     // let target_format = prompt("Please enter the target format for the new JSON file [OBv3, ELM]");
 
+    generate_json_paths();
 }
 
 //////////     HELPERS     //////////
