@@ -41,6 +41,25 @@ pub struct Address {
     pub lat_lng: LatLng,
 }
 
+//impl AddSchemaTypes for Address {
+    //fn add_schema_types(map: &mut Vec<SchemaData>, src_schema: &str, json_path: &str, optional: bool) {
+        //let json_path = format!("{}.street", json_path);
+        //map.push(SchemaData {
+            //src_schema: src_schema.to_string(),
+            //json_path: json_path.to_string(),
+            //tgt_schema: "String".to_string(),
+            //multiplicity: Multiplicity::One,
+            //optional,
+        //});
+
+        //// if struct 
+        //Province::add_schema_types("Province", "$", false);
+
+        //// else if enum
+        //Province::add_schema_types("Address", &json_path, false);
+    //}
+//}
+
 #[derive(GenPaths, serde::Deserialize)]
 pub struct Province {
     pub name: String,
@@ -99,15 +118,13 @@ fn env_key(key: &str) -> String {
 }
 
 async fn add_schema_paths() {
-    let mut schema_types = HashMap::new();
-    Person::add_schema_types(&mut schema_types);
+    let mut schema_types = Vec::new();
+    Person::add_schema_types(&mut schema_types, "ROOT", "$", false);
 
     let mut lines = vec![];
 
-    for (_, data) in schema_types.iter() {
-        for row in data.iter() {
-            lines.push(row.to_string());
-        }
+    for row in schema_types.iter() {
+        lines.push(row.to_string());
     }
 
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
