@@ -1,5 +1,5 @@
 use crate::mapping_data::MappingRule;
-use digital_credential_data_models::common::AddSchemaTypes;
+use digital_credential_data_models::{common::AddSchemaTypes, elmv3::EuropassEdcCredential};
 use demo_schema::DigitalCredential;
 use env_logger::Env;
 use mapping_data::MappingData;
@@ -60,7 +60,8 @@ fn env_key(key: &str) -> String {
 
 async fn add_schema_paths() {
     let mut schema_types = Vec::new();
-    DigitalCredential::add_schema_types(&mut schema_types, "ROOT", "$", false);
+    //DigitalCredential::add_schema_types(&mut schema_types, "ROOT", "$", false);
+    EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
 
     let mut lines = vec![];
 

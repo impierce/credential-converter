@@ -1,4 +1,5 @@
-use digital_credential_data_models::common::*;
+use digital_credential_data_models::common as types_common;
+use types_common::{GenPaths, SchemaList, OneOrMany};
 
 #[derive(GenPaths, serde::Deserialize)]
 pub struct LatLng {
