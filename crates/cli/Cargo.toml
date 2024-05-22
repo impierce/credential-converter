@@ -4,5 +4,3 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-csv_mapper = { path = "../csv_mapper" }
-tokio = { workspace = true }
