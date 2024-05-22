@@ -20,3 +20,14 @@ reqwest = { version = "0.12", features = ["json"] }
 tokio = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+cli = { path = "crates/cli" }
+csv_mapper = { path = "crates/csv_mapper" }
+
+[[bin]]
+name = "cli"
+path = "src/cli.rs"
+
+[[bin]]
+name = "mapper"
+path = "src/mapper.rs"
+

@@ -13,3 +13,7 @@ digital-credential-data-models = { git = "https://github.com/impierce/digital-cr
 log = "0.4.21"
 env_logger = "0.11.3"
 dotenvy = "0.15.7"
+
+[lib]
+name = "csv_mapper"
+path = "src/lib.rs"
