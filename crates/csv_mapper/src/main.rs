@@ -136,59 +136,5 @@ async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Re
         panic!("Gaat mis");
     }
 
-    // initializing the json object with the correct* type field
-    // *still needs further tailoring to be a 100% correct depending on what `target_format` is passed
-    //let mut new_json_value = json!({
-    //"type": [target_format],
-    //});
-    //let new_json_value = new_json_value.as_object_mut().unwrap();
-
-    //if let Some(obj) = json_value.as_object() {
-    //if let Some(_type) = obj.get("type") {
-    //// Unsure if schema title will always be findable like this, will be clarified after more introduction to the DESM tools.
-    //// Assuming the schtitle represents the Json Format, this methodology works for OBv3.
-    //println!("schTitle1: {:?}", _type);
-    //if csv_checker(_type[1].as_str().unwrap(), target_format, &csv_matrix) {
-    //println!("Mapping exists");
-    //for field in obj {
-    //if field.1.is_object() {
-    //println!("Found object ----------------------- {:?}", field);
-    //for sub_field in field.1.as_object().unwrap() {
-    //for row in &csv_matrix {
-    //if _type[1] == row[0]
-    //&& row[3] == target_format
-    //&& *sub_field.0 == row[1]
-    //{
-    //println!("Found mapping: {:?}\nFor: {:?}", row, sub_field);
-    //new_json_value.insert(row[2].clone(), sub_field.1.clone());
-    //}
-    //}
-    //println!("End of object -----------------------");
-    //}
-    //} else {
-    //for row in &csv_matrix {
-    //if _type[1] == row[0] && row[3] == target_format && *field.0 == row[1] {
-    //println!("Found mapping: {:?}\nFor: {:?}", row, field);
-    //new_json_value.insert(row[2].clone(), field.1.clone());
-    //}
-    //}
-    //}
-    //}
-    //} else {
-    //println!("Mapping does not exist");
-    //}
-    //} else {
-    //println!("No type field found in JSON");
-    //}
-    //} else {
-    //println!("JSON is not an object");
-    //}
-
-    //println!("\n\nNew JSON: {:?}", new_json_value);
-
-    //let new_path = format!("target/{}.json", target_format);
-    //let json_file = fs::File::create(new_path).await?.try_into_std().unwrap();
-    //serde_json::to_writer_pretty(json_file, &new_json_value).expect("Unable to write to file");
-
     Ok(())
 }
