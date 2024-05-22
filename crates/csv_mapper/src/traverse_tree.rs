@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::str::FromStr;
 
 use crate::{MappingData, MappingRule};
