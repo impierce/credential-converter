@@ -4,14 +4,16 @@ use std::{io::{self, Write}, path::Path};
 async fn main() {
     println!("\n\n~~~~~   Welcom to the 'OpenBadges-ELM Mapper' command line interface!   ~~~~~\n\n");
 
-    let path_input  = prompt_input_path("Please enter the path to the JSON file you would like to map,\nFor relative paths, the current directory is ");
-    let path_target = prompt_output_path("Please enter the path to the output file you would like to use for mapping");
-    let path_format = prompt_option("Please enter the format of the input JSON file ", vec!["OBv3", "ELM"]);
+    //let path_input  = prompt_input_path("Please enter the path to the JSON file you would like to map,\nFor relative paths, the current directory is ");
+    //let path_target = prompt_output_path("Please enter the path to the output file you would like to use for mapping");
+    //let path_format = prompt_option("Please enter the format of the input JSON file ", vec!["OBv3", "ELM"]);
     // Since we only have two options currently, we can assume target is the other format than the input.
     // This makes the next prompt unnecessary. Still debatable how to inform the user of this automatic deduction.
     // let target_format = prompt("Please enter the target format for the new JSON file [OBv3, ELM]");
 
-    generate_json_paths();
+    csv_mapper::generate_json_paths().await;
+    csv_mapper::add_schema_paths().await;
+    println!("TEST");
 }
 
 //////////     HELPERS     //////////
