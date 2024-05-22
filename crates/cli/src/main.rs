@@ -2,7 +2,7 @@ use std::{io::{self, Write}, path::Path};
 
 #[tokio::main]
 async fn main() {
-    println!("\n\n~~~~~   Welcom to the 'OpenBadges-ELM Mapper' command line interface!   ~~~~~\n\n");
+    println!("\n\n~~~~~   Welcome to the 'OpenBadges-ELM Mapper' command line interface!   ~~~~~\n\n");
 
     //let path_input  = prompt_input_path("Please enter the path to the JSON file you would like to map,\nFor relative paths, the current directory is ");
     //let path_target = prompt_output_path("Please enter the path to the output file you would like to use for mapping");
