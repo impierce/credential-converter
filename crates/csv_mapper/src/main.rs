@@ -1,12 +1,10 @@
 use crate::mapping_data::MappingRule;
-use digital_credential_data_models::common::{traits::*, GenPaths, OneOrMany};
+use digital_credential_data_models::common::AddSchemaTypes;
+use demo_schema::DigitalCredential;
 use env_logger::Env;
 use mapping_data::MappingData;
 use serde_json::Value;
-use std::{
-    collections::HashMap,
-    path::{Path, PathBuf},
-};
+use std::path::{Path, PathBuf};
 use tokio::{
     fs,
     io::{self},
@@ -14,6 +12,7 @@ use tokio::{
 
 mod mapping_data;
 mod traverse_tree;
+mod demo_schema;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
@@ -24,64 +23,6 @@ async fn main() -> io::Result<()> {
     add_schema_paths().await;
 
     Ok(())
-}
-
-#[derive(GenPaths, serde::Deserialize)]
-pub struct LatLng {
-    pub lat: f32,
-    pub lng: f32,
-}
-
-#[derive(GenPaths, serde::Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Address {
-    pub street: String,
-    pub number: usize,
-    pub province: Province,
-    pub lat_lng: LatLng,
-}
-
-//impl AddSchemaTypes for Address {
-    //fn add_schema_types(map: &mut Vec<SchemaData>, src_schema: &str, json_path: &str, optional: bool) {
-        //let json_path = format!("{}.street", json_path);
-        //map.push(SchemaData {
-            //src_schema: src_schema.to_string(),
-            //json_path: json_path.to_string(),
-            //tgt_schema: "String".to_string(),
-            //multiplicity: Multiplicity::One,
-            //optional,
-        //});
-
-        //// if struct 
-        //Province::add_schema_types("Province", "$", false);
-
-        //// else if enum
-        //Province::add_schema_types("Address", &json_path, false);
-    //}
-//}
-
-#[derive(GenPaths, serde::Deserialize)]
-pub struct Province {
-    pub name: String,
-    pub code: String,
-}
-
-#[derive(GenPaths, Debug, serde::Deserialize)]
-pub struct School {
-    pub name: String,
-    pub level: String,
-}
-
-#[derive(GenPaths, serde::Deserialize)]
-pub struct Person {
-    pub name: String,
-
-    #[serde(rename = "surName", default)]
-    pub sur_name: Option<String>,
-    pub age: usize,
-    pub address: Address,
-    pub synonyms: Vec<String>,
-    pub schools: Option<OneOrMany<School>>,
 }
 
 async fn generate_json_paths() {
@@ -119,7 +60,7 @@ fn env_key(key: &str) -> String {
 
 async fn add_schema_paths() {
     let mut schema_types = Vec::new();
-    Person::add_schema_types(&mut schema_types, "ROOT", "$", false);
+    DigitalCredential::add_schema_types(&mut schema_types, "ROOT", "$", false);
 
     let mut lines = vec![];
 
