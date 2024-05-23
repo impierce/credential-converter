@@ -1,6 +1,6 @@
 use crate::mapping_data::MappingRule;
 use digital_credential_data_models::{
-    elmv3::EuropeanDigitalPresentation, obv3, types_common::AddSchemaTypes,
+    elmv3::EuropeanDigitalPresentation, obv3, types_common::{AddSchemaTypes, SchemaList},
 };
 use env_logger::Env;
 use mapping_data::MappingData;
@@ -66,6 +66,7 @@ pub async fn add_schema_paths() {
     obv3::AchievementCredential::add_schema_types(&mut schema_types);
 
     schema_types.sort();
+    schema_types.merge_multiplicity();
 
     let mut lines = vec![];
 

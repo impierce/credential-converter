@@ -1,22 +1,4 @@
 use core::slice::Iter;
-use std::ops;
-
-pub struct JsonPathStr(String);
-
-impl ops::Deref for JsonPathStr {
-    type Target = String;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl JsonPathStr {
-    pub fn to_segments(&self) -> Vec<String> {
-        Vec::new()
-    }
-}
-
 
 #[derive(Debug)]
 pub struct MappingRule {

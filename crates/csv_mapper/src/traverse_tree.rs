@@ -6,7 +6,6 @@ use jsonpath_rust::{JsonPathFinder, JsonPathInst, JsonPathQuery, JsonPathValue};
 use serde_json::{Map, Value};
 
 /// Source object, target object
-
 pub type JsonPathKV = Vec<(String, String)>;
 
 pub fn store_all_json_paths(
