@@ -1,5 +1,7 @@
 use crate::mapping_data::MappingRule;
-use digital_credential_data_models::{elmv3::{EuropassEdcCredential, EuropeanDigitalPresentation}, types_common::AddSchemaTypes};
+use digital_credential_data_models::{
+    elmv3::EuropeanDigitalPresentation, obv3, types_common::AddSchemaTypes,
+};
 use env_logger::Env;
 use mapping_data::MappingData;
 use serde_json::Value;
@@ -46,7 +48,7 @@ pub async fn add_schema_paths() {
     let mut schema_types = Vec::new();
     //DigitalCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", false);
     //EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
-    EuropeanDigitalPresentation::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
+    EuropeanDigitalPresentation::add_schema_types(&mut schema_types);
 
     schema_types.sort();
 
@@ -57,7 +59,22 @@ pub async fn add_schema_paths() {
     }
 
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let _ = fs::write(root.join("../../target/schema.csv"), lines.join("\n")).await;
+    let _ = fs::write(root.join("../../target/elm_schema.csv"), lines.join("\n")).await;
+
+    let mut schema_types = Vec::new();
+
+    obv3::AchievementCredential::add_schema_types(&mut schema_types);
+
+    schema_types.sort();
+
+    let mut lines = vec![];
+
+    for row in schema_types.iter() {
+        lines.push(row.to_string());
+    }
+
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let _ = fs::write(root.join("../../target/obv3_schema.csv"), lines.join("\n")).await;
 }
 
 async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
