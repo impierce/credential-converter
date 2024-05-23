@@ -1,8 +1,8 @@
 use crate::mapping_data::MappingRule;
-use digital_credential_data_models::{common::AddSchemaTypes, elmv3::EuropassEdcCredential};
+use digital_credential_data_models::common::AddSchemaTypes;
 use demo_schema::DigitalCredential;
 use env_logger::Env;
-use mapping_data::MappingData;
+pub use mapping_data::MappingData;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use tokio::{
@@ -10,9 +10,9 @@ use tokio::{
     io::{self},
 };
 
-mod mapping_data;
-mod traverse_tree;
-mod demo_schema;
+pub mod mapping_data;
+pub mod traverse_tree;
+pub mod demo_schema;
 
 pub fn init_env_vars() {
     // load environment variables from .env file
@@ -46,7 +46,6 @@ pub async fn generate_json_paths(path: &str) {
     }
 }
 
-
 pub async fn add_schema_paths() {
     let mut schema_types = Vec::new();
     DigitalCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", false);
@@ -62,12 +61,13 @@ pub async fn add_schema_paths() {
     let _ = fs::write(root.join("../../target/schema.csv"), lines.join("\n")).await;
 }
 
-async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
+pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
     let csv_string = fs::read_to_string(csv_path).await?;
-
+    
     let mut rules = Vec::new();
-
-    for row in csv_string.lines().skip(1) {
+    
+    // commenting out .skip(1) for testing
+    for row in csv_string.lines() {
         let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
 
         assert!(

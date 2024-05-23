@@ -17,8 +17,7 @@ impl JsonPathStr {
     }
 }
 
-
-#[derive(Debug)]
+#[derive(Debug, Default, Clone)]
 pub struct MappingRule {
     pub src_path: String,
     pub target_path: String,
