@@ -50,8 +50,8 @@ pub async fn generate_json_paths() {
 
 pub async fn add_schema_paths() {
     let mut schema_types = Vec::new();
-    DigitalCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", false);
-    //EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
+    //DigitalCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", false);
+    EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
 
     let mut lines = vec![];
 
@@ -63,31 +63,6 @@ pub async fn add_schema_paths() {
     let _ = fs::write(root.join("../../target/schema.csv"), lines.join("\n")).await;
 }
 
-async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
-    let csv_string = fs::read_to_string(csv_path).await?;
-
-    let mut rules = Vec::new();
-
-    for row in csv_string.lines().skip(1) {
-        let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
-
-        assert!(
-            columns.len() == 3,
-            "Invalid CSV format (may only contain 3 items per row)"
-        );
-
-        let mapping_rule = MappingRule {
-            src_path: columns[0].to_string(),
-            target_path: columns[1].to_string(),
-            transformation: columns[2].to_string(),
-        };
-
-        rules.push(mapping_rule);
-    }
-
-    Ok(MappingData::new(rules))
-}
-
 async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     let file_path = Path::new(&path);
     let file = fs::File::open(file_path)
@@ -96,35 +71,60 @@ async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     serde_json::from_reader(file.try_into_std().unwrap())
 }
 
-#[allow(unused)]
-async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
-    // Read the CSV file into a matrix
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+//async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
+    //let csv_string = fs::read_to_string(csv_path).await?;
 
-    let mapping_data = parse_csv(root.join(csv_path)).await?;
-    let json_value = read_json(root.join(json_path)).await;
+    //let mut rules = Vec::new();
 
-    // TODO handle errors gracefully.
-    if let Err(err) = json_value {
-        panic!("{}", err);
-    }
+    //for row in csv_string.lines().skip(1) {
+        //let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
 
-    let json_value = json_value.unwrap();
+        //assert!(
+            //columns.len() == 3,
+            //"Invalid CSV format (may only contain 3 items per row)"
+        //);
 
-    println!("CSV: {:?}", mapping_data);
+        //let mapping_rule = MappingRule {
+            //src_path: columns[0].to_string(),
+            //target_path: columns[1].to_string(),
+            //transformation: columns[2].to_string(),
+        //};
 
-    if let serde_json::Value::Object(src) = json_value {
-        println!("Source value: {:?}", src);
+        //rules.push(mapping_rule);
+    //}
 
-        let mut target = serde_json::Map::new();
+    //Ok(MappingData::new(rules))
+//}
 
-        //traverse_tree::traverse_source(&src, &mut target, &mapping_data);
+//#[allow(unused)]
+//async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
+    //// Read the CSV file into a matrix
+    //let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
-        println!("Target value: {:?}", target);
-    } else {
-        // Throw some error
-        panic!("Gaat mis");
-    }
+    //let mapping_data = parse_csv(root.join(csv_path)).await?;
+    //let json_value = read_json(root.join(json_path)).await;
 
-    Ok(())
-}
+    //// TODO handle errors gracefully.
+    //if let Err(err) = json_value {
+        //panic!("{}", err);
+    //}
+
+    //let json_value = json_value.unwrap();
+
+    //println!("CSV: {:?}", mapping_data);
+
+    //if let serde_json::Value::Object(src) = json_value {
+        //println!("Source value: {:?}", src);
+
+        //let mut target = serde_json::Map::new();
+
+        ////traverse_tree::traverse_source(&src, &mut target, &mapping_data);
+
+        //println!("Target value: {:?}", target);
+    //} else {
+        //// Throw some error
+        //panic!("Gaat mis");
+    //}
+
+    //Ok(())
+//}
