@@ -1,4 +1,4 @@
-use digital_credential_data_models::common as types_common;
+use digital_credential_data_models::types_common;
 use types_common::{GenPaths, SchemaList, OneOrMany};
 
 #[derive(GenPaths, serde::Deserialize)]
@@ -29,6 +29,7 @@ pub struct School {
 }
 
 #[derive(GenPaths, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Organisation {
     pub company_name: String,
     pub employees: Option<Person>,

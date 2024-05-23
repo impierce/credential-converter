@@ -1,18 +1,14 @@
 use crate::mapping_data::MappingRule;
-use digital_credential_data_models::{common::AddSchemaTypes, elmv3::EuropassEdcCredential};
-use demo_schema::DigitalCredential;
+use digital_credential_data_models::{elmv3::{EuropassEdcCredential, EuropeanDigitalPresentation}, types_common::AddSchemaTypes};
 use env_logger::Env;
 use mapping_data::MappingData;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
-use tokio::{
-    fs,
-    io::{self},
-};
+use tokio::fs;
 
+mod demo_schema;
 mod mapping_data;
 mod traverse_tree;
-mod demo_schema;
 
 pub fn init_env_vars() {
     // load environment variables from .env file
@@ -46,11 +42,13 @@ pub async fn generate_json_paths(path: &str) {
     }
 }
 
-
 pub async fn add_schema_paths() {
     let mut schema_types = Vec::new();
     //DigitalCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", false);
-    EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
+    //EuropassEdcCredential::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
+    EuropeanDigitalPresentation::add_schema_types(&mut schema_types, "UNUSED", "UNUSED", true);
+
+    schema_types.sort();
 
     let mut lines = vec![];
 
@@ -71,59 +69,59 @@ async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
 }
 
 //async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
-    //let csv_string = fs::read_to_string(csv_path).await?;
+//let csv_string = fs::read_to_string(csv_path).await?;
 
-    //let mut rules = Vec::new();
+//let mut rules = Vec::new();
 
-    //for row in csv_string.lines().skip(1) {
-        //let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
+//for row in csv_string.lines().skip(1) {
+//let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
 
-        //assert!(
-            //columns.len() == 3,
-            //"Invalid CSV format (may only contain 3 items per row)"
-        //);
+//assert!(
+//columns.len() == 3,
+//"Invalid CSV format (may only contain 3 items per row)"
+//);
 
-        //let mapping_rule = MappingRule {
-            //src_path: columns[0].to_string(),
-            //target_path: columns[1].to_string(),
-            //transformation: columns[2].to_string(),
-        //};
+//let mapping_rule = MappingRule {
+//src_path: columns[0].to_string(),
+//target_path: columns[1].to_string(),
+//transformation: columns[2].to_string(),
+//};
 
-        //rules.push(mapping_rule);
-    //}
+//rules.push(mapping_rule);
+//}
 
-    //Ok(MappingData::new(rules))
+//Ok(MappingData::new(rules))
 //}
 
 //#[allow(unused)]
 //async fn mapper(json_path: &str, csv_path: &str, _target_format: &str) -> io::Result<()> {
-    //// Read the CSV file into a matrix
-    //let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+//// Read the CSV file into a matrix
+//let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
 
-    //let mapping_data = parse_csv(root.join(csv_path)).await?;
-    //let json_value = read_json(root.join(json_path)).await;
+//let mapping_data = parse_csv(root.join(csv_path)).await?;
+//let json_value = read_json(root.join(json_path)).await;
 
-    //// TODO handle errors gracefully.
-    //if let Err(err) = json_value {
-        //panic!("{}", err);
-    //}
+//// TODO handle errors gracefully.
+//if let Err(err) = json_value {
+//panic!("{}", err);
+//}
 
-    //let json_value = json_value.unwrap();
+//let json_value = json_value.unwrap();
 
-    //println!("CSV: {:?}", mapping_data);
+//println!("CSV: {:?}", mapping_data);
 
-    //if let serde_json::Value::Object(src) = json_value {
-        //println!("Source value: {:?}", src);
+//if let serde_json::Value::Object(src) = json_value {
+//println!("Source value: {:?}", src);
 
-        //let mut target = serde_json::Map::new();
+//let mut target = serde_json::Map::new();
 
-        ////traverse_tree::traverse_source(&src, &mut target, &mapping_data);
+////traverse_tree::traverse_source(&src, &mut target, &mapping_data);
 
-        //println!("Target value: {:?}", target);
-    //} else {
-        //// Throw some error
-        //panic!("Gaat mis");
-    //}
+//println!("Target value: {:?}", target);
+//} else {
+//// Throw some error
+//panic!("Gaat mis");
+//}
 
-    //Ok(())
+//Ok(())
 //}
