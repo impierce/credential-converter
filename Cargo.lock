@@ -402,6 +402,7 @@ dependencies = [
 [[package]]
 name = "digital-credential-data-models"
 version = "0.1.0"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#e89295df3775561d2b314d52408cc8a41b482276"
 dependencies = [
  "types-common",
  "types-elm-v3",
@@ -1037,6 +1038,7 @@ checksum = "90ed8c1e510134f979dbc4f070f87d4313098b704861a105fe34231c70a3901c"
 [[package]]
 name = "macro-derive"
 version = "0.1.0"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#e89295df3775561d2b314d52408cc8a41b482276"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -1755,9 +1757,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "syn"
-version = "2.0.65"
+version = "2.0.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2863d96a84c6439701d7a38f9de935ec562c8832cc55d1dde0f513b52fad106"
+checksum = "c42f3f41a2de00b01c0aaad383c5a45241efc8b2d1eda5661812fda5f3cdcff5"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1999,6 +2001,7 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "types-common"
 version = "0.1.0"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#e89295df3775561d2b314d52408cc8a41b482276"
 dependencies = [
  "chrono",
  "email_address",
@@ -2013,6 +2016,7 @@ dependencies = [
 [[package]]
 name = "types-elm-v3"
 version = "0.1.0"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#e89295df3775561d2b314d52408cc8a41b482276"
 dependencies = [
  "chrono",
  "fluent-uri",
@@ -2026,6 +2030,7 @@ dependencies = [
 [[package]]
 name = "types-ob-v3"
 version = "0.1.0"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#e89295df3775561d2b314d52408cc8a41b482276"
 dependencies = [
  "chrono",
  "regex",
