@@ -1,7 +1,9 @@
+use crossterm::event::KeyCode;
 use ratatui::{
     buffer::Buffer, layout::{Rect, Constraint}, widgets::{Block, Paragraph}
 };
 use ratatui::{prelude::*, widgets::*};
+use serde_json::Value;
 
 use crate::utils::{AppState, PathPrompts, Tabs};
 
@@ -27,11 +29,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
-
-    // Block::new()
-    //     .title_bottom("  Made by Impierce Technologies  ")
-    //     .title_alignment(Alignment::Center)
-    //     .render(area, buf);
 
     let vertical_sections = Layout::horizontal(vec![
         Constraint::Length(50),
@@ -114,18 +111,74 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         horizontal: 1,
     });
 
+    Block::new()
+        .borders(Borders::RIGHT)
+        .render(left_selector, buf);
+
     right_missing_fields = right_missing_fields.inner(&Margin {
         vertical: 1,
         horizontal: 1,
     });
 
-    Block::new()
-        .title("  Selector here  ")
-        .render(left_selector, buf);
+    let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
+    let input_value: Value = serde_json::from_reader(rdr).unwrap();
+    let mut input_fields = vec!((String::new(), String::new()));
+    if let Some(input_value) = input_value.as_object() {
+        for (key, value) in input_value {
+            input_fields.push((key.to_string(), value.to_string()));
+        }
+    }
+
+    let mut table_state = TableState::default().with_selected(Some(state.selected_input_field));
+    let rows: Vec<Row> = input_fields.iter().map(|(qty, ingredient)| {
+        Row::new(vec![qty.as_str(), ingredient.as_str()])
+    }).collect();
+
+    StatefulWidget::render(
+        Table::new(rows, [Constraint::Length(30), Constraint::Length(30)])
+            .block(Block::new())
+            .header(Row::new(vec!["Field", "Value"]).style(Style::new()
+            .add_modifier(Modifier::BOLD)))
+            .highlight_style(Style::new().light_yellow()),
+        left_selector,
+        buf,
+        &mut table_state,
+    );
+
+    // let mut bla = ListState::default().with_selected(Some(state.selected_input_field));
+    // let rows: Vec<ListItem> = input_fields.iter().map(|(key, value)| {
+    //     ListItem::new(Span::styled(
+    //         format!("{}: {}", key, value),
+    //         Style::default().fg(Color::White),
+    //     ))    }).collect();
+
+    // StatefulWidget::render(
+    //     List::new(rows),
+    //         //.block(Block::new())
+    //         //.header(ListItem::new("Field - Value").style(Style::new()
+    //         //.add_modifier(Modifier::BOLD)))
+    //         //.highlight_style(Style::new().light_yellow()),
+    //     left_selector,
+    //     buf,
+    //     &mut bla,
+    // );
+
+    //
+    // let mut selector = List::new(input_fields.iter().map(|(key, value)| {
+    //     ListItem::new(Span::styled(
+    //         format!("{}: {}", key, value),
+    //         Style::default().fg(Color::White),
+    //     ))
+    // })).render(left_selector, buf, state);
+
+    // Block::new()
+    //     .title("  Selector here  ")
+    //     .render(left_selector, buf);
     
     Block::new()
-        .title("  Missing field here  ")
+        .title("  Missing field here  xxx")
         .render(right_missing_fields, buf);
+
 }
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -137,6 +190,20 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 }
 
 fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
+
+    let vertical_sections = Layout::horizontal(vec![
+        Constraint::Length(23),
+        Constraint::Min(0),
+    ]);
+    let [left, right] = vertical_sections.areas(area);
+
+    Block::new()
+    .title("  Impierce Technologies ")
+    .title_alignment(Alignment::Left)
+    .title_style(style::Color::Blue)
+    .bg(Color::Black)
+    .render(left, buf);
+
     let keys = [
         ("←↓↑→", "Navigate"),
         ("Tab", "Next Page"),
@@ -155,5 +222,5 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
     Line::from(spans)
         .centered()
         .style((Color::Black, Color::Black))
-        .render(area, buf);
+        .render(right, buf);
 }
