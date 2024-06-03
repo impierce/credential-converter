@@ -1,4 +1,4 @@
-use crate::mapping_data::MappingRule;
+use crate::mapping_data::{MappingRule, TransformationEnum};
 use digital_credential_data_models::common::AddSchemaTypes;
 use demo_schema::DigitalCredential;
 use env_logger::Env;
@@ -42,7 +42,7 @@ pub async fn generate_json_paths(path: &str) {
         traverse_tree::store_all_json_paths(&obj, "$".to_string(), &mut out);
         let res: Vec<_> = out.into_iter().map(|(k, v)| format!("{k}, {v}")).collect();
 
-        let _ = fs::write(root.join("../../target/json_paths.csv"), res.join("\n")).await;
+        let _ = fs::write(root.join("../target/json_paths.csv"), res.join("\n")).await;
     }
 }
 
@@ -78,7 +78,7 @@ pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
         let mapping_rule = MappingRule {
             src_path: columns[0].to_string(),
             target_path: columns[1].to_string(),
-            transformation: columns[2].to_string(),
+            transformation: vec![TransformationEnum::DIRECT] // tmp solution //columns[2].to_string(),
         };
 
         rules.push(mapping_rule);
