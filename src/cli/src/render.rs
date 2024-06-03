@@ -28,16 +28,16 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .render(area, buf);
 
     let vertical_sections = Layout::horizontal(vec![
-        Constraint::Length(40),
+        Constraint::Length(50),
         Constraint::Min(0),
     ]);
     let [left_description, right_prompts] = vertical_sections.areas(area);
 
-    let text = "\n
+    let text = format!("\n
     This tool is made for converting credentials between the OpenBadges and the ELM format.
-    It takes a json file as input and after the mapping it returns a new json file as output.
-    Unmapped fields can be mapped manually and unused data will be stored in a seperate file.
-    All manual mappings can be saved to a custom mapping file for future use.";
+    \nIt takes a json file as input and outputs the new, mapped json file. Unmapped fields can be mapped manually. Unused data will be stored in a seperate file. Manual mappings can be saved to a custom mapping file for future use.
+    \nFor absolute paths start with '/', for relative paths the current directory is: {}",
+    std::env::current_dir().unwrap().display());
 
     Paragraph::new(text)
         .wrap(Wrap { trim: true })
@@ -89,10 +89,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .block(lost_data_prompt)
         .render(lost_data_path, buf);
 
-    // input_prompt.render(input_path, buf);
-    // output_prompt.render(output_path, buf);
-    // lost_data_prompt.render(lost_data_path, buf);
-
 }
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -101,9 +97,32 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL)
         .render(area, buf);
+
+    let vertical_sections = Layout::horizontal(vec![
+        Constraint::Percentage(50),
+        Constraint::Min(0),
+    ]);
+    let [ mut left_selector, mut right_missing_fields] = vertical_sections.areas(area);
+
+    left_selector = left_selector.inner(&Margin {
+        vertical: 1,
+        horizontal: 1,
+    });
+
+    right_missing_fields = right_missing_fields.inner(&Margin {
+        vertical: 1,
+        horizontal: 1,
+    });
+
+    Block::new()
+        .title("  Selector here  ")
+        .render(left_selector, buf);
+    
+    Block::new()
+        .title("  Missing field here  ")
+        .render(right_missing_fields, buf);
 }
 
-//
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
         .title("  Lost Data  ")
