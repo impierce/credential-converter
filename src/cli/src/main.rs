@@ -1,6 +1,7 @@
 pub mod utils;
 pub mod render;
 pub mod events;
+pub mod logging;
 
 use crate::render::*;
 use crate::events::*;
@@ -12,11 +13,15 @@ use crossterm::{
     },
     ExecutableCommand,
 };
+use logging::initialize_logging;
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use utils::AppState;
 use std::io::{stdout, Result};
 
 fn main() -> Result<()> {
+    initialize_logging().expect("Unexpected error while initializing logging");
+
+    trace_dbg!("Starting the application");
 
     // Initialize the alternate terminal screen, its input and the backend for it.
     stdout().execute(EnterAlternateScreen)?;

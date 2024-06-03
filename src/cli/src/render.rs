@@ -132,6 +132,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         input_fields.push((key, value.to_string()));
     }
 
+    input_fields.sort();
+
+
     // if let Some(input_value) = input_value.as_object() {
     //     for (key, value) in input_value {
     //         input_fields.push((key.to_string(), value.to_string()));
