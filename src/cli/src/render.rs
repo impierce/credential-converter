@@ -6,11 +6,18 @@ use ratatui::{prelude::*, widgets::*};
 use crate::utils::{AppState, PathPrompts, Tabs};
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
+    let vertical_sections = Layout::vertical(vec![
+        Constraint::Min(0),
+        Constraint::Length(1),
+    ]);
+    let [top, bottom_area] = vertical_sections.areas(area);
+
     match state.tab {
-        Tabs::InputPromptsP1 => render_description_input_p1(area, frame.buffer_mut(), state),
-        Tabs::ManualMappingP2 => render_manual_mapping_p2(area, frame.buffer_mut(), state),
-        Tabs::UnusedDataP3 => render_lost_data_p3(area, frame.buffer_mut(), state),
+        Tabs::InputPromptsP1 => render_description_input_p1(top, frame.buffer_mut(), state),
+        Tabs::ManualMappingP2 => render_manual_mapping_p2(top, frame.buffer_mut(), state),
+        Tabs::UnusedDataP3 => render_lost_data_p3(top, frame.buffer_mut(), state),
     }
+    render_bottom_bar(bottom_area, frame.buffer_mut());
 }
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -21,11 +28,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .borders(Borders::TOP)
         .render(area, buf);
 
-    Block::new()
-        .title_bottom("  Made by Impierce Technologies  ")
-        .title_alignment(Alignment::Center)
-        // .borders(Borders::BOTTOM) // Decisions on looks might be nice to run by Soula for a quick look before delivery.
-        .render(area, buf);
+    // Block::new()
+    //     .title_bottom("  Made by Impierce Technologies  ")
+    //     .title_alignment(Alignment::Center)
+    //     .render(area, buf);
 
     let vertical_sections = Layout::horizontal(vec![
         Constraint::Length(50),
@@ -74,7 +80,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         PathPrompts::Input => input_prompt = input_prompt.style(active_style),
         PathPrompts::Output => output_prompt = output_prompt.style(active_style),
         PathPrompts::UnusedData => lost_data_prompt =lost_data_prompt.style(active_style),
-
     };
 
     Paragraph::new(state.input_path.as_str())
@@ -95,7 +100,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     Block::new()
         .title("  Manual Mapping  ")
         .title_alignment(Alignment::Center)
-        .borders(Borders::ALL)
+        .borders(Borders::TOP)
         .render(area, buf);
 
     let vertical_sections = Layout::horizontal(vec![
@@ -127,6 +132,28 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
         .title("  Lost Data  ")
         .title_alignment(Alignment::Center)
-        .borders(Borders::ALL)
+        .borders(Borders::TOP)
+        .render(area, buf);
+}
+
+fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
+    let keys = [
+        ("←↓↑→", "Navigate"),
+        ("Tab", "Next Page"),
+        ("F2", "Prev Page"),
+        ("Enter", "Save"),
+        ("Esc", "Quit"),
+    ];
+    let spans: Vec<Span> = keys
+        .iter()
+        .flat_map(|(key, desc)| {
+            let key = Span::styled(format!(" {key} "), Style::default().on_black().add_modifier(Modifier::BOLD));
+            let desc = Span::styled(format!(" {desc} "), Style::default().on_dark_gray());
+            [key, desc]
+        })
+        .collect();
+    Line::from(spans)
+        .centered()
+        .style((Color::Black, Color::Black))
         .render(area, buf);
 }
