@@ -24,6 +24,7 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
     let mut state = AppState {
+        selected_input_field: 1,
         ..Default::default()
     };
     
@@ -41,5 +42,3 @@ fn main() -> Result<()> {
     disable_raw_mode()?;
     Ok(())
 }
-
-

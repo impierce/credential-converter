@@ -71,6 +71,15 @@ fn p2_handler(key: event::KeyEvent, state: &mut AppState) -> Result<bool, std::i
         Esc => return Ok(true),
         Tab => { state.tab = state.tab.next(); },
         F(2) => { state.tab = state.tab.prev(); },
+        Left => {},
+        Right => {},
+        Up => { if state.selected_input_field > 1 {
+            state.selected_input_field -= 1; 
+        }},
+        Down => { if state.selected_input_field <= state.amount_input_fields  {
+            state.selected_input_field += 1; 
+        }},
+        Enter => {},
         _ => {}
     }
 

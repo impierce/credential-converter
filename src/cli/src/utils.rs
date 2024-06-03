@@ -7,7 +7,8 @@ pub struct AppState {
     pub unused_data_path: String,
     pub tab: Tabs,
     pub path_prompts: PathPrompts,
-    pub selected_input_field: usize
+    pub selected_input_field: usize,
+    pub amount_input_fields: usize
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]

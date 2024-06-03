@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crossterm::event::KeyCode;
 use ratatui::{
     buffer::Buffer, layout::{Rect, Constraint}, widgets::{Block, Paragraph}
@@ -122,16 +124,23 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
     let input_value: Value = serde_json::from_reader(rdr).unwrap();
+    let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
     let mut input_fields = vec!((String::new(), String::new()));
-    if let Some(input_value) = input_value.as_object() {
-        for (key, value) in input_value {
-            input_fields.push((key.to_string(), value.to_string()));
-        }
+    state.amount_input_fields = input_fields.len();
+
+    for (key, value) in leaf_nodes {
+        input_fields.push((key, value.to_string()));
     }
 
+    // if let Some(input_value) = input_value.as_object() {
+    //     for (key, value) in input_value {
+    //         input_fields.push((key.to_string(), value.to_string()));
+    //     }
+    // }
+
     let mut table_state = TableState::default().with_selected(Some(state.selected_input_field));
-    let rows: Vec<Row> = input_fields.iter().map(|(qty, ingredient)| {
-        Row::new(vec![qty.as_str(), ingredient.as_str()])
+    let rows: Vec<Row> = input_fields.iter().map(|(key, value)| {
+        Row::new(vec![key.as_str(), value.as_str()])
     }).collect();
 
     StatefulWidget::render(
@@ -223,4 +232,53 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
         .centered()
         .style((Color::Black, Color::Black))
         .render(right, buf);
+}
+
+fn extract_leaf_nodes(json_object: &Value, path: String, result: &mut HashMap<String, Value>) {
+    match json_object {
+        Value::Object(map) => {
+            for (key, value) in map {
+                let new_path = if path.is_empty() {
+                    key.clone()
+                } else {
+                    format!("{}/{}", path, key)
+                };
+                extract_leaf_nodes(value, new_path, result);
+            }
+        }
+        _ => {
+            result.insert(path, json_object.clone());
+        }
+    }
+}
+
+fn get_leaf_nodes(json_object: Value) -> HashMap<String, Value> {
+    let mut result = HashMap::new();
+    extract_leaf_nodes(&json_object, String::new(), &mut result);
+    result
+        .into_iter()
+        .map(|(key, value)| (format!("/{}", key), value))
+        .collect()
+}
+
+#[test]
+fn test_function() {
+    // Example usage
+    let json_data = r#"
+    {
+        "a": 1,
+        "b": {
+            "c": 2,
+            "d": {
+                "e": 3
+            }
+        },
+        "f": [4, 5, 6]
+    }"#;
+
+    let parsed_json: Value = serde_json::from_str(json_data).expect("Invalid JSON");
+    let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(parsed_json);
+    for (key, value) in &leaf_nodes {
+        println!("{}: {}", key, value);
+    }
 }

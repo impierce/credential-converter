@@ -14,3 +14,9 @@ ratatui = { version = "0.26.0", features = ["all-widgets"]}
 strum = "0.26.2"
 num-traits = "0.2.19"
 num-derive = "0.4.2"
+tracing-error = "0.2.0"
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+directories = "5.0.1"
+lazy_static = "1.4.0"
+color-eyre = "0.6.3"
