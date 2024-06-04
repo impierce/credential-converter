@@ -20,3 +20,9 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 directories = "5.0.1"
 lazy_static = "1.4.0"
 color-eyre = "0.6.3"
+
+regex = "1.10"
+rust-i18n = "3.0"
+config = "0.14"
+serde_path_to_error = "0.1"
+jsonpath-rust = "0.5"

@@ -1,6 +1,9 @@
 pub mod events;
+pub mod jsonpointer;
 pub mod logging;
 pub mod render;
+pub mod repository;
+pub mod transformations;
 pub mod utils;
 
 use crate::events::*;
