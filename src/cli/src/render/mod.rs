@@ -15,6 +15,7 @@ use ratatui::prelude::*;
 use crate::utils::AppState;
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
+    // let state.frame = frame;
     let vertical_sections = Layout::vertical(vec![Constraint::Min(0), Constraint::Length(1)]);
     let [top, bottom_area] = vertical_sections.areas(area);
 
