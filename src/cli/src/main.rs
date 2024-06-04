@@ -1,7 +1,7 @@
 pub mod events;
+pub mod logging;
 pub mod render;
 pub mod utils;
-pub mod logging;
 
 use crate::events::*;
 use crate::render::*;

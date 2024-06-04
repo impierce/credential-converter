@@ -21,7 +21,7 @@ impl JsonPathStr {
 pub struct MappingRule {
     pub src_path: String,
     pub target_path: String,
-    pub transformation: Vec<TransformationEnum>
+    pub transformation: Vec<TransformationEnum>,
 }
 
 #[derive(Debug, Clone)]
@@ -33,7 +33,7 @@ pub enum TransformationEnum {
     TONUMBER,
     REGEX,
     MANYTOONE,
-    ONETOMANY
+    ONETOMANY,
 }
 
 #[derive(Debug)]

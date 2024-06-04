@@ -75,8 +75,8 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         PathPrompts::UnusedData => lost_data_prompt = lost_data_prompt.style(active_style),
     };
 
-    let rdr = std::fs::File::open(state.input_path.clone()).unwrap(); ///
-
+    let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
+    ///
     Paragraph::new(state.input_path.as_str())
         .block(input_prompt)
         .render(input_path, buf);
@@ -97,8 +97,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .borders(Borders::TOP)
         .render(area, buf);
 
-    let vertical_sections =
-        Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]);
+    let vertical_sections = Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]);
     let [mut left_selector, mut right_missing_fields] = vertical_sections.areas(area);
 
     left_selector = left_selector.inner(&Margin {
@@ -106,9 +105,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         horizontal: 1,
     });
 
-    Block::new()
-        .borders(Borders::RIGHT)
-        .render(left_selector, buf);
+    Block::new().borders(Borders::RIGHT).render(left_selector, buf);
 
     right_missing_fields = right_missing_fields.inner(&Margin {
         vertical: 1,
@@ -127,7 +124,6 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     input_fields.sort();
     state.amount_input_fields = input_fields.len() - 2;
 
-
     // if let Some(input_value) = input_value.as_object() {
     //     for (key, value) in input_value {
     //         input_fields.push((key.to_string(), value.to_string()));
@@ -143,9 +139,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Length(30), Constraint::Length(30)])
             .block(Block::new())
-            .header(
-                Row::new(vec!["Field", "Value"]).style(Style::new().add_modifier(Modifier::BOLD)),
-            )
+            .header(Row::new(vec!["Field", "Value"]).style(Style::new().add_modifier(Modifier::BOLD)))
             .highlight_style(Style::new().light_yellow()),
         left_selector,
         buf,

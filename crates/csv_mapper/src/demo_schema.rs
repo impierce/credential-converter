@@ -1,5 +1,5 @@
 use digital_credential_data_models::common as types_common;
-use types_common::{GenPaths, SchemaList, OneOrMany};
+use types_common::{GenPaths, OneOrMany, SchemaList};
 
 #[derive(GenPaths, serde::Deserialize)]
 pub struct LatLng {
@@ -45,7 +45,7 @@ pub struct Agent {
 pub enum AgentOrPersonOrOrganization {
     Agent(Agent),
     Person(Person),
-    Organisation(Organisation)
+    Organisation(Organisation),
 }
 
 #[derive(GenPaths, serde::Deserialize)]
@@ -66,4 +66,3 @@ pub struct DigitalCredential {
     pub score: usize,
     pub issuer: AgentOrPersonOrOrganization,
 }
-

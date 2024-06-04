@@ -1,6 +1,6 @@
 use crate::mapping_data::{MappingRule, TransformationEnum};
-use digital_credential_data_models::common::AddSchemaTypes;
 use demo_schema::DigitalCredential;
+use digital_credential_data_models::common::AddSchemaTypes;
 use env_logger::Env;
 pub use mapping_data::MappingData;
 use serde_json::Value;
@@ -10,9 +10,9 @@ use tokio::{
     io::{self},
 };
 
+pub mod demo_schema;
 pub mod mapping_data;
 pub mod traverse_tree;
-pub mod demo_schema;
 
 pub fn init_env_vars() {
     // load environment variables from .env file
@@ -63,9 +63,9 @@ pub async fn add_schema_paths() {
 
 pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
     let csv_string = fs::read_to_string(csv_path).await?;
-    
+
     let mut rules = Vec::new();
-    
+
     // commenting out .skip(1) for testing
     for row in csv_string.lines() {
         let columns: Vec<_> = row.split(',').map(|s| s.trim()).collect(); // Split by commas and trim whitespace
@@ -78,7 +78,7 @@ pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
         let mapping_rule = MappingRule {
             src_path: columns[0].to_string(),
             target_path: columns[1].to_string(),
-            transformation: vec![TransformationEnum::DIRECT] // tmp solution //columns[2].to_string(),
+            transformation: vec![TransformationEnum::DIRECT], // tmp solution //columns[2].to_string(),
         };
 
         rules.push(mapping_rule);
@@ -89,9 +89,7 @@ pub async fn parse_csv(csv_path: PathBuf) -> io::Result<MappingData> {
 
 async fn read_json(path: PathBuf) -> serde_json::Result<serde_json::Value> {
     let file_path = Path::new(&path);
-    let file = fs::File::open(file_path)
-        .await
-        .expect("file does not exist");
+    let file = fs::File::open(file_path).await.expect("file does not exist");
     serde_json::from_reader(file.try_into_std().unwrap())
 }
 

@@ -26,9 +26,5 @@ ratatui = "0.26.3"
 crossterm = "0.27.0"
 
 [[bin]]
-name = "cli"
-path = "src/cli.rs"
-
-[[bin]]
 name = "mapper"
 path = "src/mapper.rs"

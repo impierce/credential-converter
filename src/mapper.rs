@@ -1,5 +1,5 @@
-use tokio::io;
 use csv_mapper::*;
+use tokio::io;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {

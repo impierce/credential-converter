@@ -9,11 +9,7 @@ use serde_json::{Map, Value};
 
 pub type JsonPathKV = Vec<(String, String)>;
 
-pub fn store_all_json_paths(
-    src_obj: &Map<String, Value>,
-    json_path: String,
-    out: &mut JsonPathKV,
-) {
+pub fn store_all_json_paths(src_obj: &Map<String, Value>, json_path: String, out: &mut JsonPathKV) {
     fn traverse_array(arr: &Vec<Value>, json_path: String, out: &mut JsonPathKV) {
         for (i, value) in arr.iter().enumerate() {
             let new_path = format!("{json_path}[:{i}]");
@@ -51,11 +47,7 @@ pub fn store_all_json_paths(
     }
 }
 
-pub fn traverse_source(
-    src_obj: Value,
-    tgt_obj: &mut Map<String, Value>,
-    mapping_data: &MappingData,
-) {
+pub fn traverse_source(src_obj: Value, tgt_obj: &mut Map<String, Value>, mapping_data: &MappingData) {
     let box_val = Box::new(src_obj);
 
     for rule in mapping_data.iter() {
@@ -64,23 +56,15 @@ pub fn traverse_source(
 
         ////.find()
         //if let Ok(src_val) = pf.find() {
-            //insert_into_target(tgt_obj, src_val, rule, 0);
+        //insert_into_target(tgt_obj, src_val, rule, 0);
         //}
     }
 }
 
 fn insert_type(obj: &mut Map<String, Value>, type_str: &str) {
-    obj.insert(
-        "type".to_string(),
-        serde_json::to_value(type_str.to_string()).unwrap(),
-    );
+    obj.insert("type".to_string(), serde_json::to_value(type_str.to_string()).unwrap());
 }
 
-fn insert_into_target(
-    tgt_obj: &mut Map<String, Value>,
-    value: Value,
-    rule: &MappingRule,
-    current_segment: usize,
-) {
+fn insert_into_target(tgt_obj: &mut Map<String, Value>, value: Value, rule: &MappingRule, current_segment: usize) {
     //
 }
