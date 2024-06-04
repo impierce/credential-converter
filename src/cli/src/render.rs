@@ -119,11 +119,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let input_value: Value = serde_json::from_reader(rdr).unwrap();
     let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
     let mut input_fields = vec![(String::new(), String::new())];
-    state.amount_input_fields = input_fields.len();
 
     for (key, value) in leaf_nodes {
         input_fields.push((key, value.to_string()));
     }
+
+    input_fields.sort();
+    state.amount_input_fields = input_fields.len() - 2;
+
 
     // if let Some(input_value) = input_value.as_object() {
     //     for (key, value) in input_value {
