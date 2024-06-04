@@ -8,7 +8,7 @@ pub struct AppState {
     pub tab: Tabs,
     pub path_prompts: PathPrompts,
     pub selected_input_field: usize,
-    pub amount_input_fields: usize
+    pub amount_input_fields: usize,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -28,7 +28,6 @@ pub enum Tabs {
 }
 
 impl Tabs {
-
     pub fn next(self) -> Self {
         let current_index = self as usize;
         let next_index = current_index.saturating_add(1);

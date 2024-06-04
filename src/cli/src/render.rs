@@ -2,7 +2,9 @@ use std::collections::HashMap;
 
 use crossterm::event::KeyCode;
 use ratatui::{
-    buffer::Buffer, layout::{Rect, Constraint}, widgets::{Block, Paragraph}
+    buffer::Buffer,
+    layout::{Constraint, Rect},
+    widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
 use serde_json::Value;
@@ -10,10 +12,7 @@ use serde_json::Value;
 use crate::utils::{AppState, PathPrompts, Tabs};
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
-    let vertical_sections = Layout::vertical(vec![
-        Constraint::Min(0),
-        Constraint::Length(1),
-    ]);
+    let vertical_sections = Layout::vertical(vec![Constraint::Min(0), Constraint::Length(1)]);
     let [top, bottom_area] = vertical_sections.areas(area);
 
     match state.tab {
@@ -25,17 +24,13 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
 }
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    
     Block::new()
         .title("  OB-ELM Mapper  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
 
-    let vertical_sections = Layout::horizontal(vec![
-        Constraint::Length(50),
-        Constraint::Min(0),
-    ]);
+    let vertical_sections = Layout::horizontal(vec![Constraint::Length(50), Constraint::Min(0)]);
     let [left_description, right_prompts] = vertical_sections.areas(area);
 
     let text = format!("\n
@@ -58,7 +53,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         Constraint::Length(4),
     ]);
     let [input_path, output_path, lost_data_path] = input_prompts.areas(prompts_area);
-    
+
     let mut input_prompt = Block::new()
         .title("  Input Path  ")
         .title_alignment(Alignment::Center)
@@ -72,14 +67,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
 
-    let active_style =
-        Style::default().fg(Color::LightYellow);
+    let active_style = Style::default().fg(Color::LightYellow);
 
     match state.path_prompts {
         PathPrompts::Input => input_prompt = input_prompt.style(active_style),
         PathPrompts::Output => output_prompt = output_prompt.style(active_style),
-        PathPrompts::UnusedData => lost_data_prompt =lost_data_prompt.style(active_style),
+        PathPrompts::UnusedData => lost_data_prompt = lost_data_prompt.style(active_style),
     };
+
+    let rdr = std::fs::File::open(state.input_path.clone()).unwrap(); ///
 
     Paragraph::new(state.input_path.as_str())
         .block(input_prompt)
@@ -92,7 +88,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     Paragraph::new(state.unused_data_path.as_str())
         .block(lost_data_prompt)
         .render(lost_data_path, buf);
-
 }
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -102,11 +97,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .borders(Borders::TOP)
         .render(area, buf);
 
-    let vertical_sections = Layout::horizontal(vec![
-        Constraint::Percentage(50),
-        Constraint::Min(0),
-    ]);
-    let [ mut left_selector, mut right_missing_fields] = vertical_sections.areas(area);
+    let vertical_sections =
+        Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]);
+    let [mut left_selector, mut right_missing_fields] = vertical_sections.areas(area);
 
     left_selector = left_selector.inner(&Margin {
         vertical: 1,
@@ -125,7 +118,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
     let input_value: Value = serde_json::from_reader(rdr).unwrap();
     let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
-    let mut input_fields = vec!((String::new(), String::new()));
+    let mut input_fields = vec![(String::new(), String::new())];
     state.amount_input_fields = input_fields.len();
 
     for (key, value) in leaf_nodes {
@@ -139,15 +132,17 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     // }
 
     let mut table_state = TableState::default().with_selected(Some(state.selected_input_field));
-    let rows: Vec<Row> = input_fields.iter().map(|(key, value)| {
-        Row::new(vec![key.as_str(), value.as_str()])
-    }).collect();
+    let rows: Vec<Row> = input_fields
+        .iter()
+        .map(|(key, value)| Row::new(vec![key.as_str(), value.as_str()]))
+        .collect();
 
     StatefulWidget::render(
         Table::new(rows, [Constraint::Length(30), Constraint::Length(30)])
             .block(Block::new())
-            .header(Row::new(vec!["Field", "Value"]).style(Style::new()
-            .add_modifier(Modifier::BOLD)))
+            .header(
+                Row::new(vec!["Field", "Value"]).style(Style::new().add_modifier(Modifier::BOLD)),
+            )
             .highlight_style(Style::new().light_yellow()),
         left_selector,
         buf,
@@ -172,22 +167,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     //     &mut bla,
     // );
 
-    //
-    // let mut selector = List::new(input_fields.iter().map(|(key, value)| {
-    //     ListItem::new(Span::styled(
-    //         format!("{}: {}", key, value),
-    //         Style::default().fg(Color::White),
-    //     ))
-    // })).render(left_selector, buf, state);
-
-    // Block::new()
-    //     .title("  Selector here  ")
-    //     .render(left_selector, buf);
-    
     Block::new()
         .title("  Missing field here  xxx")
         .render(right_missing_fields, buf);
-
 }
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -199,19 +181,15 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 }
 
 fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
-
-    let vertical_sections = Layout::horizontal(vec![
-        Constraint::Length(23),
-        Constraint::Min(0),
-    ]);
+    let vertical_sections = Layout::horizontal(vec![Constraint::Length(23), Constraint::Min(0)]);
     let [left, right] = vertical_sections.areas(area);
 
     Block::new()
-    .title("  Impierce Technologies ")
-    .title_alignment(Alignment::Left)
-    .title_style(style::Color::Blue)
-    .bg(Color::Black)
-    .render(left, buf);
+        .title("  Impierce Technologies ")
+        .title_alignment(Alignment::Left)
+        .title_style(style::Color::Blue)
+        .bg(Color::Black)
+        .render(left, buf);
 
     let keys = [
         ("←↓↑→", "Navigate"),
@@ -223,7 +201,10 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
     let spans: Vec<Span> = keys
         .iter()
         .flat_map(|(key, desc)| {
-            let key = Span::styled(format!(" {key} "), Style::default().on_black().add_modifier(Modifier::BOLD));
+            let key = Span::styled(
+                format!(" {key} "),
+                Style::default().on_black().add_modifier(Modifier::BOLD),
+            );
             let desc = Span::styled(format!(" {desc} "), Style::default().on_dark_gray());
             [key, desc]
         })
