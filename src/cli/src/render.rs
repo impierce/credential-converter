@@ -63,7 +63,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut lost_data_prompt = Block::new()
-        .title("  Unused Data Path  ") // todo rename lost data
+        .title("  Unused Data Path  ") // todo: automatically infer unused data path from output_path
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
 
@@ -75,7 +75,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         PathPrompts::UnusedData => lost_data_prompt = lost_data_prompt.style(active_style),
     };
 
-    let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
+    // let rdr = std::fs::File::open(state.input_path.clone()).unwrap();
     ///
     Paragraph::new(state.input_path.as_str())
         .block(input_prompt)
