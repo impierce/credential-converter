@@ -2,77 +2,80 @@ use crate::repository::{construct_leaf_node, merge, Repository};
 use crate::trace_dbg;
 use crate::transformations::Transformation;
 use crate::utils::{get_leaf_nodes, AppState, Mapping, P1Prompts, Tabs};
-use crossterm::event::{self, KeyCode::*};
+use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 use regex::Regex;
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 
-pub fn p1_handler(key: event::KeyEvent, state: &mut AppState) -> Result<bool, std::io::Error> {
-    match key.code {
-        Esc => return Ok(true),
-        Tab => {
-            let path = Path::new(&state.input_path);
-            if state.tab == Tabs::InputPromptsP1 && path.exists() && path.is_file() {
-                state.tab.next();
-                preload_p2(state);
-            } else {
-                state.tab.next();
+pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {
+    if let event::Event::Key(key) = event {
+        if key.kind == KeyEventKind::Press {
+            match key.code {
+                Esc => return Ok(true),
+                Tab => {
+                    let path = Path::new(&state.input_path);
+                    if state.tab == Tabs::InputPromptsP1 && path.exists() && path.is_file() {
+                        state.tab.next();
+                        preload_p2(state);
+                    } else {
+                        state.tab.next();
+                    }
+                }
+                F(2) => {
+                    state.tab.prev();
+                }
+                Left => {
+                    if state.p1_prompts == P1Prompts::Mapping {
+                        state.mapping.prev();
+                        let strr = format!("{:?}", state.mapping);
+                        trace_dbg!(strr);
+                    }
+                }
+                Right => {
+                    if state.p1_prompts == P1Prompts::Mapping {
+                        state.mapping.next();
+                        state.mapping = crate::utils::Mapping::ELMToOBv3;
+                        let strr = format!("{:?}", state.mapping);
+                        trace_dbg!(strr);
+                    }
+                }
+                Up => {
+                    state.p1_prompts.prev();
+                }
+                Down => {
+                    state.p1_prompts.next();
+                }
+                Enter => {
+                    let path = Path::new(&state.input_path);
+                    if state.p1_prompts == P1Prompts::Mapping && path.exists() && path.is_file() {
+                        state.tab.next();
+                        preload_p2(state);
+                    }
+                    state.p1_prompts.next();
+                }
+                Backspace => match state.p1_prompts {
+                    P1Prompts::Input => {
+                        state.input_path.pop();
+                    }
+                    P1Prompts::Output => {
+                        state.output_path.pop();
+                    }
+                    _ => {}
+                },
+                Char(value) => match state.p1_prompts {
+                    P1Prompts::Input => {
+                        state.input_path.push(value);
+                    }
+                    P1Prompts::Output => {
+                        state.output_path.push(value);
+                    }
+                    _ => {}
+                },
+                _ => {}
             }
         }
-        F(2) => {
-            state.tab.prev();
-        }
-        Left => {
-            if state.p1_prompts == P1Prompts::Mapping {
-                state.mapping.prev();
-                let strr = format!("{:?}", state.mapping);
-                trace_dbg!(strr);
-            }
-        }
-        Right => {
-            if state.p1_prompts == P1Prompts::Mapping {
-                state.mapping.next();
-                state.mapping = crate::utils::Mapping::ELMToOBv3;
-                let strr = format!("{:?}", state.mapping);
-                trace_dbg!(strr);
-            }
-        }
-        Up => {
-            state.p1_prompts.prev();
-        }
-        Down => {
-            state.p1_prompts.next();
-        }
-        Enter => {
-            let path = Path::new(&state.input_path);
-            if state.p1_prompts == P1Prompts::Mapping && path.exists() && path.is_file() {
-                state.tab.next();
-                preload_p2(state);
-            }
-            state.p1_prompts.next();
-        }
-        Backspace => match state.p1_prompts {
-            P1Prompts::Input => {
-                state.input_path.pop();
-            }
-            P1Prompts::Output => {
-                state.output_path.pop();
-            }
-            _ => {}
-        },
-        Char(value) => match state.p1_prompts {
-            P1Prompts::Input => {
-                state.input_path.push(value);
-            }
-            P1Prompts::Output => {
-                state.output_path.push(value);
-            }
-            _ => {}
-        },
-        _ => {}
     }
-
     Ok(false)
 }
 

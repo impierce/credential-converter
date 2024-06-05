@@ -31,7 +31,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         vertical: 0,
         horizontal: 1,
     });
-
+    state.selector_area_p2 = left_selector;
 
     let path = Path::new(&state.input_path);
     if path.exists() && path.is_file() {

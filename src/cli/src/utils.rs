@@ -31,7 +31,11 @@ pub struct AppState {
 
     pub repository: Repository,
 
-    pub hover_scroll: bool,
+    // Scroll functionality fields
+    pub selector_area_p2: Rect,
+    pub hover_selector_p2: bool,
+    // added Area to the appstate because it was problematic to pass it to the event_handler,
+    // since the different closures in the main don't combine so easily
     pub area: Rect,
 }
 
@@ -60,7 +64,7 @@ pub enum Transformations {
     Merge,
     OneToMany,
     ManyToOne,
-    Regex
+    Regex,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
