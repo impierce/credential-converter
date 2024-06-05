@@ -1,5 +1,4 @@
 use std::path::Path;
-
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -81,6 +80,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     // Paragraph::new(state.unused_data_path.as_str())
     //     .block(mapping_prompt)
     //     .render(lost_data_path, buf);
+    // Need to add this option again at the end
 
     mapping_prompt.render(mapping, buf);
     let mapping_prompt_inner = mapping.inner(&Margin {
@@ -93,5 +93,5 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .select(state.mapping as usize)
         .divider("")
         .render(mapping_prompt_inner, buf,
-        );
+    );
 }

@@ -2,7 +2,6 @@ use crate::utils::AppState;
 use crossterm::event::{self, KeyCode::*};
 
 pub fn p2_handler(key: event::KeyEvent, state: &mut AppState) -> Result<bool, std::io::Error> {
-    
     match key.code {
         Esc => return Ok(true),
         Tab => {
@@ -11,11 +10,11 @@ pub fn p2_handler(key: event::KeyEvent, state: &mut AppState) -> Result<bool, st
         F(2) => {
             state.tab.prev();
         }
-        Left => {}
-        Right => {}
+        Left => {state.transformation.prev();}
+        Right => {state.transformation.next();}
         Up => {
             if state.selected_input_field > 1 {
-                state.selected_input_field -= 1; // todo make saturated_sub
+                state.selected_input_field -= 1;
             }
         }
         Down => {

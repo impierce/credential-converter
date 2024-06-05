@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
-use crate::repository::Repository;
+use crate::{repository::Repository, transformations::Transformation};
+use ratatui::layout::Rect;
 use serde_json::Value;
 use strum::FromRepr;
 
@@ -13,6 +14,7 @@ pub struct AppState {
     pub p1_prompts: P1Prompts,
     pub mapping: Mapping,
     pub map_input_field: bool,
+    pub transformation: Transformations,
     // Paths
     pub input_path: String,
     pub mapping_path: String,
@@ -28,6 +30,9 @@ pub struct AppState {
     pub missing_data_field: Option<String>,
 
     pub repository: Repository,
+
+    pub hover_scroll: bool,
+    pub area: Rect,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -43,6 +48,19 @@ pub enum Mapping {
     #[default]
     OBv3ToELM = 0,
     ELMToOBv3,
+}
+
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+pub enum Transformations {
+    #[default]
+    Copy = 0,
+    LowerCase,
+    UpperCase,
+    Split,
+    Merge,
+    OneToMany,
+    ManyToOne,
+    Regex
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -75,6 +93,7 @@ macro_rules! next_prev {
 next_prev!(Mapping);
 next_prev!(Tabs);
 next_prev!(P1Prompts);
+next_prev!(Transformations);
 
 //////////      HELPERS     //////////
 

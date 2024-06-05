@@ -9,8 +9,6 @@ use ratatui::{prelude::*, widgets::*};
 
 use crate::utils::AppState;
 
-use super::render_bottom_bar;
-
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
         .title("  Manual Mapping  ")
@@ -99,19 +97,13 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     Paragraph::new("missing data field: value")
         .block(Block::default())
         .wrap(Wrap { trim: false })
+        //.scroll((8, 8))//
         .render(right.inner(&Margin{ horizontal: 1, vertical: 1}), buf);
-    render_bottom_bar(bottom, buf);
-}
 
-fn render_scrollbar(position: usize, area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let mut state = ScrollbarState::default()
-        .content_length(state.amount_input_fields)
-        .viewport_content_length(6)
-        .position(position);
-    Scrollbar::new(ScrollbarOrientation::VerticalRight)
-        .begin_symbol(None)
-        .end_symbol(None)
-        .track_symbol(None)
-        .thumb_symbol("▐")
-        .render(area, buf, &mut state);
+    Tabs::new(vec!["Copy","LowerCase", "UpperCase", "Split", "Merge", "OneToMany", "ManyToOne", "Regex"])
+        .style(Style::default().fg(Color::White))
+        .highlight_style(Color::Yellow)
+        .select(state.transformation as usize)
+        .divider("")
+        .render(bottom, buf,);
 }

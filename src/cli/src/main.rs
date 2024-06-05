@@ -33,9 +33,11 @@ fn main() -> Result<()> {
         ..Default::default()
     };
 
+
     loop {
         terminal.draw(|frame| {
             let area = frame.size();
+            state.area = area;
             render_page(frame, area, &mut state);
         })?;
         if events_handler(&mut state)? {
