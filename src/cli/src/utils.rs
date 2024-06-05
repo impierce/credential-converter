@@ -34,6 +34,10 @@ pub struct AppState {
     // Scroll functionality fields
     pub selector_area_p2: Rect,
     pub hover_selector_p2: bool,
+    pub popup_area_p2: Rect,
+    pub hover_popup_p2: bool,
+    pub value_lines_amount: u16,
+    pub offset_value: u16,
     // added Area to the appstate because it was problematic to pass it to the event_handler,
     // since the different closures in the main don't combine so easily
     pub area: Rect,

@@ -81,11 +81,13 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .style(Style::default().bg(Color::Black))
         .render(area, buf);
 
+    state.popup_area_p2 = area;
     let horizontal_sections = Layout::horizontal(vec![Constraint::Percentage(33), Constraint::Min(0), Constraint::Percentage(33)]);
     let vertical_sections = Layout::vertical(vec![Constraint::Percentage(75), Constraint::Min(0)]);
     let [top, bottom] = vertical_sections.areas(area);
     let [left, middle, right] = horizontal_sections.areas(top);
 
+    state.value_lines_amount = state.input_fields[state.selected_input_field].1.len() as u16 / middle.width;
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
         .block(Block::default())
         .wrap(Wrap { trim: false })
@@ -93,6 +95,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     Paragraph::new(state.input_fields[state.selected_input_field].1.as_str())
         .block(Block::default())
         .wrap(Wrap { trim: false })
+        .scroll((state.offset_value, 0))
         .render(middle.inner(&Margin{ horizontal: 1, vertical: 1}), buf);
     Paragraph::new("missing data field: value")
         .block(Block::default())
