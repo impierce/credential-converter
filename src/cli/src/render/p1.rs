@@ -85,13 +85,20 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     mapping_prompt.render(mapping, buf);
     let mapping_prompt_inner = mapping.inner(&Margin {
         vertical: 1,
-        horizontal: 20,
+        horizontal: 0,
     });
+
+    let [_left, tabs_center, _right] = Layout::horizontal(vec![
+        Constraint::Min(0),
+        Constraint::Percentage(41),
+        Constraint::Min(0),
+        ]).areas(mapping_prompt_inner);
+
     Tabs::new(vec![" OBv3 -> ELM ", " ELM -> OBv3 "])
         .style(Style::default().fg(Color::White))
         .highlight_style(Color::Yellow)
         .select(state.mapping as usize)
         .divider("")
-        .render(mapping_prompt_inner, buf,
+        .render(tabs_center, buf,
     );
 }

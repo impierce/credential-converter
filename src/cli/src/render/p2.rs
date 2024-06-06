@@ -59,8 +59,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         //         .style(Style::default().bg(Color::Black));
         //     popup.render(area.inner(&Margin{ horizontal: 15, vertical: 4}), buf);
         // }
-    } 
-    else {
+    } else {
         Paragraph::new("Invalid input path")
             .block(Block::default())
             .fg(Color::Red)
@@ -68,7 +67,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     }
 
     if state.map_input_field == true {
-        render_popup_mapping(area.inner(&Margin{ horizontal: 15, vertical: 4}), buf, state);
+        render_popup_mapping(
+            area.inner(&Margin {
+                horizontal: 15,
+                vertical: 4,
+            }),
+            buf,
+            state,
+        );
     }
     Block::new()
         .title("  Missing field here  xxx")
@@ -77,36 +83,71 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Clear.render(area, buf);
-    Block::new()
-        .style(Style::default().bg(Color::Black))
-        .render(area, buf);
+    Block::new().style(Style::default().bg(Color::Black)).render(area, buf);
 
-    state.popup_area_p2 = area;
-    let horizontal_sections = Layout::horizontal(vec![Constraint::Percentage(33), Constraint::Min(0), Constraint::Percentage(33)]);
-    let vertical_sections = Layout::vertical(vec![Constraint::Percentage(75), Constraint::Min(0)]);
+    let horizontal_sections = Layout::horizontal(vec![
+        Constraint::Percentage(33),
+        Constraint::Min(0),
+        Constraint::Percentage(33),
+    ]);
+    let vertical_sections = Layout::vertical(vec![Constraint::Percentage(100), Constraint::Min(1)]);
     let [top, bottom] = vertical_sections.areas(area);
     let [left, middle, right] = horizontal_sections.areas(top);
 
+    state.popup_area_p2 = area;
+    state.popup_value_p2 = middle;
     state.value_lines_amount = state.input_fields[state.selected_input_field].1.len() as u16 / middle.width;
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
         .block(Block::default())
         .wrap(Wrap { trim: false })
-        .render(left.inner(&Margin{ horizontal: 1, vertical: 1}), buf);
+        .render(
+            left.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
     Paragraph::new(state.input_fields[state.selected_input_field].1.as_str())
         .block(Block::default())
         .wrap(Wrap { trim: false })
         .scroll((state.offset_value, 0))
-        .render(middle.inner(&Margin{ horizontal: 1, vertical: 1}), buf);
+        .render(
+            middle.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
     Paragraph::new("missing data field: value")
         .block(Block::default())
         .wrap(Wrap { trim: false })
-        //.scroll((8, 8))//
-        .render(right.inner(&Margin{ horizontal: 1, vertical: 1}), buf);
+        .render(
+            right.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
 
-    Tabs::new(vec!["Copy","LowerCase", "UpperCase", "Split", "Merge", "OneToMany", "ManyToOne", "Regex"])
-        .style(Style::default().fg(Color::White))
-        .highlight_style(Color::Yellow)
-        .select(state.transformation as usize)
-        .divider("")
-        .render(bottom, buf,);
+    let [_left, tabs_center, _right] = Layout::horizontal(vec![
+        Constraint::Min(0),
+        Constraint::Percentage(80),
+        Constraint::Min(0),
+        ]).areas(bottom);
+
+    Tabs::new(vec![
+        "Copy",
+        "LowerCase",
+        "UpperCase",
+        "Split",
+        "Merge",
+        "OneToMany",
+        "ManyToOne",
+        "Regex",
+    ])
+    .style(Style::default().fg(Color::White))
+    .highlight_style(Color::Yellow)
+    .select(state.transformation as usize)
+    .divider("")
+    .render(tabs_center, buf);
 }

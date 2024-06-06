@@ -38,35 +38,32 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     if let event::Event::Mouse(mouse_event) = event {
         match mouse_event.kind {
             event::MouseEventKind::Moved => {
+                state.hover_popup_p2 =
+                    is_mouse_over_area(mouse_event.column, mouse_event.row, state.popup_area_p2);
                 state.hover_selector_p2 =
                     is_mouse_over_area(mouse_event.column, mouse_event.row, state.selector_area_p2);
-                state.hover_popup_p2 = is_mouse_over_area(mouse_event.column, mouse_event.row, state.popup_area_p2);
-                if state.hover_popup_p2 {
-                    trace_dbg!("Hovering over popup");
-                }
+                state.hover_popup_value_p2 =
+                    is_mouse_over_area(mouse_event.column, mouse_event.row, state.popup_value_p2);
             }
             event::MouseEventKind::ScrollDown => {
-                if state.hover_popup_p2 {
-                    trace_dbg!("Scrolling down");
-                    if state.offset_value > 0 {
-                        state.offset_value -= 1;
+                if state.hover_popup_value_p2 {
+                    if state.offset_value < state.amount_input_fields as u16 {
+                        state.offset_value += 1;
                     }
-                } 
-                else if state.hover_selector_p2 {
-                    if state.selected_input_field > 1 {
-                        state.selected_input_field -= 1;
+                } else if state.hover_selector_p2  && !state.hover_popup_p2{
+                    if state.selected_input_field <= state.amount_input_fields {
+                        state.selected_input_field += 1;
                     }
                 }
             }
             event::MouseEventKind::ScrollUp => {
-                if state.hover_popup_p2 {
-                    if state.offset_value < state.amount_input_fields as u16 {
-                        state.offset_value += 1;
+                if state.hover_popup_value_p2 {
+                    if state.offset_value > 0 {
+                        state.offset_value -= 1;
                     }
-                }
-                else if state.hover_selector_p2 {
-                    if state.selected_input_field <= state.amount_input_fields {
-                        state.selected_input_field += 1;
+                } else if state.hover_selector_p2 && !state.hover_popup_p2 {
+                    if state.selected_input_field > 1 {
+                        state.selected_input_field -= 1;
                     }
                 }
             }
