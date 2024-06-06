@@ -88,14 +88,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
-    let string_ = " OBv3 -> ELM ".to_owned() + " ELM -> OBv3 ";
+    let tabs = vec![" OBv3 -> ELM ", " ELM -> OBv3 "];
+    let tabs_len = tabs.concat();
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
-        Constraint::Max(string_.len() as u16 + 2),
+        Constraint::Max(tabs_len.len() as u16 + 2),
         Constraint::Min(1),
     ]).areas(mapping_prompt_inner);
 
-    Tabs::new(vec![" OBv3 -> ELM ", " ELM -> OBv3 "])
+    Tabs::new(tabs)
         .style(Style::default().fg(Color::White))
         .highlight_style(Color::Yellow)
         .select(state.mapping as usize)

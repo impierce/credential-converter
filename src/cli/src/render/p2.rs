@@ -129,10 +129,20 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             buf,
         );
     
-    let string_ =         "Copy".to_owned() + "LowerCase" + "UpperCase" + "Split" + "Concat" + "OneToMany" + "ManyToOne" + "Regex";
+    let tabs = vec![
+        "Copy",
+        "LowerCase",
+        "UpperCase",
+        "Split",
+        "Concat",
+        "OneToMany",
+        "ManyToOne",
+        "Regex",
+    ];
+    let tabs_len = tabs.concat();
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
-        Constraint::Max(string_.len() as u16 + 2),
+        Constraint::Max(tabs_len.len() as u16 + 15),
         Constraint::Min(1),
         ]).areas(bottom);
 
