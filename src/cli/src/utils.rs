@@ -62,6 +62,22 @@ pub enum Mapping {
     ELMToOBv3,
 }
 
+impl Mapping {
+    pub fn input_format(&self) -> String {
+        match self {
+            Mapping::OBv3ToELM => "OBv3".to_string(),
+            Mapping::ELMToOBv3 => "ELM".to_string(),
+        }
+    }
+
+    pub fn output_format(&self) -> String {
+        match self {
+            Mapping::OBv3ToELM => "ELM".to_string(),
+            Mapping::ELMToOBv3 => "OBv3".to_string(),
+        }
+    }
+}
+
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum Transformations {
     #[default]

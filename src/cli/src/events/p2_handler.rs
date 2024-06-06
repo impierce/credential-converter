@@ -1,7 +1,9 @@
 use std::io::Write;
 
 use crate::{
+    elm::ELM,
     jsonpointer::{JsonPath, JsonPointer},
+    obv3::OBv3,
     p1_handler::verify,
     repository::{self, construct_leaf_node, merge, Repository},
     trace_dbg,
@@ -10,13 +12,10 @@ use crate::{
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
-fn selector(state: &mut AppState) {
+pub fn selector(state: &mut AppState) {
     trace_dbg!(state.transformation);
 
-    let (input_format, output_format) = match state.mapping {
-        Mapping::OBv3ToELM => ("OBv3", "ELM"),
-        Mapping::ELMToOBv3 => ("ELM", "OBv3"),
-    };
+    let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
     let (source_pointer, source_value) = state.input_fields[state.selected_input_field].clone();
 
@@ -29,33 +28,33 @@ fn selector(state: &mut AppState) {
         Transformations::LowerCase => Transformation::OneToOne {
             type_: OneToOne::toLowerCase,
             source: DataLocation {
-                format: "ELM".to_string(),
+                format: input_format.clone(),
                 path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
             },
             destination: DataLocation {
-                format: "OBv3".to_string(),
+                format: output_format.clone(),
                 path: destination_path.to_string(),
             },
         },
         Transformations::UpperCase => Transformation::OneToOne {
             type_: OneToOne::toUpperCase,
             source: DataLocation {
-                format: "ELM".to_string(),
+                format: input_format.clone(),
                 path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
             },
             destination: DataLocation {
-                format: "OBv3".to_string(),
+                format: output_format.clone(),
                 path: destination_path.to_string(),
             },
         },
         Transformations::Copy | _ => Transformation::OneToOne {
             type_: OneToOne::copy,
             source: DataLocation {
-                format: "ELM".to_string(),
+                format: input_format.clone(),
                 path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
             },
             destination: DataLocation {
-                format: "OBv3".to_string(),
+                format: output_format.clone(),
                 path: destination_path.to_string(),
             },
         },
@@ -63,25 +62,9 @@ fn selector(state: &mut AppState) {
 
     temp_repository.apply_transformation(transformation);
 
-    let candidate_data_value = temp_repository.get(output_format).unwrap().pointer(&pointer).unwrap();
+    let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();
 
     state.candidate_data_value = Some(candidate_data_value.to_string());
-
-    // let pointer = state.missing_data_field.as_ref().unwrap().clone();
-
-    // let mut json_value = state.repository.get_mut(output_format).unwrap();
-
-    // let mut leaf_node = construct_leaf_node(&pointer);
-
-    // leaf_node
-    //     .pointer_mut(&pointer)
-    //     .map(|value| *value = serde_json::from_str(&source_value).unwrap());
-
-    // merge(&mut json_value, leaf_node);
-
-    // let temp = serde_json::to_string_pretty(&json_value).unwrap();
-
-    // state.missing_data_field = verify(&mut json_value).err();
 }
 
 pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {
@@ -123,12 +106,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if !state.map_input_field {
                         state.map_input_field = true;
                     } else {
-                        // trace_dbg!(state.transformation);
-
-                        let (input_format, output_format) = match state.mapping {
-                            Mapping::OBv3ToELM => ("OBv3", "ELM"),
-                            Mapping::ELMToOBv3 => ("ELM", "OBv3"),
-                        };
+                        let output_format = state.mapping.output_format();
 
                         // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
 
@@ -136,7 +114,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                         let pointer = state.missing_data_field.as_ref().unwrap().clone();
 
-                        let mut json_value = state.repository.get_mut(output_format).unwrap();
+                        let mut json_value = state.repository.get_mut(&output_format).unwrap();
 
                         let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -146,13 +124,19 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                         merge(&mut json_value, leaf_node);
 
-                        let temp = serde_json::to_string_pretty(&json_value).unwrap();
-
-                        state.missing_data_field = verify(&mut json_value).err();
+                        state.missing_data_field = match state.mapping.output_format().as_str() {
+                            "OBv3" => verify::<OBv3>(&mut json_value).err(),
+                            "ELM" => verify::<ELM>(&mut json_value).err(),
+                            _ => panic!(),
+                        };
 
                         if state.missing_data_field.is_none() {
+                            let output_format = state.mapping.output_format();
+                            let json_value = state.repository.get_mut(&output_format).unwrap();
+
                             let mut file = std::fs::File::create(&state.output_path).unwrap();
-                            file.write_all(temp.as_bytes()).unwrap();
+                            file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
+                                .unwrap();
                             state.tab.next();
                         }
                     }
