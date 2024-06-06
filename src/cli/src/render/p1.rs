@@ -6,7 +6,7 @@ use ratatui::{
 };
 use ratatui::{prelude::*, widgets::*};
 
-use crate::utils::{AppState, P1Prompts};
+use crate::{trace_dbg, utils::{AppState, P1Prompts}};
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
@@ -88,11 +88,12 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
+    let string_ = " OBv3 -> ELM ".to_owned() + " ELM -> OBv3 ";
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
-        Constraint::Min(0),
-        Constraint::Percentage(41),
-        Constraint::Min(0),
-        ]).areas(mapping_prompt_inner);
+        Constraint::Min(1),
+        Constraint::Max(string_.len() as u16 + 2),
+        Constraint::Min(1),
+    ]).areas(mapping_prompt_inner);
 
     Tabs::new(vec![" OBv3 -> ELM ", " ELM -> OBv3 "])
         .style(Style::default().fg(Color::White))
