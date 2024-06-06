@@ -70,6 +70,9 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P1Prompts::Output => {
                         state.output_path.push(value);
                     }
+                    P1Prompts::MappingFile => {
+                        state.mapping_path.push(value);
+                    }
                     _ => {}
                 },
                 _ => {}
@@ -80,6 +83,11 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 }
 
 fn preload_p2(state: &mut AppState) {
+    let (input_format, output_format) = match state.mapping {
+        Mapping::OBv3ToELM => ("OBv3", "ELM"),
+        Mapping::ELMToOBv3 => ("ELM", "OBv3"),
+    };
+
     // Load the input file
     {
         let rdr = std::fs::File::open(&state.input_path).unwrap();
@@ -96,40 +104,69 @@ fn preload_p2(state: &mut AppState) {
         state.input_fields = input_fields;
 
         state.repository = Repository::from(HashMap::from_iter(vec![(
-            match state.mapping {
-                Mapping::OBv3ToELM => "OBv3".to_string(),
-                Mapping::ELMToOBv3 => "ELM".to_string(),
-            },
+            input_format.to_string(),
             get_json(&state.input_path).expect("No source file found"),
         )]));
 
         trace_dbg!("Successfully loaded the input file");
     }
 
-    // // Load the mapping file
-    // {
-    //     // TODO: remove this hardcoded code
-    //     let mapping_path = include_str!("../../res/mapping.json");
-    //     let rdr = std::fs::File::open(mapping_path).unwrap();
-    //     let mut transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+    // Load the mapping file
+    {
+        let rdr = std::fs::File::open(&state.mapping_path).unwrap();
+        let mut transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
 
-    //     trace_dbg!("Successfully loaded the mapping file");
+        trace_dbg!("Successfully loaded the mapping file");
 
-    //     // Load the custom mapping file
-    //     {
-    //         if let Some(custom_mapping_path) = &state.custom_mapping_path {
-    //             // TODO: remove this hardcoded code
-    //             let custom_mapping_path = include_str!("../../res/custom_mapping.json");
-    //             let rdr = std::fs::File::open(custom_mapping_path).unwrap();
-    //             let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-    //             transformations.append(&mut custom_transformations);
+        // Load the custom mapping file
+        {
+            if let Some(custom_mapping_path) = &state.custom_mapping_path {
+                let rdr = std::fs::File::open(custom_mapping_path).unwrap();
+                let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+                transformations.append(&mut custom_transformations);
 
-    //             trace_dbg!("Successfully loaded the custom mapping file");
-    //         }
+                trace_dbg!("Successfully loaded the custom mapping file");
+            }
+        }
+
+        state.repository.apply_transformations(transformations);
+    }
+
+    let mut json_value = state.repository.get(output_format).unwrap().clone();
+
+    state.missing_data_field = verify(&mut json_value).err();
+}
+
+#[test]
+fn test_verify() {
+
+    // let mut json_value = json!({
+    //     "person": {
+    //         "fullName": "John Doe"
     //     }
+    // });
 
-    //     state.repository.apply_transformations(transformations);
-    // }
+    // let result = verify(&mut json_value);
+    // println!("{:#?}", result);
+
+    // json_value["another_field"] = json!("another_field");
+
+    // let result = verify(&mut json_value);
+    // println!("{:#?}", result);
+
+    // json_value["another_field2"]["test2"]["test3"] = json!("a");
+
+    // let result = verify(&mut json_value);
+    // println!("{:#?}", result);
+    // json_value["another_field2"]["test2"]["test4"] = json!("b");
+
+    // let result = verify(&mut json_value);
+    // println!("{:#?}", result);
+
+    // json_value["another_field2"]["test2"]["test5"]["test6"] = json!("c");
+
+    // let result = verify(&mut json_value);
+    // println!("{}", serde_json::to_string_pretty(&result).unwrap());
 }
 
 pub fn verify(json_value: &mut Value) -> Result<Value, String> {
@@ -140,9 +177,9 @@ pub fn verify(json_value: &mut Value) -> Result<Value, String> {
         match serde_path_to_error::deserialize::<_, OBv3>(&mut de) {
             Ok(obv3_credential) => return Ok(json!(obv3_credential)),
             Err(e) => {
-                println!("Error: {:?}", e);
+                // println!("Error: {:?}", e);
                 let error_message = e.inner().to_string();
-                println!("Error: {}", error_message);
+                // println!("Error: {}", error_message);
 
                 let path = e.path().to_string().replace('.', "/");
 
@@ -165,27 +202,18 @@ pub fn verify(json_value: &mut Value) -> Result<Value, String> {
                     continue;
                 }
 
-                let pointer = if error_message.starts_with("invalid type") {
-                    if path == "/" {
+                if error_message.starts_with("invalid type") {
+                    let pointer = if path == "/" {
                         format!("{path}")
                     } else {
-                        format!("/{path}/")
-                    }
+                        format!("/{path}")
+                    };
+
+                    return Err(pointer);
                 } else {
                     panic!("Unknown error: {}", error_message);
                 };
 
-                let mut leaf_node = construct_leaf_node(&pointer);
-
-                println!("Please type some data of the correct type");
-                let mut input_string = String::new();
-                std::io::stdin().read_line(&mut input_string).unwrap();
-
-                let (option, input_string) = input_string.trim_end().split_once(":").unwrap();
-
-                merge(json_value, leaf_node);
-
-                return Err("String".to_string());
                 // match option {
                 //     "1" => {
                 //         println!("pointer: {:?}", pointer);
