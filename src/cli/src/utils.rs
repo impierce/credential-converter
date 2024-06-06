@@ -28,6 +28,7 @@ pub struct AppState {
     pub amount_input_fields: usize,
 
     pub missing_data_field: Option<String>,
+    pub candidate_data_value: Option<String>,
 
     pub repository: Repository,
 

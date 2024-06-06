@@ -30,6 +30,11 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
     let mut state = AppState {
+        // TODO: remove these hardcoded paths
+        input_path: "res/source_credential.json".to_string(),
+        mapping_path: "res/mapping.json".to_string(),
+        output_path: "res/output_credential.json".to_string(),
+
         selected_input_field: 1,
         ..Default::default()
     };

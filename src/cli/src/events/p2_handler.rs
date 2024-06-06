@@ -21,9 +21,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 Left => {
                     state.transformation.prev();
+                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
                     state.transformation.next();
+                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Up => {
                     if state.selected_input_field > 1 {
@@ -36,6 +38,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Enter => {
+                    // state.map_input_field = true;
+
+                    // trace_dbg!(state.transformation);
+
                     // let (input_format, output_format) = match state.mapping {
                     //     Mapping::OBv3ToELM => ("OBv3", "ELM"),
                     //     Mapping::ELMToOBv3 => ("ELM", "OBv3"),
