@@ -1,12 +1,15 @@
-use std::path::Path;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
+use std::path::Path;
 
-use crate::{trace_dbg, utils::{AppState, P1Prompts}};
+use crate::{
+    trace_dbg,
+    utils::{AppState, P1Prompts},
+};
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
@@ -36,8 +39,9 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         Constraint::Length(4),
         Constraint::Length(4),
         Constraint::Length(4),
+        Constraint::Length(4),
     ]);
-    let [input_path, output_path, mapping] = input_prompts.areas(prompts_area);
+    let [input_path, output_path, mapping_file, mapping] = input_prompts.areas(prompts_area);
 
     let mut input_prompt = Block::new()
         .title("  Input Path  ")
@@ -51,6 +55,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title("  Choose Mapping  ") // todo: automatically infer unused data path from output_path
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
+    let mut mapping_file_prompt = Block::new()
+        .title("  Choose Mapping File  ") // todo: automatically infer unused data path from output_path
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL);
 
     let active_style = Style::default().fg(Color::LightYellow);
 
@@ -58,6 +66,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         P1Prompts::Input => input_prompt = input_prompt.style(active_style),
         P1Prompts::Output => output_prompt = output_prompt.style(active_style),
         P1Prompts::Mapping => mapping_prompt = mapping_prompt.style(active_style),
+        P1Prompts::MappingFile => mapping_file_prompt = mapping_file_prompt.style(active_style),
     };
 
     let path = Path::new(&state.input_path);
@@ -89,18 +98,30 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     });
 
     let tabs = vec![" OBv3 -> ELM ", " ELM -> OBv3 "];
-    let tabs_len = tabs.concat();
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
-        Constraint::Max(tabs_len.len() as u16 + 2),
+        Constraint::Max(tabs.concat().len() as u16 + 2),
         Constraint::Min(1),
-    ]).areas(mapping_prompt_inner);
+    ])
+    .areas(mapping_prompt_inner);
 
     Tabs::new(tabs)
         .style(Style::default().fg(Color::White))
         .highlight_style(Color::Yellow)
         .select(state.mapping as usize)
         .divider("")
-        .render(tabs_center, buf,
-    );
+        .render(tabs_center, buf);
+
+    let path = Path::new(&state.mapping_path);
+    if !path.exists() || !path.is_file() {
+        Paragraph::new(state.mapping_path.as_str())
+            .block(mapping_file_prompt)
+            .fg(Color::Red)
+            .render(mapping_file, buf);
+    } else {
+        Paragraph::new(state.mapping_path.as_str())
+            .block(mapping_file_prompt)
+            .fg(Color::Green)
+            .render(mapping_file, buf);
+    }
 }
