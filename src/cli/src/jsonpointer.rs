@@ -13,7 +13,7 @@ impl Deref for JsonPath {
 }
 
 #[derive(Debug)]
-pub struct JsonPointer(String);
+pub struct JsonPointer(pub String);
 
 impl Deref for JsonPointer {
     type Target = String;

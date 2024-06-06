@@ -1,5 +1,6 @@
 use crate::{
     jsonpointer::{JsonPath, JsonPointer},
+    trace_dbg,
     transformations::{DataLocation, Transformation},
 };
 use jsonpath_rust::JsonPathFinder;
@@ -37,7 +38,7 @@ impl Repository {
         Self(HashMap::new())
     }
 
-    fn apply_transformation(&mut self, transformation: Transformation) {
+    pub fn apply_transformation(&mut self, transformation: Transformation) {
         match transformation {
             Transformation::OneToOne {
                 type_: transformation,
