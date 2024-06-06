@@ -6,6 +6,7 @@ use ratatui::{
     widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
+use symbols::border;
 
 use crate::utils::AppState;
 
@@ -51,14 +52,6 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             buf,
             &mut table_state,
         );
-
-        // if state.map_input_field == true {
-        //     let popup = Block::new()
-        //         .title("  Selected Mapping  ")
-        //         .title_alignment(Alignment::Center)
-        //         .style(Style::default().bg(Color::Black));
-        //     popup.render(area.inner(&Margin{ horizontal: 15, vertical: 4}), buf);
-        // }
     } else {
         Paragraph::new("Invalid input path")
             .block(Block::default())
@@ -66,7 +59,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .render(left_selector, buf);
     }
 
-    if state.map_input_field == true {
+    if state.popup_mapper_p2 == true {
         render_popup_mapping(
             area.inner(&Margin {
                 horizontal: 15,
@@ -94,11 +87,39 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     let [top, bottom] = vertical_sections.areas(area);
     let [left, middle, right] = horizontal_sections.areas(top);
 
+    Block::default()
+        .borders(Borders::RIGHT)
+        .border_set(border::Set {
+            top_left: ".",
+            top_right: ".",
+            bottom_left: ".",
+            bottom_right: ".",
+            vertical_left: ".",
+            vertical_right: "|",
+            horizontal_top: ".",
+            horizontal_bottom: ".",
+        })
+        .render(
+            left.inner(&Margin {
+                horizontal: 0,
+                vertical: 1,
+            }),
+            buf,
+        );
+    Block::default()
+        .borders(Borders::RIGHT)
+        .border_type(BorderType::Plain)
+        .render(
+            middle.inner(&Margin {
+                horizontal: 0,
+                vertical: 1,
+            }),
+            buf,
+        );
+
     state.popup_area_p2 = area;
-    state.popup_value_p2 = middle;
-    state.value_lines_amount = state.input_fields[state.selected_input_field].1.len() as u16 / middle.width;
+    state.popup_value_area_p2 = middle;
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
-        .block(Block::default())
         .wrap(Wrap { trim: false })
         .render(
             left.inner(&Margin {
@@ -107,8 +128,8 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             }),
             buf,
         );
+
     Paragraph::new(state.input_fields[state.selected_input_field].1.as_str())
-        .block(Block::default())
         .wrap(Wrap { trim: false })
         .scroll((state.offset_value, 0))
         .render(
@@ -118,17 +139,37 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             }),
             buf,
         );
+
+    let vertical_sections_result = Layout::vertical(vec![Constraint::Min(2), Constraint::Percentage(100)]);
+    let [path_result, value_result] = vertical_sections_result.areas(right.inner(&Margin {
+        horizontal: 1,
+        vertical: 1,
+    }));
+
+    state.popup_result_area_p2 = value_result;
     Paragraph::new(state.missing_data_field.as_ref().unwrap().as_str())
-        .block(Block::default())
         .wrap(Wrap { trim: false })
-        .render(
-            right.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
-    
+        .scroll((state.offset_result, 0))
+        .render(path_result, buf);
+
+    state.candidate_data_value = Some("asssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssffgg".to_string());
+    Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
+        .block(Block::default()
+        .borders(Borders::TOP)
+        .border_set(border::Set {
+            top_left: ".",
+            top_right: ".",
+            bottom_left: ".",
+            bottom_right: ".",
+            vertical_left: ".",
+            vertical_right: ".",
+            horizontal_top: "-",
+            horizontal_bottom: ".",
+        }))
+        .wrap(Wrap { trim: false })
+        .scroll((state.offset_result, 0))
+        .render(value_result, buf);
+
     let tabs = vec![
         "Copy",
         "LowerCase",
@@ -141,7 +182,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     ];
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
-        Constraint::Max(tabs.concat().len() as u16 + 15),
+        Constraint::Max(tabs.concat().len() as u16 + 16),
         Constraint::Min(1),
     ])
     .areas(bottom);
@@ -156,7 +197,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         "ManyToOne",
         "Regex",
     ])
-    .style(Style::default().fg(Color::White))
+    .style(Style::default().fg(Color::White).bg(Color::DarkGray))
     .highlight_style(Color::Yellow)
     .select(state.transformation as usize)
     .divider("")

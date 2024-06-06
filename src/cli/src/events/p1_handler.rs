@@ -377,7 +377,7 @@ struct Person {
 #[derive(Serialize, Deserialize, Debug)]
 struct OBv3 {
     person: Person,
-    another_field: String,
+    another_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_field: String,
     another_field2: Test,
 }
 

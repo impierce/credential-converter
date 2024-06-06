@@ -1,6 +1,6 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, default};
 
-use crate::{repository::Repository, transformations::Transformation};
+use crate::repository::Repository;
 use ratatui::layout::Rect;
 use serde_json::Value;
 use strum::FromRepr;
@@ -13,7 +13,7 @@ pub struct AppState {
     pub tab: Tabs,
     pub p1_prompts: P1Prompts,
     pub mapping: Mapping,
-    pub map_input_field: bool,
+    pub popup_mapper_p2: bool,
     pub transformation: Transformations,
     // Paths
     pub input_path: String,
@@ -33,17 +33,24 @@ pub struct AppState {
     pub repository: Repository,
 
     // Scroll functionality fields
-    pub hover_popup_p2: bool,
-    pub popup_area_p2: Rect,
-    pub selector_area_p2: Rect,
+    // Hover Booleans
     pub hover_selector_p2: bool,
-    pub popup_value_p2: Rect,
+    pub hover_popup_p2: bool,
     pub hover_popup_value_p2: bool,
-    pub value_lines_amount: u16,
-    pub offset_value: u16,
+    pub hover_popup_result_p2: bool,
+
+    // Areas
     // added Area to the appstate because it was problematic to pass it to the event_handler,
     // since the different closures in the main don't combine so easily
     pub area: Rect,
+    pub popup_area_p2: Rect,
+    pub selector_area_p2: Rect,
+    pub popup_value_area_p2: Rect,
+    pub popup_result_area_p2: Rect,
+
+    // Scroll offsets/positions
+    pub offset_value: u16,
+    pub offset_result: u16,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -57,8 +64,8 @@ pub enum P1Prompts {
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum Mapping {
-    #[default]
     OBv3ToELM = 0,
+    #[default]
     ELMToOBv3,
 }
 
