@@ -1,10 +1,10 @@
-use std::path::Path;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
+use std::path::Path;
 
 use crate::utils::{AppState, P1Prompts};
 
@@ -36,8 +36,9 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         Constraint::Length(4),
         Constraint::Length(4),
         Constraint::Length(4),
+        Constraint::Length(4),
     ]);
-    let [input_path, output_path, mapping] = input_prompts.areas(prompts_area);
+    let [input_path, output_path, mapping_file, mapping] = input_prompts.areas(prompts_area);
 
     let mut input_prompt = Block::new()
         .title("  Input Path  ")
@@ -51,6 +52,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title("  Choose Mapping  ") // todo: automatically infer unused data path from output_path
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
+    let mut mapping_file_prompt = Block::new()
+        .title("  Choose Mapping File  ") // todo: automatically infer unused data path from output_path
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL);
 
     let active_style = Style::default().fg(Color::LightYellow);
 
@@ -58,6 +63,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         P1Prompts::Input => input_prompt = input_prompt.style(active_style),
         P1Prompts::Output => output_prompt = output_prompt.style(active_style),
         P1Prompts::Mapping => mapping_prompt = mapping_prompt.style(active_style),
+        P1Prompts::MappingFile => mapping_file_prompt = mapping_file_prompt.style(active_style),
     };
 
     let path = Path::new(&state.input_path);
@@ -88,17 +94,27 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
-    let [_left, tabs_center, _right] = Layout::horizontal(vec![
-        Constraint::Min(0),
-        Constraint::Percentage(41),
-        Constraint::Min(0),
-        ]).areas(mapping_prompt_inner);
+    let [_left, tabs_center, _right] =
+        Layout::horizontal(vec![Constraint::Min(0), Constraint::Percentage(41), Constraint::Min(0)])
+            .areas(mapping_prompt_inner);
 
     Tabs::new(vec![" OBv3 -> ELM ", " ELM -> OBv3 "])
         .style(Style::default().fg(Color::White))
         .highlight_style(Color::Yellow)
         .select(state.mapping as usize)
         .divider("")
-        .render(tabs_center, buf,
-    );
+        .render(tabs_center, buf);
+
+    let path = Path::new(&state.mapping_path);
+    if !path.exists() || !path.is_file() {
+        Paragraph::new(state.mapping_path.as_str())
+            .block(mapping_file_prompt)
+            .fg(Color::Red)
+            .render(mapping_file, buf);
+    } else {
+        Paragraph::new(state.mapping_path.as_str())
+            .block(mapping_file_prompt)
+            .fg(Color::Green)
+            .render(mapping_file, buf);
+    }
 }

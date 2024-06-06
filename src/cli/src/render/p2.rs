@@ -77,7 +77,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         );
     }
     Block::new()
-        .title("  Missing field here  xxx")
+        .title(state.missing_data_field.as_ref().unwrap().as_str())
         .render(right_missing_fields, buf);
 }
 
@@ -118,7 +118,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             }),
             buf,
         );
-    Paragraph::new("missing data field: value")
+    Paragraph::new(state.missing_data_field.as_ref().unwrap().as_str())
         .block(Block::default())
         .wrap(Wrap { trim: false })
         .render(
@@ -129,11 +129,8 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             buf,
         );
 
-    let [_left, tabs_center, _right] = Layout::horizontal(vec![
-        Constraint::Min(0),
-        Constraint::Percentage(80),
-        Constraint::Min(0),
-        ]).areas(bottom);
+    let [_left, tabs_center, _right] =
+        Layout::horizontal(vec![Constraint::Min(0), Constraint::Percentage(80), Constraint::Min(0)]).areas(bottom);
 
     Tabs::new(vec![
         "Copy",

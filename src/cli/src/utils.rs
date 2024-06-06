@@ -50,6 +50,7 @@ pub enum P1Prompts {
     #[default]
     Input = 0,
     Output,
+    MappingFile,
     Mapping,
 }
 
