@@ -37,7 +37,8 @@ pub struct AppState {
     pub hover_selector_p2: bool,
     pub hover_popup_p2: bool,
     pub hover_popup_value_p2: bool,
-    pub hover_popup_result_p2: bool,
+    pub hover_popup_result_path_p2: bool,
+    pub hover_popup_result_value_p2: bool,
 
     // Areas
     // added Area to the appstate because it was problematic to pass it to the event_handler,
@@ -46,11 +47,13 @@ pub struct AppState {
     pub popup_area_p2: Rect,
     pub selector_area_p2: Rect,
     pub popup_value_area_p2: Rect,
-    pub popup_result_area_p2: Rect,
+    pub popup_result_path_p2: Rect,
+    pub popup_result_value_p2: Rect,
 
     // Scroll offsets/positions
     pub offset_value: u16,
-    pub offset_result: u16,
+    pub offset_result_path: u16,
+    pub offset_result_value: u16,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]

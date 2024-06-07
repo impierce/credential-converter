@@ -58,6 +58,17 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .fg(Color::Red)
             .render(left_selector, buf);
     }
+    
+    Block::new()
+        .title("Missing Field")
+        .title_style(Style::default().add_modifier(Modifier::BOLD))
+        .render(right_missing_fields, buf);
+    Paragraph::new("\n".to_owned() + state.missing_data_field.as_ref().unwrap().as_str())
+        .wrap(Wrap { trim: false })
+        .render(right_missing_fields.inner(&Margin {
+            horizontal: 0,
+            vertical: 1,
+        }), buf);
 
     if state.popup_mapper_p2 == true {
         render_popup_mapping(
@@ -69,9 +80,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             state,
         );
     }
-    Block::new()
-        .title(state.missing_data_field.as_ref().unwrap().as_str())
-        .render(right_missing_fields, buf);
+
 }
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -141,22 +150,21 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         );
 
     let vertical_sections_result = Layout::vertical(vec![Constraint::Min(2), Constraint::Percentage(100)]);
-    let [path_result, value_result] = vertical_sections_result.areas(right.inner(&Margin {
+    let [result_path, result_value] = vertical_sections_result.areas(right.inner(&Margin {
         horizontal: 1,
         vertical: 1,
     }));
 
-    state.popup_result_area_p2 = value_result;
+    state.popup_result_path_p2 = result_path;
+    state.popup_result_value_p2 = result_value;
     Paragraph::new(state.missing_data_field.as_ref().unwrap().as_str())
         .wrap(Wrap { trim: false })
-        .scroll((state.offset_result, 0))
-        .render(path_result, buf);
+        .scroll((state.offset_result_path, 0))
+        .render(result_path, buf);
 
     state.candidate_data_value = Some("asssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssffgg".to_string());
     Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
-        .block(Block::default()
-        .borders(Borders::TOP)
-        .border_set(border::Set {
+        .block(Block::default().borders(Borders::TOP).border_set(border::Set {
             top_left: ".",
             top_right: ".",
             bottom_left: ".",
@@ -167,8 +175,8 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             horizontal_bottom: ".",
         }))
         .wrap(Wrap { trim: false })
-        .scroll((state.offset_result, 0))
-        .render(value_result, buf);
+        .scroll((state.offset_result_value, 0))
+        .render(result_value, buf);
 
     let tabs = vec![
         "Copy",
