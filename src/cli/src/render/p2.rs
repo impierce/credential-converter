@@ -1,14 +1,16 @@
 use std::path::Path;
 
+use color_eyre::owo_colors::OwoColorize;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
+use style::palette::material::BLACK;
 use symbols::border;
 
-use crate::utils::AppState;
+use crate::{transformations, utils::AppState};
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
@@ -58,17 +60,20 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .fg(Color::Red)
             .render(left_selector, buf);
     }
-    
+
     Block::new()
         .title("Missing Field")
         .title_style(Style::default().add_modifier(Modifier::BOLD))
         .render(right_missing_fields, buf);
     Paragraph::new("\n".to_owned() + state.missing_data_field.as_ref().unwrap().as_str())
         .wrap(Wrap { trim: false })
-        .render(right_missing_fields.inner(&Margin {
-            horizontal: 0,
-            vertical: 1,
-        }), buf);
+        .render(
+            right_missing_fields.inner(&Margin {
+                horizontal: 0,
+                vertical: 1,
+            }),
+            buf,
+        );
 
     if state.popup_mapper_p2 == true {
         render_popup_mapping(
@@ -80,7 +85,6 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             state,
         );
     }
-
 }
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -188,10 +192,9 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         "ManyToOne",
         "Regex",
     ];
-    let [_left, tabs_center, _right] = Layout::horizontal(vec![
-        Constraint::Min(1),
-        Constraint::Max(tabs.concat().len() as u16 + 16),
-        Constraint::Min(1),
+    let [transformations, selected] = Layout::horizontal(vec![
+        Constraint::Min(tabs.concat().len() as u16 + 16),
+        Constraint::Percentage(100),
     ])
     .areas(bottom);
 
@@ -207,7 +210,15 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     ])
     .style(Style::default().fg(Color::White).bg(Color::DarkGray))
     .highlight_style(Color::Yellow)
-    .select(state.transformation as usize)
+    .select(state.transformations as usize)
     .divider("")
-    .render(tabs_center, buf);
+    .render(transformations, buf);
+
+    let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
+    Tabs::new(selected_transformations)
+    .style(Style::default().fg(Color::Black).bg(Color::Gray))
+    .highlight_style(Style::default().fg(BLACK).add_modifier(Modifier::BOLD))
+    .select(state.selected_transformation as usize)
+    .divider("")
+    .render(selected, buf);
 }

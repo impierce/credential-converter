@@ -14,23 +14,47 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             match key.code {
                 Esc => {
                     if state.popup_mapper_p2 {
-                        state.popup_mapper_p2 = !state.popup_mapper_p2;
-                    } else {
+                        state.popup_mapper_p2 = false;
+                        state.popup_selected_transformations = false;
+                    } 
+                    else {
                         return Ok(true);
                     }
                 }
+                Backspace => {
+                    if state.popup_selected_transformations {
+                        state.selected_transformations.remove(state.selected_transformation);
+                        // state.selected_transformations.pop(); // todo
+                    } 
+                }
                 Tab => {
-                    state.tab.next();
+                    if state.popup_mapper_p2 {
+                        state.popup_selected_transformations = !state.popup_selected_transformations;
+                    } else {
+                        state.tab.next();
+                    }
                 }
                 F(2) => {
                     state.tab.prev();
                 }
                 Left => {
-                    state.transformation.prev();
+                    if state.popup_mapper_p2 && !state.popup_selected_transformations {
+                        state.transformations.prev();
+                    }
+                    else if state.popup_mapper_p2 && state.popup_selected_transformations && state.selected_transformation > 0 {
+                        trace_dbg!(state.selected_transformation);
+                        state.selected_transformation -= 1;
+                    }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
-                    state.transformation.next();
+                    if state.popup_mapper_p2 && !state.popup_selected_transformations {
+                        state.transformations.next();
+                    }
+                    else if state.popup_mapper_p2 && state.popup_selected_transformations && state.selected_transformation < state.selected_transformations.len() -1 {
+                        trace_dbg!(state.selected_transformation);
+                        state.selected_transformation += 1;
+                    }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Up => {
@@ -76,8 +100,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     //     file.write_all(temp.as_bytes()).unwrap();
                     //     state.tab.next();
                     // }
-
-                    state.popup_mapper_p2 = !state.popup_mapper_p2;
+                    if !state.popup_mapper_p2 {
+                        state.popup_mapper_p2 = true;
+                    } else if !state.popup_selected_transformations {
+                        state.selected_transformations.push(state.transformations);
+                    }
                 }
                 _ => {}
             }
@@ -102,18 +129,16 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.offset_value < state.amount_input_fields as u16 {
                         state.offset_value += 1;
                     }
-                } 
-                else if state.hover_popup_result_path_p2 {
+                } else if state.hover_popup_result_path_p2 {
                     if state.offset_result_path < state.amount_input_fields as u16 {
                         state.offset_result_path += 1;
                     }
-                }
-                else if state.hover_popup_result_value_p2 {
-                    if state.offset_result_value < state.amount_input_fields as u16 { // todo
+                } else if state.hover_popup_result_value_p2 {
+                    if state.offset_result_value < state.amount_input_fields as u16 {
+                        // todo
                         state.offset_result_value += 1;
                     }
-                }
-                else if state.hover_selector_p2 && !state.popup_mapper_p2 {
+                } else if state.hover_selector_p2 && !state.popup_mapper_p2 {
                     if state.selected_input_field <= state.amount_input_fields {
                         state.selected_input_field += 1;
                     }
@@ -135,18 +160,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.offset_value > 0 {
                         state.offset_value -= 1;
                     }
-                } 
-                else if state.hover_popup_result_path_p2 {
+                } else if state.hover_popup_result_path_p2 {
                     if state.offset_result_path > 0 {
                         state.offset_result_path -= 1;
                     }
-                } 
-                else if state.hover_popup_result_value_p2 {
+                } else if state.hover_popup_result_value_p2 {
                     if state.offset_result_value > 0 {
                         state.offset_result_value -= 1;
                     }
-                } 
-                else if state.hover_selector_p2 && !state.popup_mapper_p2 {
+                } else if state.hover_selector_p2 && !state.popup_mapper_p2 {
                     if state.selected_input_field > 1 {
                         state.selected_input_field -= 1;
                     }

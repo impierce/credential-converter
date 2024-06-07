@@ -3,7 +3,7 @@ use std::{collections::HashMap, default};
 use crate::repository::Repository;
 use ratatui::layout::Rect;
 use serde_json::Value;
-use strum::FromRepr;
+use strum::{Display, FromRepr};
 
 //////////      STRUCTS & ENUMS     //////////
 
@@ -14,7 +14,10 @@ pub struct AppState {
     pub p1_prompts: P1Prompts,
     pub mapping: Mapping,
     pub popup_mapper_p2: bool,
-    pub transformation: Transformations,
+    pub popup_selected_transformations: bool,
+    pub selected_transformation: usize,
+    pub transformations: Transformations,
+    pub selected_transformations: Vec<Transformations>,
     // Paths
     pub input_path: String,
     pub mapping_path: String,
@@ -72,14 +75,14 @@ pub enum Mapping {
     ELMToOBv3,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
     #[default]
     Copy = 0,
     LowerCase,
     UpperCase,
     Split,
-    Merge,
+    Concat,
     OneToMany,
     ManyToOne,
     Regex,
