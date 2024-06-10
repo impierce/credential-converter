@@ -5,6 +5,7 @@ use serde_json::Value;
 #[derive(Serialize, Deserialize, Debug)]
 pub enum OneToOne {
     copy,
+    toLowerCase,
     toUpperCase,
 }
 
@@ -12,6 +13,13 @@ impl OneToOne {
     pub fn apply(&self, value: Value) -> Value {
         match self {
             OneToOne::copy => value,
+            OneToOne::toLowerCase => {
+                if let Value::String(s) = value {
+                    Value::String(s.to_lowercase())
+                } else {
+                    value
+                }
+            }
             OneToOne::toUpperCase => {
                 if let Value::String(s) = value {
                     Value::String(s.to_uppercase())

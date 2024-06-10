@@ -1,3 +1,4 @@
+pub mod credential_formats;
 pub mod events;
 pub mod jsonpointer;
 pub mod logging;
@@ -6,6 +7,7 @@ pub mod repository;
 pub mod transformations;
 pub mod utils;
 
+use crate::credential_formats::*;
 use crate::events::*;
 use crate::render::*;
 
@@ -31,8 +33,8 @@ fn main() -> Result<()> {
     terminal.clear()?;
     let mut state = AppState {
         // TODO: remove these hardcoded paths
-        input_path: "res/source_credential.json".to_string(),
-        mapping_path: "res/mapping.json".to_string(),
+        input_path: "res/source_credential_ELM.json".to_string(),
+        mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
         selected_input_field: 1,

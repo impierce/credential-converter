@@ -1,3 +1,6 @@
+use crate::elm::ELM;
+use crate::obv3::OBv3;
+use crate::p2_handler::selector;
 use crate::repository::{construct_leaf_node, merge, Repository};
 use crate::trace_dbg;
 use crate::transformations::Transformation;
@@ -83,10 +86,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 }
 
 fn preload_p2(state: &mut AppState) {
-    let (input_format, output_format) = match state.mapping {
-        Mapping::OBv3ToELM => ("OBv3", "ELM"),
-        Mapping::ELMToOBv3 => ("ELM", "OBv3"),
-    };
+    let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
     // Load the input file
     {
@@ -103,10 +103,13 @@ fn preload_p2(state: &mut AppState) {
         state.amount_input_fields = input_fields.len() - 2;
         state.input_fields = input_fields;
 
-        state.repository = Repository::from(HashMap::from_iter(vec![(
-            input_format.to_string(),
-            get_json(&state.input_path).expect("No source file found"),
-        )]));
+        state.repository = Repository::from(HashMap::from_iter(vec![
+            (
+                input_format.to_string(),
+                get_json(&state.input_path).expect("No source file found"),
+            ),
+            (output_format.to_string(), json!({})),
+        ]));
 
         trace_dbg!("Successfully loaded the input file");
     }
@@ -132,49 +135,28 @@ fn preload_p2(state: &mut AppState) {
         state.repository.apply_transformations(transformations);
     }
 
-    let mut json_value = state.repository.get(output_format).unwrap().clone();
+    trace_dbg!(&output_format);
+    trace_dbg!(&state.repository);
+    let mut json_value = state.repository.get(&output_format).unwrap().clone();
 
-    state.missing_data_field = verify(&mut json_value).err();
+    state.missing_data_field = match state.mapping.output_format().as_str() {
+        "OBv3" => verify::<OBv3>(&mut json_value).err(),
+        "ELM" => verify::<ELM>(&mut json_value).err(),
+        _ => panic!(),
+    };
+
+    selector(state);
 }
 
-#[test]
-fn test_verify() {
-
-    // let mut json_value = json!({
-    //     "person": {
-    //         "fullName": "John Doe"
-    //     }
-    // });
-
-    // let result = verify(&mut json_value);
-    // println!("{:#?}", result);
-
-    // json_value["another_field"] = json!("another_field");
-
-    // let result = verify(&mut json_value);
-    // println!("{:#?}", result);
-
-    // json_value["another_field2"]["test2"]["test3"] = json!("a");
-
-    // let result = verify(&mut json_value);
-    // println!("{:#?}", result);
-    // json_value["another_field2"]["test2"]["test4"] = json!("b");
-
-    // let result = verify(&mut json_value);
-    // println!("{:#?}", result);
-
-    // json_value["another_field2"]["test2"]["test5"]["test6"] = json!("c");
-
-    // let result = verify(&mut json_value);
-    // println!("{}", serde_json::to_string_pretty(&result).unwrap());
-}
-
-pub fn verify(json_value: &mut Value) -> Result<Value, String> {
+pub fn verify<T>(json_value: &mut Value) -> Result<Value, String>
+where
+    T: DeserializeOwned + Serialize,
+{
     let mut json_as_string = json_value.to_string();
     loop {
         // TODO: make dynamic
         let mut de = serde_json::Deserializer::from_str(&json_as_string);
-        match serde_path_to_error::deserialize::<_, OBv3>(&mut de) {
+        match serde_path_to_error::deserialize::<_, T>(&mut de) {
             Ok(obv3_credential) => return Ok(json!(obv3_credential)),
             Err(e) => {
                 // println!("Error: {:?}", e);
@@ -295,69 +277,6 @@ pub fn verify(json_value: &mut Value) -> Result<Value, String> {
     }
 }
 
-fn temp(state: &mut AppState) {
-    // Load the input file
-    {
-        let rdr = std::fs::File::open(&state.input_path).unwrap();
-        let input_value: Value = serde_json::from_reader(rdr).unwrap();
-        let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
-        let mut input_fields = vec![(String::new(), String::new())];
-
-        for (key, value) in leaf_nodes {
-            input_fields.push((key, value.to_string()));
-        }
-
-        input_fields.sort();
-        state.amount_input_fields = input_fields.len() - 2;
-        state.input_fields = input_fields;
-
-        state.repository = Repository::from(HashMap::from_iter(vec![(
-            match state.mapping {
-                Mapping::OBv3ToELM => "OBv3".to_string(),
-                Mapping::ELMToOBv3 => "ELM".to_string(),
-            },
-            get_json(&state.input_path).expect("No source file found"),
-        )]));
-
-        trace_dbg!("Successfully loaded the input file");
-    }
-
-    // Load the mapping file
-    {
-        // TODO: remove this hardcoded code
-        let mapping_path = "../../res/mapping.json";
-        let rdr = std::fs::File::open(mapping_path).unwrap();
-        let mut transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-
-        trace_dbg!("Successfully loaded the mapping file");
-
-        // Load the custom mapping file
-        {
-            if let Some(custom_mapping_path) = &state.custom_mapping_path {
-                // TODO: remove this hardcoded code
-                let custom_mapping_path = "../../res/custom_mapping.json";
-                let rdr = std::fs::File::open(custom_mapping_path).unwrap();
-                let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-                transformations.append(&mut custom_transformations);
-
-                trace_dbg!("Successfully loaded the custom mapping file");
-            }
-        }
-
-        state.repository.apply_transformations(transformations);
-    }
-}
-
-#[test]
-fn temp_test() {
-    let mut state = AppState {
-        input_path: "../../res/source_credential.json".to_string(),
-        ..Default::default()
-    };
-
-    temp(&mut state);
-}
-
 fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
 where
     T: DeserializeOwned,
@@ -366,36 +285,6 @@ where
     let reader = BufReader::new(file);
 
     serde_json::from_reader(reader)
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Person {
-    full_name: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OBv3 {
-    person: Person,
-    another_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_fieldanother_field: String,
-    another_field2: Test,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Test {
-    test2: Test2,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Test2 {
-    test3: String,
-    test4: String,
-    test5: Test5,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Test5 {
-    test6: String,
 }
 
 fn extract_between_backticks(s: &str) -> Option<String> {

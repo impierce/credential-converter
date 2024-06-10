@@ -68,14 +68,30 @@ pub enum P1Prompts {
     Mapping,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Mapping {
     OBv3ToELM = 0,
     #[default]
     ELMToOBv3,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
+impl Mapping {
+    pub fn input_format(&self) -> String {
+        match self {
+            Mapping::OBv3ToELM => "OBv3".to_string(),
+            Mapping::ELMToOBv3 => "ELM".to_string(),
+        }
+    }
+
+    pub fn output_format(&self) -> String {
+        match self {
+            Mapping::OBv3ToELM => "ELM".to_string(),
+            Mapping::ELMToOBv3 => "OBv3".to_string(),
+        }
+    }
+}
+
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum Transformations {
     #[default]
     Copy = 0,
