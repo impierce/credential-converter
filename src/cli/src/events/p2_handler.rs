@@ -13,6 +13,7 @@ use crate::{
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
 pub fn selector(state: &mut AppState) {
+    // This function shows the outcome of the transformation selected in the togglebar not the outcome of the Vec of selected transformations: state.selected_transformations.
     let transformation = Transformations::from_repr(state.selected_transformation).unwrap();
     trace_dbg!(transformation);
 
@@ -136,8 +137,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     trace_dbg!(&state.candidate_data_value);
                 }
                 Enter => {
-                    if !state.map_input_field {
-                        state.map_input_field = true;
+                    if !state.popup_mapper_p2 {
+                        state.popup_mapper_p2 = true;
                     } 
                     else if !state.popup_selected_transformations {
                         state.selected_transformations.push(state.transformations);

@@ -57,6 +57,10 @@ pub struct AppState {
     pub offset_value: u16,
     pub offset_result_path: u16,
     pub offset_result_value: u16,
+
+    // test
+
+    pub map_input_field: bool,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -68,7 +72,7 @@ pub enum P1Prompts {
     Mapping,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum Mapping {
     OBv3ToELM = 0,
     #[default]
@@ -91,7 +95,7 @@ impl Mapping {
     }
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
     #[default]
     Copy = 0,
