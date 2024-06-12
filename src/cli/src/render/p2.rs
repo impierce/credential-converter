@@ -1,6 +1,5 @@
 use std::path::Path;
 
-use color_eyre::owo_colors::OwoColorize;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -10,7 +9,7 @@ use ratatui::{prelude::*, widgets::*};
 use style::palette::material::BLACK;
 use symbols::border;
 
-use crate::{transformations, utils::AppState};
+use crate::utils::{AppState, Multiplicity};
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
@@ -183,13 +182,9 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .render(result_value, buf);
 
     let tabs = vec![
-        "Copy",
+        "None",
         "LowerCase",
         "UpperCase",
-        "Split",
-        "Concat",
-        "OneToMany",
-        "ManyToOne",
         "Regex",
     ];
     let [transformations, selected] = Layout::horizontal(vec![
@@ -198,27 +193,62 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     ])
     .areas(bottom);
 
-    Tabs::new(vec![
-        "Copy",
-        "LowerCase",
-        "UpperCase",
-        "Split",
-        "Concat",
-        "OneToMany",
-        "ManyToOne",
-        "Regex",
-    ])
-    .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-    .highlight_style(Color::Yellow)
-    .select(state.transformations as usize)
-    .divider("")
-    .render(transformations, buf);
-
-    let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
-    Tabs::new(selected_transformations)
-    .style(Style::default().fg(Color::Black).bg(Color::Gray))
-    .highlight_style(Style::default().fg(BLACK).add_modifier(Modifier::BOLD))
-    .select(state.selected_transformation as usize)
-    .divider("")
-    .render(selected, buf);
+    if state.select_multiplicity {
+        let multiplicities = vec!["OneToOne", "OneToMany", "ManyToOne"];
+        let [transformations, selected] = Layout::horizontal(vec![
+            Constraint::Min(multiplicities.concat().len() as u16 + 8),
+            Constraint::Percentage(100),
+        ])
+        .areas(bottom);
+        Tabs::new(multiplicities)
+            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+            .highlight_style(Color::Yellow)
+            .select(state.multiplicity as usize)
+            .divider("")
+            .render(transformations, buf);
+        Paragraph::new(" At anytime press Shift + Tab to finish this single mapping")
+            .style(Style::default().fg(Color::Black).bg(Color::Gray))
+            .render(selected, buf);
+    }
+    else if state.multiplicity == Multiplicity::OneToOne {
+        if !state.popup_selected_transformations {
+            Tabs::new(tabs)
+                .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+                .highlight_style(Color::Yellow)
+                .select(state.transformations as usize)
+                .divider("")
+                .render(transformations, buf);
+            let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
+            Tabs::new(selected_transformations)
+                .style(Style::default().fg(Color::Black).bg(Color::Gray))
+                .highlight_style(Style::default().fg(BLACK))
+                .select(state.selected_transformation as usize)
+                .divider("")
+                .render(selected, buf);
+        }
+        else {
+            Tabs::new(tabs)
+                .style(Style::default().fg(Color::Black).bg(Color::Gray))
+                .highlight_style(Style::default().fg(BLACK))
+                .select(state.transformations as usize)
+                .divider("")
+                .render(transformations, buf);
+            let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
+            Tabs::new(selected_transformations)
+                .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+                .highlight_style(Color::Yellow)
+                .select(state.selected_transformation as usize)
+                .divider("")
+                .render(selected, buf);
+        }
+    }
+    else if state.multiplicity == Multiplicity::OneToMany {
+        let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
+        Tabs::new(selected_transformations)
+            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+            .highlight_style(Color::Yellow)
+            .select(state.selected_transformation as usize)
+            .divider("")
+            .render(selected, buf);
+    }
 }

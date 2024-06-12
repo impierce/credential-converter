@@ -1,8 +1,5 @@
-use crate::{
-    trace_dbg,
-    utils::{AppState, Tabs},
-};
-use crossterm::event::{self, KeyEventKind};
+use crate::utils::{AppState, Tabs};
+use crossterm::event::{self};
 
 pub mod p1_handler;
 pub mod p2_handler;

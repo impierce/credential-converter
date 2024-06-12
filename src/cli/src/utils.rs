@@ -1,4 +1,4 @@
-use std::{collections::HashMap, default};
+use std::collections::HashMap;
 
 use crate::repository::Repository;
 use ratatui::layout::Rect;
@@ -12,12 +12,17 @@ pub struct AppState {
     // Fields for navigation and rendering
     pub tab: Tabs,
     pub p1_prompts: P1Prompts,
-    pub mapping: Mapping,
     pub popup_mapper_p2: bool,
     pub popup_selected_transformations: bool,
+    pub select_multiplicity: bool,
+
+    // Mapping options
+    pub mapping: Mapping,
     pub selected_transformation: usize,
+    pub multiplicity: Multiplicity,
     pub transformations: Transformations,
     pub selected_transformations: Vec<Transformations>,
+
     // Paths
     pub input_path: String,
     pub mapping_path: String,
@@ -25,6 +30,7 @@ pub struct AppState {
     pub custom_mapping_path: Option<String>,
     // Unused data path will automatically be input_path + "_unused_data.json", but user can change this.
     pub unused_data_path: String,
+
     // Fields extracted from the input json file.
     pub input_fields: Vec<(String, String)>,
     pub selected_input_field: usize,
@@ -60,7 +66,8 @@ pub struct AppState {
 
     // test
 
-    pub map_input_field: bool,
+    // testcase
+    pub finish_mapping: bool, // change into button, thus a click event, not key press event
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -96,15 +103,18 @@ impl Mapping {
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
+pub enum Multiplicity {
+    #[default]
+    OneToOne,
+    OneToMany,
+    ManyToOne,
+}
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
     #[default]
     Copy = 0,
     LowerCase,
     UpperCase,
-    Split,
-    Concat,
-    OneToMany,
-    ManyToOne,
     Regex,
 }
 
@@ -139,6 +149,7 @@ next_prev!(Mapping);
 next_prev!(Tabs);
 next_prev!(P1Prompts);
 next_prev!(Transformations);
+next_prev!(Multiplicity);
 
 //////////      HELPERS     //////////
 

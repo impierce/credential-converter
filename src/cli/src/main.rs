@@ -26,7 +26,6 @@ fn main() -> Result<()> {
     trace_dbg!("Starting the application");
 
     // Initialize the alternate terminal screen, its input and the backend for it.
-    //let mut stdout = stdout();
     execute!(stdout(), EnterAlternateScreen, EnableMouseCapture)?;
     enable_raw_mode()?;
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
