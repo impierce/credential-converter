@@ -14,3 +14,8 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, _state: &mut AppState) 
         .borders(Borders::TOP)
         .render(area, buf);
 }
+
+    // Paragraph::new(state.unused_data_path.as_str())
+    //     .block(mapping_prompt)
+    //     .render(lost_data_path, buf);
+    // todo: Need to add this option again at the end

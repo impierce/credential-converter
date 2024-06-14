@@ -31,16 +31,11 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Left => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.prev();
-                        let strr = format!("{:?}", state.mapping);
-                        trace_dbg!(strr);
                     }
                 }
                 Right => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.next();
-                        state.mapping = crate::state::Mapping::ELMToOBv3;
-                        let strr = format!("{:?}", state.mapping);
-                        trace_dbg!(strr);
                     }
                 }
                 Up => {
@@ -53,10 +48,11 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                     let input_path = Path::new(&state.input_path);
                     let output_path = Path::new(&state.output_path);
+                    let mapping_path = Path::new(&state.mapping_path);
                     if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
                         state.output_warning = true;
                     }
-                    else if state.p1_prompts == P1Prompts::Mapping && input_path.exists() && input_path.is_file() {
+                    else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() {
                         state.tab.next();
                         preload_p2(state);
                     }
@@ -74,6 +70,9 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     P1Prompts::Output => {
                         state.output_path.pop();
+                    }
+                    P1Prompts::MappingFile => {
+                        state.mapping_path.pop();
                     }
                     _ => {}
                 },
