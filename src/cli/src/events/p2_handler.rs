@@ -1,83 +1,13 @@
 use std::io::Write;
 
 use crate::{
-    elm::ELM,
-    jsonpointer::{JsonPath, JsonPointer},
-    obv3::OBv3,
-    p1_handler::verify,
-    repository::{self, construct_leaf_node, merge, Repository},
-    trace_dbg,
-    transformations::{DataLocation, OneToOne, Transformation},
-    utils::{AppState, Mapping, Transformations},
+    backend::{preload_p2::verify, repository::{construct_leaf_node, merge}, selector::selector}, elm::ELM, obv3::OBv3, state::{AppState, Multiplicity}, trace_dbg
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
-
-pub fn selector(state: &mut AppState) {
-    // This function shows the outcome of the transformation selected in the togglebar not the outcome of the Vec of selected transformations: state.selected_transformations.
-    let transformation = Transformations::from_repr(state.selected_transformation).unwrap();
-    trace_dbg!(transformation);
-
-    let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
-
-    let (source_pointer, source_value) = state.input_fields[state.selected_input_field].clone();
-
-    let pointer = state.missing_data_field.as_ref().unwrap().clone();
-    let destination_path: JsonPath = JsonPointer(pointer.clone()).into();
-
-    let mut temp_repository = Repository::from(state.repository.clone());
-
-    let transformation = match transformation {
-        Transformations::LowerCase => Transformation::OneToOne {
-            type_: OneToOne::toLowerCase,
-            source: DataLocation {
-                format: input_format.clone(),
-                path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
-            },
-            destination: DataLocation {
-                format: output_format.clone(),
-                path: destination_path.to_string(),
-            },
-        },
-        Transformations::UpperCase => Transformation::OneToOne {
-            type_: OneToOne::toUpperCase,
-            source: DataLocation {
-                format: input_format.clone(),
-                path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
-            },
-            destination: DataLocation {
-                format: output_format.clone(),
-                path: destination_path.to_string(),
-            },
-        },
-        Transformations::Copy | _ => Transformation::OneToOne {
-            type_: OneToOne::copy,
-            source: DataLocation {
-                format: input_format.clone(),
-                path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
-            },
-            destination: DataLocation {
-                format: output_format.clone(),
-                path: destination_path.to_string(),
-            },
-        },
-    };
-
-    temp_repository.apply_transformation(transformation);
-
-    let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();
-
-    state.candidate_data_value = Some(candidate_data_value.to_string());
-}
 
 pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {
     if let event::Event::Key(key) = event {
         if key.kind == KeyEventKind::Press {
-            trace_dbg!(key.code);
-            trace_dbg!(key.modifiers);
-            if key.modifiers == crossterm::event::KeyModifiers::SHIFT && key.code == Tab {
-                state.finish_mapping = true;
-                state.popup_mapper_p2 = false;
-            }
             match key.code {
                 Esc => {
                     if state.popup_mapper_p2 {
@@ -95,6 +25,9 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_transformation -= 1;
                         }
                     } 
+                    else if state.popup_mapper_p2 && state.multiplicity == Multiplicity::OneToMany {
+                        state.dividers.pop();
+                    }
                 }
                 Tab => {
                     if state.popup_mapper_p2 && !state.select_multiplicity {
@@ -102,13 +35,6 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     } 
                     else if !state.popup_mapper_p2{
                         state.tab.next();
-                    }
-                }
-                BackTab => {
-                    if state.popup_mapper_p2 {
-                        trace_dbg!("here");
-                        state.finish_mapping = true;
-                        state.popup_mapper_p2 = false;
                     }
                 }
                 F(2) => {
@@ -217,6 +143,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                     }
                 }
+                Char(char) => {
+                    if state.popup_mapper_p2 && state.multiplicity == Multiplicity::OneToMany {
+                        state.dividers.push(char);
+                    }
+                }
                 _ => {}
             }
 
@@ -284,6 +215,14 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.selected_input_field > 1 {
                         state.selected_input_field -= 1;
                     }
+                }
+            }
+            event::MouseEventKind::Up(_) => {
+                state.hover_finish_popup_p2 =
+                is_mouse_over_area(mouse_event.column, mouse_event.row, state.finish_area_popup_p2);
+                if state.hover_finish_popup_p2 {
+                    state.finish_mapping = true;
+                    state.popup_mapper_p2 = false;
                 }
             }
             _ => {}

@@ -1,4 +1,4 @@
-use crate::utils::{AppState, Tabs};
+use crate::state::{AppState, Tabs};
 use crossterm::event::{self};
 
 pub mod p1_handler;

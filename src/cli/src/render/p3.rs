@@ -5,7 +5,7 @@ use ratatui::{
 };
 use ratatui::{prelude::*, widgets::*};
 
-use crate::utils::AppState;
+use crate::state::AppState;
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, _state: &mut AppState) {
     Block::new()

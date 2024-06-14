@@ -1,4 +1,4 @@
-use crate::utils::AppState;
+use crate::state::AppState;
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
 pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {

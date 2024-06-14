@@ -8,7 +8,7 @@ use std::path::Path;
 
 use crate::{
     trace_dbg,
-    utils::{AppState, P1Prompts},
+    state::{AppState, P1Prompts},
 };
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -82,14 +82,30 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
             .render(input_path, buf);
     }
 
-    Paragraph::new(state.output_path.as_str())
-        .block(output_prompt)
-        .render(output_path, buf);
+    let path = Path::new(&state.output_path);
+    if state.output_path.is_empty() {
+        Paragraph::new(state.output_path.as_str())
+            .block(output_prompt)
+            .fg(Color::White)
+            .render(output_path, buf);
+    }        
+    else if !path.is_file() {
+        trace_dbg!(&state.output_path);
+        Paragraph::new(state.output_path.as_str())
+            .block(output_prompt)
+            .fg(Color::Green)
+            .render(output_path, buf);
+    } else {
+        Paragraph::new(state.output_path.as_str())
+            .block(output_prompt)
+            .fg(Color::Rgb(240, 160, 100))
+            .render(output_path, buf);
+    }
 
     // Paragraph::new(state.unused_data_path.as_str())
     //     .block(mapping_prompt)
     //     .render(lost_data_path, buf);
-    // Need to add this option again at the end
+    // todo: Need to add this option again at the end
 
     mapping_prompt.render(mapping, buf);
     let mapping_prompt_inner = mapping.inner(&Margin {
@@ -124,4 +140,39 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
             .fg(Color::Green)
             .render(mapping_file, buf);
     }
+
+    if state.output_warning {
+        trace_dbg!("rendering warning");
+        render_popup_warning(area.inner(&Margin {
+            vertical: 4,
+            horizontal: 30,
+        }), buf, state);
+    }
+}
+
+pub fn render_popup_warning(area: Rect, buf: &mut Buffer, _state: &mut AppState) {
+    Clear.render(area, buf);
+    Block::new().style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
+        .borders(Borders::ALL)
+        .render(area, buf);
+
+    // let horizontal_sections = Layout::horizontal(vec![
+    //     Constraint::Percentage(33),
+    //     Constraint::Min(0),
+    //     Constraint::Percentage(33),
+    // ]);
+    // let vertical_sections = Layout::vertical(vec![Constraint::Percentage(100), Constraint::Min(1)]);
+    // let [top, bottom] = vertical_sections.areas(area);
+    // let [left, middle, right] = horizontal_sections.areas(top);
+
+    let vertical_margin = (area.height - 3) / 2;
+    Paragraph::new("\nA file already exists in the given output path location.
+    This file will be overwritten if you continue.")
+        .centered()
+        .alignment(Alignment::Center)
+        .wrap(Wrap { trim: true })
+        .render(area.inner(&Margin {
+            vertical: vertical_margin,
+            horizontal: 1,
+        }), buf);
 }

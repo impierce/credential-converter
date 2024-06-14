@@ -1,7 +1,6 @@
 use crate::{
-    jsonpointer::{JsonPath, JsonPointer},
+    backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}},
     trace_dbg,
-    transformations::{DataLocation, Transformation},
 };
 use jsonpath_rust::JsonPathFinder;
 use serde_json::{json, Map, Value};

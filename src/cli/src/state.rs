@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
-use crate::repository::Repository;
 use ratatui::layout::Rect;
-use serde_json::Value;
 use strum::{Display, FromRepr};
+
+use crate::backend::repository::Repository;
 
 //////////      STRUCTS & ENUMS     //////////
 
@@ -15,6 +13,7 @@ pub struct AppState {
     pub popup_mapper_p2: bool,
     pub popup_selected_transformations: bool,
     pub select_multiplicity: bool,
+    pub output_warning: bool,
 
     // Mapping options
     pub mapping: Mapping,
@@ -22,6 +21,10 @@ pub struct AppState {
     pub multiplicity: Multiplicity,
     pub transformations: Transformations,
     pub selected_transformations: Vec<Transformations>,
+    pub dividers: String,
+    pub selected_missing_field: usize,
+    pub selected_missing_fields: Vec<String>,
+    pub selected_input_fields: Vec<String>,
 
     // Paths
     pub input_path: String,
@@ -37,6 +40,7 @@ pub struct AppState {
     pub amount_input_fields: usize,
 
     pub missing_data_field: Option<String>,
+    pub missing_data_fields: Option<Vec<String>>,
     pub candidate_data_value: Option<String>,
 
     pub repository: Repository,
@@ -48,6 +52,7 @@ pub struct AppState {
     pub hover_popup_value_p2: bool,
     pub hover_popup_result_path_p2: bool,
     pub hover_popup_result_value_p2: bool,
+    pub hover_finish_popup_p2: bool,
 
     // Areas
     // added Area to the appstate because it was problematic to pass it to the event_handler,
@@ -58,6 +63,7 @@ pub struct AppState {
     pub popup_value_area_p2: Rect,
     pub popup_result_path_p2: Rect,
     pub popup_result_value_p2: Rect,
+    pub finish_area_popup_p2: Rect,
 
     // Scroll offsets/positions
     pub offset_value: u16,
@@ -115,6 +121,7 @@ pub enum Transformations {
     Copy = 0,
     LowerCase,
     UpperCase,
+    Slice,
     Regex,
 }
 
@@ -150,32 +157,3 @@ next_prev!(Tabs);
 next_prev!(P1Prompts);
 next_prev!(Transformations);
 next_prev!(Multiplicity);
-
-//////////      HELPERS     //////////
-
-pub fn extract_leaf_nodes(json_object: &Value, path: String, result: &mut HashMap<String, Value>) {
-    match json_object {
-        Value::Object(map) => {
-            for (key, value) in map {
-                let new_path = if path.is_empty() {
-                    key.clone()
-                } else {
-                    format!("{}/{}", path, key)
-                };
-                extract_leaf_nodes(value, new_path, result);
-            }
-        }
-        _ => {
-            result.insert(path, json_object.clone());
-        }
-    }
-}
-
-pub fn get_leaf_nodes(json_object: Value) -> HashMap<String, Value> {
-    let mut result = HashMap::new();
-    extract_leaf_nodes(&json_object, String::new(), &mut result);
-    result
-        .into_iter()
-        .map(|(key, value)| (format!("/{}", key), value))
-        .collect()
-}

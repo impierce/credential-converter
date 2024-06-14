@@ -12,7 +12,7 @@ use ratatui::{
 };
 use ratatui::prelude::*;
 
-use crate::utils::AppState;
+use crate::state::AppState;
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     // let state.frame = frame;
@@ -20,9 +20,9 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     let [top, bottom_area] = vertical_sections.areas(area);
 
     match state.tab {
-        crate::utils::Tabs::InputPromptsP1 => render_description_input_p1(top, frame.buffer_mut(), state),
-        crate::utils::Tabs::ManualMappingP2 => render_manual_mapping_p2(top, frame.buffer_mut(), state),
-        crate::utils::Tabs::UnusedDataP3 => render_lost_data_p3(top, frame.buffer_mut(), state),
+        crate::state::Tabs::InputPromptsP1 => render_description_input_p1(top, frame.buffer_mut(), state),
+        crate::state::Tabs::ManualMappingP2 => render_manual_mapping_p2(top, frame.buffer_mut(), state),
+        crate::state::Tabs::UnusedDataP3 => render_lost_data_p3(top, frame.buffer_mut(), state),
     }
     render_bottom_bar(bottom_area, frame.buffer_mut());
 }
