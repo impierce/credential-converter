@@ -12,7 +12,7 @@ use crate::{
 };
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    // Title at the top of p1
+    // Main title at the top of p1
     Block::new()
         .title("  OB-ELM Mapper  ")
         .title_alignment(Alignment::Center)

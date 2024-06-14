@@ -1,7 +1,4 @@
-use crate::{
-    backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}},
-    trace_dbg,
-};
+use crate::backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}};
 use jsonpath_rust::JsonPathFinder;
 use serde_json::{json, Map, Value};
 use std::{
@@ -33,9 +30,9 @@ impl From<HashMap<String, Value>> for Repository {
 }
 
 impl Repository {
-    fn new() -> Self {
-        Self(HashMap::new())
-    }
+    // fn new() -> Self {
+    //     Self(HashMap::new())
+    // }
 
     pub fn apply_transformation(&mut self, transformation: Transformation) {
         match transformation {

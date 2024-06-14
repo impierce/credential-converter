@@ -1,9 +1,19 @@
 use std::io::Write;
 
 use crate::{
-    backend::{preload_p2::verify, repository::{construct_leaf_node, merge}, selector::selector}, elm::ELM, obv3::OBv3, state::{AppState, Multiplicity}, trace_dbg
+    backend::{
+        preload_p2::verify,
+        repository::{construct_leaf_node, merge},
+        selector::selector,
+    },
+    elm::ELM,
+    obv3::OBv3,
+    state::{AppState, Multiplicity},
+    trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
+
+use super::is_mouse_over_area;
 
 pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {
     if let event::Event::Key(key) = event {
@@ -13,8 +23,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.popup_mapper_p2 {
                         state.popup_mapper_p2 = false;
                         state.popup_selected_transformations = false;
-                    } 
-                    else {
+                    } else {
                         return Ok(true);
                     }
                 }
@@ -24,52 +33,58 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
                         }
-                    } 
-                    else if state.popup_mapper_p2 && state.multiplicity == Multiplicity::OneToMany {
+                    } else if state.popup_mapper_p2 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.pop();
                     }
                 }
                 Tab => {
                     if state.popup_mapper_p2 && !state.select_multiplicity {
                         state.popup_selected_transformations = !state.popup_selected_transformations;
-                    } 
-                    else if !state.popup_mapper_p2{
+                    } else if !state.popup_mapper_p2 {
                         state.tab.next();
                     }
                 }
                 F(2) => {
                     if state.popup_mapper_p2 {
                         state.select_multiplicity = true;
-                    }
-                    else {
+                    } else {
                         state.tab.prev();
                     }
                 }
                 Left => {
-                    if state.popup_mapper_p2 && state.select_multiplicity{
+                    if state.popup_mapper_p2 && state.select_multiplicity {
                         state.multiplicity.prev();
-                    }
-                    else if state.popup_mapper_p2 && !state.select_multiplicity && !state.popup_selected_transformations {
+                    } else if state.popup_mapper_p2
+                        && !state.select_multiplicity
+                        && !state.popup_selected_transformations
+                    {
                         state.transformations.prev();
                         selector(state);
                         trace_dbg!(&state.candidate_data_value);
-                    }
-                    else if state.popup_mapper_p2 && state.popup_selected_transformations && state.selected_transformation > 0 {
+                    } else if state.popup_mapper_p2
+                        && state.popup_selected_transformations
+                        && state.selected_transformation > 0
+                    {
                         state.selected_transformation -= 1;
                         trace_dbg!(state.selected_transformation);
                     }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
-                    if state.popup_mapper_p2 && state.select_multiplicity{
+                    if state.popup_mapper_p2 && state.select_multiplicity {
                         state.multiplicity.next();
-                    }
-                    else if state.popup_mapper_p2 && !state.select_multiplicity && !state.popup_selected_transformations {
+                    } else if state.popup_mapper_p2
+                        && !state.select_multiplicity
+                        && !state.popup_selected_transformations
+                    {
                         state.transformations.next();
                         selector(state);
                         trace_dbg!(&state.candidate_data_value);
-                    }
-                    else if state.popup_mapper_p2 && state.popup_selected_transformations && !state.selected_transformations.is_empty() && state.selected_transformation < state.selected_transformations.len() -1 {
+                    } else if state.popup_mapper_p2
+                        && state.popup_selected_transformations
+                        && !state.selected_transformations.is_empty()
+                        && state.selected_transformation < state.selected_transformations.len() - 1
+                    {
                         state.selected_transformation += 1;
                         trace_dbg!(state.selected_transformation);
                     }
@@ -93,14 +108,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if !state.popup_mapper_p2 {
                         state.popup_mapper_p2 = true;
                         state.select_multiplicity = true;
-                    }
-                    else if state.popup_mapper_p2 && state.select_multiplicity {
+                    } else if state.popup_mapper_p2 && state.select_multiplicity {
                         state.select_multiplicity = false;
-                    }
-                    else if !state.popup_selected_transformations {
+                    } else if !state.popup_selected_transformations {
                         state.selected_transformations.push(state.transformations);
-                    }
-                    else {                 
+                    } else {
                         let output_format = state.mapping.output_format();
 
                         // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
@@ -134,13 +146,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.tab.next();
                         }
 
-                        
-                    // if state.missing_data_field.is_none() {
-                    //     let mut file = std::fs::File::create(&state.output_path).unwrap();
-                    //     file.write_all(temp.as_bytes()).unwrap();
-                    //     state.tab.next();
-                    // }
-
+                        // if state.missing_data_field.is_none() {
+                        //     let mut file = std::fs::File::create(&state.output_path).unwrap();
+                        //     file.write_all(temp.as_bytes()).unwrap();
+                        //     state.tab.next();
+                        // }
                     }
                 }
                 Char(char) => {
@@ -150,7 +160,6 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 _ => {}
             }
-
         }
     }
     if let event::Event::Mouse(mouse_event) = event {
@@ -219,10 +228,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 state.hover_finish_popup_p2 =
-                is_mouse_over_area(mouse_event.column, mouse_event.row, state.finish_area_popup_p2);
+                    is_mouse_over_area(mouse_event.column, mouse_event.row, state.finish_area_popup_p2);
+                state.hover_prev_page = is_mouse_over_area(mouse_event.column, mouse_event.row, state.prev_page_button);
                 if state.hover_finish_popup_p2 {
                     state.finish_mapping = true;
                     state.popup_mapper_p2 = false;
+                } else if state.hover_prev_page {
+                    state.tab.prev();
                 }
             }
             _ => {}
@@ -230,10 +242,4 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     }
 
     Ok(false)
-}
-
-//////////     HELPERS     //////////
-
-fn is_mouse_over_area(mouse_x: u16, mouse_y: u16, area: ratatui::layout::Rect) -> bool {
-    mouse_x >= area.x && mouse_x < area.x + area.width && mouse_y >= area.y && mouse_y < area.y + area.height
 }

@@ -1,6 +1,5 @@
 use crate::backend::preload_p2::preload_p2;
-use crate::trace_dbg;
-use crate::state::{AppState, P1Prompts, Tabs};
+use crate::state::{AppState, P1Prompts};
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 use std::path::Path;
 
@@ -17,12 +16,22 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Tab => {
-                    let path = Path::new(&state.input_path);
-                    if state.tab == Tabs::InputPromptsP1 && path.exists() && path.is_file() {
+                    let input_path = Path::new(&state.input_path);
+                    let output_path = Path::new(&state.output_path);
+                    let mapping_path = Path::new(&state.mapping_path);
+                    if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
+                        state.output_warning = true;
+                    }
+                    else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() {
                         state.tab.next();
                         preload_p2(state);
-                    } else {
-                        state.tab.next();
+                    }
+                    else if state.output_warning {
+                        state.output_warning = false;
+                        state.p1_prompts.next();
+                    }
+                    else {
+                        state.p1_prompts.next();
                     }
                 }
                 F(2) => {
@@ -45,7 +54,6 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.p1_prompts.next();
                 }
                 Enter => {
-
                     let input_path = Path::new(&state.input_path);
                     let output_path = Path::new(&state.output_path);
                     let mapping_path = Path::new(&state.mapping_path);

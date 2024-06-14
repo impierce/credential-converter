@@ -53,6 +53,7 @@ pub struct AppState {
     pub hover_popup_result_path_p2: bool,
     pub hover_popup_result_value_p2: bool,
     pub hover_finish_popup_p2: bool,
+    pub hover_prev_page: bool,
 
     // Areas
     // added Area to the appstate because it was problematic to pass it to the event_handler,
@@ -64,6 +65,7 @@ pub struct AppState {
     pub popup_result_path_p2: Rect,
     pub popup_result_value_p2: Rect,
     pub finish_area_popup_p2: Rect,
+    pub prev_page_button: Rect,
 
     // Scroll offsets/positions
     pub offset_value: u16,

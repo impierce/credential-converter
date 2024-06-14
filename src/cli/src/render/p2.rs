@@ -12,19 +12,19 @@ use symbols::border;
 use crate::state::{AppState, Multiplicity};
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Main title at the top of p2
     Block::new()
         .title("  Manual Mapping  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
 
-    let horizontal_sections = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]);
-    let [_title, page] = horizontal_sections.areas(area);
-    let vertical_sections = Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]);
-    let [mut left_selector, mut right_missing_fields] = vertical_sections.areas(page);
-
+    // Layout
+    let [_title, page] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(area);
+    let [mut left_selector, mut right_missing_fields] = Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]).areas(page);
     Block::new().borders(Borders::RIGHT).render(left_selector, buf);
 
+    // Inner blocks for margins
     left_selector = left_selector.inner(&Margin {
         vertical: 0,
         horizontal: 1,
@@ -33,6 +33,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         vertical: 0,
         horizontal: 1,
     });
+    
     state.selector_area_p2 = left_selector;
 
     let path = Path::new(&state.input_path);

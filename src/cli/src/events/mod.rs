@@ -29,3 +29,9 @@ pub fn events_handler(state: &mut AppState) -> Result<bool, std::io::Error> {
 
     Ok(quit)
 }
+
+//////////     HELPERS     //////////
+
+fn is_mouse_over_area(mouse_x: u16, mouse_y: u16, area: ratatui::layout::Rect) -> bool {
+    mouse_x >= area.x && mouse_x < area.x + area.width && mouse_y >= area.y && mouse_y < area.y + area.height
+}
