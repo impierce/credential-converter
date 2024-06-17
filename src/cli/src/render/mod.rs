@@ -24,15 +24,15 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     }
 
     // Extra layout for the prev page & finish button
-    let [prev_button, _rest, finish_button] = Layout::horizontal(vec![Constraint::Length(3), Constraint::Percentage(100), Constraint::Length(8)]).areas(top);
+    let [prev_button, _rest, complete_button] = Layout::horizontal(vec![Constraint::Length(3), Constraint::Percentage(100), Constraint::Length(10)]).areas(top);
     let [prev_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(prev_button);
-    let [finish_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(finish_button);
+    let [complete_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(complete_button);
     if state.tab != Tabs::InputPromptsP1 {
         state.prev_page_button = prev_button;
         render_prev_page_button(prev_button, frame.buffer_mut());
     }
-    state.finish_button = finish_button;
-    render_finish_button(finish_button, frame.buffer_mut());
+    state.complete_button = complete_button;
+    render_complete_button(complete_button, frame.buffer_mut());
 
     render_bottom_bar(bottom_area, frame.buffer_mut());
 }
@@ -81,9 +81,9 @@ fn render_prev_page_button(area: Rect, buf: &mut Buffer) {
         .render(area, buf);
 }
 
-fn render_finish_button(area: Rect, buf: &mut Buffer) {
+fn render_complete_button(area: Rect, buf: &mut Buffer) {
     Block::default()
-        .title(" Finish ")
+        .title(" Complete ")
         .style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))
         .title_alignment(Alignment::Center)
         .render(area, buf);

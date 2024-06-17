@@ -237,13 +237,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 // }
             }
             event::MouseEventKind::Up(_) => {
-                if is_mouse_over_area(state.finish_button, mouse_event.column, mouse_event.row) {
-                    state.finish = true; // todo
+                if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
+                    state.complete = true; // todo
                     state.popup_p2 = false;
-                } else if is_mouse_over_area(state.confirm_area_p2, mouse_event.column, mouse_event.row) {
+                } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
                     // todo state.confirm = true;
                     state.popup_p2 = false;
-                } else if is_mouse_over_area(state.back_area_p2, mouse_event.column, mouse_event.row) {
+                } else if is_mouse_over_area(state.back_button, mouse_event.column, mouse_event.row) {
                     state.select_multiplicity = true;
                     state.selected_transformations.clear();
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {

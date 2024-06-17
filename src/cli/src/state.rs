@@ -57,9 +57,9 @@ pub struct AppState {
     pub popup_value_area_p2: Rect,
     pub popup_result_path_p2: Rect,
     pub popup_result_value_p2: Rect,
-    pub back_area_p2: Rect,
-    pub confirm_area_p2: Rect,
-    pub finish_button: Rect,
+    pub back_button: Rect,
+    pub confirm_button: Rect,
+    pub complete_button: Rect,
     pub prev_page_button: Rect,
 
     // Scroll offsets/positions
@@ -67,10 +67,8 @@ pub struct AppState {
     pub offset_result_path: u16,
     pub offset_result_value: u16,
 
-    // test
-
     // testcase
-    pub finish: bool, // change into button, thus a click event, not key press event
+    pub complete: bool, // change into button, thus a click event, not key press event
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -138,28 +136,60 @@ pub enum Tabs {
     UnusedDataP3,
 }
 
+// test
 #[macro_export]
 macro_rules! next_prev {
-    ($my_type:ty) => {
+    ($my_type:ty, $min:expr, $max:expr) => {
         impl $my_type {
             pub fn next(&mut self) {
                 let current_index = *self as usize;
-                let next_index = current_index.saturating_add(1);
+                let max_index = $max as usize;
+                let next_index = if current_index == max_index {
+                    $min as usize
+                } else {
+                    current_index + 1
+                };
                 *self = Self::from_repr(next_index).unwrap_or(*self);
             }
 
             pub fn prev(&mut self) {
                 let current_index = *self as usize;
-                let prev_index = current_index.saturating_sub(1);
+                let min_index = $min as usize;
+                let max_index = $max as usize;
+                let prev_index = if current_index == min_index {
+                    max_index
+                } else {
+                    current_index.saturating_sub(1)
+                };
                 *self = Self::from_repr(prev_index).unwrap_or(*self);
             }
         }
     };
 }
+//
 
-next_prev!(Mapping);
-next_prev!(Tabs);
-next_prev!(P1Prompts);
-next_prev!(Transformations);
-next_prev!(Multiplicity);
-next_prev!(P2Tabs);
+// #[macro_export]
+// macro_rules! next_prev {
+//     ($my_type:ty) => {
+//         impl $my_type {
+//             pub fn next(&mut self) {
+//                 let current_index = *self as usize;
+//                 let next_index = current_index.saturating_add(1);
+//                 *self = Self::from_repr(next_index).unwrap_or(*self);
+//             }
+
+//             pub fn prev(&mut self) {
+//                 let current_index = *self as usize;
+//                 let prev_index = current_index.saturating_sub(1);
+//                 *self = Self::from_repr(prev_index).unwrap_or(*self);
+//             }
+//         }
+//     };
+// }
+
+next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
+next_prev!(Tabs, Tabs::InputPromptsP1, Tabs::UnusedDataP3);
+next_prev!(P1Prompts, P1Prompts::Input, P1Prompts::Mapping);
+next_prev!(Transformations, Transformations::Copy, Transformations::Regex);
+next_prev!(Multiplicity, Multiplicity::OneToOne, Multiplicity::ManyToOne);
+next_prev!(P2Tabs, P2Tabs::InputFields, P2Tabs::MappingOptions);

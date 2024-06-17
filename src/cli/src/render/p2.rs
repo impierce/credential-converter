@@ -104,7 +104,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     // Render bottom mapping options bar
     if state.select_multiplicity {
         let multiplicities = vec![" OneToOne", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, selected, back, finish] = Layout::horizontal(vec![
+        let [multiplicity_tabs, selected, back, confirm] = Layout::horizontal(vec![
             Constraint::Min(multiplicities.concat().len() as u16 + 10),
             Constraint::Percentage(100),
             Constraint::Length(6),
@@ -122,7 +122,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .style(Style::default().fg(Color::Black).bg(Color::DarkGray))
             .render(selected, buf);
 
-        render_mapping_bar_buttons(back, finish, state, buf);
+        render_mapping_bar_buttons(back, confirm, state, buf);
     } else {
         match state.multiplicity {
             Multiplicity::OneToOne => render_onetoone(bottom, buf, state),
@@ -135,7 +135,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 pub fn render_onetoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = vec![" None", "LowerCase", "UpperCase", "Slice", "Regex"];
 
-    let [transformations, selected, back, finish] = Layout::horizontal(vec![
+    let [transformations, selected, back, confirm] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
         Constraint::Percentage(100),
         Constraint::Length(6),
@@ -182,12 +182,12 @@ pub fn render_onetoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             .render(selected, buf);
     }
 
-    render_mapping_bar_buttons(back, finish, state, buf);
+    render_mapping_bar_buttons(back, confirm, state, buf);
 }
 
 fn render_onetomany(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Enter a divider, or select indices manually: ";
-    let [txt_area, dividers, back, finish] = Layout::horizontal(vec![
+    let [txt_area, dividers, back, confirm] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16),
         Constraint::Percentage(100),
         Constraint::Length(6),
@@ -215,12 +215,12 @@ fn render_onetomany(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             .render(dividers, buf);
     }
 
-    render_mapping_bar_buttons(back, finish, state, buf);
+    render_mapping_bar_buttons(back, confirm, state, buf);
 }
 
 fn render_manytoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
-    let [txt_area, back, finish] = Layout::horizontal(vec![
+    let [txt_area, back, confirm] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
         Constraint::Length(6),
         Constraint::Length(9),
@@ -236,19 +236,19 @@ fn render_manytoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         )
         .render(txt_area, buf);
 
-        render_mapping_bar_buttons(back, finish, state, buf);
+    render_mapping_bar_buttons(back, confirm, state, buf);
 }
 
-fn render_mapping_bar_buttons (back: Rect, finish: Rect, state: &mut AppState, buf: &mut Buffer) {
-    state.back_area_p2 = back;
-    state.finish_button = finish;
+fn render_mapping_bar_buttons(back: Rect, confirm: Rect, state: &mut AppState, buf: &mut Buffer) {
+    state.back_button = back;
+    state.confirm_button = confirm;
 
     Paragraph::new(" Back ")
         .style(Style::default().fg(Color::Black).bg(Color::Red))
         .render(back, buf);
     Paragraph::new(" Confirm ")
         .style(Style::default().fg(Color::Black).bg(Color::Green))
-        .render(finish, buf);
+        .render(confirm, buf);
 }
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {

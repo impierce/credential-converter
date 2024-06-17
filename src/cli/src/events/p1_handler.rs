@@ -99,7 +99,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             event::MouseEventKind::Up(_) => {
                 let input_path = Path::new(&state.input_path);
                 let mapping_path = Path::new(&state.mapping_path);
-                if is_mouse_over_area(state.finish_button, mouse_event.column, mouse_event.row) && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
+                if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
                     state.tab.next();
                     preload_p2(state);
                 }
