@@ -52,13 +52,15 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     let mapping_path = Path::new(&state.mapping_path);
                     if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
                         state.output_warning = true;
-                    } else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() {
+                    } else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
                         state.tab.next();
                         preload_p2(state);
                     } else if state.output_warning {
                         state.output_warning = false;
                         state.p1_prompts.next();
-                    } else {
+                    } else if  state.p1_prompts == P1Prompts::Mapping {
+                    }
+                    else {
                         state.p1_prompts.next();
                     }
                 }

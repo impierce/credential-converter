@@ -185,13 +185,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         match mouse_event.kind {
             event::MouseEventKind::ScrollDown => {
                 if !state.popup_p2 && is_mouse_over_area(state.selector_area_p2, mouse_event.column, mouse_event.row) {
-                    if state.selected_input_field < state.amount_input_fields {
+                    if state.selected_input_field <= state.amount_input_fields {
                         state.selected_input_field += 1;
                     }
                 } else if !state.popup_p2
                     && is_mouse_over_area(state.missing_fields_area_p2, mouse_event.column, mouse_event.row)
                 {
-                    if state.selected_missing_field < state.amount_missing_fields {
+                    if state.selected_missing_field <= state.amount_missing_fields {
                         state.selected_missing_field += 1;
                     }
                 }
