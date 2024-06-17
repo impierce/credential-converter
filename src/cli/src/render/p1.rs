@@ -88,7 +88,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     if state.output_path.is_empty() {
         Paragraph::new(state.output_path.as_str())
             .block(output_prompt)
-            .fg(Color::White)
+            .fg(Color::Red)
             .render(output_path, buf);
     }        
     else if !path.is_file() {

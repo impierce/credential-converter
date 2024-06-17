@@ -33,7 +33,9 @@ fn main() -> Result<()> {
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
-        selected_input_field: 0,
+        selected_input_field: 1,
+        selected_missing_field: 1,
+        select_multiplicity: true,
         ..Default::default()
     };
 

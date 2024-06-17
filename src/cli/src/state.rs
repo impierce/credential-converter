@@ -10,21 +10,19 @@ pub struct AppState {
     // Fields for navigation and rendering
     pub tab: Tabs,
     pub p1_prompts: P1Prompts,
-    pub popup_mapper_p2: bool,
-    pub popup_selected_transformations: bool,
+    pub p2_tabs: P2Tabs,
+    pub popup_p2: bool,
+    pub selected_transformations_tab: bool,
     pub select_multiplicity: bool,
     pub output_warning: bool,
 
     // Mapping options
     pub mapping: Mapping,
-    pub selected_transformation: usize,
     pub multiplicity: Multiplicity,
     pub transformations: Transformations,
+    pub selected_transformation: usize,
     pub selected_transformations: Vec<Transformations>,
     pub dividers: String,
-    pub selected_missing_field: usize,
-    pub selected_missing_fields: Vec<String>,
-    pub selected_input_fields: Vec<String>,
 
     // Paths
     pub input_path: String,
@@ -36,35 +34,32 @@ pub struct AppState {
 
     // Fields extracted from the input json file.
     pub input_fields: Vec<(String, String)>,
-    pub selected_input_field: usize,
     pub amount_input_fields: usize,
+    pub selected_input_field: usize,
+    pub selected_input_fields: Vec<String>,
 
+    // Fields extracted from the output json format
     pub missing_data_field: Option<String>,
     pub missing_data_fields: Option<Vec<String>>,
+    pub amount_missing_fields: usize,
+    pub selected_missing_field: usize,
+    pub selected_missing_fields: Vec<String>,
+
     pub candidate_data_value: Option<String>,
 
     pub repository: Repository,
 
-    // Scroll functionality fields
-    // Hover Booleans
-    pub hover_selector_p2: bool,
-    pub hover_popup_p2: bool,
-    pub hover_popup_value_p2: bool,
-    pub hover_popup_result_path_p2: bool,
-    pub hover_popup_result_value_p2: bool,
-    pub hover_finish_popup_p2: bool,
-    pub hover_prev_page: bool,
-
-    // Areas
-    // added Area to the appstate because it was problematic to pass it to the event_handler,
-    // since the different closures in the main don't combine so easily
+    // Areas, for scrolling and clicking
     pub area: Rect,
-    pub popup_area_p2: Rect,
     pub selector_area_p2: Rect,
+    pub missing_fields_area_p2: Rect,
+    pub popup_area_p2: Rect,
     pub popup_value_area_p2: Rect,
     pub popup_result_path_p2: Rect,
     pub popup_result_value_p2: Rect,
-    pub finish_area_popup_p2: Rect,
+    pub back_area_p2: Rect,
+    pub confirm_area_p2: Rect,
+    pub finish_button: Rect,
     pub prev_page_button: Rect,
 
     // Scroll offsets/positions
@@ -75,7 +70,15 @@ pub struct AppState {
     // test
 
     // testcase
-    pub finish_mapping: bool, // change into button, thus a click event, not key press event
+    pub finish: bool, // change into button, thus a click event, not key press event
+}
+
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+pub enum P2Tabs {
+    #[default]
+    InputFields = 0,
+    MissingFields,
+    MappingOptions,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -159,3 +162,4 @@ next_prev!(Tabs);
 next_prev!(P1Prompts);
 next_prev!(Transformations);
 next_prev!(Multiplicity);
+next_prev!(P2Tabs);

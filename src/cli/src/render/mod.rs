@@ -12,7 +12,7 @@ use ratatui::{
 };
 use ratatui::prelude::*;
 
-use crate::state::AppState;
+use crate::state::{AppState, Tabs};
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     let [top, bottom_area] = Layout::vertical(vec![Constraint::Min(0), Constraint::Length(1)]).areas(area);
@@ -23,11 +23,16 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
         crate::state::Tabs::UnusedDataP3 => render_lost_data_p3(top, frame.buffer_mut(), state),
     }
 
-    // Extra layout for the prev page button
-    let [prev_button, _rest] = Layout::horizontal(vec![Constraint::Length(3), Constraint::Min(0)]).areas(top);
+    // Extra layout for the prev page & finish button
+    let [prev_button, _rest, finish_button] = Layout::horizontal(vec![Constraint::Length(3), Constraint::Percentage(100), Constraint::Length(8)]).areas(top);
     let [prev_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(prev_button);
-    state.prev_page_button = prev_button;
-    render_prev_page_button(prev_button, frame.buffer_mut());
+    let [finish_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(finish_button);
+    if state.tab != Tabs::InputPromptsP1 {
+        state.prev_page_button = prev_button;
+        render_prev_page_button(prev_button, frame.buffer_mut());
+    }
+    state.finish_button = finish_button;
+    render_finish_button(finish_button, frame.buffer_mut());
 
     render_bottom_bar(bottom_area, frame.buffer_mut());
 }
@@ -71,6 +76,14 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
 fn render_prev_page_button(area: Rect, buf: &mut Buffer) {
     Block::default()
         .title(" ← ")
+        .style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))
+        .title_alignment(Alignment::Center)
+        .render(area, buf);
+}
+
+fn render_finish_button(area: Rect, buf: &mut Buffer) {
+    Block::default()
+        .title(" Finish ")
         .style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))
         .title_alignment(Alignment::Center)
         .render(area, buf);
