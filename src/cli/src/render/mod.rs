@@ -1,6 +1,7 @@
 pub mod p1;
 pub mod p2;
 pub mod p3;
+pub mod p2_popup;
 
 use p1::render_description_input_p1;
 use p2::render_manual_mapping_p2;
@@ -52,7 +53,7 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
     let keys = [
         ("←↓↑→", "Navigate"),
         ("Tab", "Next Field"),
-        ("F2", "Prev Page"),
+        ("F2", "Prev Field"),
         ("Enter", "Save"),
         ("Esc", "Quit"),
     ];

@@ -4,10 +4,11 @@ use ratatui::{
     widgets::{Block, Paragraph},
 };
 use ratatui::{prelude::*, widgets::*};
-use style::palette::material::BLACK;
-use symbols::border;
 
-use crate::state::{AppState, Multiplicity, P2Tabs};
+use crate::{
+    p2_popup::{render_popup_field_value, render_popup_mapping},
+    state::{AppState, Multiplicity, P2Tabs},
+};
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
@@ -39,18 +40,18 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     state.missing_fields_area_p2 = right_missing_fields;
 
     // Highlight active area
-    let mut inputfields_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
-    let mut missingfields_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
+    let mut inputfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
+    let mut missingfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
     let mut mappingoptions_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
     match state.p2_tabs {
         P2Tabs::InputFields => {
-            inputfields_style = Style::default().fg(Color::Yellow);
+            inputfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
         P2Tabs::MissingFields => {
-            missingfields_style = Style::default().fg(Color::Yellow);
+            missingfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
         P2Tabs::MappingOptions => {
-            mappingoptions_style = Style::default().fg(Color::Yellow);
+            mappingoptions_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
     }
 
@@ -59,7 +60,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let rows: Vec<Row> = state
         .input_fields
         .iter()
-        .map(|(key, value)| Row::new(vec![key.as_str(), value.as_str()]))
+        .enumerate()
+        .map(|(index, (key, value))| {
+            let mut row = Row::new(vec![key.as_str(), value.as_str()]);
+            if state.completed_input_fields.contains(&index) {
+                row = row.style(Style::default().fg(Color::Green));
+            }
+            row
+        })        
         .collect();
 
     StatefulWidget::render(
@@ -74,10 +82,10 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     // Render right tab containing missing fields
     state.missing_data_fields = Some(vec![
-        "".to_string(),
-        "field1".to_string(),
-        "field1".to_string(),
-        "field1".to_string(),
+        ("".to_string(), "".to_string()),
+        ("field1".to_string(), "".to_string()),
+        ("field2".to_string(), "".to_string()),
+        ("field3".to_string(), "".to_string()),
     ]); // todo: remove hard code testdata
     state.amount_missing_fields = state.missing_data_fields.as_ref().unwrap().len() - 2; // todo
     let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
@@ -86,7 +94,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .as_ref()
         .unwrap() // todo: cleanup unwrap
         .iter()
-        .map(|key| Row::new(vec![key.as_str(), ""]))
+        .enumerate()
+        .map(|(index, (key, value))| {
+            let mut row = Row::new(vec![key.as_str(), value.as_str()]);
+            if state.completed_input_fields.contains(&index) {
+                row = row.style(Style::default().fg(Color::Green));
+            }
+            row
+        })
         .collect();
 
     StatefulWidget::render(
@@ -98,17 +113,15 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         buf,
         &mut table_state,
     );
-
     // todo: render  output results
 
     // Render bottom mapping options bar
     if state.select_multiplicity {
         let multiplicities = vec![" OneToOne", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, selected, back, confirm] = Layout::horizontal(vec![
-            Constraint::Min(multiplicities.concat().len() as u16 + 10),
+        let [multiplicity_tabs, abort, review] = Layout::horizontal(vec![
             Constraint::Percentage(100),
-            Constraint::Length(6),
-            Constraint::Length(9),
+            Constraint::Length(7),
+            Constraint::Length(8),
         ])
         .areas(bottom);
 
@@ -118,28 +131,79 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .select(state.multiplicity as usize)
             .divider("")
             .render(multiplicity_tabs, buf);
-        Block::new()
-            .style(Style::default().fg(Color::Black).bg(Color::DarkGray))
-            .render(selected, buf);
 
-        render_mapping_bar_buttons(back, confirm, state, buf);
+        render_mapping_bar_buttons(abort, review, state, buf);
     } else {
         match state.multiplicity {
-            Multiplicity::OneToOne => render_onetoone(bottom, buf, state),
-            Multiplicity::OneToMany => render_onetomany(bottom, buf, state),
-            Multiplicity::ManyToOne => render_manytoone(bottom, buf, state),
+            Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
+            Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
+            Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
+        }
+    }
+
+    if state.popup_mapping_p2 {
+        if state.select_multiplicity {
+            match state.p2_tabs {
+                P2Tabs::InputFields => render_popup_field_value(
+                    area.inner(&Margin {
+                        vertical: 4,
+                        horizontal: 20,
+                    }),
+                    buf,
+                    state,
+                    P2Tabs::InputFields,
+                ),
+                P2Tabs::MissingFields => render_popup_field_value(
+                    area.inner(&Margin {
+                        vertical: 4,
+                        horizontal: 20,
+                    }),
+                    buf,
+                    state,
+                    P2Tabs::MissingFields,
+                ),
+                P2Tabs::MappingOptions => { state.popup_mapping_p2 = false; }
+            }
+        }
+        else {
+            match state.multiplicity {
+                Multiplicity::OneToOne => render_popup_mapping(
+                    area.inner(&Margin {
+                        vertical: 4,
+                        horizontal: 20,
+                    }),
+                    buf,
+                    state,
+                ),
+                Multiplicity::OneToMany => render_popup_mapping( //
+                    area.inner(&Margin {
+                        vertical: 4,
+                        horizontal: 20,
+                    }),
+                    buf,
+                    state,
+                ),
+                Multiplicity::ManyToOne => render_manytoone_bar(
+                    area.inner(&Margin {
+                        vertical: 4,
+                        horizontal: 20,
+                    }),
+                    buf,
+                    state,
+                ),
+            }
         }
     }
 }
 
-pub fn render_onetoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = vec![" None", "LowerCase", "UpperCase", "Slice", "Regex"];
 
-    let [transformations, selected, back, confirm] = Layout::horizontal(vec![
+    let [transformations, selected, abort, review] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
         Constraint::Percentage(100),
-        Constraint::Length(6),
-        Constraint::Length(9),
+        Constraint::Length(7),
+        Constraint::Length(8),
     ])
     .areas(area);
 
@@ -161,14 +225,14 @@ pub fn render_onetoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             state.selected_transformations.iter().map(|x| x.to_string()).collect();
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(BLACK))
+            .highlight_style(Style::default().fg(Color::Black))
             .select(state.selected_transformation as usize)
             .divider("")
             .render(selected, buf);
     } else {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(BLACK))
+            .highlight_style(Style::default().fg(Color::Black))
             .select(state.transformations as usize)
             .divider("")
             .render(transformations, buf);
@@ -182,16 +246,16 @@ pub fn render_onetoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             .render(selected, buf);
     }
 
-    render_mapping_bar_buttons(back, confirm, state, buf);
+    render_mapping_bar_buttons(abort, review, state, buf);
 }
 
-fn render_onetomany(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Enter a divider, or select indices manually: ";
-    let [txt_area, dividers, back, confirm] = Layout::horizontal(vec![
+    let [txt_area, dividers, abort, review] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16),
         Constraint::Percentage(100),
-        Constraint::Length(6),
-        Constraint::Length(9),
+        Constraint::Length(7),
+        Constraint::Length(8),
     ])
     .areas(area);
 
@@ -215,15 +279,15 @@ fn render_onetomany(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             .render(dividers, buf);
     }
 
-    render_mapping_bar_buttons(back, confirm, state, buf);
+    render_mapping_bar_buttons(abort, review, state, buf);
 }
 
-fn render_manytoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
-    let [txt_area, back, confirm] = Layout::horizontal(vec![
+    let [txt_area, abort, review] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
-        Constraint::Length(6),
-        Constraint::Length(9),
+        Constraint::Length(7),
+        Constraint::Length(8),
     ])
     .areas(area);
 
@@ -236,83 +300,17 @@ fn render_manytoone(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         )
         .render(txt_area, buf);
 
-    render_mapping_bar_buttons(back, confirm, state, buf);
+    render_mapping_bar_buttons(abort, review, state, buf);
 }
 
-fn render_mapping_bar_buttons(back: Rect, confirm: Rect, state: &mut AppState, buf: &mut Buffer) {
-    state.back_button = back;
-    state.confirm_button = confirm;
+fn render_mapping_bar_buttons(abort: Rect, review: Rect, state: &mut AppState, buf: &mut Buffer) {
+    state.abort_button = abort;
+    state.review_button = review;
 
-    Paragraph::new(" Back ")
+    Paragraph::new(" Abort ")
         .style(Style::default().fg(Color::Black).bg(Color::Red))
-        .render(back, buf);
-    Paragraph::new(" Confirm ")
+        .render(abort, buf);
+    Paragraph::new(" Review ")
         .style(Style::default().fg(Color::Black).bg(Color::Green))
-        .render(confirm, buf);
-}
-
-pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    Clear.render(area, buf);
-    Block::new().style(Style::default().bg(Color::Black)).render(area, buf);
-
-    let horizontal_sections = Layout::horizontal(vec![
-        Constraint::Percentage(33),
-        Constraint::Min(0),
-        Constraint::Percentage(33),
-    ]);
-    let vertical_sections = Layout::vertical(vec![Constraint::Percentage(100), Constraint::Min(1)]);
-    let [top, _bottom] = vertical_sections.areas(area);
-    let [left, middle, right] = horizontal_sections.areas(top);
-
-    state.popup_area_p2 = area;
-    state.popup_value_area_p2 = middle;
-    Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
-        .wrap(Wrap { trim: false })
-        .render(
-            left.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
-
-    Paragraph::new(state.input_fields[state.selected_input_field].1.as_str())
-        .wrap(Wrap { trim: false })
-        .scroll((state.offset_value, 0))
-        .render(
-            middle.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
-
-    let vertical_sections_result = Layout::vertical(vec![Constraint::Min(2), Constraint::Percentage(100)]);
-    let [result_path, result_value] = vertical_sections_result.areas(right.inner(&Margin {
-        horizontal: 1,
-        vertical: 1,
-    }));
-
-    state.popup_result_path_p2 = result_path;
-    state.popup_result_value_p2 = result_value;
-    Paragraph::new(state.missing_data_field.as_ref().unwrap().as_str())
-        .wrap(Wrap { trim: false })
-        .scroll((state.offset_result_path, 0))
-        .render(result_path, buf);
-
-    //state.candidate_data_value = Some("asssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssffgg".to_string());
-    Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
-        .block(Block::default().borders(Borders::TOP).border_set(border::Set {
-            top_left: ".",
-            top_right: ".",
-            bottom_left: ".",
-            bottom_right: ".",
-            vertical_left: ".",
-            vertical_right: ".",
-            horizontal_top: "-",
-            horizontal_bottom: ".",
-        }))
-        .wrap(Wrap { trim: false })
-        .scroll((state.offset_result_value, 0))
-        .render(result_value, buf);
+        .render(review, buf);
 }

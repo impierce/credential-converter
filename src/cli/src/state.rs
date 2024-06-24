@@ -11,10 +11,11 @@ pub struct AppState {
     pub tab: Tabs,
     pub p1_prompts: P1Prompts,
     pub p2_tabs: P2Tabs,
-    pub popup_p2: bool,
+    pub popup_mapping_p2: bool,
     pub selected_transformations_tab: bool,
     pub select_multiplicity: bool,
     pub output_warning: bool,
+    pub review: bool,
 
     // Mapping options
     pub mapping: Mapping,
@@ -40,12 +41,14 @@ pub struct AppState {
 
     // Fields extracted from the output json format
     pub missing_data_field: Option<String>,
-    pub missing_data_fields: Option<Vec<String>>,
+    pub missing_data_fields: Option<Vec<(String, String)>>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
     pub selected_missing_fields: Vec<String>,
 
     pub candidate_data_value: Option<String>,
+    pub completed_input_fields: Vec<usize>,
+    pub completed_missing_fields: Vec<usize>,
 
     pub repository: Repository,
 
@@ -53,19 +56,27 @@ pub struct AppState {
     pub area: Rect,
     pub selector_area_p2: Rect,
     pub missing_fields_area_p2: Rect,
-    pub popup_area_p2: Rect,
+    pub popup_path_area_p2: Rect,
     pub popup_value_area_p2: Rect,
-    pub popup_result_path_p2: Rect,
-    pub popup_result_value_p2: Rect,
-    pub back_button: Rect,
-    pub confirm_button: Rect,
+    pub abort_button: Rect,
+    pub review_button: Rect,
     pub complete_button: Rect,
     pub prev_page_button: Rect,
+    pub popup_input_path_p2: Rect,
+    pub popup_output_path_p2: Rect,
+    pub popup_input_value_p2: Rect,
+    pub popup_output_result_p2: Rect,
+    pub confirm_button: Rect,
 
-    // Scroll offsets/positions
-    pub offset_value: u16,
-    pub offset_result_path: u16,
-    pub offset_result_value: u16,
+    // Scroll offsets and line amounts popup
+    pub popup_offset_value: u16,
+    pub popup_offset_path: u16,
+    pub popup_offset_result: u16,
+    pub popup_offset_output_path: u16,
+    pub popup_amount_lines_value: usize,
+    pub popup_amount_lines_path: usize,
+    pub popup_amount_lines_output_path: usize,
+    pub popup_amount_lines_result: usize,
 
     // testcase
     pub complete: bool, // change into button, thus a click event, not key press event
