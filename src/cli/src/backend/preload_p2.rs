@@ -66,7 +66,7 @@ pub fn preload_p2(state: &mut AppState) {
         _ => panic!(),
     };
 
-    selector(state);
+    //selector(state);
 }
 
 pub fn verify<T>(json_value: &mut Value) -> Result<Value, String>

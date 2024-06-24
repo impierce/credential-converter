@@ -20,11 +20,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    if state.popup_mapping_p2 {
+                    if state.popup_uncompleted_warning {
+                        state.popup_uncompleted_warning = false;
+                    }
+                    else if state.popup_mapping_p2 {
                         state.popup_mapping_p2 = false;
                         state.popup_offset_path = 0;
                         state.popup_offset_value = 0;
-                    } else {
+                    }
+                    else {
                         return Ok(true);
                     }
                 }
@@ -61,14 +65,14 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.prev();
-                        selector(state);
-                        trace_dbg!(&state.candidate_data_value);
+                        // selector(state);
+                        // trace_dbg!(&state.candidate_data_value);
                     } else if state.p2_tabs == P2Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && state.selected_transformation > 0
                     {
                         state.selected_transformation -= 1;
-                        trace_dbg!(state.selected_transformation);
+                        // trace_dbg!(state.selected_transformation);
                     } else if state.p2_tabs == P2Tabs::MissingFields && !state.popup_mapping_p2 {
                         state.p2_tabs = P2Tabs::InputFields;
                     }
@@ -82,15 +86,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.next();
-                        selector(state);
-                        trace_dbg!(&state.candidate_data_value);
+                        // selector(state);
+                        // trace_dbg!(&state.candidate_data_value);
                     } else if state.p2_tabs == P2Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && !state.selected_transformations.is_empty()
                         && state.selected_transformation < state.selected_transformations.len() - 1
                     {
                         state.selected_transformation += 1;
-                        trace_dbg!(state.selected_transformation);
+                        // trace_dbg!(state.selected_transformation);
                     } else if state.p2_tabs == P2Tabs::InputFields && !state.popup_mapping_p2 {
                         state.p2_tabs = P2Tabs::MissingFields;
                     }
@@ -100,8 +104,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
-                            selector(state);
-                            trace_dbg!(&state.candidate_data_value);
+                            // selector(state);
+                            // trace_dbg!(&state.candidate_data_value);
                         }
                     }
                     P2Tabs::MissingFields => {
@@ -117,8 +121,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
-                            selector(state);
-                            trace_dbg!(&state.candidate_data_value);
+                            // selector(state);
+                            // trace_dbg!(&state.candidate_data_value);
                         }
                     }
                     P2Tabs::MissingFields => {
@@ -129,6 +133,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
+                    if state.popup_uncompleted_warning {
+                        state.popup_uncompleted_warning = false;
+                        state.popup_mapping_p2 = false;
+                        state.select_multiplicity = true;
+                        state.selected_transformations.clear();
+                        state.tab.next();
+                    }
                     match state.p2_tabs {
                         P2Tabs::MappingOptions => {
                             if state.select_multiplicity {
@@ -181,7 +192,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                 // }
                             }
                         }
-                        _ => state.popup_mapping_p2 = true,
+                        _ => {
+                            if !state.popup_mapping_p2 {
+                                state.popup_mapping_p2 = true;
+                            }
+                            else {
+                                state.popup_mapping_p2 = false;
+                                state.p2_tabs.next();
+                            }
+                        }
                     }
                 }
                 Char(char) => {
@@ -296,8 +315,14 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    state.complete = true; // todo
-                    state.popup_mapping_p2 = false;
+                    if state.missing_data_fields.as_ref().unwrap().len() == state.completed_missing_fields.len() {
+                        state.popup_mapping_p2 = false;
+                        state.tab.next();
+                    }
+                    else {
+                        state.popup_uncompleted_warning = true;
+                        // state.popup_mapping_p2 = false;
+                    }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
                     state.review = true;
                     state.popup_mapping_p2 = true;
@@ -315,8 +340,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.completed_input_fields.push(state.selected_input_field);
                     state.completed_missing_fields.push(state.selected_missing_field);
                     state.missing_data_fields.as_mut().unwrap()[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
-                    trace_dbg!(state.completed_input_fields.clone());
-                    trace_dbg!(state.completed_missing_fields.clone());
+                    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+                    trace_dbg!(state.missing_data_fields.as_ref().unwrap().clone()[state.selected_missing_field].to_owned());
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     state.tab.prev();
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)

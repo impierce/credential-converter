@@ -16,6 +16,7 @@ pub struct AppState {
     pub select_multiplicity: bool,
     pub output_warning: bool,
     pub review: bool,
+    pub popup_uncompleted_warning: bool,
 
     // Mapping options
     pub mapping: Mapping,
@@ -30,7 +31,6 @@ pub struct AppState {
     pub mapping_path: String,
     pub output_path: String,
     pub custom_mapping_path: Option<String>,
-    // Unused data path will automatically be input_path + "_unused_data.json", but user can change this.
     pub unused_data_path: String,
 
     // Fields extracted from the input json file.

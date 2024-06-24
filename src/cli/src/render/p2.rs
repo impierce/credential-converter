@@ -6,7 +6,7 @@ use ratatui::{
 use ratatui::{prelude::*, widgets::*};
 
 use crate::{
-    p2_popup::{render_popup_field_value, render_popup_mapping},
+    p2_popup::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning},
     state::{AppState, Multiplicity, P2Tabs},
 };
 
@@ -81,12 +81,6 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     );
 
     // Render right tab containing missing fields
-    state.missing_data_fields = Some(vec![
-        ("".to_string(), "".to_string()),
-        ("field1".to_string(), "".to_string()),
-        ("field2".to_string(), "".to_string()),
-        ("field3".to_string(), "".to_string()),
-    ]); // todo: remove hard code testdata
     state.amount_missing_fields = state.missing_data_fields.as_ref().unwrap().len() - 2; // todo
     let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
     let rows: Vec<Row> = state
@@ -141,7 +135,16 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         }
     }
 
-    if state.popup_mapping_p2 {
+    if state.popup_uncompleted_warning {
+        render_popup_uncompleted_warning(
+            area.inner(&Margin {
+                vertical: 4,
+                horizontal: 20,
+            }),
+            buf
+        );
+    }
+    else if state.popup_mapping_p2 {
         if state.select_multiplicity {
             match state.p2_tabs {
                 P2Tabs::InputFields => render_popup_field_value(
