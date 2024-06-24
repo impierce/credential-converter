@@ -1,7 +1,8 @@
 pub mod p1;
 pub mod p2;
 pub mod p3;
-pub mod p2_popup;
+pub mod popups;
+pub mod mapping_bars;
 
 use p1::render_description_input_p1;
 use p2::render_manual_mapping_p2;

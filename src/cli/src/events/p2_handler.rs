@@ -8,7 +8,7 @@ use crate::{
     },
     elm::ELM,
     obv3::OBv3,
-    state::{AppState, Multiplicity, P2Tabs},
+    state::{AppState, Multiplicity, P2P3Tabs},
     trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
@@ -22,13 +22,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Esc => {
                     if state.popup_uncompleted_warning {
                         state.popup_uncompleted_warning = false;
-                    }
-                    else if state.popup_mapping_p2 {
-                        state.popup_mapping_p2 = false;
+                    } else if state.popup_mapping_p2_p3 {
+                        state.popup_mapping_p2_p3 = false;
                         state.popup_offset_path = 0;
                         state.popup_offset_value = 0;
-                    }
-                    else {
+                    } else {
                         return Ok(true);
                     }
                 }
@@ -39,93 +37,95 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
                         }
-                    } else if state.p2_tabs == P2Tabs::MappingOptions && state.multiplicity == Multiplicity::OneToMany {
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+                        && state.multiplicity == Multiplicity::OneToMany
+                    {
                         state.dividers.pop();
                     }
                 }
                 Tab => {
-                    if state.p2_tabs == P2Tabs::MappingOptions
+                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_multiplicity
                         && state.multiplicity == Multiplicity::OneToOne
                     {
                         state.selected_transformations_tab = !state.selected_transformations_tab;
                     } else {
-                        state.p2_tabs.next();
+                        state.p2_p3_tabs.next();
                         state.selected_transformations_tab = false;
                     }
                 }
                 F(2) => {
-                    state.p2_tabs.prev();
+                    state.p2_p3_tabs.prev();
                 }
                 Left => {
-                    if state.p2_tabs == P2Tabs::MappingOptions && state.select_multiplicity {
+                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_multiplicity {
                         state.multiplicity.prev();
-                    } else if state.p2_tabs == P2Tabs::MappingOptions
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_multiplicity
                         && !state.selected_transformations_tab
                     {
                         state.transformations.prev();
                         // selector(state);
                         // trace_dbg!(&state.candidate_data_value);
-                    } else if state.p2_tabs == P2Tabs::MappingOptions
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && state.selected_transformation > 0
                     {
                         state.selected_transformation -= 1;
                         // trace_dbg!(state.selected_transformation);
-                    } else if state.p2_tabs == P2Tabs::MissingFields && !state.popup_mapping_p2 {
-                        state.p2_tabs = P2Tabs::InputFields;
+                    } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
+                        state.p2_p3_tabs = P2P3Tabs::InputFields;
                     }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
-                    if state.p2_tabs == P2Tabs::MappingOptions && state.select_multiplicity {
+                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_multiplicity {
                         state.multiplicity.next();
-                    } else if state.p2_tabs == P2Tabs::MappingOptions
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_multiplicity
                         && !state.selected_transformations_tab
                     {
                         state.transformations.next();
                         // selector(state);
                         // trace_dbg!(&state.candidate_data_value);
-                    } else if state.p2_tabs == P2Tabs::MappingOptions
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && !state.selected_transformations.is_empty()
                         && state.selected_transformation < state.selected_transformations.len() - 1
                     {
                         state.selected_transformation += 1;
                         // trace_dbg!(state.selected_transformation);
-                    } else if state.p2_tabs == P2Tabs::InputFields && !state.popup_mapping_p2 {
-                        state.p2_tabs = P2Tabs::MissingFields;
+                    } else if state.p2_p3_tabs == P2P3Tabs::InputFields && !state.popup_mapping_p2_p3 {
+                        state.p2_p3_tabs = P2P3Tabs::OutputFields;
                     }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
-                Up => match state.p2_tabs {
-                    P2Tabs::InputFields => {
+                Up => match state.p2_p3_tabs {
+                    P2P3Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
                             // selector(state);
                             // trace_dbg!(&state.candidate_data_value);
                         }
                     }
-                    P2Tabs::MissingFields => {
+                    P2P3Tabs::OutputFields => {
                         if state.selected_missing_field > 1 {
                             state.selected_missing_field -= 1;
                         }
                     }
-                    P2Tabs::MappingOptions => {
-                        state.p2_tabs.next();
+                    P2P3Tabs::MappingOptions => {
+                        state.p2_p3_tabs.next();
                     }
                 },
-                Down => match state.p2_tabs {
-                    P2Tabs::InputFields => {
+                Down => match state.p2_p3_tabs {
+                    P2P3Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
                             // selector(state);
                             // trace_dbg!(&state.candidate_data_value);
                         }
                     }
-                    P2Tabs::MissingFields => {
+                    P2P3Tabs::OutputFields => {
                         if state.selected_missing_field <= state.amount_missing_fields {
                             state.selected_missing_field += 1;
                         }
@@ -135,22 +135,22 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Enter => {
                     if state.popup_uncompleted_warning {
                         state.popup_uncompleted_warning = false;
-                        state.popup_mapping_p2 = false;
+                        state.popup_mapping_p2_p3 = false;
                         state.select_multiplicity = true;
                         state.selected_transformations.clear();
                         state.tab.next();
                     }
-                    match state.p2_tabs {
-                        P2Tabs::MappingOptions => {
+                    match state.p2_p3_tabs {
+                        P2P3Tabs::MappingOptions => {
                             if state.select_multiplicity {
                                 state.select_multiplicity = false;
                                 if state.multiplicity == Multiplicity::OneToMany {
-                                    state.popup_mapping_p2 = true;
+                                    state.popup_mapping_p2_p3 = true;
                                 }
                             } else if !state.selected_transformations_tab {
                                 state.selected_transformations.push(state.transformations);
                             } else if state.selected_transformations_tab {
-                                state.popup_mapping_p2 = true;
+                                state.popup_mapping_p2_p3 = true;
                             } else {
                                 let output_format = state.mapping.output_format();
 
@@ -193,18 +193,17 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                         }
                         _ => {
-                            if !state.popup_mapping_p2 {
-                                state.popup_mapping_p2 = true;
-                            }
-                            else {
-                                state.popup_mapping_p2 = false;
-                                state.p2_tabs.next();
+                            if !state.popup_mapping_p2_p3 {
+                                state.popup_mapping_p2_p3 = true;
+                            } else {
+                                state.popup_mapping_p2_p3 = false;
+                                state.p2_p3_tabs.next();
                             }
                         }
                     }
                 }
                 Char(char) => {
-                    if state.popup_mapping_p2 && state.multiplicity == Multiplicity::OneToMany {
+                    if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.push(char);
                     }
                 }
@@ -215,148 +214,134 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     if let event::Event::Mouse(mouse_event) = event {
         match mouse_event.kind {
             event::MouseEventKind::ScrollDown => {
-                if !state.popup_mapping_p2 {
-                    if is_mouse_over_area(state.selector_area_p2, mouse_event.column, mouse_event.row) {
+                if !state.popup_mapping_p2_p3 {
+                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
                         }
-                    }
-                    else if is_mouse_over_area(state.missing_fields_area_p2, mouse_event.column, mouse_event.row)
-                    {
+                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_missing_field <= state.amount_missing_fields {
                             state.selected_missing_field += 1;
                         }
                     }
-                }
-                else {
+                } else {
                     if !state.select_multiplicity {
                         if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                                 state.popup_offset_path += 1;
                             }
-                        }
-                        else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_value < state.popup_amount_lines_value as u16 {
                                 state.popup_offset_value += 1;
                             }
-                        }
-                        else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
                                 state.popup_offset_output_path += 1;
                             }
-                        }
-                        else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                        {
                             if state.popup_offset_result < state.popup_amount_lines_result as u16 {
                                 state.popup_offset_result += 1;
                             }
                         }
-                    }
-                    else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
+                    } else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                             state.popup_offset_path += 1;
                         }
-                    }
-                    else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
+                    } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_value < state.popup_amount_lines_value as u16 {
                             state.popup_offset_value += 1;
                         }
                     }
-                } 
+                }
             }
             event::MouseEventKind::ScrollUp => {
-                if !state.popup_mapping_p2 {
-                    if is_mouse_over_area(state.selector_area_p2, mouse_event.column, mouse_event.row) {
+                if !state.popup_mapping_p2_p3 {
+                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
                         }
-                    }
-                    else if is_mouse_over_area(state.missing_fields_area_p2, mouse_event.column, mouse_event.row)
-                    {
+                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_missing_field > 1 {
                             state.selected_missing_field -= 1;
                         }
                     }
-                }
-                else {
+                } else {
                     if !state.select_multiplicity {
                         if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path > 0 {
                                 state.popup_offset_path -= 1;
                             }
-                        }
-                        else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_value > 0 {
                                 state.popup_offset_value -= 1;
                             }
-
-                        }
-                        else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_output_path > 0 {
                                 state.popup_offset_output_path -= 1;
                             }
-                        }
-                        else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                        {
                             if state.popup_offset_result > 0 {
                                 state.popup_offset_result -= 1;
                             }
                         }
-                    }
-                    else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
+                    } else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_path > 0 {
                             state.popup_offset_path -= 1;
                         }
-                    }
-                    else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
+                    } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_value > 0 {
                             state.popup_offset_value -= 1;
                         }
                     }
-                } 
+                }
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
                     if state.missing_data_fields.as_ref().unwrap().len() == state.completed_missing_fields.len() {
-                        state.popup_mapping_p2 = false;
+                        state.popup_mapping_p2_p3 = false;
                         state.tab.next();
-                    }
-                    else {
+                    } else {
                         state.popup_uncompleted_warning = true;
                         // state.popup_mapping_p2 = false;
                     }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
                     state.review = true;
-                    state.popup_mapping_p2 = true;
+                    state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
                     state.select_multiplicity = true;
                     state.selected_transformations.clear();
                 } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
-                    state.popup_mapping_p2 = false;
+                    state.popup_mapping_p2_p3 = false;
                     state.select_multiplicity = true;
                     state.selected_transformations.clear();
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
-                    state.p2_tabs = P2Tabs::InputFields;
+                    state.p2_p3_tabs = P2P3Tabs::InputFields;
 
                     state.completed_input_fields.push(state.selected_input_field);
                     state.completed_missing_fields.push(state.selected_missing_field);
-                    state.missing_data_fields.as_mut().unwrap()[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
+                    state.missing_data_fields.as_mut().unwrap()[state.selected_missing_field].1 =
+                        state.candidate_data_value.clone().unwrap();
                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                    trace_dbg!(state.missing_data_fields.as_ref().unwrap().clone()[state.selected_missing_field].to_owned());
+                    trace_dbg!(
+                        state.missing_data_fields.as_ref().unwrap().clone()[state.selected_missing_field].to_owned()
+                    );
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     state.tab.prev();
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
                 {
-                    state.popup_mapping_p2 = false;
+                    state.popup_mapping_p2_p3 = false;
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
-                
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     state.tab.prev();
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
                 {
-                    state.popup_mapping_p2 = false;
+                    state.popup_mapping_p2_p3 = false;
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
                 }

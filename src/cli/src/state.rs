@@ -10,8 +10,8 @@ pub struct AppState {
     // Fields for navigation and rendering
     pub tab: Tabs,
     pub p1_prompts: P1Prompts,
-    pub p2_tabs: P2Tabs,
-    pub popup_mapping_p2: bool,
+    pub p2_p3_tabs: P2P3Tabs,
+    pub popup_mapping_p2_p3: bool,
     pub selected_transformations_tab: bool,
     pub select_multiplicity: bool,
     pub output_warning: bool,
@@ -37,25 +37,32 @@ pub struct AppState {
     pub input_fields: Vec<(String, String)>,
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
-    pub selected_input_fields: Vec<String>,
+    pub selected_input_fields: Vec<String>, //string or usize?
 
-    // Fields extracted from the output json format
+    // Mandatory fields extracted from the output json format
     pub missing_data_field: Option<String>,
     pub missing_data_fields: Option<Vec<(String, String)>>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
-    pub selected_missing_fields: Vec<String>,
+    pub selected_missing_fields: Vec<String>, //string or usize?
+
+    // Optional fields extracted from the output json format
+    pub optional_fields: Vec<(String, String)>,
+    pub amount_optional_fields: usize,
+    pub selected_optional_field: usize,
+    pub selected_optional_fields: Vec<String>, //string or usize?
 
     pub candidate_data_value: Option<String>,
     pub completed_input_fields: Vec<usize>,
     pub completed_missing_fields: Vec<usize>,
+    pub completed_optional_fields: Vec<usize>,
 
     pub repository: Repository,
 
     // Areas, for scrolling and clicking
     pub area: Rect,
-    pub selector_area_p2: Rect,
-    pub missing_fields_area_p2: Rect,
+    pub selector_area_p2_p3: Rect,
+    pub output_fields_area_p2_p3: Rect,
     pub popup_path_area_p2: Rect,
     pub popup_value_area_p2: Rect,
     pub abort_button: Rect,
@@ -83,10 +90,10 @@ pub struct AppState {
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
-pub enum P2Tabs {
+pub enum P2P3Tabs {
     #[default]
     InputFields = 0,
-    MissingFields,
+    OutputFields,
     MappingOptions,
 }
 
@@ -203,4 +210,4 @@ next_prev!(Tabs, Tabs::InputPromptsP1, Tabs::UnusedDataP3);
 next_prev!(P1Prompts, P1Prompts::Input, P1Prompts::Mapping);
 next_prev!(Transformations, Transformations::Copy, Transformations::Regex);
 next_prev!(Multiplicity, Multiplicity::OneToOne, Multiplicity::ManyToOne);
-next_prev!(P2Tabs, P2Tabs::InputFields, P2Tabs::MappingOptions);
+next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::MappingOptions);

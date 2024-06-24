@@ -1,14 +1,13 @@
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    widgets::{Block, Paragraph},
+    prelude::*,
+    widgets::*,
 };
-use ratatui::{prelude::*, widgets::*};
 use std::path::Path;
 
 use crate::{
-    trace_dbg,
-    state::{AppState, P1Prompts},
+    popups::render_popup_overwrite_warning, state::{AppState, P1Prompts}, trace_dbg
 };
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -142,33 +141,9 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     // Render warning popup at the end so it doesnt get overwritten by previous renders.
     if state.output_warning {
         trace_dbg!("output file warning: file will be overwritten");
-        render_popup_warning(area.inner(&Margin {
+        render_popup_overwrite_warning(area.inner(&Margin {
             vertical: 4,
             horizontal: 30,
         }), buf);
     }
-}
-
-pub fn render_popup_warning(area: Rect, buf: &mut Buffer) {
-    Clear.render(area, buf);
-    Block::new().style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
-        .borders(Borders::ALL)
-        .render(area, buf);
-
-    let vertical_margin;
-    if area.height >= 3 {
-        vertical_margin = (area.height - 3) / 2;
-    }
-    else {
-        vertical_margin = 0;
-    }
-    Paragraph::new("\nA file already exists in the given output path location.
-    This file will be overwritten if you continue.")
-        .centered()
-        .alignment(Alignment::Center)
-        .wrap(Wrap { trim: true })
-        .render(area.inner(&Margin {
-            vertical: vertical_margin,
-            horizontal: 1,
-        }), buf);
 }

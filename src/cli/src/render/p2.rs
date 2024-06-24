@@ -1,13 +1,14 @@
+use crate::{
+    mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
+    popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2},
+    state::{AppState, Multiplicity, P2P3Tabs},
+};
+
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    widgets::{Block, Paragraph},
-};
-use ratatui::{prelude::*, widgets::*};
-
-use crate::{
-    p2_popup::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning},
-    state::{AppState, Multiplicity, P2Tabs},
+    prelude::*,
+    widgets::*,
 };
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -36,21 +37,21 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     });
 
     // Store areas in state
-    state.selector_area_p2 = left_selector;
-    state.missing_fields_area_p2 = right_missing_fields;
+    state.selector_area_p2_p3 = left_selector;
+    state.output_fields_area_p2_p3 = right_missing_fields;
 
     // Highlight active area
     let mut inputfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
     let mut missingfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
     let mut mappingoptions_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
-    match state.p2_tabs {
-        P2Tabs::InputFields => {
+    match state.p2_p3_tabs {
+        P2P3Tabs::InputFields => {
             inputfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
-        P2Tabs::MissingFields => {
+        P2P3Tabs::OutputFields => {
             missingfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
-        P2Tabs::MappingOptions => {
+        P2P3Tabs::MappingOptions => {
             mappingoptions_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
     }
@@ -67,7 +68,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
-        })        
+        })
         .collect();
 
     StatefulWidget::render(
@@ -136,39 +137,39 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     }
 
     if state.popup_uncompleted_warning {
-        render_popup_uncompleted_warning(
+        render_popup_uncompleted_warning_p2(
             area.inner(&Margin {
                 vertical: 4,
                 horizontal: 20,
             }),
-            buf
+            buf,
         );
-    }
-    else if state.popup_mapping_p2 {
+    } else if state.popup_mapping_p2_p3 {
         if state.select_multiplicity {
-            match state.p2_tabs {
-                P2Tabs::InputFields => render_popup_field_value(
+            match state.p2_p3_tabs {
+                P2P3Tabs::InputFields => render_popup_field_value(
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,
                     }),
                     buf,
                     state,
-                    P2Tabs::InputFields,
+                    P2P3Tabs::InputFields,
                 ),
-                P2Tabs::MissingFields => render_popup_field_value(
+                P2P3Tabs::OutputFields => render_popup_field_value(
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,
                     }),
                     buf,
                     state,
-                    P2Tabs::MissingFields,
+                    P2P3Tabs::OutputFields,
                 ),
-                P2Tabs::MappingOptions => { state.popup_mapping_p2 = false; }
+                P2P3Tabs::MappingOptions => {
+                    state.popup_mapping_p2_p3 = false;
+                }
             }
-        }
-        else {
+        } else {
             match state.multiplicity {
                 Multiplicity::OneToOne => render_popup_mapping(
                     area.inner(&Margin {
@@ -178,7 +179,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                     buf,
                     state,
                 ),
-                Multiplicity::OneToMany => render_popup_mapping( //
+                Multiplicity::OneToMany => render_popup_mapping(
+                    //
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,
@@ -197,123 +199,4 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             }
         }
     }
-}
-
-pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let tabs = vec![" None", "LowerCase", "UpperCase", "Slice", "Regex"];
-
-    let [transformations, selected, abort, review] = Layout::horizontal(vec![
-        Constraint::Min(tabs.concat().len() as u16 + 10),
-        Constraint::Percentage(100),
-        Constraint::Length(7),
-        Constraint::Length(8),
-    ])
-    .areas(area);
-
-    // Highlight active area
-    let mut active_style = Style::default().fg(Color::Yellow);
-    if state.p2_tabs != P2Tabs::MappingOptions {
-        active_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
-    }
-
-    // Render options tab left and the selected options to the right
-    if !state.selected_transformations_tab {
-        Tabs::new(tabs)
-            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style)
-            .select(state.transformations as usize)
-            .divider("")
-            .render(transformations, buf);
-        let selected_transformations: Vec<String> =
-            state.selected_transformations.iter().map(|x| x.to_string()).collect();
-        Tabs::new(selected_transformations)
-            .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(Color::Black))
-            .select(state.selected_transformation as usize)
-            .divider("")
-            .render(selected, buf);
-    } else {
-        Tabs::new(tabs)
-            .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(Color::Black))
-            .select(state.transformations as usize)
-            .divider("")
-            .render(transformations, buf);
-        let selected_transformations: Vec<String> =
-            state.selected_transformations.iter().map(|x| x.to_string()).collect();
-        Tabs::new(selected_transformations)
-            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style)
-            .select(state.selected_transformation as usize)
-            .divider("")
-            .render(selected, buf);
-    }
-
-    render_mapping_bar_buttons(abort, review, state, buf);
-}
-
-fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let txt = "  Enter a divider, or select indices manually: ";
-    let [txt_area, dividers, abort, review] = Layout::horizontal(vec![
-        Constraint::Min(txt.len() as u16),
-        Constraint::Percentage(100),
-        Constraint::Length(7),
-        Constraint::Length(8),
-    ])
-    .areas(area);
-
-    Paragraph::new(txt)
-        .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-        .render(txt_area, buf);
-
-    // Display italic instructions to be overwritten by user input for dividers.
-    if state.dividers.is_empty() {
-        Paragraph::new(" Select the output fields in the right tab")
-            .style(
-                Style::default()
-                    .fg(Color::Black)
-                    .bg(Color::Gray)
-                    .add_modifier(Modifier::ITALIC),
-            )
-            .render(dividers, buf);
-    } else {
-        Paragraph::new(" ".to_owned() + state.dividers.as_str())
-            .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .render(dividers, buf);
-    }
-
-    render_mapping_bar_buttons(abort, review, state, buf);
-}
-
-fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
-    let [txt_area, abort, review] = Layout::horizontal(vec![
-        Constraint::Min(txt.len() as u16 + 2),
-        Constraint::Length(7),
-        Constraint::Length(8),
-    ])
-    .areas(area);
-
-    Paragraph::new(txt)
-        .style(
-            Style::default()
-                .fg(Color::White)
-                .bg(Color::Black)
-                .add_modifier(Modifier::ITALIC),
-        )
-        .render(txt_area, buf);
-
-    render_mapping_bar_buttons(abort, review, state, buf);
-}
-
-fn render_mapping_bar_buttons(abort: Rect, review: Rect, state: &mut AppState, buf: &mut Buffer) {
-    state.abort_button = abort;
-    state.review_button = review;
-
-    Paragraph::new(" Abort ")
-        .style(Style::default().fg(Color::Black).bg(Color::Red))
-        .render(abort, buf);
-    Paragraph::new(" Review ")
-        .style(Style::default().fg(Color::Black).bg(Color::Green))
-        .render(review, buf);
 }
