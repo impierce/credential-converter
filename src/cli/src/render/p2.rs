@@ -97,7 +97,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .enumerate()
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_input_fields.contains(&index) {
+            if state.completed_missing_fields.contains(&index) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
