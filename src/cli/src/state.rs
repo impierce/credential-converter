@@ -17,6 +17,7 @@ pub struct AppState {
     pub output_warning: bool,
     pub review: bool,
     pub popup_uncompleted_warning: bool,
+    pub popup_unused_data: bool,
 
     // Mapping options
     pub mapping: Mapping,

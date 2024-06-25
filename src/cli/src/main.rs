@@ -14,6 +14,7 @@ use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use backend::logging::initialize_logging;
 use ratatui::prelude::{CrosstermBackend, Terminal};
+use state::Tabs;
 use std::io::{stdout, Result};
 use state::AppState;
 
@@ -33,6 +34,7 @@ fn main() -> Result<()> {
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
+        tab: Tabs::UnusedDataP3,
         missing_data_fields: vec![
             ("".to_string(), "".to_string()),
             ("field1".to_string(), "".to_string()),
@@ -48,6 +50,7 @@ fn main() -> Result<()> {
 
         selected_input_field: 1,
         selected_missing_field: 1,
+        selected_optional_field: 1,
         select_multiplicity: true,
         ..Default::default()
     };

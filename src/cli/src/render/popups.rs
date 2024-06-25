@@ -284,18 +284,18 @@ pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppSta
     ])
     .areas(area);
 
-    let vertical_margin;
-    if area.height >= 3 {
-        vertical_margin = (area.height - 4) / 2;
-    } else {
-        vertical_margin = 0;
-    }
-    Paragraph::new("\n There is still some unused data from the input file.\nIf you want to save this, please enter a file path, leave empty to discard: ")
+    // let vertical_margin;
+    // if area.height >= 3 {
+    //     vertical_margin = (area.height - 4) / 2;
+    // } else {
+    //     vertical_margin = 0;
+    // }
+    Paragraph::new("There is still some unused data from the input file.\nIf you want to save this, please enter a file path, leave empty to discard: ")
         .centered()
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
         .render(txt.inner(&Margin {
-            vertical: vertical_margin,
+            vertical: 1, //vertical_margin
             horizontal: 1,
         }), buf);
 

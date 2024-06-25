@@ -220,8 +220,8 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_input_field += 1;
                         }
                     } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_missing_field <= state.amount_missing_fields {
-                            state.selected_missing_field += 1;
+                        if state.selected_optional_field <= state.amount_optional_fields {
+                            state.selected_optional_field += 1;
                         }
                     }
                 } else {
@@ -262,8 +262,8 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_input_field -= 1;
                         }
                     } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_missing_field > 1 {
-                            state.selected_missing_field -= 1;
+                        if state.selected_optional_field > 1 {
+                            state.selected_optional_field -= 1;
                         }
                     }
                 } else {
@@ -299,11 +299,11 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    if state.missing_data_fields.len() == state.completed_missing_fields.len() {
+                    if state.optional_fields.len() == state.completed_optional_fields.len() {
                         state.popup_mapping_p2_p3 = false;
-                        state.tab.next();
+                        state.complete = true;
                     } else {
-                        state.popup_uncompleted_warning = true;
+                        state.popup_unused_data = true;
                         // state.popup_mapping_p2 = false;
                     }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
