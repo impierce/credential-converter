@@ -80,8 +80,6 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         &mut table_state,
     );
 
-    trace_dbg!("hier");
-
     // Render right tab containing optional fields
     state.amount_optional_fields = state.optional_fields.len() - 2; // todo
     let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
@@ -97,8 +95,6 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             row
         })
         .collect();
-
-    trace_dbg!("zo");
 
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])

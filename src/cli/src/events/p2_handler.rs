@@ -8,7 +8,7 @@ use crate::{
     },
     elm::ELM,
     obv3::OBv3,
-    state::{AppState, Multiplicity, P2P3Tabs},
+    state::{AppState, Multiplicity, P2P3Tabs, Tabs},
     trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
@@ -149,7 +149,25 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                 }
                             } else if !state.selected_transformations_tab {
                                 state.selected_transformations.push(state.transformations);
-                            } else if state.selected_transformations_tab {
+                            } else if state.popup_mapping_p2_p3 {
+                                state.popup_mapping_p2_p3 = false;
+                                state.selected_transformations_tab = false;
+                                state.select_multiplicity = true;
+                                state.selected_transformations.clear();
+                                state.popup_offset_path = 0;
+                                state.popup_offset_value = 0;
+                                state.p2_p3_tabs = P2P3Tabs::InputFields;
+            
+                                state.completed_input_fields.push(state.selected_input_field);
+                                state.completed_missing_fields.push(state.selected_missing_field);
+                                state.missing_data_fields[state.selected_missing_field].1 =
+                                    state.candidate_data_value.clone().unwrap();
+                                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+                                trace_dbg!(
+                                    state.missing_data_fields.clone()[state.selected_missing_field].to_owned()
+                                );
+                            }
+                            else if state.selected_transformations_tab {
                                 state.popup_mapping_p2_p3 = true;
                             } else {
                                 let output_format = state.mapping.output_format();
@@ -193,7 +211,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                         }
                         _ => {
-                            if !state.popup_mapping_p2_p3 {
+                            if !state.popup_mapping_p2_p3 && state.tab != Tabs::UnusedDataP3 {
                                 state.popup_mapping_p2_p3 = true;
                             } else {
                                 state.popup_mapping_p2_p3 = false;
@@ -299,12 +317,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    if state.missing_data_fields.len() == state.completed_missing_fields.len() {
+                    if state.missing_data_fields.len() - 1 == state.completed_missing_fields.len() {
                         state.popup_mapping_p2_p3 = false;
                         state.tab.next();
                     } else {
                         state.popup_uncompleted_warning = true;
-                        // state.popup_mapping_p2 = false;
                     }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
                     state.review = true;
@@ -314,6 +331,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.selected_transformations.clear();
                 } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = false;
+                    state.selected_transformations_tab = false;
                     state.select_multiplicity = true;
                     state.selected_transformations.clear();
                     state.popup_offset_path = 0;
