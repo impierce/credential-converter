@@ -34,7 +34,7 @@ fn main() -> Result<()> {
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
-        tab: Tabs::UnusedDataP3,
+        // tab: Tabs::ManualMappingP2,
         missing_data_fields: vec![
             ("".to_string(), "".to_string()),
             ("field1".to_string(), "".to_string()),
@@ -48,9 +48,9 @@ fn main() -> Result<()> {
             ("field6".to_string(), "".to_string()),
         ], // todo: remove hard code testdata
 
-        selected_input_field: 1,
-        selected_missing_field: 1,
-        selected_optional_field: 1,
+        selected_input_field: 1, // todo: what if none? Also after going back to tab 1 and changing file paths?
+        selected_missing_field: 1, // todo: what if none?
+        selected_optional_field: 1, // todo: what if none?
         select_multiplicity: true,
         ..Default::default()
     };

@@ -255,7 +255,7 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         .render(area, buf);
 
     let vertical_margin;
-    if area.height >= 3 {
+    if area.height >= 4 {
         vertical_margin = (area.height - 4) / 2;
     } else {
         vertical_margin = 0;
@@ -274,36 +274,34 @@ pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppSta
     Clear.render(area, buf);
     Block::new()
         .style(Style::default().fg(Color::White).bg(Color::Black))
-        .borders(Borders::ALL)
+        .title("~~~  Unused Data  ~~~")
+        .title_alignment(Alignment::Center)
         .render(area, buf);
 
-    let [txt, path, _margin] = Layout::vertical(vec![
+    let [txt, path] = Layout::vertical(vec![
         Constraint::Percentage(100),
         Constraint::Length(3),
-        Constraint::Min(1),
     ])
     .areas(area);
 
-    // let vertical_margin;
-    // if area.height >= 3 {
-    //     vertical_margin = (area.height - 4) / 2;
-    // } else {
-    //     vertical_margin = 0;
-    // }
-    Paragraph::new("There is still some unused data from the input file.\nIf you want to save this, please enter a file path, leave empty to discard: ")
+    let vertical_margin;
+    if txt.height >= 6 {
+        vertical_margin = (txt.height - 6) / 2;
+    } else {
+        vertical_margin = 0;
+    }
+    let text = format!("\nThere is still some unused data from the input file.\nIf you want to save this, please enter a file path, leave empty to discard.\n If a file already exists at the given path, it will be overwritten.\nFor absolute paths start with '/', for relative paths the current directory is: {}",
+    std::env::current_dir().unwrap().display());
+    Paragraph::new(text)
         .centered()
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
         .render(txt.inner(&Margin {
-            vertical: 1, //vertical_margin
+            vertical: vertical_margin,
             horizontal: 1,
         }), buf);
-
-    let unused_data_prompt = Block::new()
-        .title("  Unused Data Path  ")
-        .title_alignment(Alignment::Center)
-        .borders(Borders::ALL);
     
+    let unused_data_prompt = Block::default().borders(Borders::ALL);
     let unused_data_path = Path::new(&state.unused_data_path);
     if state.unused_data_path.is_empty() {
         Paragraph::new(state.unused_data_path.as_str())
