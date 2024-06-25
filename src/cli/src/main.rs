@@ -33,12 +33,18 @@ fn main() -> Result<()> {
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
-        missing_data_fields: Some(vec![
+        missing_data_fields: vec![
             ("".to_string(), "".to_string()),
             ("field1".to_string(), "".to_string()),
             ("field2".to_string(), "".to_string()),
             ("field3".to_string(), "".to_string()),
-        ]), // todo: remove hard code testdata
+        ], // todo: remove hard code testdata
+        optional_fields: vec![
+            ("".to_string(), "".to_string()),
+            ("field4".to_string(), "".to_string()),
+            ("field5".to_string(), "".to_string()),
+            ("field6".to_string(), "".to_string()),
+        ], // todo: remove hard code testdata
 
         selected_input_field: 1,
         selected_missing_field: 1,

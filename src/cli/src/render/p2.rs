@@ -82,12 +82,10 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     );
 
     // Render right tab containing missing fields
-    state.amount_missing_fields = state.missing_data_fields.as_ref().unwrap().len() - 2; // todo
+    state.amount_missing_fields = state.missing_data_fields.len() - 2; // todo
     let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
     let rows: Vec<Row> = state
         .missing_data_fields
-        .as_ref()
-        .unwrap() // todo: cleanup unwrap
         .iter()
         .enumerate()
         .map(|(index, (key, value))| {

@@ -65,12 +65,12 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             state.input_fields[state.selected_input_field].0.len() / (right.width as usize - 2);
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
-        state.popup_amount_lines_output_path = state.missing_data_fields.as_ref().unwrap()
+        state.popup_amount_lines_output_path = state.missing_data_fields
             [state.selected_missing_field]
             .0
             .len()
             / (right.width as usize - 2);
-        state.popup_amount_lines_result = state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+        state.popup_amount_lines_result = state.missing_data_fields[state.selected_missing_field]
             .1
             .len()
             / (right.width as usize - 2);
@@ -101,7 +101,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         );
 
     Paragraph::new(
-        state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+        state.missing_data_fields[state.selected_missing_field]
             .0
             .as_str(),
     )
@@ -117,7 +117,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     );
 
     Paragraph::new(
-        state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+        state.missing_data_fields[state.selected_missing_field]
             .1
             .as_str(),
     )
@@ -165,19 +165,19 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
     if tab == P2P3Tabs::OutputFields {
         title_left = "  Missing Field  ";
         title_right = "  Result Value  ";
-        field = state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+        field = state.missing_data_fields[state.selected_missing_field]
             .0
             .as_str();
-        value = state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+        value = state.missing_data_fields[state.selected_missing_field]
             .1
             .as_str();
         // Calculate maximum lines used, this sets the maximum scroll offset
         if right.width > 2 {
-            state.popup_amount_lines_path = state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+            state.popup_amount_lines_path = state.missing_data_fields[state.selected_missing_field]
                 .0
                 .len()
                 / (right.width as usize - 2);
-            state.popup_amount_lines_value = state.missing_data_fields.as_ref().unwrap()[state.selected_missing_field]
+            state.popup_amount_lines_value = state.missing_data_fields[state.selected_missing_field]
                 .1
                 .len()
                 / (right.width as usize - 2);

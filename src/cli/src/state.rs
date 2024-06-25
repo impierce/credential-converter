@@ -41,7 +41,7 @@ pub struct AppState {
 
     // Mandatory fields extracted from the output json format
     pub missing_data_field: Option<String>,
-    pub missing_data_fields: Option<Vec<(String, String)>>,
+    pub missing_data_fields: Vec<(String, String)>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
     pub selected_missing_fields: Vec<String>, //string or usize?

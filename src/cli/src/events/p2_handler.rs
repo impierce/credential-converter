@@ -299,7 +299,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    if state.missing_data_fields.as_ref().unwrap().len() == state.completed_missing_fields.len() {
+                    if state.missing_data_fields.len() == state.completed_missing_fields.len() {
                         state.popup_mapping_p2_p3 = false;
                         state.tab.next();
                     } else {
@@ -322,11 +322,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                     state.completed_input_fields.push(state.selected_input_field);
                     state.completed_missing_fields.push(state.selected_missing_field);
-                    state.missing_data_fields.as_mut().unwrap()[state.selected_missing_field].1 =
+                    state.missing_data_fields[state.selected_missing_field].1 =
                         state.candidate_data_value.clone().unwrap();
                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                     trace_dbg!(
-                        state.missing_data_fields.as_ref().unwrap().clone()[state.selected_missing_field].to_owned()
+                        state.missing_data_fields.clone()[state.selected_missing_field].to_owned()
                     );
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     state.tab.prev();
