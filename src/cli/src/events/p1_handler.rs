@@ -27,17 +27,20 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.p1_prompts.next();
                     }
                 }
-                F(2) => {
-                    state.page.prev();
-                }
                 Left => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.prev();
+                    }
+                    else if state.p1_prompts == P1Prompts::Language {
+                        state.language.prev();
                     }
                 }
                 Right => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.next();
+                    }
+                    else if state.p1_prompts == P1Prompts::Language {
+                        state.language.next();
                     }
                 }
                 Up => {

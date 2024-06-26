@@ -3,13 +3,13 @@ use crate::{
     state::{AppState, P2P3Tabs},
 };
 
-use std::path::Path;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     prelude::*,
     widgets::*,
 };
+use std::path::Path;
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Clear.render(area, buf);
@@ -65,15 +65,10 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             state.input_fields[state.selected_input_field].0.len() / (right.width as usize - 2);
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
-        state.popup_amount_lines_output_path = state.missing_data_fields
-            [state.selected_missing_field]
-            .0
-            .len()
-            / (right.width as usize - 2);
-        state.popup_amount_lines_result = state.missing_data_fields[state.selected_missing_field]
-            .1
-            .len()
-            / (right.width as usize - 2);
+        state.popup_amount_lines_output_path =
+            state.missing_data_fields[state.selected_missing_field].0.len() / (right.width as usize - 2);
+        state.popup_amount_lines_result =
+            state.missing_data_fields[state.selected_missing_field].1.len() / (right.width as usize - 2);
     }
 
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
@@ -100,36 +95,29 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             buf,
         );
 
-    Paragraph::new(
-        state.missing_data_fields[state.selected_missing_field]
-            .0
-            .as_str(),
-    )
-    .wrap(Wrap { trim: false })
-    .remove_modifier(Modifier::BOLD)
-    .scroll((state.popup_offset_path, 0))
-    .render(
-        right_top.inner(&Margin {
-            horizontal: 1,
-            vertical: 1,
-        }),
-        buf,
-    );
+    Paragraph::new(state.missing_data_fields[state.selected_missing_field].0.as_str())
+        .wrap(Wrap { trim: false })
+        .remove_modifier(Modifier::BOLD)
+        .scroll((state.popup_offset_path, 0))
+        .render(
+            right_top.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
 
-    Paragraph::new(
-        state.candidate_data_value.as_ref().unwrap()
-            .as_str(),
-    )
-    .wrap(Wrap { trim: false })
-    .remove_modifier(Modifier::BOLD)
-    .scroll((state.popup_offset_value, 0))
-    .render(
-        right_bottom.inner(&Margin {
-            horizontal: 1,
-            vertical: 1,
-        }),
-        buf,
-    );
+    Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
+        .wrap(Wrap { trim: false })
+        .remove_modifier(Modifier::BOLD)
+        .scroll((state.popup_offset_value, 0))
+        .render(
+            right_bottom.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
 
     let [_top, confirm_area] =
         Layout::vertical(vec![Constraint::Percentage(100), Constraint::Length(1)]).areas(right_bottom);
@@ -164,43 +152,26 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
     if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::ManualMappingP2 {
         title_left = "  Missing Field  ";
         title_right = "  Result Value  ";
-        field = state.missing_data_fields[state.selected_missing_field]
-            .0
-            .as_str();
-        value = state.missing_data_fields[state.selected_missing_field]
-            .1
-            .as_str();
+        field = state.missing_data_fields[state.selected_missing_field].0.as_str();
+        value = state.missing_data_fields[state.selected_missing_field].1.as_str();
         // Calculate maximum lines used, this sets the maximum scroll offset
         if right.width > 2 {
-            state.popup_amount_lines_path = state.missing_data_fields[state.selected_missing_field]
-                .0
-                .len()
-                / (right.width as usize - 2);
-            state.popup_amount_lines_value = state.missing_data_fields[state.selected_missing_field]
-                .1
-                .len()
-                / (right.width as usize - 2);
+            state.popup_amount_lines_path =
+                state.missing_data_fields[state.selected_missing_field].0.len() / (right.width as usize - 2);
+            state.popup_amount_lines_value =
+                state.missing_data_fields[state.selected_missing_field].1.len() / (right.width as usize - 2);
         }
-    }
-    else if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::UnusedDataP3 {
+    } else if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::UnusedDataP3 {
         title_left = "  Optional Field  ";
         title_right = "  Result Value  ";
-        field = state.optional_fields[state.selected_optional_field]
-            .0
-            .as_str();
-        value = state.optional_fields[state.selected_optional_field]
-            .1
-            .as_str();
+        field = state.optional_fields[state.selected_optional_field].0.as_str();
+        value = state.optional_fields[state.selected_optional_field].1.as_str();
         // Calculate maximum lines used, this sets the maximum scroll offset
         if right.width > 2 {
-            state.popup_amount_lines_path = state.optional_fields[state.selected_optional_field]
-                .0
-                .len()
-                / (right.width as usize - 2);
-            state.popup_amount_lines_value = state.optional_fields[state.selected_optional_field]
-                .1
-                .len()
-                / (right.width as usize - 2);
+            state.popup_amount_lines_path =
+                state.optional_fields[state.selected_optional_field].0.len() / (right.width as usize - 2);
+            state.popup_amount_lines_value =
+                state.optional_fields[state.selected_optional_field].1.len() / (right.width as usize - 2);
         }
     }
 
@@ -245,26 +216,31 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
 pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
     Clear.render(area, buf);
-    Block::new().style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
+    Block::new()
+        .style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
         .borders(Borders::ALL)
         .render(area, buf);
 
     let vertical_margin;
     if area.height >= 3 {
         vertical_margin = (area.height - 3) / 2;
-    }
-    else {
+    } else {
         vertical_margin = 0;
     }
-    Paragraph::new("\nA file already exists in the given output path location.
-    This file will be overwritten if you continue.")
-        .centered()
-        .alignment(Alignment::Center)
-        .wrap(Wrap { trim: true })
-        .render(area.inner(&Margin {
+    Paragraph::new(
+        "\nA file already exists in the given output path location.
+    This file will be overwritten if you continue.",
+    )
+    .centered()
+    .alignment(Alignment::Center)
+    .wrap(Wrap { trim: false })
+    .render(
+        area.inner(&Margin {
             vertical: vertical_margin,
-            horizontal: 1,
-        }), buf);
+            horizontal: 2,
+        }),
+        buf,
+    );
 }
 
 pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
@@ -290,7 +266,7 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         }), buf);
 }
 
-pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Clear.render(area, buf);
     Block::new()
         .style(Style::default().fg(Color::White).bg(Color::Black))
@@ -298,11 +274,7 @@ pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .title_alignment(Alignment::Center)
         .render(area, buf);
 
-    let [txt, path] = Layout::vertical(vec![
-        Constraint::Percentage(100),
-        Constraint::Length(3),
-    ])
-    .areas(area);
+    let [txt, path] = Layout::vertical(vec![Constraint::Percentage(100), Constraint::Length(3)]).areas(area);
 
     let vertical_margin;
     if txt.height >= 6 {
@@ -316,11 +288,14 @@ pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .centered()
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
-        .render(txt.inner(&Margin {
-            vertical: vertical_margin,
-            horizontal: 1,
-        }), buf);
-    
+        .render(
+            txt.inner(&Margin {
+                vertical: vertical_margin,
+                horizontal: 1,
+            }),
+            buf,
+        );
+
     let unused_data_prompt = Block::default().borders(Borders::ALL);
     let unused_data_path = Path::new(&state.unused_data_path);
     if state.unused_data_path.is_empty() {
@@ -336,6 +311,57 @@ pub fn render_popup_unused_data(area: Rect, buf: &mut Buffer, state: &mut AppSta
     } else {
         Paragraph::new(state.unused_data_path.as_str())
             .block(unused_data_prompt)
+            .fg(Color::Rgb(240, 160, 100))
+            .render(path, buf);
+    }
+}
+
+pub fn render_popup_custom_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    Clear.render(area, buf);
+    Block::new()
+        .style(Style::default().fg(Color::White).bg(Color::Black))
+        .title("~~~  Custom Mapping  ~~~")
+        .title_alignment(Alignment::Center)
+        .render(area, buf);
+
+    let [txt, path] = Layout::vertical(vec![
+        Constraint::Percentage(100),
+        Constraint::Length(3),
+    ])
+    .areas(area);
+
+    let vertical_margin;
+    if txt.height >= 6 {
+        vertical_margin = (txt.height - 6) / 2;
+    } else {
+        vertical_margin = 0;
+    }
+    let text = format!("\n Do you want to save your manual mappings as rules to a custom mapping file?\nIf yes, please enter a file path, leave empty to discard.\n If a file already exists at the given path, it will be overwritten.\nFor absolute paths start with '/', for relative paths the current directory is: {}",
+    std::env::current_dir().unwrap().display());
+    Paragraph::new(text)
+        .centered()
+        .alignment(Alignment::Center)
+        .wrap(Wrap { trim: false })
+        .render(txt.inner(&Margin {
+            vertical: vertical_margin,
+            horizontal: 1,
+        }), buf);
+    
+    let custom_mapping_prompt = Block::default().borders(Borders::ALL);
+
+    if state.custom_mapping_path.is_empty() {
+        Paragraph::new("")
+            .block(custom_mapping_prompt)
+            .fg(Color::White)
+            .render(path, buf);
+    } else if !Path::new(&state.custom_mapping_path).is_file() {
+        Paragraph::new(state.custom_mapping_path.as_str())
+            .block(custom_mapping_prompt)
+            .fg(Color::Green)
+            .render(path, buf);
+    } else {
+        Paragraph::new(state.custom_mapping_path.as_str())
+            .block(custom_mapping_prompt)
             .fg(Color::Rgb(240, 160, 100))
             .render(path, buf);
     }

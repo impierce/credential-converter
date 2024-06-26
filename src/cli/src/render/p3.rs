@@ -6,7 +6,14 @@ use ratatui::{
 };
 
 use crate::{
-    backend::selector::selector, mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar}, popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2, render_popup_unused_data}, state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg
+    backend::selector::selector,
+    mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
+    popups::{
+        render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2,
+        render_popup_unused_data_p3,
+    },
+    state::{AppState, Multiplicity, P2P3Tabs},
+    trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -128,7 +135,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => { 
+            _ => {
                 selector(state);
                 state.selected_transformations_tab = false;
                 state.select_multiplicity = true;
@@ -139,8 +146,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
                 state.completed_input_fields.push(state.selected_input_field);
                 state.completed_optional_fields.push(state.selected_optional_field);
-                state.optional_fields[state.selected_optional_field].1 =
-                    state.candidate_data_value.clone().unwrap();
+                state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
                 trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                 trace_dbg!(&state.optional_fields[state.selected_optional_field]);
 
@@ -160,13 +166,13 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     }
 
     if state.popup_unused_data {
-        render_popup_unused_data(
+        render_popup_unused_data_p3(
             area.inner(&Margin {
                 vertical: 4,
                 horizontal: 20,
             }),
             buf,
-            state
+            state,
         );
     } else if state.popup_mapping_p2_p3 {
         if state.select_multiplicity {

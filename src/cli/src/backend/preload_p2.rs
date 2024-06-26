@@ -49,8 +49,8 @@ pub fn preload_p2(state: &mut AppState) {
 
         // Load the custom mapping file
         {
-            if let Some(custom_mapping_path) = &state.custom_mapping_path {
-                let rdr = std::fs::File::open(custom_mapping_path).unwrap();
+            if !state.custom_mapping_path.is_empty() {
+                let rdr = std::fs::File::open(&state.custom_mapping_path).unwrap();
                 let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
                 transformations.append(&mut custom_transformations);
 

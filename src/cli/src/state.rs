@@ -9,6 +9,7 @@ use crate::backend::repository::Repository;
 pub struct AppState {
     // Fields for navigation and rendering
     pub page: Pages,
+    pub language: Languages,
     pub p1_prompts: P1Prompts,
     pub p2_p3_tabs: P2P3Tabs,
     pub popup_mapping_p2_p3: bool,
@@ -16,6 +17,7 @@ pub struct AppState {
     pub select_multiplicity: bool,
     pub output_warning: bool,
     pub review: bool,
+    pub popup_custom_mapping: bool,
     pub popup_uncompleted_warning: bool,
     pub popup_unused_data: bool,
 
@@ -31,7 +33,7 @@ pub struct AppState {
     pub input_path: String,
     pub mapping_path: String,
     pub output_path: String,
-    pub custom_mapping_path: Option<String>,
+    pub custom_mapping_path: String,
     pub unused_data_path: String,
 
     // Fields extracted from the input json file.
@@ -91,6 +93,13 @@ pub struct AppState {
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+pub enum Languages {
+    #[default]
+    EN = 0,
+    NL,
+}
+
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum P2P3Tabs {
     #[default]
     InputFields = 0,
@@ -101,7 +110,8 @@ pub enum P2P3Tabs {
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
 pub enum P1Prompts {
     #[default]
-    Input = 0,
+    Language = 0,
+    Input,
     Output,
     MappingFile,
     Mapping,
@@ -208,9 +218,10 @@ macro_rules! next_prev {
 //     };
 // }
 
+next_prev!(Languages, Languages::EN, Languages::NL);
 next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
 next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
-next_prev!(P1Prompts, P1Prompts::Input, P1Prompts::Mapping);
+next_prev!(P1Prompts, P1Prompts::Language, P1Prompts::Mapping);
 next_prev!(Transformations, Transformations::LowerCase, Transformations::Regex);
 next_prev!(Multiplicity, Multiplicity::DirectCopy, Multiplicity::ManyToOne);
 next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::MappingOptions);

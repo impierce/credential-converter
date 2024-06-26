@@ -43,6 +43,8 @@ fn main() -> Result<()> {
         selected_missing_field: 1, // todo: what if none?
         selected_optional_field: 1, // todo: what if none?
         select_multiplicity: true,
+
+        popup_custom_mapping: true,
         ..Default::default()
     };
 

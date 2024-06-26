@@ -1,5 +1,5 @@
 use crate::{
-    backend::selector::selector, mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar}, popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2}, state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg
+    backend::selector::selector, mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar}, popups::{render_popup_custom_mapping_p2, render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2}, state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg
 };
 
 use ratatui::{
@@ -160,7 +160,17 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         }
     }
 
-    if state.popup_uncompleted_warning {
+    if state.popup_custom_mapping {
+        render_popup_custom_mapping_p2(
+            area.inner(&Margin {
+                vertical: 4,
+                horizontal: 20,
+            }),
+            buf,
+            state
+        );
+    }
+    else if state.popup_uncompleted_warning {
         render_popup_uncompleted_warning_p2(
             area.inner(&Margin {
                 vertical: 4,

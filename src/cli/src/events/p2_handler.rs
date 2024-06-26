@@ -30,7 +30,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 Backspace => {
                     // Delete a selected transformation from the list of selected transformations
-                    if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
+                    if state.popup_custom_mapping {
+                        state.custom_mapping_path.pop();
+                    }
+                    else if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
                         state.selected_transformations.remove(state.selected_transformation);
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
@@ -121,7 +124,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
-                    if state.popup_uncompleted_warning {
+                    if state.popup_custom_mapping {
+                        state.popup_custom_mapping = false;
+                    }
+                    else if state.popup_uncompleted_warning {
                         state.popup_uncompleted_warning = false;
                         state.popup_mapping_p2_p3 = false;
                         state.selected_input_field = 1;
@@ -222,7 +228,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Char(char) => {
-                    if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
+                    if state.popup_custom_mapping {
+                            state.custom_mapping_path.push(char);
+                    }
+                    else if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.push(char);
                     }
                 }

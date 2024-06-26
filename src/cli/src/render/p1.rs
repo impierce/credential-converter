@@ -19,10 +19,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .render(area, buf);
 
     let vertical_sections = Layout::horizontal(vec![Constraint::Length(50), Constraint::Min(0)]);
-    let [left_description, right_prompts] = vertical_sections.areas(area);
+    let [left, right_prompts] = vertical_sections.areas(area);
+    let [languages_area, left_description] = Layout::vertical(vec![Constraint::Length(3), Constraint::Min(0)]).areas(left.inner(&Margin {
+        vertical: 2,
+        horizontal: 0,
+    
+    }));
 
     // Left description area
-    let description = format!("\n
+    let description = format!("
     This tool is made for converting credentials between the OpenBadges and the ELM format.
     \nIt takes a json file as input and outputs the new, mapped json file. Unmapped fields can be mapped manually. Unused data will be stored in a seperate file. Manual mappings can be saved to a custom mapping file for future use.
     \nFor absolute paths start with '/', for relative paths the current directory is: {}",
@@ -60,9 +65,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title("  Choose Mapping File  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
+    // Top-left language prompt
+    let mut language_prompt = Block::new()
+        .title("  Language Selector  ")
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL);
 
     let active_style = Style::default().fg(Color::LightYellow);
     match state.p1_prompts {
+        P1Prompts::Language => language_prompt = language_prompt.style(active_style),
         P1Prompts::Input => input_prompt = input_prompt.style(active_style),
         P1Prompts::Output => output_prompt = output_prompt.style(active_style),
         P1Prompts::Mapping => mapping_prompt = mapping_prompt.style(active_style),
@@ -142,7 +153,30 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     if state.output_warning {
         render_popup_overwrite_warning(area.inner(&Margin {
             vertical: 4,
-            horizontal: 30,
+            horizontal: 28,
         }), buf);
     }
+
+    // Top-left language prompt
+    language_prompt.render(languages_area, buf);
+    let language_prompt_inner = languages_area.inner(&Margin {
+        vertical: 1,
+        horizontal: 0,
+    });
+
+    let tabs = vec![" EN ", " NL "];
+    let [_left, tabs_center, _right] = Layout::horizontal(vec![
+        Constraint::Min(1),
+        Constraint::Max(tabs.concat().len() as u16 + 2),
+        Constraint::Min(1),
+    ])
+    .areas(language_prompt_inner);
+
+    Tabs::new(tabs)
+        .style(Style::default().fg(Color::White))
+        .highlight_style(Color::Yellow)
+        .select(state.language as usize)
+        .divider("")
+        .render(tabs_center, buf);
+
 }
