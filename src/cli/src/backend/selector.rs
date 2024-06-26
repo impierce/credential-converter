@@ -1,4 +1,12 @@
-use crate::{backend::{jsonpointer::{JsonPath, JsonPointer}, repository::Repository, transformations::{DataLocation, OneToOne, Transformation}}, state::{AppState, Transformations}, trace_dbg};
+use crate::{
+    backend::{
+        jsonpointer::{JsonPath, JsonPointer},
+        repository::Repository,
+        transformations::{DataLocation, OneToOne, Transformation},
+    },
+    state::{AppState, Transformations},
+    trace_dbg,
+};
 
 pub fn selector(state: &mut AppState) {
     // This function shows the outcome of the transformation selected in the togglebar not the outcome of the Vec of selected transformations: state.selected_transformations.
@@ -9,7 +17,7 @@ pub fn selector(state: &mut AppState) {
 
     let (source_pointer, _source_value) = state.input_fields[state.selected_input_field].clone();
 
-    let pointer = state.missing_data_field.as_ref().unwrap().clone();
+    let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
     let destination_path: JsonPath = JsonPointer(pointer.clone()).into();
 
     let mut temp_repository = Repository::from(state.repository.clone());
@@ -52,6 +60,7 @@ pub fn selector(state: &mut AppState) {
 
     temp_repository.apply_transformation(transformation);
 
+    trace_dbg!(&pointer);
     let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();
 
     state.candidate_data_value = Some(candidate_data_value.to_string());

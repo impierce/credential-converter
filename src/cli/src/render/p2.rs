@@ -41,18 +41,18 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     state.output_fields_area_p2_p3 = right_missing_fields;
 
     // Highlight active area
-    let mut inputfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
-    let mut missingfields_style = Style::default().add_modifier(Modifier::UNDERLINED);
-    let mut mappingoptions_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
+    let mut inputfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+    let mut missingfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC);
+    let mut mappingoptions_style = Style::default().fg(Color::White);
     match state.p2_p3_tabs {
         P2P3Tabs::InputFields => {
-            inputfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+            inputfields_style = Style::default().fg(Color::Yellow);
         }
         P2P3Tabs::OutputFields => {
-            missingfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+            missingfields_style = Style::default().fg(Color::Yellow);
         }
         P2P3Tabs::MappingOptions => {
-            mappingoptions_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+            mappingoptions_style = Style::default().fg(Color::Yellow);
         }
     }
 
@@ -74,7 +74,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Field", "Value"]).style(Style::new().add_modifier(Modifier::BOLD)))
+            .header(Row::new(vec!["Field", "Value"]).style(Style::new()))
             .highlight_style(inputfields_style),
         left_selector,
         buf,
@@ -100,7 +100,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Missing Field", "Result Value"]).style(Style::new().add_modifier(Modifier::BOLD)))
+            .header(Row::new(vec!["Missing Field", "Result Value"]).style(Style::new()))
             .highlight_style(missingfields_style),
         right_missing_fields,
         buf,

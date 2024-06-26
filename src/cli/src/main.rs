@@ -1,10 +1,8 @@
 pub mod backend;
-pub mod credential_formats;
 pub mod events;
 pub mod render;
 pub mod state;
 
-use crate::credential_formats::*;
 use crate::events::*;
 use crate::render::*;
 
@@ -15,7 +13,6 @@ use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use state::AppState;
-use state::Pages;
 use std::io::{stdout, Result};
 
 fn main() -> Result<()> {
@@ -34,13 +31,7 @@ fn main() -> Result<()> {
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 
-        // tab: Tabs::ManualMappingP2,
-        missing_data_fields: vec![
-            ("".to_string(), "".to_string()),
-            ("field1".to_string(), "".to_string()),
-            ("field2".to_string(), "".to_string()),
-            ("field3".to_string(), "".to_string()),
-        ], // todo: remove hard code testdata
+        // tab: Tabs::UnusedDataP3,
         optional_fields: vec![
             ("".to_string(), "".to_string()),
             ("field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4".to_string(), "".to_string()),

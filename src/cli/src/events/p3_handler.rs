@@ -2,16 +2,14 @@ use std::io::Write;
 
 use crate::{
     backend::{
-        preload_p2::verify,
+        preload_p2::get_missing_data_fields,
         repository::{construct_leaf_node, merge},
-        selector::selector,
     },
-    elm::ELM,
-    obv3::OBv3,
     state::{AppState, Multiplicity, P2P3Tabs, Transformations},
     trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
+use digital_credential_data_models::{elmv3::EuropassEdcCredential, obv3::AchievementCredential};
 
 use super::is_mouse_over_area;
 
@@ -169,11 +167,18 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                                 merge(&mut json_value, leaf_node);
 
-                                state.missing_data_field = match state.mapping.output_format().as_str() {
-                                    "OBv3" => verify::<OBv3>(&mut json_value).err(),
-                                    "ELM" => verify::<ELM>(&mut json_value).err(),
-                                    _ => panic!(),
-                                };
+                                state.missing_data_fields = vec![
+                                    vec![("".to_string(), "".to_string())],
+                                    match state.mapping.output_format().as_str() {
+                                        "OBv3" => get_missing_data_fields::<AchievementCredential>(json_value.clone()),
+                                        "ELM" => get_missing_data_fields::<EuropassEdcCredential>(json_value.clone()),
+                                        _ => panic!(),
+                                    }
+                                    .into_iter()
+                                    .map(|pointer| (pointer, "".to_string()))
+                                    .collect(),
+                                ]
+                                .concat();
 
                                 if state.missing_data_field.is_none() {
                                     let output_format = state.mapping.output_format();

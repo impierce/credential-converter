@@ -1,10 +1,15 @@
-use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
+use digital_credential_data_models::{elmv3::EuropassEdcCredential, obv3::AchievementCredential};
 use regex::Regex;
 use serde::{de::DeserializeOwned, Serialize};
 use serde_json::{json, Value};
+use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 
-use crate::{backend::{leaf_nodes::get_leaf_nodes, repository::Repository, selector::selector, transformations::Transformation}, elm::ELM, obv3::OBv3, state::AppState, trace_dbg};
 use super::repository::{construct_leaf_node, merge};
+use crate::{
+    backend::{leaf_nodes::get_leaf_nodes, repository::Repository, transformations::Transformation},
+    state::AppState,
+    trace_dbg,
+};
 
 pub fn preload_p2(state: &mut AppState) {
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
@@ -58,13 +63,20 @@ pub fn preload_p2(state: &mut AppState) {
 
     trace_dbg!(&output_format);
     trace_dbg!(&state.repository);
-    let mut json_value = state.repository.get(&output_format).unwrap().clone();
+    let json_value = state.repository.get(&output_format).unwrap().clone();
 
-    state.missing_data_field = match state.mapping.output_format().as_str() {
-        "OBv3" => verify::<OBv3>(&mut json_value).err(),
-        "ELM" => verify::<ELM>(&mut json_value).err(),
-        _ => panic!(),
-    };
+    state.missing_data_fields = vec![
+        vec![("".to_string(), "".to_string())],
+        match state.mapping.output_format().as_str() {
+            "OBv3" => get_missing_data_fields::<AchievementCredential>(json_value.clone()),
+            "ELM" => get_missing_data_fields::<EuropassEdcCredential>(json_value.clone()),
+            _ => panic!(),
+        }
+        .into_iter()
+        .map(|pointer| (pointer, "".to_string()))
+        .collect(),
+    ]
+    .concat();
 
     //selector(state);
 }
@@ -78,11 +90,11 @@ where
         // TODO: make dynamic
         let mut de = serde_json::Deserializer::from_str(&json_as_string);
         match serde_path_to_error::deserialize::<_, T>(&mut de) {
-            Ok(obv3_credential) => return Ok(json!(obv3_credential)),
+            Ok(obv3_credential) => {
+                return Ok(json!(obv3_credential));
+            }
             Err(e) => {
-                // println!("Error: {:?}", e);
                 let error_message = e.inner().to_string();
-                // println!("Error: {}", error_message);
 
                 let path = e.path().to_string().replace('.', "/");
 
@@ -105,97 +117,122 @@ where
                     continue;
                 }
 
-                if error_message.starts_with("invalid type") {
+                if error_message.starts_with("data did not match any variant of untagged enum") {
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
                         format!("/{path}")
                     };
 
+                    let mut leaf_node = construct_leaf_node(&pointer);
+
+                    leaf_node.pointer_mut(&pointer).map(|value| *value = json!("")).unwrap();
+
+                    merge(json_value, leaf_node);
+
+                    // json_as_string = json_value.to_string();
+
+                    return Err(pointer);
+                }
+
+                if error_message.starts_with("input contains invalid characters") {
+                    let pointer = if path == "/" {
+                        format!("{path}")
+                    } else {
+                        format!("/{path}")
+                    };
+
+                    let mut leaf_node = construct_leaf_node(&pointer);
+
+                    leaf_node
+                        .pointer_mut(&pointer)
+                        .map(|value| *value = json!("2010-01-01T00:00:00Z"))
+                        .unwrap();
+
+                    merge(json_value, leaf_node);
+
+                    json_as_string = json_value.to_string();
+
+                    continue;
+                }
+
+                if error_message.starts_with("invalid type") {
+                    let pointer = if error_message.contains("invalid type: map")
+                        && error_message.contains("expected a sequence")
+                    {
+                        let pointer = if path == "/" {
+                            format!("{path}")
+                        } else {
+                            format!("/{path}")
+                        };
+
+                        let mut leaf_node = construct_leaf_node(&pointer);
+
+                        leaf_node
+                            .pointer_mut(&pointer)
+                            .map(|value| *value = json!(["TEMP"]))
+                            .unwrap();
+
+                        merge(json_value, leaf_node);
+
+                        // json_as_string = json_value.to_string();
+
+                        return Err(format!("{pointer}/0"));
+                    } else {
+                        let pointer = if path == "/" {
+                            format!("{path}")
+                        } else {
+                            format!("/{path}")
+                        };
+                        pointer
+                    };
+
                     return Err(pointer);
                 } else {
                     panic!("Unknown error: {}", error_message);
                 };
-
-                // match option {
-                //     "1" => {
-                //         println!("pointer: {:?}", pointer);
-
-                //         leaf_node
-                //             .pointer_mut(&pointer)
-                //             .map(|value| *value = serde_json::from_str(input_string.trim_end()).unwrap());
-
-                //         println!("{}", leaf_node);
-
-                //         merge(&mut json_value, leaf_node);
-
-                //         temp = json_value.to_string();
-                //     }
-                //     "2" => {
-                //         let source_credential = repository.get(&settings.source.format).unwrap();
-
-                //         let finder = JsonPathFinder::from_str(&source_credential.to_string(), &input_string).unwrap();
-                //         // TODO: use loop in case the value can not be found.
-                //         let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
-
-                //         println!("pointer: {:?}", pointer);
-                //         let destination_path: JsonPath = JsonPointer(pointer.clone()).into();
-
-                //         let transformation = Transformation::OneToOne {
-                //             type_: OneToOne::copy,
-                //             source: DataLocation {
-                //                 format: "ELM".to_string(),
-                //                 path: input_string.to_string(),
-                //             },
-                //             destination: DataLocation {
-                //                 format: "OBv3".to_string(),
-                //                 path: destination_path.to_string(),
-                //             },
-                //         };
-
-                //         settings.custom_mapping_file.as_ref().map(|custom_mapping_file| {
-                //             let mut custom_transformations = custom_mapping_file
-                //                 .exists
-                //                 .then(|| {
-                //                     get_json::<Vec<Transformation>>(&custom_mapping_file.path)
-                //                         .expect("No custom mapping file found")
-                //                 })
-                //                 .unwrap_or_default();
-
-                //             println!("before: custom_transformations: {:?}", custom_transformations.len());
-                //             custom_transformations.push(transformation);
-                //             println!("after: custom_transformations: {:?}", custom_transformations.len());
-
-                //             // For pretty printing
-                //             let pretty_file = std::fs::OpenOptions::new()
-                //                 .create(true)
-                //                 .write(true)
-                //                 .truncate(true)
-                //                 .open(&custom_mapping_file.path)
-                //                 .unwrap();
-
-                //             // Serialize the struct to pretty JSON and write it to the file
-                //             serde_json::to_writer_pretty(&pretty_file, &custom_transformations)
-                //                 .expect("Failed to serialize");
-                //         });
-
-                //         println!("destination_path: {:?}", destination_path);
-
-                //         leaf_node.pointer_mut(&pointer).map(|value| *value = source_value);
-
-                //         println!("{}", leaf_node);
-
-                //         merge(&mut json_value, leaf_node);
-
-                //         temp = json_value.to_string();
-                //     }
-                //     _ => {
-                //         panic!("Invalid option");
-                //     }
-                // }
             }
         }
     }
+}
+
+pub fn get_missing_data_fields<T>(json_value: Value) -> Vec<String>
+where
+    T: DeserializeOwned + Serialize,
+{
+    let mut temp_credential = &mut json_value.clone();
+
+    let mut missing_data_fields = vec![];
+    while let Err(pointer) = verify::<T>(&mut temp_credential) {
+        temp_credential
+            .pointer_mut(&pointer)
+            .map(|value| *value = json!("TEMP"))
+            .unwrap();
+        // thread::sleep(std::time::Duration::from_secs(1));
+        missing_data_fields.push(pointer);
+    }
+
+    missing_data_fields
+}
+
+// #[test]
+// fn temp() {
+//     let mut json_value = json!({
+//         "test": "test"
+//     });
+
+//     println!("json_value: {:#?}", json_value);
+//     println!("missing_data_fields: {:#?}", missing_data_fields);
+// }
+
+#[test]
+fn test() {
+    let temp_credential = json!({});
+
+    let missing_data_fields = get_missing_data_fields::<EuropassEdcCredential>(temp_credential.clone());
+
+    println!("temp_credential: {:#?}", temp_credential);
+    println!("missing_data_fields: {:#?}", missing_data_fields);
 }
 
 fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
