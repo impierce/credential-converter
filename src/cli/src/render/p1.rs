@@ -42,8 +42,9 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         Constraint::Length(4),
         Constraint::Length(4),
         Constraint::Length(4),
+        Constraint::Length(4),
     ]);
-    let [input_path, output_path, mapping_file, mapping] = input_prompts.areas(prompts_area);
+    let [input_path, output_path, mapping_file, mapping, custom_mapping] = input_prompts.areas(prompts_area);
 
     let mut input_prompt = Block::new()
         .title("  Input Path  ")
@@ -61,6 +62,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title("  Choose Mapping File  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
+    let mut custom_mapping_prompt = Block::new()
+        .title("  Choose Mapping File  ")
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL);
     // Top-left language prompt
     let mut language_prompt = Block::new()
         .title("  Language Selector  ")
@@ -74,6 +79,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         P1Prompts::Output => output_prompt = output_prompt.style(active_style),
         P1Prompts::Mapping => mapping_prompt = mapping_prompt.style(active_style),
         P1Prompts::MappingFile => mapping_file_prompt = mapping_file_prompt.style(active_style),
+        P1Prompts::CustomMapping => custom_mapping_prompt = custom_mapping_prompt.style(active_style),
     };
 
     // Checking paths for validity/overwriting.
@@ -145,12 +151,18 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .divider("")
         .render(tabs_center, buf);
 
-    // Render warning popup at the end so it doesnt get overwritten by previous renders.
-    if state.output_warning {
-        render_popup_overwrite_warning(area.inner(&Margin {
-            vertical: 4,
-            horizontal: 28,
-        }), buf);
+    // Custom mapping prompt
+    let path = Path::new(&state.custom_mapping_path);
+    if !path.exists() || !path.is_file() {
+        Paragraph::new(state.custom_mapping_path.as_str())
+            .block(custom_mapping_prompt)
+            .fg(Color::White)
+            .render(custom_mapping, buf);
+    } else {
+        Paragraph::new(state.custom_mapping_path.as_str())
+            .block(custom_mapping_prompt)
+            .fg(Color::Green)
+            .render(custom_mapping, buf);
     }
 
     // Top-left language prompt
@@ -168,8 +180,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     ])
     .areas(language_prompt_inner);
 
-    // trace_dbg!(tabs_center.width as usize / 6);
-    // trace_dbg!(state.language as usize);
     if state.language as usize >= tabs_center.width as usize / 6 {
         let tabs_slice = &tabs[(state.language as usize - (tabs_center.width as usize / 6) + 1)..state.language as usize + 1];
         let tabs_vec: Vec<String> = tabs_slice.iter().map(|s| s.to_string()).collect();
@@ -188,28 +198,13 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
             .divider("")
             .render(tabs_center, buf);
     }
+
+    // Render warning popup at the end so it doesnt get overwritten by previous renders.
+    if state.output_warning {
+        render_popup_overwrite_warning(area.inner(&Margin {
+            vertical: 4,
+            horizontal: 28,
+        }), buf);
+    }
+
 }
-
-// pub fn tabber_side_scroll(
-//     area: Rect,
-//     buf: &mut Buffer,
-//     tabs: &[&str],
-//     active_tab: usize,
-//     offset: u16,
-// ) {
-//     let tabs_len = tabs.iter().map(|t| t.len() as u16).sum::<u16>() + tabs.len() as u16;
-//     let tabs = tabs.iter().map(|t| Spans::from(*t)).collect::<Vec<_>>();
-//     let tabs = Tabs::new(tabs)
-//         .style(Style::default().fg(Color::White))
-//         .highlight_style(Color::Yellow)
-//         .select(active_tab)
-//         .divider("")
-//         .block(Block::default().borders(Borders::ALL))
-//         .widths(&[
-//             Constraint::Length(1),
-//             Constraint::Length(tabs_len),
-//             Constraint::Length(1),
-//         ]);
-
-//     tabs.render(area, buf);
-// }
