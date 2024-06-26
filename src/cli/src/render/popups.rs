@@ -117,8 +117,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     );
 
     Paragraph::new(
-        state.missing_data_fields[state.selected_missing_field]
-            .1
+        state.candidate_data_value.as_ref().unwrap()
             .as_str(),
     )
     .wrap(Wrap { trim: false })

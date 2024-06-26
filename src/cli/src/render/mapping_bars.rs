@@ -7,7 +7,7 @@ use ratatui::{
 };
 
 pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let tabs = vec![" None", "LowerCase", "UpperCase", "Slice", "Regex"];
+    let tabs = vec!["LowerCase", "UpperCase", "Slice", "Regex"];
 
     let [transformations, selected, abort, review] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),

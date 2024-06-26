@@ -140,7 +140,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
 
     // Render warning popup at the end so it doesnt get overwritten by previous renders.
     if state.output_warning {
-        trace_dbg!("output file warning: file will be overwritten");
         render_popup_overwrite_warning(area.inner(&Margin {
             vertical: 4,
             horizontal: 30,

@@ -133,14 +133,15 @@ impl Mapping {
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Multiplicity {
     #[default]
+    DirectCopy,
     OneToOne,
     OneToMany,
     ManyToOne,
 }
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
+    DirectCopy,
     #[default]
-    Copy = 0,
     LowerCase,
     UpperCase,
     Slice,
@@ -210,6 +211,6 @@ macro_rules! next_prev {
 next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
 next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Input, P1Prompts::Mapping);
-next_prev!(Transformations, Transformations::Copy, Transformations::Regex);
-next_prev!(Multiplicity, Multiplicity::OneToOne, Multiplicity::ManyToOne);
+next_prev!(Transformations, Transformations::LowerCase, Transformations::Regex);
+next_prev!(Multiplicity, Multiplicity::DirectCopy, Multiplicity::ManyToOne);
 next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::MappingOptions);

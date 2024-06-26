@@ -11,7 +11,7 @@ use crate::{
 pub fn selector(state: &mut AppState) {
     // This function shows the outcome of the transformation selected in the togglebar not the outcome of the Vec of selected transformations: state.selected_transformations.
     let transformation = Transformations::from_repr(state.selected_transformation).unwrap();
-    trace_dbg!(transformation);
+    //trace_dbg!(transformation);
 
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
@@ -45,7 +45,7 @@ pub fn selector(state: &mut AppState) {
                 path: destination_path.to_string(),
             },
         },
-        Transformations::Copy | _ => Transformation::OneToOne {
+        Transformations::DirectCopy | _ => Transformation::OneToOne {
             type_: OneToOne::copy,
             source: DataLocation {
                 format: input_format.clone(),
@@ -60,7 +60,7 @@ pub fn selector(state: &mut AppState) {
 
     temp_repository.apply_transformation(transformation);
 
-    trace_dbg!(&pointer);
+    //trace_dbg!(&pointer);
     let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();
 
     state.candidate_data_value = Some(candidate_data_value.to_string());

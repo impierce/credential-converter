@@ -63,14 +63,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.prev();
-                        // selector(state);
-                        // trace_dbg!(&state.candidate_data_value);
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && state.selected_transformation > 0
                     {
                         state.selected_transformation -= 1;
-                        // trace_dbg!(state.selected_transformation);
                     } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
                         state.p2_p3_tabs = P2P3Tabs::InputFields;
                     }
@@ -84,15 +81,12 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.next();
-                        // selector(state);
-                        // trace_dbg!(&state.candidate_data_value);
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && !state.selected_transformations.is_empty()
                         && state.selected_transformation < state.selected_transformations.len() - 1
                     {
                         state.selected_transformation += 1;
-                        // trace_dbg!(state.selected_transformation);
                     } else if state.p2_p3_tabs == P2P3Tabs::InputFields && !state.popup_mapping_p2_p3 {
                         state.p2_p3_tabs = P2P3Tabs::OutputFields;
                     }
@@ -102,8 +96,6 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
-                            // selector(state);
-                            // trace_dbg!(&state.candidate_data_value);
                         }
                     }
                     P2P3Tabs::OutputFields => {
@@ -119,8 +111,6 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
-                            // selector(state);
-                            // trace_dbg!(&state.candidate_data_value);
                         }
                     }
                     P2P3Tabs::OutputFields => {
@@ -165,9 +155,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                     state.missing_data_fields[state.selected_missing_field].1 =
                                         state.candidate_data_value.clone().unwrap();
                                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                                    trace_dbg!(
-                                        state.missing_data_fields.clone()[state.selected_missing_field].to_owned()
-                                    );
+                                    trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
                                 } else if state.selected_transformations_tab {
                                     state.popup_mapping_p2_p3 = true;
                                 } else {
@@ -224,7 +212,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                             _ => {
                                 if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {
-                                    state.popup_mapping_p2_p3 = true;
+                                    state.p2_p3_tabs.next();
                                 } else {
                                     state.popup_mapping_p2_p3 = false;
                                     state.p2_p3_tabs.next();
@@ -332,7 +320,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
                     if state.missing_data_fields.len() - 1 == state.completed_missing_fields.len() {
                         state.popup_mapping_p2_p3 = false;
-                        state.transformations = Transformations::Copy;
+                        state.transformations = Transformations::LowerCase;
                         state.selected_transformations_tab = false;
                         state.select_multiplicity = true;
                         state.selected_transformation = 0;
@@ -345,7 +333,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.review = true;
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
-                    state.transformations = Transformations::Copy;
+                    state.transformations = Transformations::LowerCase;
                     state.selected_transformations_tab = false;
                     state.select_multiplicity = true;
                     state.selected_transformation = 0;
@@ -374,7 +362,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.select_multiplicity = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
-                        state.transformations = Transformations::Copy;
+                        state.transformations = Transformations::LowerCase;
 
                         state.page.prev();
                     }

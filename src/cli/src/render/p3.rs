@@ -130,6 +130,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
+            _ => {} // DirectCopy
         }
     }
 
@@ -194,6 +195,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                     buf,
                     state,
                 ),
+                _ => {} // DirectCopy
             }
         }
     }
