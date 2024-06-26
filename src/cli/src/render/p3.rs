@@ -6,9 +6,7 @@ use ratatui::{
 };
 
 use crate::{
-    mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
-    popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2, render_popup_unused_data},
-    state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg,
+    backend::selector::selector, mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar}, popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2, render_popup_unused_data}, state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -109,7 +107,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
     // Render bottom mapping options bar
     if state.select_multiplicity {
-        let multiplicities = vec![" OneToOne", "OneToMany", "ManyToOne"];
+        let multiplicities = vec![" DirectCopy", "OneToOne", "OneToMany", "ManyToOne"];
         let [multiplicity_tabs, abort, review] = Layout::horizontal(vec![
             Constraint::Percentage(100),
             Constraint::Length(7),
@@ -130,7 +128,22 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {} // DirectCopy
+            _ => { 
+                selector(state);
+                state.selected_transformations_tab = false;
+                state.select_multiplicity = true;
+                state.selected_transformations.clear();
+                state.popup_offset_path = 0;
+                state.popup_offset_value = 0;
+                state.p2_p3_tabs = P2P3Tabs::InputFields;
+
+                state.completed_input_fields.push(state.selected_input_field);
+                state.completed_optional_fields.push(state.selected_optional_field);
+                state.optional_fields[state.selected_optional_field].1 =
+                    state.candidate_data_value.clone().unwrap();
+                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+                trace_dbg!(&state.optional_fields[state.selected_optional_field]);
+            } // DirectCopy
         }
     }
 

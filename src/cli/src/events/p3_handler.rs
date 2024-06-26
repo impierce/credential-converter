@@ -210,8 +210,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                             _ => {
                                 if !state.popup_mapping_p2_p3 {
-                                    // todo
-                                    state.popup_mapping_p2_p3 = true;
+                                    state.p2_p3_tabs.next();
                                 } else {
                                     state.popup_mapping_p2_p3 = false;
                                     state.p2_p3_tabs.next();
