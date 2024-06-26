@@ -8,7 +8,7 @@ use crate::backend::repository::Repository;
 #[derive(Debug, Default)]
 pub struct AppState {
     // Fields for navigation and rendering
-    pub tab: Tabs,
+    pub page: Pages,
     pub p1_prompts: P1Prompts,
     pub p2_p3_tabs: P2P3Tabs,
     pub popup_mapping_p2_p3: bool,
@@ -148,11 +148,12 @@ pub enum Transformations {
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
-pub enum Tabs {
+pub enum Pages {
     #[default]
     InputPromptsP1 = 0,
     ManualMappingP2,
     UnusedDataP3,
+    EndP4,
 }
 
 // test
@@ -207,7 +208,7 @@ macro_rules! next_prev {
 // }
 
 next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
-next_prev!(Tabs, Tabs::InputPromptsP1, Tabs::UnusedDataP3);
+next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Input, P1Prompts::Mapping);
 next_prev!(Transformations, Transformations::Copy, Transformations::Regex);
 next_prev!(Multiplicity, Multiplicity::OneToOne, Multiplicity::ManyToOne);

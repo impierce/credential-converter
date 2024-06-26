@@ -1,22 +1,22 @@
+pub mod backend;
 pub mod credential_formats;
 pub mod events;
 pub mod render;
 pub mod state;
-pub mod backend;
 
 use crate::credential_formats::*;
 use crate::events::*;
 use crate::render::*;
 
+use backend::logging::initialize_logging;
 use crossterm::event::DisableMouseCapture;
 use crossterm::event::EnableMouseCapture;
 use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
-use backend::logging::initialize_logging;
 use ratatui::prelude::{CrosstermBackend, Terminal};
-use state::Tabs;
-use std::io::{stdout, Result};
 use state::AppState;
+use state::Pages;
+use std::io::{stdout, Result};
 
 fn main() -> Result<()> {
     initialize_logging().expect("Unexpected error while initializing logging");

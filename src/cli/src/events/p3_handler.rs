@@ -33,8 +33,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Backspace => {
                     if state.popup_unused_data {
                         state.unused_data_path.pop();
-                    }
-                    else if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
+                    } else if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
                         state.selected_transformations.remove(state.selected_transformation);
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
@@ -136,8 +135,9 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 },
                 Enter => {
                     if state.popup_unused_data {
-                        state.complete = true; // todo
-                        state.tab.next(); // make a "finished" tab
+                        state.page.next(); // make a "finished" tab, signal finish to backend
+                        trace_dbg!(state.page);
+                        trace_dbg!("hiero");
                     }
                     match state.p2_p3_tabs {
                         P2P3Tabs::MappingOptions => {
@@ -192,7 +192,8 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                         }
                         _ => {
-                            if !state.popup_mapping_p2_p3 { // todo
+                            if !state.popup_mapping_p2_p3 {
+                                // todo
                                 state.popup_mapping_p2_p3 = true;
                             } else {
                                 state.popup_mapping_p2_p3 = false;
@@ -204,8 +205,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Char(char) => {
                     if state.popup_unused_data {
                         state.unused_data_path.push(char);
-                    }
-                    else if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
+                    } else if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.push(char);
                     }
                 }
@@ -303,10 +303,10 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
                     if state.input_fields.len() == state.completed_input_fields.len() {
                         state.popup_mapping_p2_p3 = false;
-                        state.complete = true;
+                        state.page.next();
+                        trace_dbg!(state.page);
                     } else {
                         state.popup_unused_data = true;
-                        // state.popup_mapping_p2 = false;
                     }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
                     state.review = true;
@@ -330,22 +330,19 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.optional_fields[state.selected_optional_field].1 =
                         state.candidate_data_value.clone().unwrap();
                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                    trace_dbg!(
-                        state.optional_fields.clone()[state.selected_optional_field].to_owned()
-                    );
+                    trace_dbg!(state.optional_fields.clone()[state.selected_optional_field].to_owned());
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
                     } else if state.popup_unused_data {
                         state.popup_unused_data = false;
-                    }
-                    else {
+                    } else {
                         state.select_multiplicity = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
                         state.transformations = Transformations::Copy;
-                        
-                        state.tab.prev();
+
+                        state.page.prev();
                     }
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
@@ -354,7 +351,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
-                    state.tab.prev();
+                    state.page.prev();
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
                 {

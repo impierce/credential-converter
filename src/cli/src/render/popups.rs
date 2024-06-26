@@ -162,7 +162,7 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
     }
 
-    if tab == P2P3Tabs::OutputFields && state.tab == crate::state::Tabs::ManualMappingP2 {
+    if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::ManualMappingP2 {
         title_left = "  Missing Field  ";
         title_right = "  Result Value  ";
         field = state.missing_data_fields[state.selected_missing_field]
@@ -183,7 +183,7 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 / (right.width as usize - 2);
         }
     }
-    else if tab == P2P3Tabs::OutputFields && state.tab == crate::state::Tabs::UnusedDataP3 {
+    else if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::UnusedDataP3 {
         title_left = "  Optional Field  ";
         title_right = "  Result Value  ";
         field = state.optional_fields[state.selected_optional_field]

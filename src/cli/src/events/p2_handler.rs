@@ -8,7 +8,7 @@ use crate::{
     },
     elm::ELM,
     obv3::OBv3,
-    state::{AppState, Multiplicity, P2P3Tabs, Tabs, Transformations},
+    state::{AppState, Multiplicity, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
@@ -142,7 +142,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.selected_transformations.clear();
                         state.select_multiplicity = true;
                         state.p2_p3_tabs = P2P3Tabs::InputFields;
-                        state.tab.next();
+                        state.page.next();
                     }
                     else {
                         match state.p2_p3_tabs {
@@ -216,7 +216,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                 }
                             }
                             _ => {
-                                if !state.popup_mapping_p2_p3 && state.tab != Tabs::UnusedDataP3 {
+                                if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {
                                     state.popup_mapping_p2_p3 = true;
                                 } else {
                                     state.popup_mapping_p2_p3 = false;
@@ -330,7 +330,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.select_multiplicity = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
-                        state.tab.next();
+                        state.page.next();
                     } else {
                         state.popup_uncompleted_warning = true;
                     }
@@ -371,7 +371,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.selected_transformations.clear();
                         state.transformations = Transformations::Copy;
                         
-                        state.tab.prev();
+                        state.page.prev();
                     }
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
@@ -380,7 +380,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
-                    state.tab.prev();
+                    state.page.prev();
                 } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
                     && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
                 {

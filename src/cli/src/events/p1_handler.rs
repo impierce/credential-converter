@@ -28,7 +28,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 F(2) => {
-                    state.tab.prev();
+                    state.page.prev();
                 }
                 Left => {
                     if state.p1_prompts == P1Prompts::Mapping {
@@ -53,7 +53,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
                         state.output_warning = true;
                     } else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
-                        state.tab.next();
+                        state.page.next();
                         preload_p2(state);
                     } else if state.output_warning {
                         state.output_warning = false;
@@ -102,7 +102,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 let input_path = Path::new(&state.input_path);
                 let mapping_path = Path::new(&state.mapping_path);
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
-                    state.tab.next();
+                    state.page.next();
                     preload_p2(state);
                 }
             }
