@@ -310,6 +310,12 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.popup_mapping_p2_p3 = false;
                         state.page.next();
                         trace_dbg!(state.page);
+
+                        let output_format = state.mapping.output_format();
+                        let json_value = state.repository.get_mut(&output_format).unwrap();
+                        let mut file = std::fs::File::create(&state.output_path).unwrap();
+                        file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
+                            .unwrap();
                     } else {
                         state.popup_unused_data = true;
                     }
