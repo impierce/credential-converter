@@ -318,7 +318,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    if state.input_fields.len() == state.completed_input_fields.len() {
+                    if state.input_fields.len() - 1 == state.completed_input_fields.len() {
                         state.popup_mapping_p2_p3 = false;
                         state.page.next();
 

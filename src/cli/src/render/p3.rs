@@ -143,6 +143,18 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                     state.candidate_data_value.clone().unwrap();
                 trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                 trace_dbg!(&state.optional_fields[state.selected_optional_field]);
+
+                if state.selected_input_field == state.input_fields.len() - 1 {
+                    state.selected_input_field = 0;
+                } else {
+                    state.selected_input_field += 1;
+                }
+
+                if state.selected_optional_field == state.optional_fields.len() - 1 {
+                    state.selected_optional_field = 0;
+                } else {
+                    state.selected_optional_field += 1;
+                }
             } // DirectCopy
         }
     }

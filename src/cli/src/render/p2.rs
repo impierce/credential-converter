@@ -144,6 +144,18 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                     state.candidate_data_value.clone().unwrap();
                 trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                 trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
+
+                if state.selected_input_field == state.input_fields.len() - 1 {
+                    state.selected_input_field = 0;
+                } else {
+                    state.selected_input_field += 1;
+                }
+
+                if state.selected_missing_field == state.missing_data_fields.len() - 1 {
+                    state.selected_missing_field = 0;
+                } else {
+                    state.selected_missing_field += 1;
+                }
             } // DirectCopy
         }
     }
