@@ -160,7 +160,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
-    let tabs = vec![" EN ", " NL "];
+    let tabs = vec![" EN ", " NL ", " BG ", " CS ", " DA ", " DE ", " EL ", " ES ", " ET ", " FI ", " FR ", " HR ", " HU ", " IS ", " IT ", " LT ", " LV ", " PL ", " PT ", " RO ", " RU ", " SK ", " SL ", " SV "];
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
         Constraint::Max(tabs.concat().len() as u16 + 2),
@@ -168,11 +168,48 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     ])
     .areas(language_prompt_inner);
 
-    Tabs::new(tabs)
-        .style(Style::default().fg(Color::White))
-        .highlight_style(Color::Yellow)
-        .select(state.language as usize)
-        .divider("")
-        .render(tabs_center, buf);
-
+    // trace_dbg!(tabs_center.width as usize / 6);
+    // trace_dbg!(state.language as usize);
+    if state.language as usize >= tabs_center.width as usize / 6 {
+        let tabs_slice = &tabs[(state.language as usize - (tabs_center.width as usize / 6) + 1)..state.language as usize + 1];
+        let tabs_vec: Vec<String> = tabs_slice.iter().map(|s| s.to_string()).collect();
+        Tabs::new(tabs_vec)
+            .style(Style::default().fg(Color::White))
+            .highlight_style(Color::Yellow)
+            .select(tabs_center.width as usize / 6 - 1)
+            .divider("")
+            .render(tabs_center, buf);
+    }
+    else {
+        Tabs::new(tabs)
+            .style(Style::default().fg(Color::White))
+            .highlight_style(Color::Yellow)
+            .select(state.language as usize)
+            .divider("")
+            .render(tabs_center, buf);
+    }
 }
+
+// pub fn tabber_side_scroll(
+//     area: Rect,
+//     buf: &mut Buffer,
+//     tabs: &[&str],
+//     active_tab: usize,
+//     offset: u16,
+// ) {
+//     let tabs_len = tabs.iter().map(|t| t.len() as u16).sum::<u16>() + tabs.len() as u16;
+//     let tabs = tabs.iter().map(|t| Spans::from(*t)).collect::<Vec<_>>();
+//     let tabs = Tabs::new(tabs)
+//         .style(Style::default().fg(Color::White))
+//         .highlight_style(Color::Yellow)
+//         .select(active_tab)
+//         .divider("")
+//         .block(Block::default().borders(Borders::ALL))
+//         .widths(&[
+//             Constraint::Length(1),
+//             Constraint::Length(tabs_len),
+//             Constraint::Length(1),
+//         ]);
+
+//     tabs.render(area, buf);
+// }

@@ -97,6 +97,28 @@ pub enum Languages {
     #[default]
     EN = 0,
     NL,
+    BG,
+    CS,
+    DA,
+    DE,
+    EL,
+    ES,
+    ET,
+    FI,
+    FR,
+    HR,
+    HU,
+    IS,
+    IT,
+    LT,
+    LV,
+    PL,
+    PT,
+    RO,
+    RU,
+    SK,
+    SL,
+    SV,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -218,7 +240,7 @@ macro_rules! next_prev {
 //     };
 // }
 
-next_prev!(Languages, Languages::EN, Languages::NL);
+next_prev!(Languages, Languages::EN, Languages::SV);
 next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
 next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Language, P1Prompts::Mapping);
