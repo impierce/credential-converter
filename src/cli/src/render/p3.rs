@@ -135,7 +135,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {
+            _ => { // this is actually event handling and should be moved
                 selector(state);
                 state.selected_transformations_tab = false;
                 state.select_multiplicity = true;

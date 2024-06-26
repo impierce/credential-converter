@@ -1,0 +1,3 @@
+{
+    "intro": "\nTo narzędzie służy do konwertowania uprawnień między formatami OpenBadges i ELM.\n\nPrzyjmuje plik json jako wejście i generuje nowy, zmapowany plik json. Niesparowane pola można sparować ręcznie. Nieużywane dane zostaną zapisane w osobnym pliku. Ręczne mapowania można zapisać w niestandardowym pliku mapowania do późniejszego użycia.\n\nDla bezwzględnych ścieżek zacznij od '/', dla względnych ścieżek bieżący katalog to: %{pwd}"
+}

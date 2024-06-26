@@ -1,0 +1,3 @@
+{
+    "intro": "\nDette værktøj er lavet til at konvertere legitimationsoplysninger mellem OpenBadges og ELM-formatet.\n\nDet tager en json-fil som input og genererer en ny, kortlagt json-fil. Umapede felter kan kortlægges manuelt. Ubrugte data gemmes i en separat fil. Manuelle kortlægninger kan gemmes i en brugerdefineret kortlægningsfil til fremtidig brug.\n\nFor absolutte stier start med '/', for relative stier er den aktuelle mappe: %{pwd}"
+}

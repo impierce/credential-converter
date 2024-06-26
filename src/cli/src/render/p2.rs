@@ -129,7 +129,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => { 
+            _ => { // this is actually event handling and should be moved
                 selector(state);
                 state.selected_transformations_tab = false;
                 state.select_multiplicity = true;

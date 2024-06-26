@@ -15,10 +15,16 @@ use ratatui::prelude::{CrosstermBackend, Terminal};
 use state::AppState;
 use std::io::{stdout, Result};
 
+// Load I18n macro, for allow you use `t!` macro in anywhere.
+#[macro_use]
+extern crate rust_i18n;
+i18n!("src/locales", fallback = "en");
+
 fn main() -> Result<()> {
     initialize_logging().expect("Unexpected error while initializing logging");
-
     trace_dbg!("Starting the application");
+
+    // rust_i18n::set_locale("sv"); // move to event_handler
 
     // Initialize the alternate terminal screen, its input and the backend for it.
     execute!(stdout(), EnterAlternateScreen, EnableMouseCapture)?;

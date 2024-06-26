@@ -1,5 +1,6 @@
 use crate::backend::preload_p2::preload_p2;
 use crate::state::{AppState, P1Prompts};
+use crate::trace_dbg;
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 use std::path::Path;
 
@@ -33,6 +34,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     else if state.p1_prompts == P1Prompts::Language {
                         state.language.prev();
+                        rust_i18n::set_locale(state.language.as_ref().to_lowercase().as_str());
                     }
                 }
                 Right => {
@@ -41,6 +43,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     else if state.p1_prompts == P1Prompts::Language {
                         state.language.next();
+                        rust_i18n::set_locale(state.language.as_ref().to_lowercase().as_str());
                     }
                 }
                 Up => {

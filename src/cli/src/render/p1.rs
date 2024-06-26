@@ -5,10 +5,11 @@ use ratatui::{
     widgets::*,
 };
 use std::path::Path;
-
 use crate::{
     popups::render_popup_overwrite_warning, state::{AppState, P1Prompts}, trace_dbg
 };
+
+use rust_i18n::t;
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p1
@@ -27,12 +28,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     }));
 
     // Left description area
-    let description = format!("
-    This tool is made for converting credentials between the OpenBadges and the ELM format.
-    \nIt takes a json file as input and outputs the new, mapped json file. Unmapped fields can be mapped manually. Unused data will be stored in a seperate file. Manual mappings can be saved to a custom mapping file for future use.
-    \nFor absolute paths start with '/', for relative paths the current directory is: {}",
-    std::env::current_dir().unwrap().display());
-    Paragraph::new(description)
+    Paragraph::new(t!("intro", pwd = std::env::current_dir().unwrap().display()))
         .wrap(Wrap { trim: true })
         .render(left_description, buf);
 

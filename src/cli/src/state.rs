@@ -1,5 +1,5 @@
 use ratatui::layout::Rect;
-use strum::{Display, FromRepr};
+use strum::{AsRefStr, Display, FromRepr};
 
 use crate::backend::repository::Repository;
 
@@ -92,7 +92,7 @@ pub struct AppState {
     pub complete: bool, // change into button, thus a click event, not key press event
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, AsRefStr)]
 pub enum Languages {
     #[default]
     EN = 0,
