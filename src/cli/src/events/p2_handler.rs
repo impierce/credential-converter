@@ -162,58 +162,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                         state.candidate_data_value.clone().unwrap();
                                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                                     trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
+
+                                    update_repository(state);
                                 } else if state.selected_transformations_tab {
                                     state.popup_mapping_p2_p3 = true;
                                 } else {
-                                    let output_format = state.mapping.output_format();
-
-                                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
-
-                                    let source_value = state.candidate_data_value.clone().unwrap();
-
-                                    let pointer = state.missing_data_field.as_ref().unwrap().clone();
-
-                                    let mut json_value = state.repository.get_mut(&output_format).unwrap();
-
-                                    let mut leaf_node = construct_leaf_node(&pointer);
-
-                                    leaf_node
-                                        .pointer_mut(&pointer)
-                                        .map(|value| *value = serde_json::from_str(&source_value).unwrap());
-
-                                    merge(&mut json_value, leaf_node);
-
-                                    state.missing_data_fields = vec![
-                                        vec![("".to_string(), "".to_string())],
-                                        match state.mapping.output_format().as_str() {
-                                            "OBv3" => {
-                                                get_missing_data_fields::<AchievementCredential>(json_value.clone())
-                                            }
-                                            "ELM" => {
-                                                get_missing_data_fields::<EuropassEdcCredential>(json_value.clone())
-                                            }
-                                            _ => panic!(),
-                                        }
-                                        .into_iter()
-                                        .map(|pointer| (pointer, "".to_string()))
-                                        .collect(),
-                                    ]
-                                    .concat();
-
-                                    if state.missing_data_field.is_none() {
-                                        let output_format = state.mapping.output_format();
-                                        let json_value = state.repository.get_mut(&output_format).unwrap();
-                                        let mut file = std::fs::File::create(&state.output_path).unwrap();
-                                        file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
-                                            .unwrap();
-                                        //state.tab.next();
-                                    }
-
-                                    // if state.missing_data_field.is_none() {
-                                    //     let mut file = std::fs::File::create(&state.output_path).unwrap();
-                                    //     file.write_all(temp.as_bytes()).unwrap();
-                                    //     state.tab.next();
-                                    // }
                                 }
                             }
                             _ => {
@@ -396,4 +349,32 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     }
 
     Ok(false)
+}
+
+pub fn update_repository(state: &mut AppState) {
+    let output_format = state.mapping.output_format();
+
+    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
+
+    let source_value = state.candidate_data_value.clone().unwrap();
+
+    trace_dbg!(state.selected_missing_field);
+    if state.selected_missing_field == 0 {
+        return;
+    }
+
+    let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
+    trace_dbg!(&pointer);
+
+    let mut json_value = state.repository.get_mut(&output_format).unwrap();
+
+    let mut leaf_node = construct_leaf_node(&pointer);
+
+    leaf_node
+        .pointer_mut(&pointer)
+        .map(|value| *value = serde_json::from_str(&source_value).unwrap());
+    trace_dbg!(&leaf_node);
+
+    merge(&mut json_value, leaf_node);
+    trace_dbg!(json_value);
 }

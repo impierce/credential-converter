@@ -1,5 +1,13 @@
 use crate::{
-    backend::selector::selector, mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar}, popups::{render_popup_custom_mapping_p2, render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2}, state::{AppState, Multiplicity, P2P3Tabs}, trace_dbg
+    backend::selector::selector,
+    mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
+    p2_handler::update_repository,
+    popups::{
+        render_popup_custom_mapping_p2, render_popup_field_value, render_popup_mapping,
+        render_popup_uncompleted_warning_p2,
+    },
+    state::{AppState, Multiplicity, P2P3Tabs},
+    trace_dbg,
 };
 
 use ratatui::{
@@ -129,7 +137,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => { 
+            _ => {
                 selector(state);
                 state.selected_transformations_tab = false;
                 state.select_multiplicity = true;
@@ -140,8 +148,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
                 state.completed_input_fields.push(state.selected_input_field);
                 state.completed_missing_fields.push(state.selected_missing_field);
-                state.missing_data_fields[state.selected_missing_field].1 =
-                    state.candidate_data_value.clone().unwrap();
+                state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
                 trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                 trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
 
@@ -156,6 +163,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 } else {
                     state.selected_missing_field += 1;
                 }
+
+                update_repository(state);
             } // DirectCopy
         }
     }
@@ -167,10 +176,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 horizontal: 20,
             }),
             buf,
-            state
+            state,
         );
-    }
-    else if state.popup_uncompleted_warning {
+    } else if state.popup_uncompleted_warning {
         render_popup_uncompleted_warning_p2(
             area.inner(&Margin {
                 vertical: 4,
