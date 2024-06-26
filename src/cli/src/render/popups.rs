@@ -162,7 +162,7 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
     }
 
-    if tab == P2P3Tabs::OutputFields {
+    if tab == P2P3Tabs::OutputFields && state.tab == crate::state::Tabs::ManualMappingP2 {
         title_left = "  Missing Field  ";
         title_right = "  Result Value  ";
         field = state.missing_data_fields[state.selected_missing_field]
@@ -178,6 +178,27 @@ pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 .len()
                 / (right.width as usize - 2);
             state.popup_amount_lines_value = state.missing_data_fields[state.selected_missing_field]
+                .1
+                .len()
+                / (right.width as usize - 2);
+        }
+    }
+    else if tab == P2P3Tabs::OutputFields && state.tab == crate::state::Tabs::UnusedDataP3 {
+        title_left = "  Optional Field  ";
+        title_right = "  Result Value  ";
+        field = state.optional_fields[state.selected_optional_field]
+            .0
+            .as_str();
+        value = state.optional_fields[state.selected_optional_field]
+            .1
+            .as_str();
+        // Calculate maximum lines used, this sets the maximum scroll offset
+        if right.width > 2 {
+            state.popup_amount_lines_path = state.optional_fields[state.selected_optional_field]
+                .0
+                .len()
+                / (right.width as usize - 2);
+            state.popup_amount_lines_value = state.optional_fields[state.selected_optional_field]
                 .1
                 .len()
                 / (right.width as usize - 2);

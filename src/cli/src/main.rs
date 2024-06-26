@@ -43,7 +43,7 @@ fn main() -> Result<()> {
         ], // todo: remove hard code testdata
         optional_fields: vec![
             ("".to_string(), "".to_string()),
-            ("field4".to_string(), "".to_string()),
+            ("field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4".to_string(), "".to_string()),
             ("field5".to_string(), "".to_string()),
             ("field6".to_string(), "".to_string()),
         ], // todo: remove hard code testdata
