@@ -204,11 +204,16 @@ where
 
     let mut missing_data_fields = vec![];
     while let Err(pointer) = verify::<T>(&mut temp_credential) {
-        temp_credential
+        trace_dbg!(&temp_credential);
+        trace_dbg!(&pointer);
+
+        match temp_credential
             .pointer_mut(&pointer)
             .map(|value| *value = json!("TEMP"))
-            .unwrap();
-        // thread::sleep(std::time::Duration::from_secs(1));
+        {
+            Some(_) => {}
+            None => return vec![],
+        }
         missing_data_fields.push(pointer);
     }
 
