@@ -15,9 +15,8 @@ pub struct AppState {
     pub popup_mapping_p2_p3: bool,
     pub selected_transformations_tab: bool,
     pub select_multiplicity: bool,
-    pub output_warning: bool,
+    pub overwrite_warning: bool,
     pub review: bool,
-    pub popup_custom_mapping: bool,
     pub popup_uncompleted_warning: bool,
     pub popup_unused_data: bool,
 

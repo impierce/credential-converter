@@ -1,17 +1,11 @@
-use std::io::Write;
-
 use crate::{
-    backend::{
-        preload_p2::get_missing_data_fields,
-        repository::{construct_leaf_node, merge},
-    },
+    backend::repository::{construct_leaf_node, merge},
     state::{AppState, Multiplicity, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
-use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
-use digital_credential_data_models::{elmv3::EuropassEdcCredential, obv3::AchievementCredential};
-
 use super::is_mouse_over_area;
+
+use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
 pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::Error> {
     if let event::Event::Key(key) = event {
@@ -30,10 +24,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 Backspace => {
                     // Delete a selected transformation from the list of selected transformations
-                    if state.popup_custom_mapping {
-                        state.custom_mapping_path.pop();
-                    }
-                    else if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
+                    if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
                         state.selected_transformations.remove(state.selected_transformation);
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
@@ -124,10 +115,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
-                    if state.popup_custom_mapping {
-                        state.popup_custom_mapping = false;
-                    }
-                    else if state.popup_uncompleted_warning {
+                    if state.popup_uncompleted_warning {
                         state.popup_uncompleted_warning = false;
                         state.popup_mapping_p2_p3 = false;
                         state.selected_input_field = 1;
@@ -181,10 +169,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Char(char) => {
-                    if state.popup_custom_mapping {
-                            state.custom_mapping_path.push(char);
-                    }
-                    else if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
+                    if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.push(char);
                     }
                 }

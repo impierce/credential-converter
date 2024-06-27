@@ -48,8 +48,8 @@ pub fn preload_p2(state: &mut AppState) {
         trace_dbg!("Successfully loaded the mapping file");
 
         // Load the custom mapping file
-        {
-            if !state.custom_mapping_path.is_empty() {
+        { // todo: I added the custom_mapping_path as the destination to save the manual mappings to. not to load mappings from, thats the mapping_path
+            if !state.custom_mapping_path.is_empty() && Path::new(&state.custom_mapping_path).is_file() && state.custom_mapping_path.ends_with(".json"){
                 let rdr = std::fs::File::open(&state.custom_mapping_path).unwrap();
                 let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
                 transformations.append(&mut custom_transformations);

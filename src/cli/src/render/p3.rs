@@ -9,7 +9,7 @@ use crate::{
     backend::selector::selector,
     mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
     popups::{
-        render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2,
+        render_popup_field_value, render_popup_mapping,
         render_popup_unused_data_p3,
     },
     state::{AppState, Multiplicity, P2P3Tabs},
@@ -18,7 +18,7 @@ use crate::{
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
-        .title("  Lost Data  ")
+        .title("  Unused Data  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
@@ -172,7 +172,6 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                 horizontal: 20,
             }),
             buf,
-            state,
         );
     } else if state.popup_mapping_p2_p3 {
         if state.select_multiplicity {

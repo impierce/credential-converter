@@ -11,18 +11,15 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    if state.output_warning {
-                        state.output_warning = false;
+                    if state.overwrite_warning {
+                        state.overwrite_warning = false;
                     } else {
                         return Ok(true);
                     }
                 }
                 Tab => {
-                    let output_path = Path::new(&state.output_path);
-                    if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
-                        state.output_warning = true;
-                    } else if state.output_warning {
-                        state.output_warning = false;
+                    if state.overwrite_warning {
+                        state.overwrite_warning = false;
                         state.p1_prompts.next();
                     } else {
                         state.p1_prompts.next();
@@ -31,8 +28,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Left => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.prev();
-                    }
-                    else if state.p1_prompts == P1Prompts::Language {
+                    } else if state.p1_prompts == P1Prompts::Language {
                         state.language.prev();
                         rust_i18n::set_locale(state.language.as_ref().to_lowercase().as_str());
                     }
@@ -40,8 +36,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Right => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.next();
-                    }
-                    else if state.p1_prompts == P1Prompts::Language {
+                    } else if state.p1_prompts == P1Prompts::Language {
                         state.language.next();
                         rust_i18n::set_locale(state.language.as_ref().to_lowercase().as_str());
                     }
@@ -56,16 +51,30 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     let input_path = Path::new(&state.input_path);
                     let output_path = Path::new(&state.output_path);
                     let mapping_path = Path::new(&state.mapping_path);
-                    if state.p1_prompts == P1Prompts::Output && output_path.is_file() && !state.output_warning {
-                        state.output_warning = true;
-                    } else if state.p1_prompts == P1Prompts::Mapping && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
+                    let custom_mapping_path = Path::new(&state.custom_mapping_path);
+                    if state.p1_prompts == P1Prompts::CustomMapping && (output_path.is_file() || custom_mapping_path.is_file()) && !state.overwrite_warning {
+                        state.overwrite_warning = true;
+                    } else if state.overwrite_warning 
+                        && input_path.is_file()
+                        && mapping_path.is_file()
+                        && !state.output_path.is_empty()
+                    {
                         state.page.next();
                         preload_p2(state);
-                    } else if state.output_warning {
-                        state.output_warning = false;
-                        state.p1_prompts.next();
-                    } else if  state.p1_prompts == P1Prompts::Mapping {
+                        state.overwrite_warning = false;
                     }
+                    else if state.p1_prompts == P1Prompts::CustomMapping
+                        && input_path.is_file()
+                        && mapping_path.is_file()
+                        && !state.output_path.is_empty()
+                    {
+                        state.page.next();
+                        preload_p2(state);
+                        state.overwrite_warning = false;
+                    } else if state.overwrite_warning {
+                        state.overwrite_warning = false;
+                    }
+
                     else {
                         state.p1_prompts.next();
                     }
@@ -80,10 +89,13 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P1Prompts::MappingFile => {
                         state.mapping_path.pop();
                     }
+                    P1Prompts::CustomMapping => {
+                        state.custom_mapping_path.pop();
+                    }
                     _ => {}
                 },
                 Char(value) => {
-                    if !state.output_warning {
+                    if !state.overwrite_warning {
                         match state.p1_prompts {
                             P1Prompts::Input => {
                                 state.input_path.push(value);
@@ -93,6 +105,9 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             }
                             P1Prompts::MappingFile => {
                                 state.mapping_path.push(value);
+                            }
+                            P1Prompts::CustomMapping => {
+                                state.custom_mapping_path.push(value);
                             }
                             _ => {}
                         }
@@ -107,9 +122,17 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             event::MouseEventKind::Up(_) => {
                 let input_path = Path::new(&state.input_path);
                 let mapping_path = Path::new(&state.mapping_path);
-                if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) && input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
-                    state.page.next();
-                    preload_p2(state);
+                let output_path = Path::new(&state.output_path);
+                let custom_mapping_path = Path::new(&state.custom_mapping_path);
+                if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row)
+                {
+                    if (output_path.is_file() || custom_mapping_path.is_file()) && !state.overwrite_warning {
+                        state.overwrite_warning = true;
+                    }
+                    else if input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
+                        state.page.next();
+                        preload_p2(state);
+                    }
                 }
             }
             _ => {}

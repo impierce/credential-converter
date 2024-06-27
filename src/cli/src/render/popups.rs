@@ -3,13 +3,13 @@ use crate::{
     state::{AppState, P2P3Tabs},
 };
 
+use num_traits::float;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     prelude::*,
     widgets::*,
 };
-use std::path::Path;
 
 pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Clear.render(area, buf);
@@ -221,16 +221,18 @@ pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
+    let mut txt = "\nA file already exists in the path(s) in the orange box(es).\nThe file(s) will be overwritten if you continue.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let width: f32 = 50 as f32 / (area.width as f32 - 2.0);
+
     let vertical_margin;
-    if area.height >= 3 {
-        vertical_margin = (area.height - 3) / 2;
+    if area.height >= 4 && width <= 1.0 {
+        vertical_margin = (area.height - 4) / 2;
     } else {
+        txt = "\n".to_owned() + &txt;
         vertical_margin = 0;
     }
-    Paragraph::new(
-        "\nA file already exists in the given output path location.
-    This file will be overwritten if you continue.",
-    )
+
+    Paragraph::new(txt)
     .centered()
     .alignment(Alignment::Center)
     .wrap(Wrap { trim: false })
@@ -250,13 +252,18 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
+    let mut txt = "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let width: f32 = 50 as f32 / (area.width as f32 - 2.0);
+
     let vertical_margin;
-    if area.height >= 4 {
+    if area.height >= 4 && width <= 1.0 {
         vertical_margin = (area.height - 4) / 2;
     } else {
+        txt = "\n".to_owned() + &txt;
         vertical_margin = 0;
     }
-    Paragraph::new("\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.")
+
+    Paragraph::new(txt)
         .centered()
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
@@ -266,7 +273,7 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         }), buf);
 }
 
-pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer) {
     Clear.render(area, buf);
     Block::new()
         .style(Style::default().fg(Color::White).bg(Color::Black))
@@ -274,11 +281,9 @@ pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .render(area, buf);
 
-    let [txt, path] = Layout::vertical(vec![Constraint::Percentage(100), Constraint::Length(3)]).areas(area);
-
     let vertical_margin;
-    if txt.height >= 6 {
-        vertical_margin = (txt.height - 6) / 2;
+    if area.height >= 6 {
+        vertical_margin = (area.height - 6) / 2;
     } else {
         vertical_margin = 0;
     }
@@ -289,80 +294,10 @@ pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer, state: &mut App
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
         .render(
-            txt.inner(&Margin {
+            area.inner(&Margin {
                 vertical: vertical_margin,
                 horizontal: 1,
             }),
             buf,
         );
-
-    let unused_data_prompt = Block::default().borders(Borders::ALL);
-    let unused_data_path = Path::new(&state.unused_data_path);
-    if state.unused_data_path.is_empty() {
-        Paragraph::new(state.unused_data_path.as_str())
-            .block(unused_data_prompt)
-            .fg(Color::White)
-            .render(path, buf);
-    } else if !unused_data_path.is_file() {
-        Paragraph::new(state.unused_data_path.as_str())
-            .block(unused_data_prompt)
-            .fg(Color::Green)
-            .render(path, buf);
-    } else {
-        Paragraph::new(state.unused_data_path.as_str())
-            .block(unused_data_prompt)
-            .fg(Color::Rgb(240, 160, 100))
-            .render(path, buf);
-    }
-}
-
-pub fn render_popup_custom_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    Clear.render(area, buf);
-    Block::new()
-        .style(Style::default().fg(Color::White).bg(Color::Black))
-        .title("~~~  Custom Mapping  ~~~")
-        .title_alignment(Alignment::Center)
-        .render(area, buf);
-
-    let [txt, path] = Layout::vertical(vec![
-        Constraint::Percentage(100),
-        Constraint::Length(3),
-    ])
-    .areas(area);
-
-    let vertical_margin;
-    if txt.height >= 6 {
-        vertical_margin = (txt.height - 6) / 2;
-    } else {
-        vertical_margin = 0;
-    }
-    let text = format!("\n Do you want to save your manual mappings as rules to a custom mapping file?\nIf yes, please enter a file path, leave empty to discard.\n If a file already exists at the given path, it will be overwritten.\nFor absolute paths start with '/', for relative paths the current directory is: {}",
-    std::env::current_dir().unwrap().display());
-    Paragraph::new(text)
-        .centered()
-        .alignment(Alignment::Center)
-        .wrap(Wrap { trim: false })
-        .render(txt.inner(&Margin {
-            vertical: vertical_margin,
-            horizontal: 1,
-        }), buf);
-    
-    let custom_mapping_prompt = Block::default().borders(Borders::ALL);
-
-    if state.custom_mapping_path.is_empty() {
-        Paragraph::new("")
-            .block(custom_mapping_prompt)
-            .fg(Color::White)
-            .render(path, buf);
-    } else if !Path::new(&state.custom_mapping_path).is_file() {
-        Paragraph::new(state.custom_mapping_path.as_str())
-            .block(custom_mapping_prompt)
-            .fg(Color::Green)
-            .render(path, buf);
-    } else {
-        Paragraph::new(state.custom_mapping_path.as_str())
-            .block(custom_mapping_prompt)
-            .fg(Color::Rgb(240, 160, 100))
-            .render(path, buf);
-    }
 }

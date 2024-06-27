@@ -1,3 +1,8 @@
+use crate::{
+    popups::render_popup_overwrite_warning,
+    state::{AppState, P1Prompts},
+    trace_dbg,
+};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -5,9 +10,6 @@ use ratatui::{
     widgets::*,
 };
 use std::path::Path;
-use crate::{
-    popups::render_popup_overwrite_warning, state::{AppState, P1Prompts}, trace_dbg
-};
 
 use rust_i18n::t;
 
@@ -21,11 +23,11 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
 
     let vertical_sections = Layout::horizontal(vec![Constraint::Length(50), Constraint::Min(0)]);
     let [left, right_prompts] = vertical_sections.areas(area);
-    let [languages_area, left_description] = Layout::vertical(vec![Constraint::Length(3), Constraint::Min(0)]).areas(left.inner(&Margin {
-        vertical: 2,
-        horizontal: 0,
-    
-    }));
+    let [languages_area, left_description] =
+        Layout::vertical(vec![Constraint::Length(3), Constraint::Min(0)]).areas(left.inner(&Margin {
+            vertical: 2,
+            horizontal: 0,
+        }));
 
     // Left description area
     Paragraph::new(t!("intro", pwd = std::env::current_dir().unwrap().display()))
@@ -63,7 +65,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut custom_mapping_prompt = Block::new()
-        .title("  Choose Mapping File  ")
+        .title("  Save Custom Mapping To ")
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     // Top-left language prompt
@@ -102,8 +104,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
             .block(output_prompt)
             .fg(Color::Red)
             .render(output_path, buf);
-    }        
-    else if !path.is_file() {
+    } else if !path.is_file() {
         trace_dbg!(&state.output_path);
         Paragraph::new(state.output_path.as_str())
             .block(output_prompt)
@@ -153,10 +154,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
 
     // Custom mapping prompt
     let path = Path::new(&state.custom_mapping_path);
-    if !path.exists() || !path.is_file() {
+    if state.custom_mapping_path.is_empty() {
         Paragraph::new(state.custom_mapping_path.as_str())
             .block(custom_mapping_prompt)
             .fg(Color::White)
+            .render(custom_mapping, buf);
+    } else if path.is_file() {
+        Paragraph::new(state.custom_mapping_path.as_str())
+            .block(custom_mapping_prompt)
+            .fg(Color::Rgb(240, 160, 100))
             .render(custom_mapping, buf);
     } else {
         Paragraph::new(state.custom_mapping_path.as_str())
@@ -172,7 +178,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
-    let tabs = vec![" EN ", " NL ", " BG ", " CS ", " DA ", " DE ", " EL ", " ES ", " ET ", " FI ", " FR ", " HR ", " HU ", " IS ", " IT ", " LT ", " LV ", " PL ", " PT ", " RO ", " RU ", " SK ", " SL ", " SV "];
+    let tabs = vec![
+        " EN ", " NL ", " BG ", " CS ", " DA ", " DE ", " EL ", " ES ", " ET ", " FI ", " FR ", " HR ", " HU ", " IS ",
+        " IT ", " LT ", " LV ", " PL ", " PT ", " RO ", " RU ", " SK ", " SL ", " SV ",
+    ];
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
         Constraint::Max(tabs.concat().len() as u16 + 2),
@@ -181,16 +190,23 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     .areas(language_prompt_inner);
 
     if state.language as usize >= tabs_center.width as usize / 6 {
-        let tabs_slice = &tabs[(state.language as usize - (tabs_center.width as usize / 6) + 1)..state.language as usize + 1];
+        let tabs_slice =
+            &tabs[(state.language as usize - (tabs_center.width as usize / 6) + 1)..state.language as usize + 1];
         let tabs_vec: Vec<String> = tabs_slice.iter().map(|s| s.to_string()).collect();
+        let selected_tab;
+        if tabs_center.width / 6 < 1 {
+            selected_tab = 0;
+        }
+        else {
+            selected_tab = tabs_center.width as usize / 6 - 1;
+        }
         Tabs::new(tabs_vec)
             .style(Style::default().fg(Color::White))
             .highlight_style(Color::Yellow)
-            .select(tabs_center.width as usize / 6 - 1)
+            .select(selected_tab)
             .divider("")
             .render(tabs_center, buf);
-    }
-    else {
+    } else {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::White))
             .highlight_style(Color::Yellow)
@@ -200,11 +216,13 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     }
 
     // Render warning popup at the end so it doesnt get overwritten by previous renders.
-    if state.output_warning {
-        render_popup_overwrite_warning(area.inner(&Margin {
-            vertical: 4,
-            horizontal: 28,
-        }), buf);
+    if state.overwrite_warning {
+        render_popup_overwrite_warning(
+            area.inner(&Margin {
+                vertical: 4,
+                horizontal: 28,
+            }),
+            buf,
+        );
     }
-
 }
