@@ -1,6 +1,6 @@
 use super::is_mouse_over_area;
 use crate::{
-    backend::repository::{construct_leaf_node, merge},
+    backend::{repository::{construct_leaf_node, merge}, selector::selector},
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
@@ -53,71 +53,28 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Tab => {
-                    // Check if inside Transformations bar on the left and switch to the selected transformations tab
+                    handle_tab(state);
+                }
+                F(2) => {
+                    // Check if inside Transformations bar on the selected_transformations tab and switch to the transformations tab
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_mapping_option
                         && state.mapping_option == MappingOptions::Transformations
-                        && !state.selected_transformations_tab
-                    {
-                        state.selected_transformations_tab = true;
-                    }
-                    // Check if inside Transformation bar in the selected transformations tab and switch to button
-                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_mapping_option
-                        && state.mapping_option == MappingOptions::Transformations
                         && state.selected_transformations_tab
                     {
-                        state.p2_p3_tabs.next();
-                    } else {
-                        state.p2_p3_tabs.next();
-                        //state.selected_transformations_tab = false;
+                        state.selected_transformations_tab = false;
                     }
-                }
-                F(2) => {
-                    state.p2_p3_tabs.prev();
+                    else {
+                        state.p2_p3_tabs.prev();
+                    }
                 }
                 Left => {
-                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
-                        state.mapping_option.prev();
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_mapping_option
-                        && !state.selected_transformations_tab
-                    {
-                        state.transformations.prev();
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
-                        if state.selected_transformation > 0 {
-                            state.selected_transformation -= 1;
-                        } else {
-                            state.selected_transformations_tab = false;
-                        }
-                    } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
-                        state.p2_p3_tabs = P2P3Tabs::InputFields;
-                    }
+                    handle_left(state);
                 }
                 Right => {
-                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
-                        state.mapping_option.next();
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_mapping_option
-                        && !state.selected_transformations_tab
-                    {
-                        if state.transformations != Transformations::Regex {
-                            state.transformations.next();
-                        } else {
-                            state.selected_transformations_tab = true;
-                        }
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && state.selected_transformations_tab
-                        && !state.selected_transformations.is_empty()
-                        && state.selected_transformation < state.selected_transformations.len() - 1
-                    {
-                        state.selected_transformation += 1;
-                    } else if state.p2_p3_tabs == P2P3Tabs::InputFields && !state.popup_mapping_p2_p3 {
-                        state.p2_p3_tabs = P2P3Tabs::OutputFields;
-                    }
-                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
+                    handle_right(state);
                 }
-                Up => match state.p2_p3_tabs {
+                Up => match state.p2_p3_tabs { // Scroll through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
@@ -128,12 +85,9 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_missing_field -= 1;
                         }
                     }
-                    P2P3Tabs::MappingOptions => {
-                        state.p2_p3_tabs.next();
-                    }
                     _ => {}
                 },
-                Down => match state.p2_p3_tabs {
+                Down => match state.p2_p3_tabs { // Scroll through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
@@ -147,62 +101,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
-                    if state.uncompleted_warning {
-                        state.uncompleted_warning = false;
-                        state.popup_mapping_p2_p3 = false;
-                        state.selected_input_field = 1;
-                        state.selected_transformation = 0;
-                        state.selected_transformations_tab = false;
-                        state.selected_transformations.clear();
-                        state.select_mapping_option = true;
-                        state.p2_p3_tabs = P2P3Tabs::InputFields;
-                        state.page.next();
-                    } else {
-                        match state.p2_p3_tabs {
-                            P2P3Tabs::MappingOptions => {
-                                if state.select_mapping_option {
-                                    state.select_mapping_option = false;
-                                    if state.mapping_option == MappingOptions::OneToMany {
-                                        state.popup_mapping_p2_p3 = true;
-                                    }
-                                } else if !state.selected_transformations_tab {
-                                    state.selected_transformations.push(state.transformations);
-                                } else if state.popup_mapping_p2_p3 {
-                                    state.popup_mapping_p2_p3 = false;
-                                    state.selected_transformations_tab = false;
-                                    state.select_mapping_option = true;
-                                    state.selected_transformations.clear();
-                                    state.popup_offset_path = 0;
-                                    state.popup_offset_value = 0;
-                                    state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                                    if !state.completed_input_fields.contains(&state.selected_input_field) {
-                                        state.completed_input_fields.push(state.selected_input_field);
-                                    }
-                                    if !state.completed_missing_fields.contains(&state.selected_missing_field) {
-                                        state.completed_missing_fields.push(state.selected_missing_field);
-                                    }
-                                    state.missing_data_fields[state.selected_missing_field].1 =
-                                        state.candidate_data_value.clone().unwrap();
-                                    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                                    trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
-
-                                    update_repository(state);
-                                } else if state.selected_transformations_tab {
-                                    state.popup_mapping_p2_p3 = true;
-                                } else {
-                                }
-                            }
-                            _ => {
-                                if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {
-                                    state.p2_p3_tabs.next();
-                                } else {
-                                    state.popup_mapping_p2_p3 = false;
-                                    state.p2_p3_tabs.next();
-                                }
-                            }
-                        }
-                    }
+                    handle_enter(state);
                 }
                 Char(char) => {
                     if state.popup_mapping_p2_p3 && state.mapping_option == MappingOptions::OneToMany {
@@ -408,4 +307,215 @@ pub fn update_repository(state: &mut AppState) {
     trace_dbg!(json_value);
 }
 
+
 /////     HELPERS     /////
+
+fn handle_tab(state: &mut AppState) {
+    // Check if inside Transformations bar in the transformations tab and switch to the selected transformations tab
+    if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && !state.select_mapping_option
+        && state.mapping_option == MappingOptions::Transformations
+        && !state.selected_transformations_tab
+    {
+        state.selected_transformations_tab = true;
+    }
+    // Check if inside Transformation bar in the selected transformations tab and switch to button
+    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && !state.select_mapping_option
+        && state.mapping_option == MappingOptions::Transformations
+        && state.selected_transformations_tab
+    {
+        state.p2_p3_tabs.next();
+    } 
+    // Check if right tab of Transformations bar is still selected and switch to the left when tabbing to the bar from output_fields
+    else if state.p2_p3_tabs == P2P3Tabs::OutputFields && state.selected_transformations_tab {
+        state.selected_transformations_tab = false;
+        state.p2_p3_tabs.next();                        
+    }    
+    else {
+        state.p2_p3_tabs.next();
+        //state.selected_transformations_tab = false;
+    }
+}
+
+fn handle_left(state: &mut AppState) {
+    // Move through mapping options bar, loops.
+    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
+        state.mapping_option.prev();
+    }
+    // Move through transformation bar, loops 
+    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && !state.select_mapping_option
+        && !state.selected_transformations_tab
+    {
+        state.transformations.prev();
+    }
+    // Move through selected transformations bar, loops
+    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
+        if state.selected_transformation > 0 {
+            state.selected_transformation -= 1;
+        }
+        else if state.selected_transformations.len() > 0 {
+            state.selected_transformation = state.selected_transformations.len() - 1;
+        }
+    }
+    // move between input tab and output tab
+    else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
+        state.p2_p3_tabs = P2P3Tabs::InputFields;
+    }
+}
+
+fn handle_right(state: &mut AppState) {
+    // Move through mapping options bar, loops.
+    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
+        state.mapping_option.next();
+    }
+    // Move through transformation bar, loops
+    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && !state.select_mapping_option
+        && !state.selected_transformations_tab
+    {
+        state.transformations.next();
+    } 
+    // Move through selected transformations bar, loops
+    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && state.selected_transformations_tab
+        && !state.selected_transformations.is_empty()
+    {
+        if state.selected_transformation < state.selected_transformations.len() - 1 {
+            state.selected_transformation += 1;
+        }
+        else {
+            state.selected_transformation = 0;
+        }
+    } 
+    // Move between input tab and output tab
+    else if state.p2_p3_tabs == P2P3Tabs::InputFields && !state.popup_mapping_p2_p3 {
+        state.p2_p3_tabs = P2P3Tabs::OutputFields;
+    }
+}
+
+fn handle_enter(state: &mut AppState) {
+    // Close warning, reset values and move to next page
+    if state.uncompleted_warning {
+        state.uncompleted_warning = false;
+        state.popup_mapping_p2_p3 = false;
+        state.selected_input_field = 1;
+        state.selected_transformation = 0;
+        state.selected_transformations_tab = false;
+        state.selected_transformations.clear();
+        state.select_mapping_option = true;
+        state.p2_p3_tabs = P2P3Tabs::InputFields;
+        state.page.next();
+    } 
+    else {
+        match state.p2_p3_tabs {
+            P2P3Tabs::MappingOptions => {
+                // Switch from mapping options tab to respective tab
+                if state.select_mapping_option {
+                    // Fast-track mapping, Copy to output result value and reset values
+                    if state.mapping_option == MappingOptions::DirectCopy {
+                        selector(state);
+                        state.selected_transformations_tab = false;
+                        state.popup_mapping_p2_p3 = false;
+                        state.select_mapping_option = true;
+                        state.selected_transformations.clear();
+                        state.popup_offset_path = 0;
+                        state.popup_offset_value = 0;
+                        state.p2_p3_tabs = P2P3Tabs::InputFields;
+
+                        // Only push input field and missing field if they are not already in the completed fields
+                        if !state.completed_input_fields.contains(&state.selected_input_field) {
+                            state.completed_input_fields.push(state.selected_input_field);
+                        }
+                        if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+                            state.completed_missing_fields.push(state.selected_missing_field);
+                        }
+
+                        state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
+
+                        // Move active fields to next field
+                        if state.selected_input_field == state.input_fields.len() - 1 {
+                            state.selected_input_field = 1;
+                        } else {
+                            state.selected_input_field += 1;
+                        }
+
+                        if state.selected_missing_field == state.missing_data_fields.len() - 1 {
+                            state.selected_missing_field = 1;
+                        } else {
+                            state.selected_missing_field += 1;
+                        }
+
+                        update_repository(state);
+                    }
+                    else {
+                        state.select_mapping_option = false;
+                    }
+                } 
+                // Select a transformation
+                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab {
+                    state.selected_transformations.push(state.transformations);
+                } 
+                // Complete a mapping from the view popup
+                else if state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = false;
+                    state.selected_transformations_tab = false;
+                    state.select_mapping_option = true;
+                    state.selected_transformations.clear();
+                    state.popup_offset_path = 0;
+                    state.popup_offset_value = 0;
+                    state.p2_p3_tabs = P2P3Tabs::InputFields;
+
+                    // Only push input field and missing field if they are not already in the completed fields
+                    if !state.completed_input_fields.contains(&state.selected_input_field) {
+                        state.completed_input_fields.push(state.selected_input_field);
+                    }
+                    if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+                        state.completed_missing_fields.push(state.selected_missing_field);
+                    }
+
+                    state.missing_data_fields[state.selected_missing_field].1 =
+                        state.candidate_data_value.clone().unwrap();
+
+                    // Move active fields to next field
+                    if state.selected_input_field == state.input_fields.len() - 1 {
+                        state.selected_input_field = 1;
+                    } else {
+                        state.selected_input_field += 1;
+                    }
+
+                    if state.selected_missing_field == state.missing_data_fields.len() - 1 {
+                        state.selected_missing_field = 1;
+                    } else {
+                        state.selected_missing_field += 1;
+                    }
+
+                    update_repository(state);
+                } else if state.selected_transformations_tab {
+                    state.popup_mapping_p2_p3 = true;
+                }
+            }
+            P2P3Tabs::ClearResultAbort => {
+                if state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = false;
+                } 
+                else if !state.select_mapping_option {
+                    state.transformations = Transformations::LowerCase;
+                    state.selected_transformations.clear();
+                    state.mapping_option = MappingOptions::DirectCopy;
+                    state.selected_transformations_tab = false;
+                    state.select_mapping_option = true;
+                }
+            }
+            _ => {
+                if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {
+                    state.p2_p3_tabs.next();
+                } else {
+                    state.popup_mapping_p2_p3 = false;
+                    state.p2_p3_tabs.next();
+                }
+            }
+        }
+    }
+}

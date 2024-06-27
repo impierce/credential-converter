@@ -137,40 +137,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
             MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
             MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {
-                // this is actually event handling and should be moved
-                selector(state);
-                state.selected_transformations_tab = false;
-                state.select_mapping_option = true;
-                state.selected_transformations.clear();
-                state.popup_offset_path = 0;
-                state.popup_offset_value = 0;
-                state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                if !state.completed_input_fields.contains(&state.selected_input_field) {
-                    state.completed_input_fields.push(state.selected_input_field);
-                }
-                if !state.completed_missing_fields.contains(&state.selected_missing_field) {
-                    state.completed_missing_fields.push(state.selected_missing_field);
-                }
-                state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
-                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
-
-                if state.selected_input_field == state.input_fields.len() - 1 {
-                    state.selected_input_field = 1;
-                } else {
-                    state.selected_input_field += 1;
-                }
-
-                if state.selected_missing_field == state.missing_data_fields.len() - 1 {
-                    state.selected_missing_field = 1;
-                } else {
-                    state.selected_missing_field += 1;
-                }
-
-                update_repository(state);
-            } // DirectCopy
+            _ => {}
         }
     }
 
