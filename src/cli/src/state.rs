@@ -18,7 +18,6 @@ pub struct AppState {
     pub overwrite_warning: bool,
     pub review: bool,
     pub popup_uncompleted_warning: bool,
-    pub popup_unused_data: bool,
 
     // Mapping options
     pub mapping: Mapping,
@@ -33,7 +32,6 @@ pub struct AppState {
     pub mapping_path: String,
     pub output_path: String,
     pub custom_mapping_path: String,
-    pub unused_data_path: String,
 
     // Fields extracted from the input json file.
     pub input_fields: Vec<(String, String)>,
@@ -166,7 +164,7 @@ impl Mapping {
 pub enum Multiplicity {
     #[default]
     DirectCopy,
-    OneToOne,
+    Transformations,
     OneToMany,
     ManyToOne,
 }

@@ -38,7 +38,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Tab => {
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_multiplicity
-                        && state.multiplicity == Multiplicity::OneToOne
+                        && state.multiplicity == Multiplicity::Transformations
                     {
                         state.selected_transformations_tab = !state.selected_transformations_tab;
                     } else {
@@ -75,6 +75,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.next();
+                        trace_dbg!(state.transformations);
+                        trace_dbg!(state.transformations as usize - 1);
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && !state.selected_transformations.is_empty()
@@ -144,8 +146,12 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                     state.popup_offset_value = 0;
                                     state.p2_p3_tabs = P2P3Tabs::InputFields;
 
-                                    state.completed_input_fields.push(state.selected_input_field);
-                                    state.completed_missing_fields.push(state.selected_missing_field);
+                                    if !state.completed_input_fields.contains(&state.selected_input_field) {
+                                        state.completed_input_fields.push(state.selected_input_field);
+                                    }
+                                    if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+                                        state.completed_missing_fields.push(state.selected_missing_field);
+                                    }
                                     state.missing_data_fields[state.selected_missing_field].1 =
                                         state.candidate_data_value.clone().unwrap();
                                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
@@ -265,6 +271,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
+                    trace_dbg!(state.missing_data_fields.len() - 1);
+                    trace_dbg!(state.completed_missing_fields.len());
                     if state.missing_data_fields.len() - 1 == state.completed_missing_fields.len() {
                         state.popup_mapping_p2_p3 = false;
                         state.transformations = Transformations::LowerCase;
@@ -294,8 +302,12 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.popup_offset_value = 0;
                     state.p2_p3_tabs = P2P3Tabs::InputFields;
 
-                    state.completed_input_fields.push(state.selected_input_field);
-                    state.completed_missing_fields.push(state.selected_missing_field);
+                    if !state.completed_input_fields.contains(&state.selected_input_field) {
+                        state.completed_input_fields.push(state.selected_input_field);
+                    }
+                    if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+                        state.completed_missing_fields.push(state.selected_missing_field);
+                    }
                     state.missing_data_fields[state.selected_missing_field].1 =
                         state.candidate_data_value.clone().unwrap();
                     trace_dbg!(state.candidate_data_value.as_ref().unwrap());

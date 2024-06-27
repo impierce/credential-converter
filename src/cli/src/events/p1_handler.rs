@@ -1,6 +1,5 @@
 use crate::backend::preload_p2::preload_p2;
 use crate::state::{AppState, P1Prompts};
-use crate::trace_dbg;
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 use std::path::Path;
 
@@ -132,6 +131,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     else if input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
                         state.page.next();
                         preload_p2(state);
+                        state.overwrite_warning = false;
                     }
                 }
             }

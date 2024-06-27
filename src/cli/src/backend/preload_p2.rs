@@ -48,15 +48,15 @@ pub fn preload_p2(state: &mut AppState) {
         trace_dbg!("Successfully loaded the mapping file");
 
         // Load the custom mapping file
-        { // todo: I added the custom_mapping_path as the destination to save the manual mappings to. not to load mappings from, thats the mapping_path
-            if !state.custom_mapping_path.is_empty() && Path::new(&state.custom_mapping_path).is_file() && state.custom_mapping_path.ends_with(".json"){
-                let rdr = std::fs::File::open(&state.custom_mapping_path).unwrap();
-                let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-                transformations.append(&mut custom_transformations);
+        // { // todo: I added the custom_mapping_path as the destination to save the manual mappings to. not to load mappings from, thats the mapping_path
+        //     if !state.custom_mapping_path.is_empty() && Path::new(&state.custom_mapping_path).is_file() && state.custom_mapping_path.ends_with(".json"){
+        //         let rdr = std::fs::File::open(&state.custom_mapping_path).unwrap();
+        //         let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+        //         transformations.append(&mut custom_transformations);
 
-                trace_dbg!("Successfully loaded the custom mapping file");
-            }
-        }
+        //         trace_dbg!("Successfully loaded the custom mapping file");
+        //     }
+        // }
 
         state.repository.apply_transformations(transformations);
     }

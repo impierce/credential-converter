@@ -18,9 +18,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    if state.popup_unused_data {
-                        state.popup_unused_data = false;
-                    } else if state.popup_mapping_p2_p3 {
+                    if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
                         state.popup_offset_path = 0;
                         state.popup_offset_value = 0;
@@ -29,9 +27,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Backspace => {
-                    if state.popup_unused_data {
-                        state.unused_data_path.pop();
-                    } else if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
+                    if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
                         state.selected_transformations.remove(state.selected_transformation);
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
@@ -45,7 +41,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Tab => {
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_multiplicity
-                        && state.multiplicity == Multiplicity::OneToOne
+                        && state.multiplicity == Multiplicity::Transformations
                     {
                         state.selected_transformations_tab = !state.selected_transformations_tab;
                     } else {
@@ -122,107 +118,92 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
-                    if state.popup_unused_data {
-                        let output_format = state.mapping.output_format();
-                        trace_dbg!(&output_format);
-                        let json_value = state.repository.get_mut(&output_format).unwrap();
-                        trace_dbg!(&json_value);
-                        let mut file = std::fs::File::create(&state.output_path).unwrap();
-                        file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
-                            .unwrap();
-
-                        state.page.next(); // make a "finished" tab, signal finish to backend
-                    }
-                    else {
-                        match state.p2_p3_tabs {
-                            P2P3Tabs::MappingOptions => {
-                                if state.select_multiplicity {
-                                    state.select_multiplicity = false;
-                                    if state.multiplicity == Multiplicity::OneToMany {
-                                        state.popup_mapping_p2_p3 = true;
-                                    }
-                                } else if !state.selected_transformations_tab {
-                                    state.selected_transformations.push(state.transformations);
-                                } else if state.popup_mapping_p2_p3 {
-                                    state.popup_mapping_p2_p3 = false;
-                                    state.selected_transformations_tab = false;
-                                    state.select_multiplicity = true;
-                                    state.selected_transformations.clear();
-                                    state.popup_offset_path = 0;
-                                    state.popup_offset_value = 0;
-                                    state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                                    state.completed_input_fields.push(state.selected_input_field);
-                                    state.completed_optional_fields.push(state.selected_optional_field);
-                                    state.optional_fields[state.selected_optional_field].1 =
-                                        state.candidate_data_value.clone().unwrap();
-                                    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                                    trace_dbg!(&state.optional_fields[state.selected_optional_field]);
-                                } else if state.selected_transformations_tab {
+                    match state.p2_p3_tabs {
+                        P2P3Tabs::MappingOptions => {
+                            if state.select_multiplicity {
+                                state.select_multiplicity = false;
+                                if state.multiplicity == Multiplicity::OneToMany {
                                     state.popup_mapping_p2_p3 = true;
-                                } else {
-                                    let output_format = state.mapping.output_format();
+                                }
+                            } else if !state.selected_transformations_tab {
+                                state.selected_transformations.push(state.transformations);
+                            } else if state.popup_mapping_p2_p3 {
+                                state.popup_mapping_p2_p3 = false;
+                                state.selected_transformations_tab = false;
+                                state.select_multiplicity = true;
+                                state.selected_transformations.clear();
+                                state.popup_offset_path = 0;
+                                state.popup_offset_value = 0;
+                                state.p2_p3_tabs = P2P3Tabs::InputFields;
 
-                                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
+                                state.completed_input_fields.push(state.selected_input_field);
+                                state.completed_optional_fields.push(state.selected_optional_field);
+                                state.optional_fields[state.selected_optional_field].1 =
+                                    state.candidate_data_value.clone().unwrap();
+                                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+                                trace_dbg!(&state.optional_fields[state.selected_optional_field]);
+                            } else if state.selected_transformations_tab {
+                                state.popup_mapping_p2_p3 = true;
+                            } else {
+                                let output_format = state.mapping.output_format();
 
-                                    let source_value = state.candidate_data_value.clone().unwrap();
+                                // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
 
-                                    let pointer = state.missing_data_field.as_ref().unwrap().clone();
+                                let source_value = state.candidate_data_value.clone().unwrap();
 
-                                    let mut json_value = state.repository.get_mut(&output_format).unwrap();
+                                let pointer = state.missing_data_field.as_ref().unwrap().clone();
 
-                                    let mut leaf_node = construct_leaf_node(&pointer);
+                                let mut json_value = state.repository.get_mut(&output_format).unwrap();
 
-                                    leaf_node
-                                        .pointer_mut(&pointer)
-                                        .map(|value| *value = serde_json::from_str(&source_value).unwrap());
+                                let mut leaf_node = construct_leaf_node(&pointer);
 
-                                    merge(&mut json_value, leaf_node);
+                                leaf_node
+                                    .pointer_mut(&pointer)
+                                    .map(|value| *value = serde_json::from_str(&source_value).unwrap());
 
-                                    state.missing_data_fields = vec![
-                                        vec![("".to_string(), "".to_string())],
-                                        match state.mapping.output_format().as_str() {
-                                            "OBv3" => get_missing_data_fields::<AchievementCredential>(json_value.clone()),
-                                            "ELM" => get_missing_data_fields::<EuropassEdcCredential>(json_value.clone()),
-                                            _ => panic!(),
-                                        }
-                                        .into_iter()
-                                        .map(|pointer| (pointer, "".to_string()))
-                                        .collect(),
-                                    ]
-                                    .concat();
+                                merge(&mut json_value, leaf_node);
 
-                                    if state.missing_data_field.is_none() {
-                                        let output_format = state.mapping.output_format();
-                                        let json_value = state.repository.get_mut(&output_format).unwrap();
-                                        let mut file = std::fs::File::create(&state.output_path).unwrap();
-                                        file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
-                                            .unwrap();
-                                        //state.tab.next();
+                                state.missing_data_fields = vec![
+                                    vec![("".to_string(), "".to_string())],
+                                    match state.mapping.output_format().as_str() {
+                                        "OBv3" => get_missing_data_fields::<AchievementCredential>(json_value.clone()),
+                                        "ELM" => get_missing_data_fields::<EuropassEdcCredential>(json_value.clone()),
+                                        _ => panic!(),
                                     }
+                                    .into_iter()
+                                    .map(|pointer| (pointer, "".to_string()))
+                                    .collect(),
+                                ]
+                                .concat();
 
-                                    // if state.missing_data_field.is_none() {
-                                    //     let mut file = std::fs::File::create(&state.output_path).unwrap();
-                                    //     file.write_all(temp.as_bytes()).unwrap();
-                                    //     state.tab.next();
-                                    // }
+                                if state.missing_data_field.is_none() {
+                                    let output_format = state.mapping.output_format();
+                                    let json_value = state.repository.get_mut(&output_format).unwrap();
+                                    let mut file = std::fs::File::create(&state.output_path).unwrap();
+                                    file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
+                                        .unwrap();
+                                    //state.tab.next();
                                 }
+
+                                // if state.missing_data_field.is_none() {
+                                //     let mut file = std::fs::File::create(&state.output_path).unwrap();
+                                //     file.write_all(temp.as_bytes()).unwrap();
+                                //     state.tab.next();
+                                // }
                             }
-                            _ => {
-                                if !state.popup_mapping_p2_p3 {
-                                    state.p2_p3_tabs.next();
-                                } else {
-                                    state.popup_mapping_p2_p3 = false;
-                                    state.p2_p3_tabs.next();
-                                }
+                        }
+                        _ => {
+                            if !state.popup_mapping_p2_p3 {
+                                state.p2_p3_tabs.next();
+                            } else {
+                                state.popup_mapping_p2_p3 = false;
+                                state.p2_p3_tabs.next();
                             }
                         }
                     }
                 }
                 Char(char) => {
-                    if state.popup_unused_data {
-                        state.unused_data_path.push(char);
-                    } else if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
+                    if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
                         state.dividers.push(char);
                     }
                 }
@@ -318,7 +299,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             event::MouseEventKind::Up(_) => {
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    if state.input_fields.len() - 1 == state.completed_input_fields.len() {
+                    // if state.input_fields.len() - 1 == state.completed_input_fields.len() {
                         state.popup_mapping_p2_p3 = false;
                         state.page.next();
 
@@ -327,9 +308,6 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         let mut file = std::fs::File::create(&state.output_path).unwrap();
                         file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
                             .unwrap();
-                    } else {
-                        state.popup_unused_data = true;
-                    }
                 } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
                     state.review = true;
                     state.popup_mapping_p2_p3 = true;
@@ -357,9 +335,8 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
-                    } else if state.popup_unused_data {
-                        state.popup_unused_data = false;
-                    } else {
+                    } 
+                    else {
                         state.select_multiplicity = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();

@@ -1,4 +1,4 @@
-use crate::state::{AppState, P2P3Tabs};
+use crate::{state::AppState, trace_dbg};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,7 +6,7 @@ use ratatui::{
     widgets::*,
 };
 
-pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = vec!["LowerCase", "UpperCase", "Slice", "Regex"];
 
     let [transformations, selected, abort, review] = Layout::horizontal(vec![
@@ -17,18 +17,12 @@ pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     ])
     .areas(area);
 
-    // Highlight active area
-    let mut active_style = Style::default().fg(Color::Yellow);
-    if state.p2_p3_tabs != P2P3Tabs::MappingOptions {
-        active_style = Style::default().fg(Color::White).add_modifier(Modifier::BOLD);
-    }
-
     // Render options tab left and the selected options to the right
     if !state.selected_transformations_tab {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style)
-            .select(state.transformations as usize)
+            .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)) // todo: change active style when not active tab
+            .select(state.transformations as usize - 1)
             .divider("")
             .render(transformations, buf);
         let selected_transformations: Vec<String> =
@@ -36,21 +30,19 @@ pub fn render_onetoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::Black).bg(Color::Gray))
             .highlight_style(Style::default().fg(Color::Black))
-            .select(state.selected_transformation as usize)
             .divider("")
             .render(selected, buf);
     } else {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::Black).bg(Color::Gray))
             .highlight_style(Style::default().fg(Color::Black))
-            .select(state.transformations as usize)
             .divider("")
             .render(transformations, buf);
         let selected_transformations: Vec<String> =
             state.selected_transformations.iter().map(|x| x.to_string()).collect();
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style)
+            .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
             .select(state.selected_transformation as usize)
             .divider("")
             .render(selected, buf);

@@ -3,7 +3,6 @@ use crate::{
     state::{AppState, P2P3Tabs},
 };
 
-use num_traits::float;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -271,33 +270,4 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
             vertical: vertical_margin,
             horizontal: 1,
         }), buf);
-}
-
-pub fn render_popup_unused_data_p3(area: Rect, buf: &mut Buffer) {
-    Clear.render(area, buf);
-    Block::new()
-        .style(Style::default().fg(Color::White).bg(Color::Black))
-        .title("~~~  Unused Data  ~~~")
-        .title_alignment(Alignment::Center)
-        .render(area, buf);
-
-    let vertical_margin;
-    if area.height >= 6 {
-        vertical_margin = (area.height - 6) / 2;
-    } else {
-        vertical_margin = 0;
-    }
-    let text = format!("\nThere is still some unused data from the input file.\nIf you want to save this, please enter a file path, leave empty to discard.\n If a file already exists at the given path, it will be overwritten.\nFor absolute paths start with '/', for relative paths the current directory is: {}",
-    std::env::current_dir().unwrap().display());
-    Paragraph::new(text)
-        .centered()
-        .alignment(Alignment::Center)
-        .wrap(Wrap { trim: false })
-        .render(
-            area.inner(&Margin {
-                vertical: vertical_margin,
-                horizontal: 1,
-            }),
-            buf,
-        );
 }

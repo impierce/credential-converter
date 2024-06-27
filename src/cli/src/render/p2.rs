@@ -1,11 +1,10 @@
 use crate::{
     backend::selector::selector,
-    mapping_bars::{render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_onetoone_bar},
-    p2_handler::update_repository,
-    popups::{
-        render_popup_field_value, render_popup_mapping,
-        render_popup_uncompleted_warning_p2,
+    mapping_bars::{
+        render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
+    p2_handler::update_repository,
+    popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2},
     state::{AppState, Multiplicity, P2P3Tabs},
     trace_dbg,
 };
@@ -52,13 +51,13 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let mut mappingoptions_style = Style::default().fg(Color::White);
     match state.p2_p3_tabs {
         P2P3Tabs::InputFields => {
-            inputfields_style = Style::default().fg(Color::Yellow);
+            inputfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
         P2P3Tabs::OutputFields => {
-            missingfields_style = Style::default().fg(Color::Yellow);
+            missingfields_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
         P2P3Tabs::MappingOptions => {
-            mappingoptions_style = Style::default().fg(Color::Yellow);
+            mappingoptions_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
     }
 
@@ -116,7 +115,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     // Render bottom mapping options bar
     if state.select_multiplicity {
-        let multiplicities = vec![" DirectCopy", "OneToOne", "OneToMany", "ManyToOne"];
+        let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
         let [multiplicity_tabs, abort, review] = Layout::horizontal(vec![
             Constraint::Percentage(100),
             Constraint::Length(7),
@@ -134,10 +133,11 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         render_mapping_bar_buttons(abort, review, state, buf);
     } else {
         match state.multiplicity {
-            Multiplicity::OneToOne => render_onetoone_bar(bottom, buf, state),
+            Multiplicity::Transformations => render_transformations_bar(bottom, buf, state),
             Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
             Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {  // this is actually event handling and should be moved
+            _ => {
+                // this is actually event handling and should be moved
                 selector(state);
                 state.selected_transformations_tab = false;
                 state.select_multiplicity = true;
@@ -146,20 +146,24 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 state.popup_offset_value = 0;
                 state.p2_p3_tabs = P2P3Tabs::InputFields;
 
-                state.completed_input_fields.push(state.selected_input_field);
-                state.completed_missing_fields.push(state.selected_missing_field);
+                if !state.completed_input_fields.contains(&state.selected_input_field) {
+                    state.completed_input_fields.push(state.selected_input_field);
+                }
+                if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+                    state.completed_missing_fields.push(state.selected_missing_field);
+                }
                 state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
                 trace_dbg!(state.candidate_data_value.as_ref().unwrap());
                 trace_dbg!(&state.missing_data_fields[state.selected_missing_field]);
 
                 if state.selected_input_field == state.input_fields.len() - 1 {
-                    state.selected_input_field = 0;
+                    state.selected_input_field = 1;
                 } else {
                     state.selected_input_field += 1;
                 }
 
                 if state.selected_missing_field == state.missing_data_fields.len() - 1 {
-                    state.selected_missing_field = 0;
+                    state.selected_missing_field = 1;
                 } else {
                     state.selected_missing_field += 1;
                 }
@@ -204,7 +208,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             }
         } else {
             match state.multiplicity {
-                Multiplicity::OneToOne => render_popup_mapping(
+                Multiplicity::Transformations => render_popup_mapping(
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,
