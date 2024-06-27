@@ -11,7 +11,7 @@ use crate::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
     popups::{render_popup_field_value, render_popup_mapping},
-    state::{AppState, Multiplicity, P2P3Tabs},
+    state::{AppState, MappingOptions, P2P3Tabs},
     trace_dbg,
 };
 
@@ -112,7 +112,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // todo: render  output results
 
     // Render bottom mapping options bar
-    if state.select_multiplicity {
+    if state.select_mapping_option {
         let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
         let [multiplicity_tabs, abort, review] = Layout::horizontal(vec![
             Constraint::Percentage(100),
@@ -124,21 +124,21 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         Tabs::new(multiplicities)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
             .highlight_style(mappingoptions_style)
-            .select(state.multiplicity as usize)
+            .select(state.mapping_option as usize)
             .divider("")
             .render(multiplicity_tabs, buf);
 
         render_mapping_bar_buttons(abort, review, state, buf);
     } else {
-        match state.multiplicity {
-            Multiplicity::Transformations => render_transformations_bar(bottom, buf, state),
-            Multiplicity::OneToMany => render_onetomany_bar(bottom, buf, state),
-            Multiplicity::ManyToOne => render_manytoone_bar(bottom, buf, state),
+        match state.mapping_option {
+            MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
+            MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
+            MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
             _ => {
                 // this is actually event handling and should be moved
                 selector(state);
                 state.selected_transformations_tab = false;
-                state.select_multiplicity = true;
+                state.select_mapping_option = true;
                 state.selected_transformations.clear();
                 state.popup_offset_path = 0;
                 state.popup_offset_value = 0;
@@ -166,7 +166,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     }
 
     if state.popup_mapping_p2_p3 {
-        if state.select_multiplicity {
+        if state.select_mapping_option {
             match state.p2_p3_tabs {
                 P2P3Tabs::InputFields => render_popup_field_value(
                     area.inner(&Margin {
@@ -191,8 +191,8 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                 }
             }
         } else {
-            match state.multiplicity {
-                Multiplicity::Transformations => render_popup_mapping(
+            match state.mapping_option {
+                MappingOptions::Transformations => render_popup_mapping(
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,
@@ -200,7 +200,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                     buf,
                     state,
                 ),
-                Multiplicity::OneToMany => render_popup_mapping(
+                MappingOptions::OneToMany => render_popup_mapping(
                     //
                     area.inner(&Margin {
                         vertical: 4,
@@ -209,7 +209,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                     buf,
                     state,
                 ),
-                Multiplicity::ManyToOne => render_manytoone_bar(
+                MappingOptions::ManyToOne => render_manytoone_bar(
                     area.inner(&Margin {
                         vertical: 4,
                         horizontal: 20,

@@ -1,4 +1,4 @@
-use crate::{state::AppState, trace_dbg};
+use crate::{state::{AppState, P2P3Tabs}, trace_dbg};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -7,7 +7,7 @@ use ratatui::{
 };
 
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let tabs = vec!["LowerCase", "UpperCase", "Slice", "Regex"];
+    let tabs = vec![" LowerCase", "UpperCase", "Slice", "Regex"];
 
     let [transformations, selected, abort, review] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
@@ -17,12 +17,18 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
     ])
     .areas(area);
 
-    // Render options tab left and the selected options to the right
+
+    let mut active_style = Style::default().fg(Color::White).bg(Color::DarkGray);
+    if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
+        active_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+    }
+
+// Render options tab left and the selected options to the right
     if !state.selected_transformations_tab {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)) // todo: change active style when not active tab
-            .select(state.transformations as usize - 1)
+            .highlight_style(active_style) // todo: change active style when not active tab
+            .select(state.transformations as usize - 1) // todo: this ' - 1 ' is due to the fact i didn't want to dive into the backend just yet, which is depending on a "Copy" variant in the fn selector to complete a mapping. This means "Copy" is not shown in the tabber, but does exist in the enum Transformations
             .divider("")
             .render(transformations, buf);
         let selected_transformations: Vec<String> =
@@ -42,7 +48,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
             state.selected_transformations.iter().map(|x| x.to_string()).collect();
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
+            .highlight_style(active_style)
             .select(state.selected_transformation as usize)
             .divider("")
             .render(selected, buf);

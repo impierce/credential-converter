@@ -14,14 +14,14 @@ pub struct AppState {
     pub p2_p3_tabs: P2P3Tabs,
     pub popup_mapping_p2_p3: bool,
     pub selected_transformations_tab: bool,
-    pub select_multiplicity: bool,
+    pub select_mapping_option: bool,
     pub overwrite_warning: bool,
     pub review: bool,
     pub popup_uncompleted_warning: bool,
 
     // Mapping options
     pub mapping: Mapping,
-    pub multiplicity: Multiplicity,
+    pub mapping_option: MappingOptions,
     pub transformations: Transformations,
     pub selected_transformation: usize,
     pub selected_transformations: Vec<Transformations>,
@@ -161,7 +161,7 @@ impl Mapping {
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
-pub enum Multiplicity {
+pub enum MappingOptions {
     #[default]
     DirectCopy,
     Transformations,
@@ -243,5 +243,5 @@ next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
 next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Language, P1Prompts::CustomMapping);
 next_prev!(Transformations, Transformations::LowerCase, Transformations::Regex);
-next_prev!(Multiplicity, Multiplicity::DirectCopy, Multiplicity::ManyToOne);
+next_prev!(MappingOptions, MappingOptions::DirectCopy, MappingOptions::ManyToOne);
 next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::MappingOptions);

@@ -1,9 +1,9 @@
+use super::is_mouse_over_area;
 use crate::{
     backend::repository::{construct_leaf_node, merge},
-    state::{AppState, Multiplicity, P2P3Tabs, Pages, Transformations},
+    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
-use super::is_mouse_over_area;
 
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
@@ -30,15 +30,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_transformation -= 1;
                         }
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && state.multiplicity == Multiplicity::OneToMany
+                        && state.mapping_option == MappingOptions::OneToMany
                     {
                         state.dividers.pop();
                     }
                 }
                 Tab => {
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_multiplicity
-                        && state.multiplicity == Multiplicity::Transformations
+                        && !state.select_mapping_option
+                        && state.mapping_option == MappingOptions::Transformations
                     {
                         state.selected_transformations_tab = !state.selected_transformations_tab;
                     } else {
@@ -50,33 +50,41 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.p2_p3_tabs.prev();
                 }
                 Left => {
-                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_multiplicity {
-                        state.multiplicity.prev();
+                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
+                        if state.mapping_option as usize > 1 {
+                            state.mapping_option.prev();
+                        }
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_multiplicity
+                        && !state.select_mapping_option
                         && !state.selected_transformations_tab
                     {
                         state.transformations.prev();
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && state.selected_transformations_tab
-                        && state.selected_transformation > 0
                     {
-                        state.selected_transformation -= 1;
+                        if state.selected_transformation > 0 {
+                            state.selected_transformation -= 1;
+                        }
+                        else {
+                            state.selected_transformations_tab = false;
+                        }
                     } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
                         state.p2_p3_tabs = P2P3Tabs::InputFields;
                     }
                     // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
-                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_multiplicity {
-                        state.multiplicity.next();
+                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
+                        state.mapping_option.next();
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_multiplicity
+                        && !state.select_mapping_option
                         && !state.selected_transformations_tab
                     {
-                        state.transformations.next();
-                        trace_dbg!(state.transformations);
-                        trace_dbg!(state.transformations as usize - 1);
+                        if state.transformations != Transformations::Regex {
+                            state.transformations.next();
+                        }
+                        else {
+                            state.selected_transformations_tab = true;
+                        }
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.selected_transformations_tab
                         && !state.selected_transformations.is_empty()
@@ -124,15 +132,15 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.selected_transformation = 0;
                         state.selected_transformations_tab = false;
                         state.selected_transformations.clear();
-                        state.select_multiplicity = true;
+                        state.select_mapping_option = true;
                         state.p2_p3_tabs = P2P3Tabs::InputFields;
                         state.page.next();
                     } else {
                         match state.p2_p3_tabs {
                             P2P3Tabs::MappingOptions => {
-                                if state.select_multiplicity {
-                                    state.select_multiplicity = false;
-                                    if state.multiplicity == Multiplicity::OneToMany {
+                                if state.select_mapping_option {
+                                    state.select_mapping_option = false;
+                                    if state.mapping_option == MappingOptions::OneToMany {
                                         state.popup_mapping_p2_p3 = true;
                                     }
                                 } else if !state.selected_transformations_tab {
@@ -140,7 +148,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                                 } else if state.popup_mapping_p2_p3 {
                                     state.popup_mapping_p2_p3 = false;
                                     state.selected_transformations_tab = false;
-                                    state.select_multiplicity = true;
+                                    state.select_mapping_option = true;
                                     state.selected_transformations.clear();
                                     state.popup_offset_path = 0;
                                     state.popup_offset_value = 0;
@@ -175,7 +183,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Char(char) => {
-                    if state.popup_mapping_p2_p3 && state.multiplicity == Multiplicity::OneToMany {
+                    if state.popup_mapping_p2_p3 && state.mapping_option == MappingOptions::OneToMany {
                         state.dividers.push(char);
                     }
                 }
@@ -197,7 +205,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         }
                     }
                 } else {
-                    if !state.select_multiplicity {
+                    if !state.select_mapping_option {
                         if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                                 state.popup_offset_path += 1;
@@ -239,7 +247,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         }
                     }
                 } else {
-                    if !state.select_multiplicity {
+                    if !state.select_mapping_option {
                         if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path > 0 {
                                 state.popup_offset_path -= 1;
@@ -277,7 +285,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.popup_mapping_p2_p3 = false;
                         state.transformations = Transformations::LowerCase;
                         state.selected_transformations_tab = false;
-                        state.select_multiplicity = true;
+                        state.select_mapping_option = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
                         state.page.next();
@@ -290,13 +298,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;
                     state.selected_transformations_tab = false;
-                    state.select_multiplicity = true;
+                    state.select_mapping_option = true;
                     state.selected_transformation = 0;
                     state.selected_transformations.clear();
                 } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = false;
                     state.selected_transformations_tab = false;
-                    state.select_multiplicity = true;
+                    state.select_mapping_option = true;
                     state.selected_transformations.clear();
                     state.popup_offset_path = 0;
                     state.popup_offset_value = 0;
@@ -318,7 +326,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     } else if state.popup_uncompleted_warning {
                         state.popup_uncompleted_warning = false;
                     } else {
-                        state.select_multiplicity = true;
+                        state.select_mapping_option = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
                         state.transformations = Transformations::LowerCase;
