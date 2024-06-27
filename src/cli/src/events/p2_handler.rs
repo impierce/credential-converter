@@ -59,12 +59,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && !state.selected_transformations_tab
                     {
                         state.transformations.prev();
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                    {
+                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
-                        }
-                        else {
+                        } else {
                             state.selected_transformations_tab = false;
                         }
                     } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
@@ -81,8 +79,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     {
                         if state.transformations != Transformations::Regex {
                             state.transformations.next();
-                        }
-                        else {
+                        } else {
                             state.selected_transformations_tab = true;
                         }
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
@@ -292,8 +289,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     } else {
                         state.popup_uncompleted_warning = true;
                     }
-                } else if is_mouse_over_area(state.review_button, mouse_event.column, mouse_event.row) {
-                    state.review = true;
+                } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
+                    state.view = true;
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;

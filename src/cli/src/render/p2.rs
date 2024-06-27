@@ -116,10 +116,10 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     // Render bottom mapping options bar
     if state.select_mapping_option {
         let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, abort, review] = Layout::horizontal(vec![
+        let [multiplicity_tabs, abort, view] = Layout::horizontal(vec![
             Constraint::Percentage(100),
             Constraint::Length(7),
-            Constraint::Length(8),
+            Constraint::Length(6),
         ])
         .areas(bottom);
 
@@ -130,7 +130,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .divider("")
             .render(multiplicity_tabs, buf);
 
-        render_mapping_bar_buttons(abort, review, state, buf);
+        render_mapping_bar_buttons(abort, view, state, buf);
     } else {
         match state.mapping_option {
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),

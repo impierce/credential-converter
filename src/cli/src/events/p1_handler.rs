@@ -88,6 +88,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     if let event::Event::Mouse(mouse_event) = event {
         match mouse_event.kind {
             event::MouseEventKind::Up(_) => {
+                // Complete button
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row)
                 {
                     // init paths for if statements

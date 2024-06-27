@@ -16,7 +16,7 @@ pub struct AppState {
     pub selected_transformations_tab: bool,
     pub select_mapping_option: bool,
     pub overwrite_warning: bool,
-    pub review: bool,
+    pub view: bool,
     pub popup_uncompleted_warning: bool,
 
     // Mapping options
@@ -37,20 +37,20 @@ pub struct AppState {
     pub input_fields: Vec<(String, String)>,
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
-    pub selected_input_fields: Vec<String>, //string or usize?
+    pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
 
     // Mandatory fields extracted from the output json format
     pub missing_data_field: Option<String>,
     pub missing_data_fields: Vec<(String, String)>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
-    pub selected_missing_fields: Vec<String>, //string or usize?
+    pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
 
     // Optional fields extracted from the output json format
     pub optional_fields: Vec<(String, String)>,
     pub amount_optional_fields: usize,
     pub selected_optional_field: usize,
-    pub selected_optional_fields: Vec<String>, //string or usize?
+    pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
 
     pub candidate_data_value: Option<String>,
     pub completed_input_fields: Vec<usize>,
@@ -66,7 +66,7 @@ pub struct AppState {
     pub popup_path_area_p2: Rect,
     pub popup_value_area_p2: Rect,
     pub abort_button: Rect,
-    pub review_button: Rect,
+    pub view_button: Rect,
     pub complete_button: Rect,
     pub prev_page_button: Rect,
     pub popup_input_path_p2: Rect,

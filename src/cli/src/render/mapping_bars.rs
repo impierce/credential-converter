@@ -1,4 +1,7 @@
-use crate::{state::{AppState, P2P3Tabs}, trace_dbg};
+use crate::{
+    state::{AppState, P2P3Tabs},
+    trace_dbg,
+};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -9,21 +12,20 @@ use ratatui::{
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = vec![" LowerCase", "UpperCase", "Slice", "Regex"];
 
-    let [transformations, selected, abort, review] = Layout::horizontal(vec![
+    let [transformations, selected, abort, view] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
         Constraint::Percentage(100),
         Constraint::Length(7),
-        Constraint::Length(8),
+        Constraint::Length(6),
     ])
     .areas(area);
-
 
     let mut active_style = Style::default().fg(Color::White).bg(Color::DarkGray);
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
         active_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
     }
 
-// Render options tab left and the selected options to the right
+    // Render options tab left and the selected options to the right
     if !state.selected_transformations_tab {
         Tabs::new(tabs)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
@@ -54,16 +56,16 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
             .render(selected, buf);
     }
 
-    render_mapping_bar_buttons(abort, review, state, buf);
+    render_mapping_bar_buttons(abort, view, state, buf);
 }
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Enter a divider, or select indices manually: ";
-    let [txt_area, dividers, abort, review] = Layout::horizontal(vec![
+    let [txt_area, dividers, abort, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16),
         Constraint::Percentage(100),
         Constraint::Length(7),
-        Constraint::Length(8),
+        Constraint::Length(6),
     ])
     .areas(area);
 
@@ -87,15 +89,15 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             .render(dividers, buf);
     }
 
-    render_mapping_bar_buttons(abort, review, state, buf);
+    render_mapping_bar_buttons(abort, view, state, buf);
 }
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
-    let [txt_area, abort, review] = Layout::horizontal(vec![
+    let [txt_area, abort, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
         Constraint::Length(7),
-        Constraint::Length(8),
+        Constraint::Length(6),
     ])
     .areas(area);
 
@@ -108,17 +110,17 @@ pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         )
         .render(txt_area, buf);
 
-    render_mapping_bar_buttons(abort, review, state, buf);
+    render_mapping_bar_buttons(abort, view, state, buf);
 }
 
-pub fn render_mapping_bar_buttons(abort: Rect, review: Rect, state: &mut AppState, buf: &mut Buffer) {
+pub fn render_mapping_bar_buttons(abort: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
     state.abort_button = abort;
-    state.review_button = review;
+    state.view_button = view;
 
     Paragraph::new(" Abort ")
         .style(Style::default().fg(Color::Black).bg(Color::Red))
         .render(abort, buf);
-    Paragraph::new(" Review ")
+    Paragraph::new(" View ")
         .style(Style::default().fg(Color::Black).bg(Color::Green))
-        .render(review, buf);
+        .render(view, buf);
 }
