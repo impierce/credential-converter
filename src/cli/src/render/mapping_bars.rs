@@ -20,37 +20,43 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
     ])
     .areas(area);
 
+    Block::new()
+        .border_type(BorderType::Thick)
+        .borders(Borders::RIGHT)
+        .render(transformations, buf);
+
     let mut active_style = Style::default().fg(Color::White).bg(Color::DarkGray);
+    let mut active_style_selected_tab = Style::default().fg(Color::White).bg(Color::DarkGray);
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
-        active_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        if !state.selected_transformations_tab {
+            active_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        }
+        else {
+            active_style_selected_tab = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        }
     }
 
     // Render options tab left and the selected options to the right
-    if !state.selected_transformations_tab {
-        Tabs::new(tabs)
+    Tabs::new(tabs)
+        .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+        .highlight_style(active_style)
+        .select(state.transformations as usize - 1) // todo: this ' - 1 ' is due to the fact i didn't want to dive into the backend just yet, which is depending on a "Copy" variant in the fn selector to complete a mapping. This means "Copy" is not shown in the tabber, but does exist in the enum Transformations
+        .divider("")
+        .render(transformations, buf);
+    let selected_transformations: Vec<String> =
+        state.selected_transformations.iter().map(|x| x.to_string()).collect();
+    // if no transformations selected to show and tab is active, show a yellow cursor
+    if selected_transformations.is_empty() && state.selected_transformations_tab {
+        Tabs::new(vec![" __"])
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style) // todo: change active style when not active tab
-            .select(state.transformations as usize - 1) // todo: this ' - 1 ' is due to the fact i didn't want to dive into the backend just yet, which is depending on a "Copy" variant in the fn selector to complete a mapping. This means "Copy" is not shown in the tabber, but does exist in the enum Transformations
+            .highlight_style(active_style_selected_tab)
             .divider("")
-            .render(transformations, buf);
-        let selected_transformations: Vec<String> =
-            state.selected_transformations.iter().map(|x| x.to_string()).collect();
-        Tabs::new(selected_transformations)
-            .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(Color::Black))
-            .divider("")
-            .render(selected, buf);
-    } else {
-        Tabs::new(tabs)
-            .style(Style::default().fg(Color::Black).bg(Color::Gray))
-            .highlight_style(Style::default().fg(Color::Black))
-            .divider("")
-            .render(transformations, buf);
-        let selected_transformations: Vec<String> =
-            state.selected_transformations.iter().map(|x| x.to_string()).collect();
+            .render(selected, buf);        
+    }
+    else {
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(active_style)
+            .highlight_style(active_style_selected_tab)
             .select(state.selected_transformation as usize)
             .divider("")
             .render(selected, buf);
@@ -117,10 +123,29 @@ pub fn render_mapping_bar_buttons(abort: Rect, view: Rect, state: &mut AppState,
     state.abort_button = abort;
     state.view_button = view;
 
-    Paragraph::new(" Abort ")
-        .style(Style::default().fg(Color::Black).bg(Color::Red))
-        .render(abort, buf);
+    let mut clearresult_abort_style = Style::default().fg(Color::Black).bg(Color::Red);
+    let mut view_style = Style::default().fg(Color::Black).bg(Color::Green);
+    match state.p2_p3_tabs {
+        P2P3Tabs::ClearResultAbort => {
+            clearresult_abort_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        }
+        P2P3Tabs::View => {
+            view_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        }
+        _ => {}
+    }
+
+    if state.select_mapping_option {
+        Paragraph::new(" Clear ")
+            .style(clearresult_abort_style)
+            .render(abort, buf);
+    }
+    else {
+        Paragraph::new(" Abort ")
+            .style(clearresult_abort_style)
+            .render(abort, buf);
+    }
     Paragraph::new(" View ")
-        .style(Style::default().fg(Color::Black).bg(Color::Green))
+        .style(view_style)
         .render(view, buf);
 }

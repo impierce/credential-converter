@@ -134,6 +134,8 @@ pub enum P2P3Tabs {
     InputFields = 0,
     OutputFields,
     MappingOptions,
+    ClearResultAbort,
+    View,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
@@ -254,4 +256,4 @@ next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Language, P1Prompts::CustomMapping);
 next_prev!(Transformations, Transformations::LowerCase, Transformations::Regex);
 next_prev!(MappingOptions, MappingOptions::DirectCopy, MappingOptions::ManyToOne);
-next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::MappingOptions);
+next_prev!(P2P3Tabs, P2P3Tabs::InputFields, P2P3Tabs::View);

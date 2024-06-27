@@ -59,6 +59,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         P2P3Tabs::MappingOptions => {
             mappingoptions_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
+        _ => {}
     }
 
     // Render left selector list of input fields
@@ -205,6 +206,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 P2P3Tabs::MappingOptions => {
                     state.popup_mapping_p2_p3 = false;
                 }
+                _ => {}
             }
         } else {
             match state.mapping_option {

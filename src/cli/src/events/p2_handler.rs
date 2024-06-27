@@ -29,6 +29,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.select_mapping_option = true;
                         state.selected_transformations_tab = false;
                         state.selected_transformations.clear();
+                        state.transformations = Transformations::LowerCase;
+                        state.mapping_option = MappingOptions::DirectCopy;
                     }
                     // Close program
                     else {
@@ -51,14 +53,24 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Tab => {
+                    // Check if inside Transformations bar on the left and switch to the selected transformations tab
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_mapping_option
                         && state.mapping_option == MappingOptions::Transformations
+                        && !state.selected_transformations_tab
                     {
-                        state.selected_transformations_tab = !state.selected_transformations_tab;
+                        state.selected_transformations_tab = true;
+                    }
+                    // Check if inside Transformation bar in the selected transformations tab and switch to button
+                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+                        && !state.select_mapping_option
+                        && state.mapping_option == MappingOptions::Transformations
+                        && state.selected_transformations_tab
+                    {
+                        state.p2_p3_tabs.next();
                     } else {
                         state.p2_p3_tabs.next();
-                        state.selected_transformations_tab = false;
+                        //state.selected_transformations_tab = false;
                     }
                 }
                 F(2) => {
@@ -119,6 +131,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2P3Tabs::MappingOptions => {
                         state.p2_p3_tabs.next();
                     }
+                    _ => {}
                 },
                 Down => match state.p2_p3_tabs {
                     P2P3Tabs::InputFields => {

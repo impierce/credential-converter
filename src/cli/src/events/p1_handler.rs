@@ -22,6 +22,12 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     state.p1_prompts.next();
                 }
+                F(2) => {
+                    if state.overwrite_warning {
+                        state.overwrite_warning = false;
+                    }
+                    state.p1_prompts.prev();
+                }
                 Left => {
                     if state.p1_prompts == P1Prompts::Mapping {
                         state.mapping.prev();

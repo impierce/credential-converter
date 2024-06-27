@@ -65,7 +65,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut custom_mapping_prompt = Block::new()
-        .title("  Save Custom Mapping To ")
+        .title("  Save Custom Mapping To  ")
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     // Top-left language prompt

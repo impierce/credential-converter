@@ -108,6 +108,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     P2P3Tabs::MappingOptions => {
                         state.p2_p3_tabs.next();
                     }
+                    _ => {}
                 },
                 Down => match state.p2_p3_tabs {
                     P2P3Tabs::InputFields => {
