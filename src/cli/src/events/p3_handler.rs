@@ -231,11 +231,11 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 } else {
                     if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
+                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                                 state.popup_offset_path += 1;
                             }
-                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_value < state.popup_amount_lines_value as u16 {
                                 state.popup_offset_value += 1;
                             }
@@ -273,11 +273,11 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 } else {
                     if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
+                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path > 0 {
                                 state.popup_offset_path -= 1;
                             }
-                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_value > 0 {
                                 state.popup_offset_value -= 1;
                             }
@@ -314,7 +314,6 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
                         .unwrap();
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
-                    state.view = true;
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;

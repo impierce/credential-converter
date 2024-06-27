@@ -20,9 +20,9 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     let [right_top, right_bottom] =
         Layout::vertical(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(right);
 
-    state.popup_input_path_p2 = left_top;
+    state.popup_path_area_p2 = left_top;
     state.popup_output_path_p2 = right_top;
-    state.popup_input_value_p2 = left_bottom;
+    state.popup_value_area_p2 = left_bottom;
     state.popup_output_result_p2 = right_bottom;
 
     selector(state);
@@ -67,7 +67,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         state.popup_amount_lines_output_path =
             state.missing_data_fields[state.selected_missing_field].0.len() / (right.width as usize - 2);
         state.popup_amount_lines_result =
-            state.missing_data_fields[state.selected_missing_field].1.len() / (right.width as usize - 2);
+            state.candidate_data_value.as_ref().unwrap().len() / (right.width as usize - 2);
     }
 
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
@@ -97,7 +97,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     Paragraph::new(state.missing_data_fields[state.selected_missing_field].0.as_str())
         .wrap(Wrap { trim: false })
         .remove_modifier(Modifier::BOLD)
-        .scroll((state.popup_offset_path, 0))
+        .scroll((state.popup_offset_output_path, 0))
         .render(
             right_top.inner(&Margin {
                 horizontal: 1,
@@ -109,7 +109,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
         .wrap(Wrap { trim: false })
         .remove_modifier(Modifier::BOLD)
-        .scroll((state.popup_offset_value, 0))
+        .scroll((state.popup_offset_result, 0))
         .render(
             right_bottom.inner(&Margin {
                 horizontal: 1,

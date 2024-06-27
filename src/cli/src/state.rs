@@ -7,25 +7,14 @@ use crate::backend::repository::Repository;
 
 #[derive(Debug, Default)]
 pub struct AppState {
-    // Fields for navigation and rendering
-    pub page: Pages,
-    pub language: Languages,
-    pub p1_prompts: P1Prompts,
-    pub p2_p3_tabs: P2P3Tabs,
-    pub popup_mapping_p2_p3: bool,
-    pub selected_transformations_tab: bool,
-    pub select_mapping_option: bool,
-    pub overwrite_warning: bool,
-    pub view: bool,
-    pub popup_uncompleted_warning: bool,
 
-    // Mapping options
+    // Main pages of the program
+    pub page: Pages,
+
+    // User input prompts on P1
+    pub p1_prompts: P1Prompts,
+    pub language: Languages,
     pub mapping: Mapping,
-    pub mapping_option: MappingOptions,
-    pub transformations: Transformations,
-    pub selected_transformation: usize,
-    pub selected_transformations: Vec<Transformations>,
-    pub dividers: String,
 
     // Paths
     pub input_path: String,
@@ -33,47 +22,68 @@ pub struct AppState {
     pub output_path: String,
     pub custom_mapping_path: String,
 
+    // Tabs for P2 and P3
+    pub p2_p3_tabs: P2P3Tabs,
+    pub selected_transformations_tab: bool,
+    pub select_mapping_option: bool,
+
+    // Popups
+    pub overwrite_warning: bool,
+    pub uncompleted_warning: bool,
+    pub popup_mapping_p2_p3: bool,
+
+    // Mapping options
+    pub mapping_option: MappingOptions,
+    pub transformations: Transformations,
+    pub selected_transformation: usize,
+    pub selected_transformations: Vec<Transformations>,
+    pub dividers: String,
+
     // Fields extracted from the input json file.
     pub input_fields: Vec<(String, String)>,
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
     pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
+    pub completed_input_fields: Vec<usize>,
 
     // Mandatory fields extracted from the output json format
-    pub missing_data_field: Option<String>,
+    pub missing_data_field: Option<String>, //remove
     pub missing_data_fields: Vec<(String, String)>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
     pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
+    pub completed_missing_fields: Vec<usize>,
 
     // Optional fields extracted from the output json format
     pub optional_fields: Vec<(String, String)>,
     pub amount_optional_fields: usize,
     pub selected_optional_field: usize,
     pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-
-    pub candidate_data_value: Option<String>,
-    pub completed_input_fields: Vec<usize>,
-    pub completed_missing_fields: Vec<usize>,
     pub completed_optional_fields: Vec<usize>,
 
+    // Backend
+    pub candidate_data_value: Option<String>,
     pub repository: Repository,
 
-    // Areas, for scrolling and clicking
     pub area: Rect,
+
+    // Areas for scrolling
     pub selector_area_p2_p3: Rect,
     pub output_fields_area_p2_p3: Rect,
     pub popup_path_area_p2: Rect,
     pub popup_value_area_p2: Rect,
+    // pub popup_input_path_p2: Rect,
+    pub popup_output_path_p2: Rect,
+    // pub popup_input_value_p2: Rect,
+    pub popup_output_result_p2: Rect,
+
+    // Areas for clicking
     pub abort_button: Rect,
     pub view_button: Rect,
     pub complete_button: Rect,
     pub prev_page_button: Rect,
-    pub popup_input_path_p2: Rect,
-    pub popup_output_path_p2: Rect,
-    pub popup_input_value_p2: Rect,
-    pub popup_output_result_p2: Rect,
     pub confirm_button: Rect,
+
 
     // Scroll offsets and line amounts popup
     pub popup_offset_value: u16,

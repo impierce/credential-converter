@@ -173,7 +173,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         }
     }
 
-    if state.popup_uncompleted_warning {
+    if state.uncompleted_warning {
         render_popup_uncompleted_warning_p2(
             area.inner(&Margin {
                 vertical: 4,

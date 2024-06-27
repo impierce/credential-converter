@@ -12,13 +12,26 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    if state.popup_uncompleted_warning {
-                        state.popup_uncompleted_warning = false;
-                    } else if state.popup_mapping_p2_p3 {
+                    // Close popup warning
+                    if state.uncompleted_warning {
+                        state.uncompleted_warning = false;
+                    }
+                    // Close popup mapping and reset scroll offsets
+                    else if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
                         state.popup_offset_path = 0;
                         state.popup_offset_value = 0;
-                    } else {
+                        state.popup_offset_output_path = 0;
+                        state.popup_offset_result = 0;
+                    }
+                    // Abort mapping
+                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
+                        state.select_mapping_option = true;
+                        state.selected_transformations_tab = false;
+                        state.selected_transformations.clear();
+                    }
+                    // Close program
+                    else {
                         return Ok(true);
                     }
                 }
@@ -29,7 +42,9 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.selected_transformation > 0 {
                             state.selected_transformation -= 1;
                         }
-                    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+                    }
+                    // Delete a character from the dividers
+                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && state.mapping_option == MappingOptions::OneToMany
                     {
                         state.dividers.pop();
@@ -51,9 +66,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 Left => {
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
-                        if state.mapping_option as usize > 1 {
-                            state.mapping_option.prev();
-                        }
+                        state.mapping_option.prev();
                     } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
                         && !state.select_mapping_option
                         && !state.selected_transformations_tab
@@ -68,7 +81,6 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     } else if state.p2_p3_tabs == P2P3Tabs::OutputFields && !state.popup_mapping_p2_p3 {
                         state.p2_p3_tabs = P2P3Tabs::InputFields;
                     }
-                    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
                 }
                 Right => {
                     if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
@@ -122,8 +134,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Enter => {
-                    if state.popup_uncompleted_warning {
-                        state.popup_uncompleted_warning = false;
+                    if state.uncompleted_warning {
+                        state.uncompleted_warning = false;
                         state.popup_mapping_p2_p3 = false;
                         state.selected_input_field = 1;
                         state.selected_transformation = 0;
@@ -203,20 +215,23 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 } else {
                     if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
+                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
+                            trace_dbg!("patthhh");
                             if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                                 state.popup_offset_path += 1;
                             }
-                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
+                            trace_dbg!("valuee");
                             if state.popup_offset_value < state.popup_amount_lines_value as u16 {
                                 state.popup_offset_value += 1;
                             }
                         } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
+                            trace_dbg!("outputpath");
                             if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
                                 state.popup_offset_output_path += 1;
                             }
-                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                        {
+                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
+                            trace_dbg!("result");
                             if state.popup_offset_result < state.popup_amount_lines_result as u16 {
                                 state.popup_offset_result += 1;
                             }
@@ -245,11 +260,11 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 } else {
                     if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_input_path_p2, mouse_event.column, mouse_event.row) {
+                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_path > 0 {
                                 state.popup_offset_path -= 1;
                             }
-                        } else if is_mouse_over_area(state.popup_input_value_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                             if state.popup_offset_value > 0 {
                                 state.popup_offset_value -= 1;
                             }
@@ -287,10 +302,9 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.selected_transformations.clear();
                         state.page.next();
                     } else {
-                        state.popup_uncompleted_warning = true;
+                        state.uncompleted_warning = true;
                     }
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
-                    state.view = true;
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;
@@ -320,8 +334,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
                     if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
-                    } else if state.popup_uncompleted_warning {
-                        state.popup_uncompleted_warning = false;
+                    } else if state.uncompleted_warning {
+                        state.uncompleted_warning = false;
                     } else {
                         state.select_mapping_option = true;
                         state.selected_transformation = 0;
@@ -380,3 +394,5 @@ pub fn update_repository(state: &mut AppState) {
     merge(&mut json_value, leaf_node);
     trace_dbg!(json_value);
 }
+
+/////     HELPERS     /////
