@@ -589,21 +589,20 @@ dependencies = [
 [[package]]
 name = "digital-credential-data-models"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#5fcd65121bceffeda2c91f244afb327d863d86b8"
 dependencies = [
- "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
- "types-elm-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
- "types-ob-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
+ "types-common 0.1.0",
+ "types-elm-v3 0.1.0",
+ "types-ob-v3 0.1.0",
 ]
 
 [[package]]
 name = "digital-credential-data-models"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27#9f16c27b4fa2d413269fc10b38c4ce66a10a0d49"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#5fcd65121bceffeda2c91f244afb327d863d86b8"
 dependencies = [
- "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
- "types-elm-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
- "types-ob-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
+ "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
+ "types-elm-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
+ "types-ob-v3 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
 ]
 
 [[package]]
@@ -1249,7 +1248,7 @@ dependencies = [
  "color-eyre",
  "config",
  "crossterm",
- "digital-credential-data-models 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
+ "digital-credential-data-models 0.1.0",
  "directories",
  "jsonpath-rust",
  "lazy_static",
@@ -1433,7 +1432,6 @@ dependencies = [
 [[package]]
 name = "macro-derive"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#5fcd65121bceffeda2c91f244afb327d863d86b8"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -1444,7 +1442,7 @@ dependencies = [
 [[package]]
 name = "macro-derive"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27#9f16c27b4fa2d413269fc10b38c4ce66a10a0d49"
+source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#5fcd65121bceffeda2c91f244afb327d863d86b8"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -2945,6 +2943,20 @@ checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 [[package]]
 name = "types-common"
 version = "0.1.0"
+dependencies = [
+ "chrono",
+ "email_address",
+ "iso8601-duration",
+ "macro-derive 0.1.0",
+ "regex",
+ "serde",
+ "serde_json",
+ "serde_stacker",
+]
+
+[[package]]
+name = "types-common"
+version = "0.1.0"
 source = "git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths#5fcd65121bceffeda2c91f244afb327d863d86b8"
 dependencies = [
  "chrono",
@@ -2958,18 +2970,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "types-common"
+name = "types-elm-v3"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27#9f16c27b4fa2d413269fc10b38c4ce66a10a0d49"
 dependencies = [
  "chrono",
- "email_address",
- "iso8601-duration",
- "macro-derive 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
+ "fluent-uri",
  "regex",
  "serde",
  "serde_json",
- "serde_stacker",
+ "strum",
+ "strum_macros",
+ "time",
+ "types-common 0.1.0",
 ]
 
 [[package]]
@@ -2987,17 +2999,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "types-elm-v3"
+name = "types-ob-v3"
 version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27#9f16c27b4fa2d413269fc10b38c4ce66a10a0d49"
 dependencies = [
  "chrono",
- "fluent-uri",
  "regex",
  "serde",
  "serde_json",
- "time",
- "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
+ "types-common 0.1.0",
 ]
 
 [[package]]
@@ -3010,18 +3019,6 @@ dependencies = [
  "serde",
  "serde_json",
  "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?branch=feat/json-paths)",
-]
-
-[[package]]
-name = "types-ob-v3"
-version = "0.1.0"
-source = "git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27#9f16c27b4fa2d413269fc10b38c4ce66a10a0d49"
-dependencies = [
- "chrono",
- "regex",
- "serde",
- "serde_json",
- "types-common 0.1.0 (git+https://github.com/impierce/digital-credential-data-models.git?rev=9f16c27)",
 ]
 
 [[package]]

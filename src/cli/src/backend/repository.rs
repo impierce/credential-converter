@@ -1,4 +1,7 @@
-use crate::backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}};
+use crate::backend::{
+    jsonpointer::{JsonPath, JsonPointer},
+    transformations::{DataLocation, Transformation},
+};
 use jsonpath_rust::JsonPathFinder;
 use serde_json::{json, Map, Value};
 use std::{
@@ -41,7 +44,7 @@ impl Repository {
                 source:
                     DataLocation {
                         format: source_format,
-                        path: source_path,
+                        path: mut source_path,
                     },
                 destination:
                     DataLocation {
@@ -51,6 +54,9 @@ impl Repository {
             } => {
                 let source_credential = self.get(&source_format).unwrap();
 
+                if source_path == "$.@context" {
+                    source_path = r#"$["@context"]"#.to_string();
+                };
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 

@@ -2,7 +2,10 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::selector::selector, p2_handler::{handle_left, handle_right, handle_tab, update_repository}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
+    backend::selector::selector,
+    p2_handler::{handle_left, handle_right, handle_tab, update_repository},
+    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
+    trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
@@ -206,7 +209,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         }
                     }
                 }
-                // Scroll within tabs of the view popup 
+                // Scroll within tabs of the view popup
                 else {
                     if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_path < state.popup_amount_lines_path as u16 {
@@ -220,8 +223,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
                             state.popup_offset_output_path += 1;
                         }
-                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                    {
+                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_result < state.popup_amount_lines_result as u16 {
                             state.popup_offset_result += 1;
                         }
@@ -240,7 +242,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_missing_field -= 1;
                         }
                     }
-                } 
+                }
                 // Scroll within tabs of the view popup
                 else {
                     if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
@@ -255,8 +257,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.popup_offset_output_path > 0 {
                             state.popup_offset_output_path -= 1;
                         }
-                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                    {
+                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_result > 0 {
                             state.popup_offset_result -= 1;
                         }
@@ -278,16 +279,23 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
                     let output_format = state.mapping.output_format();
                     let json_value = state.repository.get_mut(&output_format).unwrap();
+
+                    // Create Output File
                     let mut file = std::fs::File::create(&state.output_path).unwrap();
                     file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
                         .unwrap();
+
+                    // // Create Mapping File
+                    // let mut file = std::fs::File::create(&state.mapping_path).unwrap();
+                    // file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
+                    //     .unwrap();
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
                     // Close popup if open.
                     if state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = false;
-                    } 
+                    }
                     // If mapping options have been chosen, clear mapping options.
                     else if !state.select_mapping_option {
                         state.transformations = Transformations::LowerCase;
@@ -299,7 +307,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     // Clear selected missing field
                     else {
                         state.missing_data_fields[state.selected_missing_field].1.clear();
-                        
+
                         state.transformations = Transformations::LowerCase;
                         state.selected_transformations.clear();
                         state.mapping_option = MappingOptions::DirectCopy;
@@ -357,13 +365,12 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             }
             _ => {}
         }
-
     } //
 
     Ok(false)
 }
 
-fn handle_enter_p3 (state: &mut AppState) {
+fn handle_enter_p3(state: &mut AppState) {
     match state.p2_p3_tabs {
         P2P3Tabs::MappingOptions => {
             // Switch from mapping options tab to respective tab
@@ -409,8 +416,7 @@ fn handle_enter_p3 (state: &mut AppState) {
                 }
             }
             // Select a transformation
-            else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab
-            {
+            else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab {
                 state.selected_transformations.push(state.transformations);
             }
             // Complete a mapping from the view popup
@@ -431,8 +437,7 @@ fn handle_enter_p3 (state: &mut AppState) {
                     state.completed_optional_fields.push(state.selected_optional_field);
                 }
 
-                state.optional_fields[state.selected_optional_field].1 =
-                    state.candidate_data_value.clone().unwrap();
+                state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
 
                 // Move active fields to next field
                 if state.selected_input_field == state.input_fields.len() - 1 {
@@ -448,7 +453,7 @@ fn handle_enter_p3 (state: &mut AppState) {
                 }
 
                 update_repository(state);
-            } 
+            }
             // If transformation(s) selected open the view popup to show the result.
             else if state.selected_transformations_tab {
                 state.popup_mapping_p2_p3 = true;
@@ -458,7 +463,7 @@ fn handle_enter_p3 (state: &mut AppState) {
             // Close popup if open.
             if state.popup_mapping_p2_p3 {
                 state.popup_mapping_p2_p3 = false;
-            } 
+            }
             // If mapping options have been chosen, clear mapping options.
             else if !state.select_mapping_option {
                 state.transformations = Transformations::LowerCase;
@@ -471,7 +476,9 @@ fn handle_enter_p3 (state: &mut AppState) {
             else {
                 // todo: no way yet to correctly clear the completed input fields (one field can be used for multipe output fields)
                 state.optional_fields[state.selected_optional_field].1.clear();
-                state.completed_optional_fields.retain(|&x| x != state.selected_optional_field);
+                state
+                    .completed_optional_fields
+                    .retain(|&x| x != state.selected_optional_field);
 
                 state.transformations = Transformations::LowerCase;
                 state.selected_transformations.clear();
