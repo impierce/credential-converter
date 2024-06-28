@@ -1,3 +1,4 @@
+use core::panic;
 use digital_credential_data_models::{elmv3::EuropassEdcCredential, obv3::AchievementCredential};
 use regex::Regex;
 use serde::{de::DeserializeOwned, Serialize};
@@ -96,9 +97,16 @@ where
             Err(e) => {
                 let error_message = e.inner().to_string();
 
+                // println!("line: {:?}", line!());
+                // println!("json_as_string: {}", json_as_string);
+
                 let path = e.path().to_string().replace('.', "/");
+                // println!("error_message: {path}: {:#?}", error_message);
+
+                // println!("line: {:?}", line!());
 
                 if error_message.starts_with("missing field") {
+                    // println!("line: {:?}", line!());
                     let missing_field = extract_between_backticks(&e.to_string()).unwrap();
                     let pointer = if path == "/" {
                         format!("{path}{missing_field}")
@@ -118,6 +126,7 @@ where
                 }
 
                 if error_message.starts_with("data did not match any variant of untagged enum") {
+                    // println!("line: {:?}", line!());
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
@@ -130,12 +139,13 @@ where
 
                     merge(json_value, leaf_node);
 
-                    // json_as_string = json_value.to_string();
+                    json_as_string = json_value.to_string();
 
-                    return Err(pointer);
+                    continue;
                 }
 
                 if error_message.starts_with("input contains invalid characters") {
+                    // println!("line: {:?}", line!());
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
@@ -156,10 +166,40 @@ where
                     continue;
                 }
 
+                if error_message.starts_with("invalid value") {
+                    // println!("line: {:?}", line!());
+                    let pointer = if path == "/" {
+                        format!("{path}")
+                    } else {
+                        format!("/{path}")
+                    };
+
+                    let mut leaf_node = construct_leaf_node(&pointer);
+
+                    let expected_value = extract_string_value(&error_message).unwrap();
+
+                    if expected_value != "https://www.w3.org/ns/credentials/v2" {
+                        panic!("Expected value: {}", expected_value);
+                    }
+
+                    leaf_node
+                        .pointer_mut(&pointer)
+                        .map(|value| *value = json!([expected_value]))
+                        .unwrap();
+
+                    merge(json_value, leaf_node);
+
+                    json_as_string = json_value.to_string();
+
+                    continue;
+                }
+
                 if error_message.starts_with("invalid type") {
+                    // println!("line: {:?}", line!());
                     let pointer = if error_message.contains("invalid type: map")
                         && error_message.contains("expected a sequence")
                     {
+                        // println!("line: {:?}", line!());
                         let pointer = if path == "/" {
                             format!("{path}")
                         } else {
@@ -179,6 +219,7 @@ where
 
                         return Err(format!("{pointer}/0"));
                     } else {
+                        // println!("line: {:?}", line!());
                         let pointer = if path == "/" {
                             format!("{path}")
                         } else {
@@ -202,8 +243,14 @@ where
 {
     let mut temp_credential = &mut json_value.clone();
 
+    let now = std::time::Instant::now();
+
     let mut missing_data_fields = vec![];
     while let Err(pointer) = verify::<T>(&mut temp_credential) {
+        // println!("missing_data_fields: {:#?}", missing_data_fields);
+        // if now.elapsed().as_micros() > 3000 {
+        //     panic!("Timeout");
+        // }
         trace_dbg!(&temp_credential);
         trace_dbg!(&pointer);
 
@@ -220,24 +267,19 @@ where
     missing_data_fields
 }
 
-// #[test]
-// fn temp() {
-//     let mut json_value = json!({
-//         "test": "test"
-//     });
-
-//     println!("json_value: {:#?}", json_value);
-//     println!("missing_data_fields: {:#?}", missing_data_fields);
-// }
-
 #[test]
 fn test() {
     let temp_credential = json!({});
 
     let missing_data_fields = get_missing_data_fields::<EuropassEdcCredential>(temp_credential.clone());
 
-    println!("temp_credential: {:#?}", temp_credential);
-    println!("missing_data_fields: {:#?}", missing_data_fields);
+    // println!("temp_credential: {:#?}", temp_credential);
+    // println!("missing_data_fields: {:#?}", missing_data_fields);
+}
+
+fn extract_string_value(input: &str) -> Option<&str> {
+    let re = Regex::new(r"expected (.*?) at line").unwrap();
+    re.captures(input).and_then(|cap| cap.get(1).map(|m| m.as_str()))
 }
 
 fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
