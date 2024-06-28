@@ -63,7 +63,8 @@ pub fn selector(state: &mut AppState) {
             },
         };
 
-        temp_repository.apply_transformation(transformation);
+        temp_repository.apply_transformation(transformation.clone());
+        state.mappings.push(transformation);
 
         //trace_dbg!(&pointer);
         let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();

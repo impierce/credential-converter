@@ -285,10 +285,10 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
                         .unwrap();
 
-                    // // Create Mapping File
-                    // let mut file = std::fs::File::create(&state.mapping_path).unwrap();
-                    // file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
-                    //     .unwrap();
+                    // Create Mapping File
+                    let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
+                    file.write_all(serde_json::to_string_pretty(&state.mappings).unwrap().as_bytes())
+                        .unwrap();
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {

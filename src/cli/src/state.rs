@@ -1,7 +1,7 @@
 use ratatui::layout::Rect;
 use strum::{AsRefStr, Display, FromRepr};
 
-use crate::backend::repository::Repository;
+use crate::backend::{repository::Repository, transformations::Transformation};
 
 //////////      STRUCTS & ENUMS     //////////
 
@@ -63,6 +63,7 @@ pub struct AppState {
     // Backend
     pub candidate_data_value: Option<String>,
     pub repository: Repository,
+    pub mappings: Vec<Transformation>,
 
     pub area: Rect,
 

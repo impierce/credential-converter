@@ -97,16 +97,9 @@ where
             Err(e) => {
                 let error_message = e.inner().to_string();
 
-                // println!("line: {:?}", line!());
-                // println!("json_as_string: {}", json_as_string);
-
                 let path = e.path().to_string().replace('.', "/");
-                // println!("error_message: {path}: {:#?}", error_message);
-
-                // println!("line: {:?}", line!());
 
                 if error_message.starts_with("missing field") {
-                    // println!("line: {:?}", line!());
                     let missing_field = extract_between_backticks(&e.to_string()).unwrap();
                     let pointer = if path == "/" {
                         format!("{path}{missing_field}")
@@ -126,7 +119,6 @@ where
                 }
 
                 if error_message.starts_with("data did not match any variant of untagged enum") {
-                    // println!("line: {:?}", line!());
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
@@ -145,7 +137,6 @@ where
                 }
 
                 if error_message.starts_with("input contains invalid characters") {
-                    // println!("line: {:?}", line!());
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
@@ -167,7 +158,6 @@ where
                 }
 
                 if error_message.starts_with("invalid value") {
-                    // println!("line: {:?}", line!());
                     let pointer = if path == "/" {
                         format!("{path}")
                     } else {
@@ -195,11 +185,9 @@ where
                 }
 
                 if error_message.starts_with("invalid type") {
-                    // println!("line: {:?}", line!());
                     let pointer = if error_message.contains("invalid type: map")
                         && error_message.contains("expected a sequence")
                     {
-                        // println!("line: {:?}", line!());
                         let pointer = if path == "/" {
                             format!("{path}")
                         } else {
@@ -219,7 +207,6 @@ where
 
                         return Err(format!("{pointer}/0"));
                     } else {
-                        // println!("line: {:?}", line!());
                         let pointer = if path == "/" {
                             format!("{path}")
                         } else {
@@ -247,7 +234,6 @@ where
 
     let mut missing_data_fields = vec![];
     while let Err(pointer) = verify::<T>(&mut temp_credential) {
-        // println!("missing_data_fields: {:#?}", missing_data_fields);
         // if now.elapsed().as_micros() > 3000 {
         //     panic!("Timeout");
         // }
@@ -272,9 +258,6 @@ fn test() {
     let temp_credential = json!({});
 
     let missing_data_fields = get_missing_data_fields::<EuropassEdcCredential>(temp_credential.clone());
-
-    // println!("temp_credential: {:#?}", temp_credential);
-    // println!("missing_data_fields: {:#?}", missing_data_fields);
 }
 
 fn extract_string_value(input: &str) -> Option<&str> {
