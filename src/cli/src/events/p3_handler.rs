@@ -316,7 +316,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         .unwrap();
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
-                } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
+                } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;
                     state.selected_transformations_tab = false;
                     state.select_mapping_option = true;

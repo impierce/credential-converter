@@ -1,12 +1,9 @@
 use crate::{
-    backend::selector::selector,
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
-    p2_handler::update_repository,
-    popups::{render_popup_field_value, render_popup_mapping, render_popup_uncompleted_warning_p2},
+    popups::{render_popup_mapping, render_popup_uncompleted_warning_p2},
     state::{AppState, MappingOptions, P2P3Tabs},
-    trace_dbg,
 };
 
 use ratatui::{
@@ -117,7 +114,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     // Render bottom mapping options bar
     if state.select_mapping_option {
         let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, abort, view] = Layout::horizontal(vec![
+        let [multiplicity_tabs, clear, view] = Layout::horizontal(vec![
             Constraint::Percentage(100),
             Constraint::Length(7),
             Constraint::Length(6),
@@ -131,7 +128,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             .divider("")
             .render(multiplicity_tabs, buf);
 
-        render_mapping_bar_buttons(abort, view, state, buf);
+        render_mapping_bar_buttons(clear, view, state, buf);
     } else {
         match state.mapping_option {
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
@@ -151,30 +148,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         );
     } else if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
-            match state.p2_p3_tabs {
-                P2P3Tabs::InputFields => render_popup_field_value(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                    P2P3Tabs::InputFields,
-                ),
-                P2P3Tabs::OutputFields => render_popup_field_value(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                    P2P3Tabs::OutputFields,
-                ),
-                P2P3Tabs::MappingOptions => {
-                    state.popup_mapping_p2_p3 = false;
-                }
-                _ => {}
-            }
+            render_popup_mapping(
+                area.inner(&Margin {
+                    vertical: 4,
+                    horizontal: 20,
+                }),
+                buf,
+                state,
+            )
         } else {
             match state.mapping_option {
                 MappingOptions::Transformations => render_popup_mapping(

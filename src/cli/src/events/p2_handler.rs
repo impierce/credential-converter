@@ -1,6 +1,9 @@
 use super::is_mouse_over_area;
 use crate::{
-    backend::{repository::{construct_leaf_node, merge}, selector::selector},
+    backend::{
+        repository::{construct_leaf_node, merge},
+        selector::selector,
+    },
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
@@ -24,7 +27,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.popup_offset_output_path = 0;
                         state.popup_offset_result = 0;
                     }
-                    // Abort mapping
+                    // clear mapping
                     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
                         state.select_mapping_option = true;
                         state.selected_transformations_tab = false;
@@ -63,8 +66,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         && state.selected_transformations_tab
                     {
                         state.selected_transformations_tab = false;
-                    }
-                    else {
+                    } else {
                         state.p2_p3_tabs.prev();
                     }
                 }
@@ -74,7 +76,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Right => {
                     handle_right(state);
                 }
-                Up => match state.p2_p3_tabs { // Scroll through input or output fields
+                Up => match state.p2_p3_tabs {
+                    // Scroll through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
@@ -87,7 +90,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     _ => {}
                 },
-                Down => match state.p2_p3_tabs { // Scroll through input or output fields
+                Down => match state.p2_p3_tabs {
+                    // Scroll through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
@@ -142,7 +146,8 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
                                 state.popup_offset_output_path += 1;
                             }
-                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
+                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                        {
                             trace_dbg!("result");
                             if state.popup_offset_result < state.popup_amount_lines_result as u16 {
                                 state.popup_offset_result += 1;
@@ -218,7 +223,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
-                } else if is_mouse_over_area(state.abort_button, mouse_event.column, mouse_event.row) {
+                } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
                     state.transformations = Transformations::LowerCase;
                     state.selected_transformations_tab = false;
                     state.select_mapping_option = true;
@@ -307,7 +312,6 @@ pub fn update_repository(state: &mut AppState) {
     trace_dbg!(json_value);
 }
 
-
 /////     HELPERS     /////
 
 fn handle_tab(state: &mut AppState) {
@@ -326,13 +330,12 @@ fn handle_tab(state: &mut AppState) {
         && state.selected_transformations_tab
     {
         state.p2_p3_tabs.next();
-    } 
+    }
     // Check if right tab of Transformations bar is still selected and switch to the left when tabbing to the bar from output_fields
     else if state.p2_p3_tabs == P2P3Tabs::OutputFields && state.selected_transformations_tab {
         state.selected_transformations_tab = false;
-        state.p2_p3_tabs.next();                        
-    }    
-    else {
+        state.p2_p3_tabs.next();
+    } else {
         state.p2_p3_tabs.next();
         //state.selected_transformations_tab = false;
     }
@@ -343,7 +346,7 @@ fn handle_left(state: &mut AppState) {
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
         state.mapping_option.prev();
     }
-    // Move through transformation bar, loops 
+    // Move through transformation bar, loops
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
         && !state.select_mapping_option
         && !state.selected_transformations_tab
@@ -354,8 +357,7 @@ fn handle_left(state: &mut AppState) {
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
         if state.selected_transformation > 0 {
             state.selected_transformation -= 1;
-        }
-        else if state.selected_transformations.len() > 0 {
+        } else if state.selected_transformations.len() > 0 {
             state.selected_transformation = state.selected_transformations.len() - 1;
         }
     }
@@ -376,7 +378,7 @@ fn handle_right(state: &mut AppState) {
         && !state.selected_transformations_tab
     {
         state.transformations.next();
-    } 
+    }
     // Move through selected transformations bar, loops
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
         && state.selected_transformations_tab
@@ -384,11 +386,10 @@ fn handle_right(state: &mut AppState) {
     {
         if state.selected_transformation < state.selected_transformations.len() - 1 {
             state.selected_transformation += 1;
-        }
-        else {
+        } else {
             state.selected_transformation = 0;
         }
-    } 
+    }
     // Move between input tab and output tab
     else if state.p2_p3_tabs == P2P3Tabs::InputFields && !state.popup_mapping_p2_p3 {
         state.p2_p3_tabs = P2P3Tabs::OutputFields;
@@ -407,8 +408,7 @@ fn handle_enter(state: &mut AppState) {
         state.select_mapping_option = true;
         state.p2_p3_tabs = P2P3Tabs::InputFields;
         state.page.next();
-    } 
-    else {
+    } else {
         match state.p2_p3_tabs {
             P2P3Tabs::MappingOptions => {
                 // Switch from mapping options tab to respective tab
@@ -432,7 +432,8 @@ fn handle_enter(state: &mut AppState) {
                             state.completed_missing_fields.push(state.selected_missing_field);
                         }
 
-                        state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
+                        state.missing_data_fields[state.selected_missing_field].1 =
+                            state.candidate_data_value.clone().unwrap();
 
                         // Move active fields to next field
                         if state.selected_input_field == state.input_fields.len() - 1 {
@@ -448,15 +449,15 @@ fn handle_enter(state: &mut AppState) {
                         }
 
                         update_repository(state);
-                    }
-                    else {
+                    } else {
                         state.select_mapping_option = false;
                     }
-                } 
+                }
                 // Select a transformation
-                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab {
+                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab
+                {
                     state.selected_transformations.push(state.transformations);
-                } 
+                }
                 // Complete a mapping from the view popup
                 else if state.popup_mapping_p2_p3 {
                     state.popup_mapping_p2_p3 = false;
@@ -492,14 +493,18 @@ fn handle_enter(state: &mut AppState) {
                     }
 
                     update_repository(state);
-                } else if state.selected_transformations_tab {
+                } 
+                // If transformation(s) selected open the view popup to show the result.
+                else if state.selected_transformations_tab {
                     state.popup_mapping_p2_p3 = true;
                 }
             }
-            P2P3Tabs::ClearResultAbort => {
+            P2P3Tabs::Clear => {
+                // Close popup if open.
                 if state.popup_mapping_p2_p3 {
                     state.popup_mapping_p2_p3 = false;
                 } 
+                // If mapping options have been chosen, clear mapping options.
                 else if !state.select_mapping_option {
                     state.transformations = Transformations::LowerCase;
                     state.selected_transformations.clear();
@@ -507,6 +512,20 @@ fn handle_enter(state: &mut AppState) {
                     state.selected_transformations_tab = false;
                     state.select_mapping_option = true;
                 }
+                // Clear selected missing field
+                else {
+                    state.missing_data_fields[state.selected_missing_field].1.clear();
+                    
+                    state.transformations = Transformations::LowerCase;
+                    state.selected_transformations.clear();
+                    state.mapping_option = MappingOptions::DirectCopy;
+                    state.selected_transformations_tab = false;
+                    state.select_mapping_option = true;
+                }
+            }
+            P2P3Tabs::View => {
+                // Open Popup
+                state.popup_mapping_p2_p3 = true;
             }
             _ => {
                 if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {

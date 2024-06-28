@@ -7,7 +7,6 @@ use crate::backend::repository::Repository;
 
 #[derive(Debug, Default)]
 pub struct AppState {
-
     // Main pages of the program
     pub page: Pages,
 
@@ -78,12 +77,11 @@ pub struct AppState {
     pub popup_output_result_p2: Rect,
 
     // Areas for clicking
-    pub abort_button: Rect,
+    pub clear_button: Rect,
     pub view_button: Rect,
     pub complete_button: Rect,
     pub prev_page_button: Rect,
     pub confirm_button: Rect,
-
 
     // Scroll offsets and line amounts popup
     pub popup_offset_value: u16,
@@ -134,7 +132,7 @@ pub enum P2P3Tabs {
     InputFields = 0,
     OutputFields,
     MappingOptions,
-    ClearResultAbort,
+    Clear,
     View,
 }
 

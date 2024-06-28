@@ -1,7 +1,4 @@
-use crate::{
-    state::{AppState, P2P3Tabs},
-    trace_dbg,
-};
+use crate::state::{AppState, P2P3Tabs};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -12,7 +9,7 @@ use ratatui::{
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = vec![" LowerCase", "UpperCase", "Slice", "Regex"];
 
-    let [transformations, selected, abort, view] = Layout::horizontal(vec![
+    let [transformations, selected, clear, view] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
         Constraint::Percentage(100),
         Constraint::Length(7),
@@ -30,8 +27,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
         if !state.selected_transformations_tab {
             active_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
-        }
-        else {
+        } else {
             active_style_selected_tab = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
     }
@@ -43,17 +39,15 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
         .select(state.transformations as usize - 1) // todo: this ' - 1 ' is due to the fact i didn't want to dive into the backend just yet, which is depending on a "Copy" variant in the fn selector to complete a mapping. This means "Copy" is not shown in the tabber, but does exist in the enum Transformations
         .divider("")
         .render(transformations, buf);
-    let selected_transformations: Vec<String> =
-        state.selected_transformations.iter().map(|x| x.to_string()).collect();
+    let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
     // if no transformations selected to show and tab is active, show a yellow cursor
     if selected_transformations.is_empty() && state.selected_transformations_tab {
         Tabs::new(vec![" __"])
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
             .highlight_style(active_style_selected_tab)
             .divider("")
-            .render(selected, buf);        
-    }
-    else {
+            .render(selected, buf);
+    } else {
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
             .highlight_style(active_style_selected_tab)
@@ -62,12 +56,12 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
             .render(selected, buf);
     }
 
-    render_mapping_bar_buttons(abort, view, state, buf);
+    render_mapping_bar_buttons(clear, view, state, buf);
 }
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Enter a divider, or select indices manually: ";
-    let [txt_area, dividers, abort, view] = Layout::horizontal(vec![
+    let [txt_area, dividers, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16),
         Constraint::Percentage(100),
         Constraint::Length(7),
@@ -95,12 +89,12 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
             .render(dividers, buf);
     }
 
-    render_mapping_bar_buttons(abort, view, state, buf);
+    render_mapping_bar_buttons(clear, view, state, buf);
 }
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
-    let [txt_area, abort, view] = Layout::horizontal(vec![
+    let [txt_area, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
         Constraint::Length(7),
         Constraint::Length(6),
@@ -116,18 +110,18 @@ pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         )
         .render(txt_area, buf);
 
-    render_mapping_bar_buttons(abort, view, state, buf);
+    render_mapping_bar_buttons(clear, view, state, buf);
 }
 
-pub fn render_mapping_bar_buttons(abort: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
-    state.abort_button = abort;
+pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
+    state.clear_button = clear;
     state.view_button = view;
 
-    let mut clearresult_abort_style = Style::default().fg(Color::Black).bg(Color::Red);
+    let mut clear_style = Style::default().fg(Color::Black).bg(Color::Red);
     let mut view_style = Style::default().fg(Color::Black).bg(Color::Green);
     match state.p2_p3_tabs {
-        P2P3Tabs::ClearResultAbort => {
-            clearresult_abort_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+        P2P3Tabs::Clear => {
+            clear_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
         }
         P2P3Tabs::View => {
             view_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
@@ -135,17 +129,8 @@ pub fn render_mapping_bar_buttons(abort: Rect, view: Rect, state: &mut AppState,
         _ => {}
     }
 
-    if state.select_mapping_option {
-        Paragraph::new(" Clear ")
-            .style(clearresult_abort_style)
-            .render(abort, buf);
-    }
-    else {
-        Paragraph::new(" Abort ")
-            .style(clearresult_abort_style)
-            .render(abort, buf);
-    }
-    Paragraph::new(" View ")
-        .style(view_style)
-        .render(view, buf);
+    Paragraph::new(" Clear ")
+        .style(clear_style)
+        .render(clear, buf);
+    Paragraph::new(" View ").style(view_style).render(view, buf);
 }

@@ -115,7 +115,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Render bottom mapping options bar
     if state.select_mapping_option {
         let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, abort, view] = Layout::horizontal(vec![
+        let [multiplicity_tabs, clear, view] = Layout::horizontal(vec![
             Constraint::Percentage(100),
             Constraint::Length(7),
             Constraint::Length(6),
@@ -129,7 +129,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             .divider("")
             .render(multiplicity_tabs, buf);
 
-        render_mapping_bar_buttons(abort, view, state, buf);
+        render_mapping_bar_buttons(clear, view, state, buf);
     } else {
         match state.mapping_option {
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
