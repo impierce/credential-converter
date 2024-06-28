@@ -77,7 +77,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     handle_right(state);
                 }
                 Up => match state.p2_p3_tabs {
-                    // Scroll through input or output fields
+                    // Scroll up through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field > 1 {
                             state.selected_input_field -= 1;
@@ -91,7 +91,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     _ => {}
                 },
                 Down => match state.p2_p3_tabs {
-                    // Scroll through input or output fields
+                    // Scroll down through input or output fields
                     P2P3Tabs::InputFields => {
                         if state.selected_input_field <= state.amount_input_fields {
                             state.selected_input_field += 1;
@@ -119,6 +119,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     if let event::Event::Mouse(mouse_event) = event {
         match mouse_event.kind {
             event::MouseEventKind::ScrollDown => {
+                // Scroll through input/output fields
                 if !state.popup_mapping_p2_p3 {
                     if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_input_field <= state.amount_input_fields {
@@ -129,31 +130,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_missing_field += 1;
                         }
                     }
-                } else {
-                    if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
-                            trace_dbg!("patthhh");
-                            if state.popup_offset_path < state.popup_amount_lines_path as u16 {
-                                state.popup_offset_path += 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
-                            trace_dbg!("valuee");
-                            if state.popup_offset_value < state.popup_amount_lines_value as u16 {
-                                state.popup_offset_value += 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
-                            trace_dbg!("outputpath");
-                            if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
-                                state.popup_offset_output_path += 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                        {
-                            trace_dbg!("result");
-                            if state.popup_offset_result < state.popup_amount_lines_result as u16 {
-                                state.popup_offset_result += 1;
-                            }
-                        }
-                    } else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
+                }
+                // Scroll within tabs of the view popup 
+                else {
+                    if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_path < state.popup_amount_lines_path as u16 {
                             state.popup_offset_path += 1;
                         }
@@ -161,10 +141,20 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         if state.popup_offset_value < state.popup_amount_lines_value as u16 {
                             state.popup_offset_value += 1;
                         }
+                    } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
+                        if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
+                            state.popup_offset_output_path += 1;
+                        }
+                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                    {
+                        if state.popup_offset_result < state.popup_amount_lines_result as u16 {
+                            state.popup_offset_result += 1;
+                        }
                     }
                 }
             }
             event::MouseEventKind::ScrollUp => {
+                // Scroll through input/output fields
                 if !state.popup_mapping_p2_p3 {
                     if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
                         if state.selected_input_field > 1 {
@@ -175,33 +165,25 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                             state.selected_missing_field -= 1;
                         }
                     }
-                } else {
-                    if !state.select_mapping_option {
-                        if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
-                            if state.popup_offset_path > 0 {
-                                state.popup_offset_path -= 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
-                            if state.popup_offset_value > 0 {
-                                state.popup_offset_value -= 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
-                            if state.popup_offset_output_path > 0 {
-                                state.popup_offset_output_path -= 1;
-                            }
-                        } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                        {
-                            if state.popup_offset_result > 0 {
-                                state.popup_offset_result -= 1;
-                            }
-                        }
-                    } else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
+                } 
+                // Scroll within tabs of the view popup
+                else {
+                    if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_path > 0 {
                             state.popup_offset_path -= 1;
                         }
                     } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
                         if state.popup_offset_value > 0 {
                             state.popup_offset_value -= 1;
+                        }
+                    } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
+                        if state.popup_offset_output_path > 0 {
+                            state.popup_offset_output_path -= 1;
+                        }
+                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                    {
+                        if state.popup_offset_result > 0 {
+                            state.popup_offset_result -= 1;
                         }
                     }
                 }
@@ -224,11 +206,28 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
-                    state.transformations = Transformations::LowerCase;
-                    state.selected_transformations_tab = false;
-                    state.select_mapping_option = true;
-                    state.selected_transformation = 0;
-                    state.selected_transformations.clear();
+                    // Close popup if open.
+                    if state.popup_mapping_p2_p3 {
+                        state.popup_mapping_p2_p3 = false;
+                    } 
+                    // If mapping options have been chosen, clear mapping options.
+                    else if !state.select_mapping_option {
+                        state.transformations = Transformations::LowerCase;
+                        state.selected_transformations.clear();
+                        state.mapping_option = MappingOptions::DirectCopy;
+                        state.selected_transformations_tab = false;
+                        state.select_mapping_option = true;
+                    }
+                    // Clear selected missing field
+                    else {
+                        state.missing_data_fields[state.selected_missing_field].1.clear();
+                        
+                        state.transformations = Transformations::LowerCase;
+                        state.selected_transformations.clear();
+                        state.mapping_option = MappingOptions::DirectCopy;
+                        state.selected_transformations_tab = false;
+                        state.select_mapping_option = true;
+                    }
                 } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = false;
                     state.selected_transformations_tab = false;
@@ -314,7 +313,8 @@ pub fn update_repository(state: &mut AppState) {
 
 /////     HELPERS     /////
 
-fn handle_tab(state: &mut AppState) {
+// todo: move to general file for both P2 and P3 and substitute as many events as possible with helper functions to make clear which are the same between P2 & P3
+pub fn handle_tab(state: &mut AppState) {
     // Check if inside Transformations bar in the transformations tab and switch to the selected transformations tab
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions
         && !state.select_mapping_option
@@ -341,7 +341,7 @@ fn handle_tab(state: &mut AppState) {
     }
 }
 
-fn handle_left(state: &mut AppState) {
+pub fn handle_left(state: &mut AppState) {
     // Move through mapping options bar, loops.
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
         state.mapping_option.prev();
@@ -367,7 +367,7 @@ fn handle_left(state: &mut AppState) {
     }
 }
 
-fn handle_right(state: &mut AppState) {
+pub fn handle_right(state: &mut AppState) {
     // Move through mapping options bar, loops.
     if state.p2_p3_tabs == P2P3Tabs::MappingOptions && state.select_mapping_option {
         state.mapping_option.next();

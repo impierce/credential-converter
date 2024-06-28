@@ -10,7 +10,7 @@ use crate::{
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
-    popups::{render_popup_field_value, render_popup_mapping},
+    popups::render_popup_mapping,
     state::{AppState, MappingOptions, P2P3Tabs},
     trace_dbg,
 };
@@ -168,30 +168,14 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
     if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
-            match state.p2_p3_tabs {
-                P2P3Tabs::InputFields => render_popup_field_value(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                    P2P3Tabs::InputFields,
-                ),
-                P2P3Tabs::OutputFields => render_popup_field_value(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                    P2P3Tabs::OutputFields,
-                ),
-                P2P3Tabs::MappingOptions => {
-                    state.popup_mapping_p2_p3 = false;
-                }
-                _ => {}
-            }
+            render_popup_mapping(
+                area.inner(&Margin {
+                    vertical: 4,
+                    horizontal: 20,
+                }),
+                buf,
+                state,
+            )
         } else {
             match state.mapping_option {
                 MappingOptions::Transformations => render_popup_mapping(
