@@ -1,4 +1,4 @@
-use crate::backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}};
+use crate::{backend::{jsonpointer::{JsonPath, JsonPointer}, transformations::{DataLocation, Transformation}}, trace_dbg};
 use jsonpath_rust::JsonPathFinder;
 use serde_json::{json, Map, Value};
 use std::{
@@ -51,6 +51,7 @@ impl Repository {
             } => {
                 let source_credential = self.get(&source_format).unwrap();
 
+                trace_dbg!(&source_path);
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 

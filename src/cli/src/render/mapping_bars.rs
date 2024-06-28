@@ -134,3 +134,24 @@ pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState,
         .render(clear, buf);
     Paragraph::new(" View ").style(view_style).render(view, buf);
 }
+
+// pub fn render_slice_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+//     let txt = "  Enter two dividers as start and end of the slice";
+//     let [txt_area, dividers, clear, view] = Layout::horizontal(vec![
+//         Constraint::Min(txt.len() as u16),
+//         Constraint::Percentage(100),
+//         Constraint::Length(7),
+//         Constraint::Length(6),
+//     ])
+//     .areas(area);
+
+//     Paragraph::new(txt)
+//         .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+//         .render(txt_area, buf);
+
+//     Paragraph::new(" ".to_owned() + state.slice_input.0.as_str() + " --> " + state.slice_input.1.as_str())
+//         .style(Style::default().fg(Color::Black).bg(Color::Gray))
+//         .render(dividers, buf);
+
+//     render_mapping_bar_buttons(clear, view, state, buf);
+// }

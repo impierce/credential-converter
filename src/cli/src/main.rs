@@ -24,8 +24,6 @@ fn main() -> Result<()> {
     initialize_logging().expect("Unexpected error while initializing logging");
     trace_dbg!("Starting the application");
 
-    // rust_i18n::set_locale("sv"); // move to event_handler
-
     // Initialize the alternate terminal screen, its input and the backend for it.
     execute!(stdout(), EnterAlternateScreen, EnableMouseCapture)?;
     enable_raw_mode()?;
@@ -33,7 +31,7 @@ fn main() -> Result<()> {
     terminal.clear()?;
     let mut state = AppState {
         // TODO: remove these hardcoded paths
-        input_path: "res/source_credential_ELM.json".to_string(),
+        input_path: "res/elm_example.json".to_string(),
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
 

@@ -7,6 +7,7 @@ pub enum OneToOne {
     copy,
     toLowerCase,
     toUpperCase,
+    slice,
 }
 
 impl OneToOne {
@@ -27,6 +28,25 @@ impl OneToOne {
                     value
                 }
             }
+            _ => {value}
+        }
+    }
+
+    pub fn slice(&self, value: Value, slice: (usize, usize)) -> Value {
+        match self {
+            OneToOne::slice => {
+                if let Value::String(s) = &value {
+                    if slice.0 <= slice.1 {
+                        Value::String(s.chars().skip(slice.0).take(slice.1 - slice.0).collect())
+                    } else {
+                        value
+                    }
+                }
+                else {
+                    value
+                }
+            },
+            _ => {value}
         }
     }
 }

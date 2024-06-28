@@ -457,8 +457,7 @@ fn handle_enter(state: &mut AppState) {
                     }
                 }
                 // Select a transformation
-                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab
-                {
+                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab && !state.selected_transformations.contains(&state.transformations) {
                     state.selected_transformations.push(state.transformations);
                 }
                 // Complete a mapping from the view popup
@@ -479,6 +478,7 @@ fn handle_enter(state: &mut AppState) {
                         state.completed_missing_fields.push(state.selected_missing_field);
                     }
 
+                    selector(state);
                     state.missing_data_fields[state.selected_missing_field].1 =
                         state.candidate_data_value.clone().unwrap();
 

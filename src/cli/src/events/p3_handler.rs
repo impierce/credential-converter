@@ -409,8 +409,7 @@ fn handle_enter_p3 (state: &mut AppState) {
                 }
             }
             // Select a transformation
-            else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab
-            {
+            else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab && !state.selected_transformations.contains(&state.transformations) {
                 state.selected_transformations.push(state.transformations);
             }
             // Complete a mapping from the view popup
