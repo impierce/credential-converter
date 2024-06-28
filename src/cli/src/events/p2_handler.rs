@@ -196,6 +196,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                         state.popup_mapping_p2_p3 = false;
                         state.transformations = Transformations::LowerCase;
                         state.selected_transformations_tab = false;
+                        state.selected_input_field = 1;
                         state.select_mapping_option = true;
                         state.selected_transformation = 0;
                         state.selected_transformations.clear();
@@ -220,8 +221,10 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                     // Clear selected missing field
                     else {
+                        // todo: no way yet to correctly clear the completed input fields (one field can be used for multipe output fields)
                         state.missing_data_fields[state.selected_missing_field].1.clear();
-                        
+                        state.completed_missing_fields.retain(|&x| x != state.selected_missing_field);
+
                         state.transformations = Transformations::LowerCase;
                         state.selected_transformations.clear();
                         state.mapping_option = MappingOptions::DirectCopy;

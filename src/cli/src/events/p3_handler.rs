@@ -1,3 +1,5 @@
+use std::io::Write;
+
 use super::is_mouse_over_area;
 use crate::{
     backend::selector::selector, p2_handler::{handle_left, handle_right, handle_tab, update_repository}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
@@ -265,17 +267,20 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
                     trace_dbg!(state.missing_data_fields.len() - 1);
                     trace_dbg!(state.completed_missing_fields.len());
-                    if state.missing_data_fields.len() - 1 == state.completed_missing_fields.len() {
-                        state.popup_mapping_p2_p3 = false;
-                        state.transformations = Transformations::LowerCase;
-                        state.selected_transformations_tab = false;
-                        state.select_mapping_option = true;
-                        state.selected_transformation = 0;
-                        state.selected_transformations.clear();
-                        state.page.next();
-                    } else {
-                        state.uncompleted_warning = true;
-                    }
+
+                    state.popup_mapping_p2_p3 = false;
+                    state.transformations = Transformations::LowerCase;
+                    state.selected_transformations_tab = false;
+                    state.select_mapping_option = true;
+                    state.selected_transformation = 0;
+                    state.selected_transformations.clear();
+                    state.page.next();
+
+                    let output_format = state.mapping.output_format();
+                    let json_value = state.repository.get_mut(&output_format).unwrap();
+                    let mut file = std::fs::File::create(&state.output_path).unwrap();
+                    file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
+                        .unwrap();
                 } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
                     state.popup_mapping_p2_p3 = true;
                 } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
@@ -328,6 +333,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     } else {
                         state.select_mapping_option = true;
                         state.selected_transformation = 0;
+                        state.selected_input_field = 1;
                         state.selected_transformations.clear();
                         state.transformations = Transformations::LowerCase;
 
@@ -463,8 +469,10 @@ fn handle_enter_p3 (state: &mut AppState) {
             }
             // Clear selected optional field
             else {
+                // todo: no way yet to correctly clear the completed input fields (one field can be used for multipe output fields)
                 state.optional_fields[state.selected_optional_field].1.clear();
-                
+                state.completed_optional_fields.retain(|&x| x != state.selected_optional_field);
+
                 state.transformations = Transformations::LowerCase;
                 state.selected_transformations.clear();
                 state.mapping_option = MappingOptions::DirectCopy;
