@@ -109,7 +109,7 @@ where
 
                     let mut leaf_node = construct_leaf_node(&pointer);
 
-                    leaf_node.pointer_mut(&pointer).map(|value| *value = json!({})).unwrap();
+                    leaf_node.pointer_mut(&pointer).map(|value| *value = json!({})).unwrap(); // could be a problem when we add field constraints
 
                     merge(json_value, leaf_node);
 
@@ -127,7 +127,7 @@ where
 
                     let mut leaf_node = construct_leaf_node(&pointer);
 
-                    leaf_node.pointer_mut(&pointer).map(|value| *value = json!("")).unwrap();
+                    leaf_node.pointer_mut(&pointer).map(|value| *value = json!("")).unwrap(); // doesnt work
 
                     merge(json_value, leaf_node);
 
@@ -230,19 +230,14 @@ where
 {
     let mut temp_credential = &mut json_value.clone();
 
-    let now = std::time::Instant::now();
-
     let mut missing_data_fields = vec![];
     while let Err(pointer) = verify::<T>(&mut temp_credential) {
-        // if now.elapsed().as_micros() > 3000 {
-        //     panic!("Timeout");
-        // }
         trace_dbg!(&temp_credential);
         trace_dbg!(&pointer);
 
         match temp_credential
             .pointer_mut(&pointer)
-            .map(|value| *value = json!("TEMP"))
+            .map(|value| *value = json!("TEMP")) // could be a problem when we add field constraints
         {
             Some(_) => {}
             None => return vec![],

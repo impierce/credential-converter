@@ -60,7 +60,7 @@ impl Repository {
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 
-                let mut destination_credential = self.entry(destination_format).or_insert(json!({}));
+                let mut destination_credential = self.entry(destination_format).or_insert(json!({})); // 
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
@@ -131,7 +131,7 @@ pub fn merge(a: &mut Value, b: Value) {
         (a @ &mut Value::Object(_), Value::Object(b)) => {
             let a = a.as_object_mut().unwrap();
             for (k, v) in b {
-                merge(a.entry(k).or_insert(Value::Null), v);
+                merge(a.entry(k).or_insert(Value::Null), v); //
             }
         }
         (a, b) => *a = b,
