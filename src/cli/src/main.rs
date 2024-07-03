@@ -39,9 +39,9 @@ fn main() -> Result<()> {
         // tab: Tabs::UnusedDataP3,
         optional_fields: vec![
             ("".to_string(), "".to_string()),
-            ("field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4field4".to_string(), "".to_string()),
-            ("field5".to_string(), "".to_string()),
-            ("field6".to_string(), "".to_string()),
+            ("credentialSubject/e-Mail".to_string(), "".to_string()),
+            ("credentialSubject/phoneNumber".to_string(), "".to_string()),
+            ("credentialSubject/gender".to_string(), "".to_string()),
         ], // todo: remove hard code testdata
 
         selected_input_field: 1, // todo: what if none? Also after going back to tab 1 and changing file paths?

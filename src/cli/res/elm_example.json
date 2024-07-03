@@ -32,13 +32,13 @@
         }
       ],
       "givenName": {
-        "en": ["David"]
+        "en": "David"
       },
       "familyName": {
-        "en": ["Smith"]
+        "en": "Smith"
       },
       "fullName": {
-        "en": ["David Smith"]
+        "en": "David Smith"
       },
       "hasClaim": [
         {
@@ -81,7 +81,7 @@
                       }
                     ],
                     "description": {
-                      "en": ["Address"]
+                      "en": "Address"
                     }
                   }
                 ],
@@ -102,7 +102,7 @@
                       "type": "ConceptScheme"
                     },
                     "prefLabel": {
-                      "en": ["Spain"]
+                      "en": "Spain"
                     },
                     "notation": "country"
                   }

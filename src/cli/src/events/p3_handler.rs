@@ -489,7 +489,42 @@ fn handle_enter_p3(state: &mut AppState) {
         }
         P2P3Tabs::View => {
             // Open Popup
-            state.popup_mapping_p2_p3 = true;
+            if !state.popup_mapping_p2_p3 {
+                state.popup_mapping_p2_p3 = true;
+            }
+            else {
+                state.popup_mapping_p2_p3 = false;
+                state.selected_transformations_tab = false;
+                state.select_mapping_option = true;
+                state.selected_transformations.clear();
+                state.popup_offset_path = 0;
+                state.popup_offset_value = 0;
+                state.p2_p3_tabs = P2P3Tabs::InputFields;
+
+                if !state.completed_input_fields.contains(&state.selected_input_field) {
+                    state.completed_input_fields.push(state.selected_input_field);
+                }
+                if !state.completed_optional_fields.contains(&state.selected_optional_field) {
+                    state.completed_optional_fields.push(state.selected_optional_field);
+                }
+                state.optional_fields[state.selected_optional_field].1 =
+                    state.candidate_data_value.clone().unwrap();
+                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+                trace_dbg!(state.optional_fields.clone()[state.selected_optional_field].to_owned());
+ 
+                // Move active fields to next field
+                if state.selected_input_field == state.input_fields.len() - 1 {
+                    state.selected_input_field = 1;
+                } else {
+                    state.selected_input_field += 1;
+                }
+
+                if state.selected_optional_field == state.optional_fields.len() - 1 {
+                    state.selected_optional_field = 1;
+                } else {
+                    state.selected_optional_field += 1;
+                }            
+            }
         }
         _ => {
             if !state.popup_mapping_p2_p3 && state.page != Pages::UnusedDataP3 {
