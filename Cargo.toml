@@ -1,7 +1,3 @@
-#[workspace]
-#members = ["crates/*"]
-#resolver = "2"
-
 [package]
 name = "impierce-mapper"
 version = "0.1.0"
