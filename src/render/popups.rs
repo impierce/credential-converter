@@ -1,7 +1,4 @@
-use crate::{
-    backend::selector::selector,
-    state::{AppState, P2P3Tabs},
-};
+use crate::{backend::selector::selector, state::AppState};
 
 use ratatui::{
     buffer::Buffer,
@@ -128,91 +125,6 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .render(confirm_area, buf);
 }
 
-pub fn render_popup_field_value(area: Rect, buf: &mut Buffer, state: &mut AppState, tab: P2P3Tabs) {
-    Clear.render(area, buf);
-    Block::new().style(Style::default().bg(Color::Black)).render(area, buf);
-    let [left, right] = Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(area);
-    state.popup_path_area_p2 = left;
-    state.popup_value_area_p2 = right;
-
-    // (if tab == P2Tabs::InputFields)
-    let mut field = state.input_fields[state.selected_input_field].0.as_str();
-    let mut value = state.input_fields[state.selected_input_field].1.as_str();
-    let mut title_left = "  Field  ";
-    let mut title_right = "  Value  ";
-    // Calculate maximum lines used, this sets the maximum scroll offset
-    if right.width > 2 {
-        state.popup_amount_lines_path =
-            state.input_fields[state.selected_input_field].0.len() / (right.width as usize - 2);
-        state.popup_amount_lines_value =
-            state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
-    }
-
-    if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::ManualMappingP2 {
-        title_left = "  Missing Field  ";
-        title_right = "  Result Value  ";
-        field = state.missing_data_fields[state.selected_missing_field].0.as_str();
-        value = state.missing_data_fields[state.selected_missing_field].1.as_str();
-        // Calculate maximum lines used, this sets the maximum scroll offset
-        if right.width > 2 {
-            state.popup_amount_lines_path =
-                state.missing_data_fields[state.selected_missing_field].0.len() / (right.width as usize - 2);
-            state.popup_amount_lines_value =
-                state.missing_data_fields[state.selected_missing_field].1.len() / (right.width as usize - 2);
-        }
-    } else if tab == P2P3Tabs::OutputFields && state.page == crate::state::Pages::UnusedDataP3 {
-        title_left = "  Optional Field  ";
-        title_right = "  Result Value  ";
-        field = state.optional_fields[state.selected_optional_field].0.as_str();
-        value = state.optional_fields[state.selected_optional_field].1.as_str();
-        // Calculate maximum lines used, this sets the maximum scroll offset
-        if right.width > 2 {
-            state.popup_amount_lines_path =
-                state.optional_fields[state.selected_optional_field].0.len() / (right.width as usize - 2);
-            state.popup_amount_lines_value =
-                state.optional_fields[state.selected_optional_field].1.len() / (right.width as usize - 2);
-        }
-    }
-
-    Block::new()
-        .title(title_left)
-        .add_modifier(Modifier::BOLD)
-        .title_alignment(Alignment::Center)
-        .borders(Borders::RIGHT)
-        .border_type(BorderType::Thick)
-        .render(left, buf);
-
-    Block::new()
-        .title(title_right)
-        .add_modifier(Modifier::BOLD)
-        .title_alignment(Alignment::Center)
-        .render(right, buf);
-
-    Paragraph::new(field)
-        .wrap(Wrap { trim: false })
-        .remove_modifier(Modifier::BOLD)
-        .scroll((state.popup_offset_path, 0))
-        .render(
-            left.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
-
-    Paragraph::new(value)
-        .wrap(Wrap { trim: false })
-        .remove_modifier(Modifier::BOLD)
-        .scroll((state.popup_offset_value, 0))
-        .render(
-            right.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
-}
-
 pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
     Clear.render(area, buf);
     Block::new()
@@ -221,38 +133,7 @@ pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
         .render(area, buf);
 
     let mut txt = "\nA file already exists in the path(s) in the orange box(es).\nThe file(s) will be overwritten if you continue.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
-    let width: f32 = 50 as f32 / (area.width as f32 - 2.0);
-
-    let vertical_margin;
-    if area.height >= 4 && width <= 1.0 {
-        vertical_margin = (area.height - 4) / 2;
-    } else {
-        txt = "\n".to_owned() + &txt;
-        vertical_margin = 0;
-    }
-
-    Paragraph::new(txt)
-    .centered()
-    .alignment(Alignment::Center)
-    .wrap(Wrap { trim: false })
-    .render(
-        area.inner(&Margin {
-            vertical: vertical_margin,
-            horizontal: 2,
-        }),
-        buf,
-    );
-}
-
-pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
-    Clear.render(area, buf);
-    Block::new()
-        .style(Style::default().fg(Color::Red).bg(Color::Black))
-        .borders(Borders::ALL)
-        .render(area, buf);
-
-    let mut txt = "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
-    let width: f32 = 50 as f32 / (area.width as f32 - 2.0);
+    let width: f32 = 50_f32 / (area.width as f32 - 2.0);
 
     let vertical_margin;
     if area.height >= 4 && width <= 1.0 {
@@ -266,8 +147,42 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         .centered()
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: false })
-        .render(area.inner(&Margin {
-            vertical: vertical_margin,
-            horizontal: 1,
-        }), buf);
+        .render(
+            area.inner(&Margin {
+                vertical: vertical_margin,
+                horizontal: 2,
+            }),
+            buf,
+        );
+}
+
+pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
+    Clear.render(area, buf);
+    Block::new()
+        .style(Style::default().fg(Color::Red).bg(Color::Black))
+        .borders(Borders::ALL)
+        .render(area, buf);
+
+    let mut txt = "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let width: f32 = 50_f32 / (area.width as f32 - 2.0);
+
+    let vertical_margin;
+    if area.height >= 4 && width <= 1.0 {
+        vertical_margin = (area.height - 4) / 2;
+    } else {
+        txt = "\n".to_owned() + &txt;
+        vertical_margin = 0;
+    }
+
+    Paragraph::new(txt)
+        .centered()
+        .alignment(Alignment::Center)
+        .wrap(Wrap { trim: false })
+        .render(
+            area.inner(&Margin {
+                vertical: vertical_margin,
+                horizontal: 1,
+            }),
+            buf,
+        );
 }

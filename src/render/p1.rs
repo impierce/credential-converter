@@ -193,13 +193,13 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         let tabs_slice =
             &tabs[(state.language as usize - (tabs_center.width as usize / 6) + 1)..state.language as usize + 1];
         let tabs_vec: Vec<String> = tabs_slice.iter().map(|s| s.to_string()).collect();
-        let selected_tab;
-        if tabs_center.width / 6 < 1 {
-            selected_tab = 0;
-        }
-        else {
-            selected_tab = tabs_center.width as usize / 6 - 1;
-        }
+
+        let selected_tab = if tabs_center.width / 6 < 1 {
+            0
+        } else {
+            tabs_center.width as usize / 6 - 1
+        };
+
         Tabs::new(tabs_vec)
             .style(Style::default().fg(Color::White))
             .highlight_style(Color::Yellow)

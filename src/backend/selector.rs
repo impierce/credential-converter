@@ -9,7 +9,7 @@ use crate::{
 };
 
 pub fn selector(state: &mut AppState) {
-    let selected_transformations = vec![
+    let selected_transformations = [
         vec![Transformations::DirectCopy],
         state.selected_transformations.clone(),
     ]
@@ -32,7 +32,7 @@ pub fn selector(state: &mut AppState) {
                 type_: OneToOne::toLowerCase,
                 source: DataLocation {
                     format: input_format.clone(),
-                    path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
+                    path: JsonPath::from(JsonPointer(source_pointer)).to_string(),
                 },
                 destination: DataLocation {
                     format: output_format.clone(),
@@ -43,7 +43,7 @@ pub fn selector(state: &mut AppState) {
                 type_: OneToOne::toUpperCase,
                 source: DataLocation {
                     format: input_format.clone(),
-                    path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
+                    path: JsonPath::from(JsonPointer(source_pointer)).to_string(),
                 },
                 destination: DataLocation {
                     format: output_format.clone(),
@@ -54,7 +54,7 @@ pub fn selector(state: &mut AppState) {
                 type_: OneToOne::copy,
                 source: DataLocation {
                     format: input_format.clone(),
-                    path: JsonPath::try_from(JsonPointer(source_pointer)).unwrap().to_string(),
+                    path: JsonPath::from(JsonPointer(source_pointer)).to_string(),
                 },
                 destination: DataLocation {
                     format: output_format.clone(),

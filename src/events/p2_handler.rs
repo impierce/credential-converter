@@ -121,69 +121,65 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             event::MouseEventKind::ScrollDown => {
                 // Scroll through input/output fields
                 if !state.popup_mapping_p2_p3 {
-                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_input_field <= state.amount_input_fields {
-                            state.selected_input_field += 1;
-                        }
-                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_missing_field <= state.amount_missing_fields {
-                            state.selected_missing_field += 1;
-                        }
+                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row)
+                        && state.selected_input_field <= state.amount_input_fields
+                    {
+                        state.selected_input_field += 1;
+                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
+                        && state.selected_missing_field <= state.amount_missing_fields
+                    {
+                        state.selected_missing_field += 1;
                     }
                 }
                 // Scroll within tabs of the view popup
-                else {
-                    if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_path < state.popup_amount_lines_path as u16 {
-                            state.popup_offset_path += 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_value < state.popup_amount_lines_value as u16 {
-                            state.popup_offset_value += 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_output_path < state.popup_amount_lines_output_path as u16 {
-                            state.popup_offset_output_path += 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_result < state.popup_amount_lines_result as u16 {
-                            state.popup_offset_result += 1;
-                        }
-                    }
+                else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_path < state.popup_amount_lines_path as u16
+                {
+                    state.popup_offset_path += 1;
+                } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_value < state.popup_amount_lines_value as u16
+                {
+                    state.popup_offset_value += 1;
+                } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_output_path < state.popup_amount_lines_output_path as u16
+                {
+                    state.popup_offset_output_path += 1;
+                } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_result < state.popup_amount_lines_result as u16
+                {
+                    state.popup_offset_result += 1;
                 }
             }
             event::MouseEventKind::ScrollUp => {
                 // Scroll through input/output fields
                 if !state.popup_mapping_p2_p3 {
-                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_input_field > 1 {
-                            state.selected_input_field -= 1;
-                        }
-                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row) {
-                        if state.selected_missing_field > 1 {
-                            state.selected_missing_field -= 1;
-                        }
+                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row)
+                        && state.selected_input_field > 1
+                    {
+                        state.selected_input_field -= 1;
+                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
+                        && state.selected_missing_field > 1
+                    {
+                        state.selected_missing_field -= 1;
                     }
                 }
                 // Scroll within tabs of the view popup
-                else {
-                    if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_path > 0 {
-                            state.popup_offset_path -= 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_value > 0 {
-                            state.popup_offset_value -= 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_output_path > 0 {
-                            state.popup_offset_output_path -= 1;
-                        }
-                    } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row) {
-                        if state.popup_offset_result > 0 {
-                            state.popup_offset_result -= 1;
-                        }
-                    }
+                else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_path > 0
+                {
+                    state.popup_offset_path -= 1;
+                } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_value > 0
+                {
+                    state.popup_offset_value -= 1;
+                } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_output_path > 0
+                {
+                    state.popup_offset_output_path -= 1;
+                } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
+                    && state.popup_offset_result > 0
+                {
+                    state.popup_offset_result -= 1;
                 }
             }
             event::MouseEventKind::Up(_) => {
@@ -301,16 +297,17 @@ pub fn update_repository(state: &mut AppState) {
     let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
     trace_dbg!(&pointer);
 
-    let mut json_value = state.repository.get_mut(&output_format).unwrap();
+    let json_value = state.repository.get_mut(&output_format).unwrap();
 
     let mut leaf_node = construct_leaf_node(&pointer);
 
-    leaf_node
-        .pointer_mut(&pointer)
-        .map(|value| *value = serde_json::from_str(&source_value).unwrap());
+    if let Some(value) = leaf_node.pointer_mut(&pointer) {
+        *value = serde_json::from_str(&source_value).unwrap();
+    }
+
     trace_dbg!(&leaf_node);
 
-    merge(&mut json_value, leaf_node);
+    merge(json_value, leaf_node);
     trace_dbg!(json_value);
 }
 
@@ -360,7 +357,7 @@ pub fn handle_left(state: &mut AppState) {
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
         if state.selected_transformation > 0 {
             state.selected_transformation -= 1;
-        } else if state.selected_transformations.len() > 0 {
+        } else if state.selected_transformations.is_empty() {
             state.selected_transformation = state.selected_transformations.len() - 1;
         }
     }
@@ -457,7 +454,10 @@ fn handle_enter(state: &mut AppState) {
                     }
                 }
                 // Select a transformation
-                else if state.mapping_option == MappingOptions::Transformations && !state.selected_transformations_tab && !state.selected_transformations.contains(&state.transformations) {
+                else if state.mapping_option == MappingOptions::Transformations
+                    && !state.selected_transformations_tab
+                    && !state.selected_transformations.contains(&state.transformations)
+                {
                     state.selected_transformations.push(state.transformations);
                 }
                 // Complete a mapping from the view popup
@@ -530,8 +530,7 @@ fn handle_enter(state: &mut AppState) {
                 // Open Popup
                 if !state.popup_mapping_p2_p3 {
                     state.popup_mapping_p2_p3 = true;
-                }
-                else {
+                } else {
                     state.popup_mapping_p2_p3 = false;
                     state.selected_transformations_tab = false;
                     state.select_mapping_option = true;

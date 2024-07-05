@@ -60,16 +60,16 @@ impl Repository {
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 
-                let mut destination_credential = self.entry(destination_format).or_insert(json!({}));
+                let destination_credential = self.entry(destination_format).or_insert(json!({}));
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-                leaf_node
-                    .pointer_mut(&pointer)
-                    .map(|value| *value = transformation.apply(source_value));
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(source_value);
+                }
 
-                merge(&mut destination_credential, leaf_node);
+                merge(destination_credential, leaf_node);
             }
             Transformation::ManyToOne {
                 type_: transformation,
@@ -86,16 +86,16 @@ impl Repository {
                     })
                     .collect::<Vec<_>>();
 
-                let mut destination_credential = self.entry(destination.format).or_insert(json!({}));
+                let destination_credential = self.entry(destination.format).or_insert(json!({}));
                 let pointer = JsonPointer::try_from(JsonPath(destination.path.clone())).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-                leaf_node
-                    .pointer_mut(&pointer)
-                    .map(|value| *value = transformation.apply(source_values));
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(source_values);
+                }
 
-                merge(&mut destination_credential, leaf_node);
+                merge(destination_credential, leaf_node);
             }
 
             _ => todo!(),

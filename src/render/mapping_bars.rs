@@ -51,7 +51,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
         Tabs::new(selected_transformations)
             .style(Style::default().fg(Color::White).bg(Color::DarkGray))
             .highlight_style(active_style_selected_tab)
-            .select(state.selected_transformation as usize)
+            .select(state.selected_transformation)
             .divider("")
             .render(selected, buf);
     }
@@ -129,9 +129,7 @@ pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState,
         _ => {}
     }
 
-    Paragraph::new(" Clear ")
-        .style(clear_style)
-        .render(clear, buf);
+    Paragraph::new(" Clear ").style(clear_style).render(clear, buf);
     Paragraph::new(" View ").style(view_style).render(view, buf);
 }
 
