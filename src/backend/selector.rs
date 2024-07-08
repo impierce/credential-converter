@@ -50,6 +50,8 @@ pub fn selector(state: &mut AppState) {
                     path: destination_path.to_string(),
                 },
             },
+            // This clippy warning is known, this body is for 'DirectCopy' and all others until they
+            // get their own branches
             Transformations::DirectCopy | _ => Transformation::OneToOne {
                 type_: OneToOne::copy,
                 source: DataLocation {
