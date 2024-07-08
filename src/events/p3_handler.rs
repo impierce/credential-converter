@@ -2,10 +2,7 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::selector::selector,
-    p2_handler::{handle_left, handle_right, handle_tab, update_repository},
-    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
-    trace_dbg,
+    backend::{repository::update_repository, selector::selector}, p2_p3_common::{handle_esc, handle_left, handle_right, handle_tab}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
@@ -14,24 +11,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    // Close popup mapping and reset scroll offsets
-                    if state.popup_mapping_p2_p3 {
-                        state.popup_mapping_p2_p3 = false;
-                        state.popup_offset_path = 0;
-                        state.popup_offset_value = 0;
-                        state.popup_offset_output_path = 0;
-                        state.popup_offset_result = 0;
-                    }
-                    // clear mapping
-                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
-                        state.select_mapping_option = true;
-                        state.selected_transformations_tab = false;
-                        state.selected_transformations.clear();
-                        state.transformations = Transformations::LowerCase;
-                        state.mapping_option = MappingOptions::DirectCopy;
-                    }
-                    // Close program
-                    else {
+                    if handle_esc(state) {
                         return Ok(true);
                     }
                 }
