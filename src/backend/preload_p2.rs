@@ -44,7 +44,7 @@ pub fn preload_p2(state: &mut AppState) {
     // Load the mapping file
     {
         let rdr = std::fs::File::open(&state.mapping_path).unwrap();
-        let mut transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+        let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
 
         trace_dbg!("Successfully loaded the mapping file");
 
@@ -66,7 +66,7 @@ pub fn preload_p2(state: &mut AppState) {
     trace_dbg!(&state.repository);
     let json_value = state.repository.get(&output_format).unwrap().clone();
 
-    state.missing_data_fields = vec![
+    state.missing_data_fields = [
         vec![("".to_string(), "".to_string())],
         match state.mapping.output_format().as_str() {
             "OBv3" => get_missing_data_fields::<AchievementCredential>(json_value.clone()),
@@ -119,11 +119,7 @@ where
                 }
 
                 if error_message.starts_with("data did not match any variant of untagged enum") {
-                    let pointer = if path == "/" {
-                        format!("{path}")
-                    } else {
-                        format!("/{path}")
-                    };
+                    let pointer = if path == "/" { path } else { format!("/{path}") };
 
                     let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -137,11 +133,7 @@ where
                 }
 
                 if error_message.starts_with("input contains invalid characters") {
-                    let pointer = if path == "/" {
-                        format!("{path}")
-                    } else {
-                        format!("/{path}")
-                    };
+                    let pointer = if path == "/" { path } else { format!("/{path}") };
 
                     let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -158,11 +150,7 @@ where
                 }
 
                 if error_message.starts_with("invalid value") {
-                    let pointer = if path == "/" {
-                        format!("{path}")
-                    } else {
-                        format!("/{path}")
-                    };
+                    let pointer = if path == "/" { path } else { format!("/{path}") };
 
                     let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -188,11 +176,7 @@ where
                     let pointer = if error_message.contains("invalid type: map")
                         && error_message.contains("expected a sequence")
                     {
-                        let pointer = if path == "/" {
-                            format!("{path}")
-                        } else {
-                            format!("/{path}")
-                        };
+                        let pointer = if path == "/" { path } else { format!("/{path}") };
 
                         let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -206,13 +190,10 @@ where
                         // json_as_string = json_value.to_string();
 
                         return Err(format!("{pointer}/0"));
+                    } else if path == "/" {
+                        path
                     } else {
-                        let pointer = if path == "/" {
-                            format!("{path}")
-                        } else {
-                            format!("/{path}")
-                        };
-                        pointer
+                        format!("/{path}")
                     };
 
                     return Err(pointer);
@@ -224,12 +205,10 @@ where
     }
 }
 
-pub fn get_missing_data_fields<T>(json_value: Value) -> Vec<String>
+pub fn get_missing_data_fields<T>(mut temp_credential: Value) -> Vec<String>
 where
     T: DeserializeOwned + Serialize,
 {
-    let mut temp_credential = &mut json_value.clone();
-
     let mut missing_data_fields = vec![];
     while let Err(pointer) = verify::<T>(&mut temp_credential) {
         trace_dbg!(&temp_credential);
@@ -246,13 +225,6 @@ where
     }
 
     missing_data_fields
-}
-
-#[test]
-fn test() {
-    let temp_credential = json!({});
-
-    let missing_data_fields = get_missing_data_fields::<EuropassEdcCredential>(temp_credential.clone());
 }
 
 fn extract_string_value(input: &str) -> Option<&str> {

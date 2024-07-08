@@ -23,9 +23,9 @@ impl Deref for JsonPointer {
     }
 }
 
-impl Into<JsonPath> for JsonPointer {
-    fn into(self) -> JsonPath {
-        JsonPath(format!("${}", self.0.replace("/", ".")))
+impl From<JsonPointer> for JsonPath {
+    fn from(val: JsonPointer) -> JsonPath {
+        JsonPath(format!("${}", val.replace('/', ".")))
     }
 }
 
@@ -33,6 +33,6 @@ impl TryFrom<JsonPath> for JsonPointer {
     type Error = String;
 
     fn try_from(value: JsonPath) -> Result<Self, Self::Error> {
-        Ok(JsonPointer(value.0.trim_start_matches("$").replace(".", "/")))
+        Ok(JsonPointer(value.0.trim_start_matches('$').replace('.', "/")))
     }
 }

@@ -58,6 +58,7 @@ fn main() -> Result<()> {
             state.area = area;
             render_page(frame, area, &mut state);
         })?;
+
         if events_handler(&mut state)? {
             break;
         };

@@ -28,25 +28,7 @@ impl OneToOne {
                     value
                 }
             }
-            _ => {value}
-        }
-    }
-
-    pub fn slice(&self, value: Value, slice: (usize, usize)) -> Value {
-        match self {
-            OneToOne::slice => {
-                if let Value::String(s) = &value {
-                    if slice.0 <= slice.1 {
-                        Value::String(s.chars().skip(slice.0).take(slice.1 - slice.0).collect())
-                    } else {
-                        value
-                    }
-                }
-                else {
-                    value
-                }
-            },
-            _ => {value}
+            _ => value,
         }
     }
 }
@@ -55,20 +37,6 @@ impl OneToOne {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OneToMany {
     split,
-}
-
-impl OneToMany {
-    pub fn apply(&self, value: Value) -> Vec<Value> {
-        match self {
-            OneToMany::split => {
-                if let Value::String(s) = value {
-                    s.split(',').map(|s| Value::String(s.to_string())).collect()
-                } else {
-                    vec![value]
-                }
-            }
-        }
-    }
 }
 
 #[allow(non_camel_case_types)]

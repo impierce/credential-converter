@@ -5,12 +5,7 @@ use crate::state::AppState;
 pub fn render_end_p4(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new().style(Style::default().fg(Color::White)).render(area, buf);
 
-    let vertical_margin;
-    if area.height >= 3 {
-        vertical_margin = (area.height - 3) / 2;
-    } else {
-        vertical_margin = 0;
-    }
+    let vertical_margin = if area.height >= 3 { (area.height - 3) / 2 } else { 0 };
 
     let txt = format!(
         "The mapping has been completed.
