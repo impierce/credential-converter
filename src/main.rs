@@ -2,6 +2,7 @@ mod backend;
 mod events;
 mod render;
 mod state;
+mod translations;
 
 use crate::events::*;
 use crate::render::*;
@@ -48,7 +49,6 @@ fn main() -> Result<()> {
         selected_missing_field: 1, // todo: what if none?
         selected_optional_field: 1, // todo: what if none?
         select_mapping_option: true,
-
         ..Default::default()
     };
 
