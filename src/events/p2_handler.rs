@@ -2,7 +2,7 @@ use super::is_mouse_over_area;
 use crate::{
     backend::{
         repository::update_repository, selector::selector
-    }, p2_p3_common::{handle_esc, handle_left, handle_right, handle_tab}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
+    }, p2_p3_common::{handle_backspace, handle_char, handle_down, handle_esc, handle_f2, handle_left, handle_right, handle_tab, handle_up}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
 };
 
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
@@ -17,34 +17,13 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     }
                 }
                 Backspace => {
-                    // Delete a selected transformation from the list of selected transformations
-                    if state.selected_transformations_tab && !state.selected_transformations.is_empty() {
-                        state.selected_transformations.remove(state.selected_transformation);
-                        if state.selected_transformation > 0 {
-                            state.selected_transformation -= 1;
-                        }
-                    }
-                    // Delete a character from the dividers
-                    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && state.mapping_option == MappingOptions::OneToMany
-                    {
-                        state.dividers.pop();
-                    }
+                    handle_backspace(state);
                 }
                 Tab => {
                     handle_tab(state);
                 }
                 F(2) => {
-                    // Check if inside Transformations bar on the selected_transformations tab and switch to the transformations tab
-                    if state.p2_p3_tabs == P2P3Tabs::MappingOptions
-                        && !state.select_mapping_option
-                        && state.mapping_option == MappingOptions::Transformations
-                        && state.selected_transformations_tab
-                    {
-                        state.selected_transformations_tab = false;
-                    } else {
-                        state.p2_p3_tabs.prev();
-                    }
+                    handle_f2(state);
                 }
                 Left => {
                     handle_left(state);
@@ -52,41 +31,17 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Right => {
                     handle_right(state);
                 }
-                Up => match state.p2_p3_tabs {
-                    // Scroll up through input or output fields
-                    P2P3Tabs::InputFields => {
-                        if state.selected_input_field > 1 {
-                            state.selected_input_field -= 1;
-                        }
-                    }
-                    P2P3Tabs::OutputFields => {
-                        if state.selected_missing_field > 1 {
-                            state.selected_missing_field -= 1;
-                        }
-                    }
-                    _ => {}
-                },
-                Down => match state.p2_p3_tabs {
-                    // Scroll down through input or output fields
-                    P2P3Tabs::InputFields => {
-                        if state.selected_input_field <= state.amount_input_fields {
-                            state.selected_input_field += 1;
-                        }
-                    }
-                    P2P3Tabs::OutputFields => {
-                        if state.selected_missing_field <= state.amount_missing_fields {
-                            state.selected_missing_field += 1;
-                        }
-                    }
-                    _ => {}
-                },
+                Up => {
+                    handle_up(state);
+                }
+                Down => {
+                    handle_down(state);
+                }
                 Enter => {
                     handle_enter(state);
                 }
                 Char(char) => {
-                    if state.popup_mapping_p2_p3 && state.mapping_option == MappingOptions::OneToMany {
-                        state.dividers.push(char);
-                    }
+                    handle_char(state, char);
                 }
                 _ => {}
             }
