@@ -1,4 +1,7 @@
-use crate::state::{AppState, P2P3Tabs};
+use crate::{
+    state::{AppState, P2P3Tabs},
+    translations::translate,
+};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -7,7 +10,12 @@ use ratatui::{
 };
 
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let tabs = vec![" LowerCase", "UpperCase", "Slice", "Regex"];
+    let tabs = [
+        format!(" {}", translate("lower_case")),
+        translate("upper_case").to_string(),
+        translate("slice").to_string(),
+        "Regex".to_string(),
+    ];
 
     let [transformations, selected, clear, view] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
@@ -60,7 +68,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
 }
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let txt = "  Enter a divider, or select indices manually: ";
+    let txt = format!("  {} ", translate("enter_divider"));
     let [txt_area, dividers, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16),
         Constraint::Percentage(100),
@@ -75,7 +83,8 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 
     // Display italic instructions to be overwritten by user input for dividers.
     if state.dividers.is_empty() {
-        Paragraph::new(" Select the output fields in the right tab")
+        let txt = format!("{} ", translate("select_output"));
+        Paragraph::new(txt)
             .style(
                 Style::default()
                     .fg(Color::Black)
@@ -93,7 +102,7 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 }
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
-    let txt = "  Select multiple fields in the left tab, the result is shown in the right tab. ";
+    let txt = format!("  {} ", translate("select_fields"));
     let [txt_area, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
         Constraint::Length(7),
@@ -129,8 +138,10 @@ pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState,
         _ => {}
     }
 
-    Paragraph::new(" Clear ").style(clear_style).render(clear, buf);
-    Paragraph::new(" View ").style(view_style).render(view, buf);
+    let clear_txt = format!(" {} ", translate("clear"));
+    Paragraph::new(clear_txt).style(clear_style).render(clear, buf);
+    let view_txt = format!(" {} ", translate("view"));
+    Paragraph::new(view_txt).style(view_style).render(view, buf);
 }
 
 // pub fn render_slice_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {

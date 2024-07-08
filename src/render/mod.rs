@@ -16,7 +16,7 @@ use ratatui::{
 };
 use ratatui::prelude::*;
 
-use crate::state::{AppState, Pages};
+use crate::{state::{AppState, Pages}, translations::translate};
 
 pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     let [top, bottom_area] = Layout::vertical(vec![Constraint::Min(0), Constraint::Length(1)]).areas(area);
@@ -55,12 +55,13 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
         .render(left, buf);
 
     let keys = [
-        ("←↓↑→", "Navigate"),
-        ("Tab", "Next Field"),
-        ("F2", "Prev Field"),
-        ("Enter", "Save"),
-        ("Esc", "Quit"),
+        ("←↓↑→", translate("Navigate")),
+        ("Tab", translate("next_fied")),
+        ("F2", translate("prev_field")),
+        ("Enter", translate("save")),
+        ("Esc", translate("quit")),
     ];
+
     let spans: Vec<Span> = keys
         .iter()
         .flat_map(|(key, desc)| {
@@ -88,7 +89,7 @@ fn render_prev_page_button(area: Rect, buf: &mut Buffer) {
 
 fn render_complete_button(area: Rect, buf: &mut Buffer) {
     Block::default()
-        .title(" Complete ")
+        .title(format!(" {} ", translate("complete")))
         .style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))
         .title_alignment(Alignment::Center)
         .render(area, buf);
