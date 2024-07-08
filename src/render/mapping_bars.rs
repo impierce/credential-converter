@@ -11,8 +11,8 @@ use ratatui::{
 
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = [
-        format!(" {}", translate("lower_case")),
-        translate("upper_case").to_string(),
+        format!(" {}", translate("lowercase")),
+        translate("uppercase").to_string(),
         translate("slice").to_string(),
         "Regex".to_string(),
     ];
@@ -47,7 +47,11 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
         .select(state.transformations as usize - 1) // todo: this ' - 1 ' is due to the fact i didn't want to dive into the backend just yet, which is depending on a "Copy" variant in the fn selector to complete a mapping. This means "Copy" is not shown in the tabber, but does exist in the enum Transformations
         .divider("")
         .render(transformations, buf);
-    let selected_transformations: Vec<String> = state.selected_transformations.iter().map(|x| x.to_string()).collect();
+    let selected_transformations: Vec<String> = state
+        .selected_transformations
+        .iter()
+        .map(|x| translate(x.to_string().to_lowercase().as_str()).to_string())
+        .collect();
     // if no transformations selected to show and tab is active, show a yellow cursor
     if selected_transformations.is_empty() && state.selected_transformations_tab {
         Tabs::new(vec![" __"])

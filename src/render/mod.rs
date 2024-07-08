@@ -55,8 +55,8 @@ fn render_bottom_bar(area: Rect, buf: &mut Buffer) {
         .render(left, buf);
 
     let keys = [
-        ("←↓↑→", translate("Navigate")),
-        ("Tab", translate("next_fied")),
+        ("←↓↑→", translate("navigate")),
+        ("Tab", translate("next_field")),
         ("F2", translate("prev_field")),
         ("Enter", translate("save")),
         ("Esc", translate("quit")),
