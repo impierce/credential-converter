@@ -1,4 +1,7 @@
-use crate::{backend::selector::selector, state::AppState, translations::translate};
+use crate::{
+    backend::selector::selector,
+    state::{translate, AppState},
+};
 
 use ratatui::{
     buffer::Buffer,
@@ -36,21 +39,21 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .render(left_top, buf);
 
     Block::new()
-        .title(format!("  {}  ", translate("output_path"))) 
+        .title(format!("  {}  ", translate("output_path")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .borders(Borders::BOTTOM)
         .render(right_top, buf);
 
     Block::new()
-        .title(format!("  {}  ", translate("input_value"))) 
+        .title(format!("  {}  ", translate("input_value")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .borders(Borders::RIGHT)
         .border_type(BorderType::Thick)
         .render(left_bottom, buf);
     Block::new()
-        .title(format!("  {}  ", translate("output_result"))) 
+        .title(format!("  {}  ", translate("output_result")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .render(right_bottom, buf);

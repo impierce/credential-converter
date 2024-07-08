@@ -1,6 +1,6 @@
 use ratatui::{buffer::Buffer, layout::Rect, prelude::*, widgets::*};
 
-use crate::{state::AppState, translations::translate};
+use crate::state::{translate, AppState};
 
 pub fn render_end_p4(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new().style(Style::default().fg(Color::White)).render(area, buf);

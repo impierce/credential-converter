@@ -1,8 +1,7 @@
 use crate::{
     popups::render_popup_overwrite_warning,
-    state::{AppState, P1Prompts},
+    state::{translate, AppState, P1Prompts},
     trace_dbg,
-    translations::translate,
 };
 use ratatui::{
     buffer::Buffer,

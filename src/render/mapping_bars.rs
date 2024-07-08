@@ -1,7 +1,4 @@
-use crate::{
-    state::{AppState, P2P3Tabs},
-    translations::translate,
-};
+use crate::state::{translate, AppState, P2P3Tabs};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},

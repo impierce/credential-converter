@@ -3,8 +3,7 @@ use crate::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
     popups::{render_popup_mapping, render_popup_uncompleted_warning_p2},
-    state::{AppState, MappingOptions, P2P3Tabs},
-    translations::translate,
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
 
 use ratatui::{
