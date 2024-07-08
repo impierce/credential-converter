@@ -17,10 +17,10 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     let [right_top, right_bottom] =
         Layout::vertical(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(right);
 
-    state.popup_path_area_p2 = left_top;
-    state.popup_output_path_p2 = right_top;
-    state.popup_value_area_p2 = left_bottom;
-    state.popup_output_result_p2 = right_bottom;
+    state.popup_path_area = left_top;
+    state.popup_output_path = right_top;
+    state.popup_value_area = left_bottom;
+    state.popup_output_result = right_bottom;
 
     selector(state);
 

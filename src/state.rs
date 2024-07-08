@@ -70,12 +70,12 @@ pub struct AppState {
     // Areas for scrolling
     pub selector_area_p2_p3: Rect,
     pub output_fields_area_p2_p3: Rect,
-    pub popup_path_area_p2: Rect,
-    pub popup_value_area_p2: Rect,
+    pub popup_path_area: Rect,
+    pub popup_value_area: Rect,
     // pub popup_input_path_p2: Rect,
-    pub popup_output_path_p2: Rect,
+    pub popup_output_path: Rect,
     // pub popup_input_value_p2: Rect,
-    pub popup_output_result_p2: Rect,
+    pub popup_output_result: Rect,
 
     // Areas for clicking
     pub clear_button: Rect,

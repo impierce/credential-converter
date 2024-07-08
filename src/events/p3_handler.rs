@@ -1,8 +1,10 @@
-use std::io::Write;
-
-use super::is_mouse_over_area;
 use crate::{
-    backend::{repository::update_repository, selector::selector}, p2_p3_common::{handle_backspace, handle_char, handle_down, handle_esc, handle_f2, handle_left, handle_right, handle_tab, handle_up}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
+    backend::{repository::update_repository, selector::selector},
+    p2_p3_common::{
+        handle_backspace, handle_char, handle_down, handle_esc, handle_f2, handle_left, handle_mouse_up, handle_right, handle_scroll_down, handle_scroll_up, handle_tab, handle_up
+    },
+    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
+    trace_dbg,
 };
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 
@@ -35,7 +37,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 }
                 Down => {
                     handle_down(state);
-                },
+                }
                 Enter => {
                     handle_enter_p3(state);
                 }
@@ -49,167 +51,13 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
     if let event::Event::Mouse(mouse_event) = event {
         match mouse_event.kind {
             event::MouseEventKind::ScrollDown => {
-                // Scroll through input/output fields
-                if !state.popup_mapping_p2_p3 {
-                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row)
-                        && state.selected_input_field <= state.amount_input_fields
-                    {
-                        state.selected_input_field += 1;
-                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
-                        && state.selected_missing_field <= state.amount_missing_fields
-                    {
-                        state.selected_missing_field += 1;
-                    }
-                }
-                // Scroll within tabs of the view popup
-                else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_path < state.popup_amount_lines_path as u16
-                {
-                    state.popup_offset_path += 1;
-                } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_value < state.popup_amount_lines_value as u16
-                {
-                    state.popup_offset_value += 1;
-                } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_output_path < state.popup_amount_lines_output_path as u16
-                {
-                    state.popup_offset_output_path += 1;
-                } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_result < state.popup_amount_lines_result as u16
-                {
-                    state.popup_offset_result += 1;
-                }
+                handle_scroll_down(state, mouse_event);
             }
             event::MouseEventKind::ScrollUp => {
-                // Scroll through input/output fields
-                if !state.popup_mapping_p2_p3 {
-                    if is_mouse_over_area(state.selector_area_p2_p3, mouse_event.column, mouse_event.row)
-                        && state.selected_input_field > 1
-                    {
-                        state.selected_input_field -= 1;
-                    } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
-                        && state.selected_missing_field > 1
-                    {
-                        state.selected_missing_field -= 1;
-                    }
-                }
-                // Scroll within tabs of the view popup
-                else if is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_path > 0
-                {
-                    state.popup_offset_path -= 1;
-                } else if is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_value > 0
-                {
-                    state.popup_offset_value -= 1;
-                } else if is_mouse_over_area(state.popup_output_path_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_output_path > 0
-                {
-                    state.popup_offset_output_path -= 1;
-                } else if is_mouse_over_area(state.popup_output_result_p2, mouse_event.column, mouse_event.row)
-                    && state.popup_offset_result > 0
-                {
-                    state.popup_offset_result -= 1;
-                }
+                handle_scroll_up(state, mouse_event);
             }
             event::MouseEventKind::Up(_) => {
-                if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-                    trace_dbg!(state.missing_data_fields.len() - 1);
-                    trace_dbg!(state.completed_missing_fields.len());
-
-                    state.popup_mapping_p2_p3 = false;
-                    state.transformations = Transformations::LowerCase;
-                    state.selected_transformations_tab = false;
-                    state.select_mapping_option = true;
-                    state.selected_transformation = 0;
-                    state.selected_transformations.clear();
-                    state.page.next();
-
-                    let output_format = state.mapping.output_format();
-                    let json_value = state.repository.get_mut(&output_format).unwrap();
-
-                    // Create Output File
-                    let mut file = std::fs::File::create(&state.output_path).unwrap();
-                    file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
-                        .unwrap();
-
-                    // Create Mapping File
-                    let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
-                    file.write_all(serde_json::to_string_pretty(&state.mappings).unwrap().as_bytes())
-                        .unwrap();
-                } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
-                    state.popup_mapping_p2_p3 = true;
-                } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
-                    // Close popup if open.
-                    if state.popup_mapping_p2_p3 {
-                        state.popup_mapping_p2_p3 = false;
-                    }
-                    // If mapping options have been chosen, clear mapping options.
-                    else if !state.select_mapping_option {
-                        state.transformations = Transformations::LowerCase;
-                        state.selected_transformations.clear();
-                        state.mapping_option = MappingOptions::DirectCopy;
-                        state.selected_transformations_tab = false;
-                        state.select_mapping_option = true;
-                    }
-                    // Clear selected missing field
-                    else {
-                        state.missing_data_fields[state.selected_missing_field].1.clear();
-
-                        state.transformations = Transformations::LowerCase;
-                        state.selected_transformations.clear();
-                        state.mapping_option = MappingOptions::DirectCopy;
-                        state.selected_transformations_tab = false;
-                        state.select_mapping_option = true;
-                    }
-                } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
-                    state.popup_mapping_p2_p3 = false;
-                    state.selected_transformations_tab = false;
-                    state.select_mapping_option = true;
-                    state.selected_transformations.clear();
-                    state.popup_offset_path = 0;
-                    state.popup_offset_value = 0;
-                    state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                    if !state.completed_input_fields.contains(&state.selected_input_field) {
-                        state.completed_input_fields.push(state.selected_input_field);
-                    }
-                    if !state.completed_missing_fields.contains(&state.selected_missing_field) {
-                        state.completed_missing_fields.push(state.selected_missing_field);
-                    }
-                    state.missing_data_fields[state.selected_missing_field].1 =
-                        state.candidate_data_value.clone().unwrap();
-                    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                    trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
-                } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
-                    if state.popup_mapping_p2_p3 {
-                        state.popup_mapping_p2_p3 = false;
-                    } else if state.uncompleted_warning {
-                        state.uncompleted_warning = false;
-                    } else {
-                        state.select_mapping_option = true;
-                        state.selected_transformation = 0;
-                        state.selected_input_field = 1;
-                        state.selected_transformations.clear();
-                        state.transformations = Transformations::LowerCase;
-
-                        state.page.prev();
-                    }
-                } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
-                    && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
-                {
-                    state.popup_mapping_p2_p3 = false;
-                    state.popup_offset_path = 0;
-                    state.popup_offset_value = 0;
-                } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
-                    state.page.prev();
-                } else if !is_mouse_over_area(state.popup_path_area_p2, mouse_event.column, mouse_event.row)
-                    && !is_mouse_over_area(state.popup_value_area_p2, mouse_event.column, mouse_event.row)
-                {
-                    state.popup_mapping_p2_p3 = false;
-                    state.popup_offset_path = 0;
-                    state.popup_offset_value = 0;
-                }
+                handle_mouse_up(state, mouse_event);
             }
             _ => {}
         }
