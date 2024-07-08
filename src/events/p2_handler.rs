@@ -357,7 +357,7 @@ pub fn handle_left(state: &mut AppState) {
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions {
         if state.selected_transformation > 0 {
             state.selected_transformation -= 1;
-        } else if state.selected_transformations.is_empty() {
+        } else if !state.selected_transformations.is_empty() {
             state.selected_transformation = state.selected_transformations.len() - 1;
         }
     }
