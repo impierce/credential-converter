@@ -1,4 +1,7 @@
-use crate::{backend::selector::selector, state::AppState};
+use crate::{
+    backend::selector::selector,
+    state::{translate, AppState},
+};
 
 use ratatui::{
     buffer::Buffer,
@@ -25,7 +28,7 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     selector(state);
 
     Block::new()
-        .title("  Input Path  ")
+        .title(format!("  {}  ", translate("input_path")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .borders(Borders::BOTTOM)
@@ -36,21 +39,21 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .render(left_top, buf);
 
     Block::new()
-        .title("  Output Path  ")
+        .title(format!("  {}  ", translate("output_path")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .borders(Borders::BOTTOM)
         .render(right_top, buf);
 
     Block::new()
-        .title("  Input Value  ")
+        .title(format!("  {}  ", translate("input_value")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .borders(Borders::RIGHT)
         .border_type(BorderType::Thick)
         .render(left_bottom, buf);
     Block::new()
-        .title("  Output Result  ")
+        .title(format!("  {}  ", translate("output_result")))
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .render(right_bottom, buf);
@@ -116,11 +119,12 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         );
 
     let [_top, confirm_area] =
-        Layout::vertical(vec![Constraint::Percentage(100), Constraint::Length(1)]).areas(right_bottom);
+        Layout::vertical([Constraint::Percentage(100), Constraint::Length(1)]).areas(right_bottom);
     let [_left, confirm_area] =
-        Layout::horizontal(vec![Constraint::Percentage(100), Constraint::Length(9)]).areas(confirm_area);
+        Layout::horizontal([Constraint::Percentage(100), Constraint::Length(9)]).areas(confirm_area);
+
     state.confirm_button = confirm_area;
-    Paragraph::new(" Confirm ")
+    Paragraph::new(format!(" {} ", translate("confirm")))
         .style(Style::new().fg(Color::Black).bg(Color::Green))
         .render(confirm_area, buf);
 }
@@ -132,14 +136,14 @@ pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
-    let mut txt = "\nA file already exists in the path(s) in the orange box(es).\nThe file(s) will be overwritten if you continue.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let mut txt = translate("file_exists");
     let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;
     if area.height >= 4 && width <= 1.0 {
         vertical_margin = (area.height - 4) / 2;
     } else {
-        txt = "\n".to_owned() + &txt;
+        txt = format!("\n{}", txt).into();
         vertical_margin = 0;
     }
 
@@ -163,14 +167,14 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
-    let mut txt = "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let mut txt = translate("missing_fields_incomplete");
     let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;
     if area.height >= 4 && width <= 1.0 {
         vertical_margin = (area.height - 4) / 2;
     } else {
-        txt = "\n".to_owned() + &txt;
+        txt = format!("\n{}", txt).into();
         vertical_margin = 0;
     }
 

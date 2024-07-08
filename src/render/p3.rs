@@ -11,13 +11,13 @@ use crate::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
     popups::render_popup_mapping,
-    state::{AppState, MappingOptions, P2P3Tabs},
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
     trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
-        .title("  Unused Data  ")
+        .title(format!("  {}  ", translate("unused_data")))
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
@@ -78,7 +78,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Field", "Value"]).style(Style::new().add_modifier(Modifier::BOLD)))
+            .header(Row::new([translate("field"), translate("value")]).style(Style::new().add_modifier(Modifier::BOLD)))
             .highlight_style(inputfields_style),
         left_selector,
         buf,
@@ -104,7 +104,10 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Optional Field", "Result Value"]).style(Style::new().add_modifier(Modifier::BOLD)))
+            .header(
+                Row::new([translate("optional_field"), translate("result_value")])
+                    .style(Style::new().add_modifier(Modifier::BOLD)),
+            )
             .highlight_style(optionalfields_style),
         right_optional_fields,
         buf,
@@ -114,8 +117,14 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
     // Render bottom mapping options bar
     if state.select_mapping_option {
-        let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, clear, view] = Layout::horizontal(vec![
+        let multiplicities = [
+            format!(" {}", translate("direct_copy")),
+            translate("transformations").to_string(),
+            translate("one_to_many").to_string(),
+            translate("many_to_one").to_string(),
+        ];
+
+        let [multiplicity_tabs, clear, view] = Layout::horizontal([
             Constraint::Percentage(100),
             Constraint::Length(7),
             Constraint::Length(6),

@@ -1,6 +1,6 @@
 use crate::{
     popups::render_popup_overwrite_warning,
-    state::{AppState, P1Prompts},
+    state::{translate, AppState, P1Prompts},
     trace_dbg,
 };
 use ratatui::{
@@ -10,8 +10,6 @@ use ratatui::{
     widgets::*,
 };
 use std::path::Path;
-
-use rust_i18n::t;
 
 pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p1
@@ -30,7 +28,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         }));
 
     // Left description area
-    Paragraph::new(t!("intro", pwd = std::env::current_dir().unwrap().display()))
+    Paragraph::new(translate("intro"))
         .wrap(Wrap { trim: true })
         .render(left_description, buf);
 
@@ -49,28 +47,28 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     let [input_path, output_path, mapping_file, mapping, custom_mapping] = input_prompts.areas(prompts_area);
 
     let mut input_prompt = Block::new()
-        .title("  Input Path  ")
+        .title(format!("  {}  ", translate("input_path")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut output_prompt = Block::new()
-        .title("  Output Path  ")
+        .title(format!("  {}  ", translate("output_path")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut mapping_prompt = Block::new()
-        .title("  Choose Mapping  ")
+        .title(format!("  {}  ", translate("choose_mapping")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut mapping_file_prompt = Block::new()
-        .title("  Choose Mapping File  ")
+        .title(format!("  {}  ", translate("choose_mapping_file")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     let mut custom_mapping_prompt = Block::new()
-        .title("  Save Custom Mapping To  ")
+        .title(format!("  {}  ", translate("save_custom_mapping")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
     // Top-left language prompt
     let mut language_prompt = Block::new()
-        .title("  Language Selector  ")
+        .title(format!("  {}  ", translate("language_selector")))
         .title_alignment(Alignment::Center)
         .borders(Borders::ALL);
 
@@ -182,6 +180,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         " EN ", " NL ", " BG ", " CS ", " DA ", " DE ", " EL ", " ES ", " ET ", " FI ", " FR ", " HR ", " HU ", " IS ",
         " IT ", " LT ", " LV ", " PL ", " PT ", " RO ", " RU ", " SK ", " SL ", " SV ",
     ];
+
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
         Constraint::Max(tabs.concat().len() as u16 + 2),

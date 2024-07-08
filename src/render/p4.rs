@@ -1,6 +1,6 @@
 use ratatui::{buffer::Buffer, layout::Rect, prelude::*, widgets::*};
 
-use crate::state::AppState;
+use crate::state::{translate, AppState};
 
 pub fn render_end_p4(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new().style(Style::default().fg(Color::White)).render(area, buf);
@@ -8,11 +8,11 @@ pub fn render_end_p4(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let vertical_margin = if area.height >= 3 { (area.height - 3) / 2 } else { 0 };
 
     let txt = format!(
-        "The mapping has been completed.
-    The output file has been saved to: {}
-    The custom mapping file has been saved to: {}
-    ",
-        state.output_path, state.custom_mapping_path
+        "{}: {}\n{}: {}",
+        translate("mapping_complete_1"),
+        state.output_path,
+        translate("mapping_complete_2"),
+        state.custom_mapping_path
     );
 
     Paragraph::new(txt)
