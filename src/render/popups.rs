@@ -133,7 +133,7 @@ pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
         .render(area, buf);
 
     let mut txt = "\nA file already exists in the path(s) in the orange box(es).\nThe file(s) will be overwritten if you continue.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
-    let width: f32 = 50_f32 / (area.width as f32 - 2.0);
+    let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;
     if area.height >= 4 && width <= 1.0 {
@@ -164,7 +164,7 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         .render(area, buf);
 
     let mut txt = "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
-    let width: f32 = 50_f32 / (area.width as f32 - 2.0);
+    let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;
     if area.height >= 4 && width <= 1.0 {
