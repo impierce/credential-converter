@@ -30,6 +30,7 @@ pub struct AppState {
     pub overwrite_warning: bool,
     pub uncompleted_warning: bool,
     pub popup_mapping_p2_p3: bool,
+    pub exit_warning: bool,
 
     // Mapping options
     pub mapping_option: MappingOptions,

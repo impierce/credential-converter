@@ -12,7 +12,10 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 Esc => {
                     if state.overwrite_warning {
                         state.overwrite_warning = false;
-                    } else {
+                    } else if !state.exit_warning {
+                        state.exit_warning = true;
+                    }
+                    else {
                         return Ok(true);
                     }
                 }

@@ -8,7 +8,12 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
             match key.code {
                 Esc => {
                     if handle_esc(state) {
-                        return Ok(true);
+                        if !state.exit_warning {
+                            state.exit_warning = true;
+                        }
+                        else {
+                            return Ok(true);
+                        }
                     }
                 }
                 Backspace => {

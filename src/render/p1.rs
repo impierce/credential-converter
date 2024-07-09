@@ -1,5 +1,5 @@
 use crate::{
-    popups::render_popup_overwrite_warning,
+    popups::{render_popup_exit_warning, render_popup_overwrite_warning},
     state::{AppState, P1Prompts},
     trace_dbg,
 };
@@ -217,12 +217,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
 
     // Render warning popup at the end so it doesnt get overwritten by previous renders.
     if state.overwrite_warning {
-        render_popup_overwrite_warning(
-            area.inner(&Margin {
-                vertical: 4,
-                horizontal: 28,
-            }),
-            buf,
-        );
+        render_popup_overwrite_warning(area, buf);
+    }
+    // Render warning if user wants to exit.
+    if state.exit_warning {
+        render_popup_exit_warning(area, buf);
     }
 }
