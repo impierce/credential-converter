@@ -160,7 +160,7 @@ pub fn handle_left(state: &mut AppState) {
             state.selected_transformation -= 1;
         }
         // to stop it from crashing when the selected_transformation is empty.
-        else if state.selected_transformations.is_empty() {
+        else if !state.selected_transformations.is_empty() {
             state.selected_transformation = state.selected_transformations.len() - 1;
         }
     }

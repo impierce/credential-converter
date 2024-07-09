@@ -185,6 +185,7 @@ pub enum Transformations {
     #[default]
     LowerCase,
     UpperCase,
+    Slice,
     Regex,
 }
 
