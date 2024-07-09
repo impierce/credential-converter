@@ -4,8 +4,7 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
-    trace_dbg,
+    backend::{repository::update_repository, selector::selector}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
 };
 
 //////////     KEYBOARD EVENTS     //////////
@@ -289,29 +288,7 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
         clear_button(state);
     } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
-        clear_popup(state);
-        state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-        // todo
-        // Input fields can be used multiple times, so it can be pushed multiple times as well.
-        state.completed_input_fields.push(state.selected_input_field);
-
-        if state.page == Pages::ManualMappingP2 {
-            if !state.completed_missing_fields.contains(&state.selected_missing_field) {
-                state.completed_missing_fields.push(state.selected_missing_field);
-            }
-            state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
-        } else {
-            if !state.completed_optional_fields.contains(&state.selected_optional_field) {
-                state.completed_optional_fields.push(state.selected_optional_field);
-            }
-            state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
-        }
-
-        trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-        trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
-
-        clear_mapping_options(state);
+        confirm_mapping(state);
     } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
         if state.popup_mapping_p2_p3 {
             clear_popup(state);
@@ -404,5 +381,138 @@ pub fn clear_button(state: &mut AppState) {
             state
                 .completed_optional_fields
                 .retain(|&x| x != state.selected_optional_field);}
+    }
+}
+
+pub fn confirm_mapping(state: &mut AppState) {
+    clear_popup(state);
+    state.p2_p3_tabs = P2P3Tabs::InputFields;
+
+    if state.page == Pages::ManualMappingP2 {
+        state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
+    } else {
+        state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
+    }
+
+    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+    trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
+    
+    update_repository(state);
+
+    // Save completed fields and move active fields to next field
+    state.completed_input_fields.push(state.selected_input_field);
+    
+    if state.selected_input_field == state.input_fields.len() - 1 {
+        state.selected_input_field = 1;
+    } else {
+        state.selected_input_field += 1;
+    }
+
+    if state.page == Pages::ManualMappingP2 {
+        if !state.completed_missing_fields.contains(&state.selected_missing_field) {
+            state.completed_missing_fields.push(state.selected_missing_field);
+        }
+        if state.selected_missing_field == state.missing_data_fields.len() - 1 {
+            state.selected_missing_field = 1;
+        } else {
+            state.selected_missing_field += 1;
+        }
+    }
+    else {
+        if !state.completed_optional_fields.contains(&state.selected_optional_field) {
+            state.completed_optional_fields.push(state.selected_optional_field);
+        }
+        if state.selected_optional_field == state.optional_fields.len() - 1 {
+            state.selected_optional_field = 1;
+        } else {
+            state.selected_optional_field += 1;
+        }        
+    }
+
+    clear_mapping_options(state);
+}
+
+
+pub fn handle_enter(state: &mut AppState) {
+    // Close warning, reset values and move to next page
+    if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
+        state.uncompleted_warning = false;
+        next_page(state);
+    }
+    else {
+        match state.p2_p3_tabs {
+            P2P3Tabs::MappingOptions => {
+                if state.select_mapping_option {
+                    // Fast-track mapping, Copy to output result value and reset values
+                    if state.mapping_option == MappingOptions::DirectCopy {
+                        selector(state);
+                        confirm_mapping(state);
+                    }
+                    // Switch from mapping options tab to respective tab 
+                    else {
+                        state.select_mapping_option = false;
+                    }
+                }
+                // Select a transformation if it hasn't already been selected
+                else if state.mapping_option == MappingOptions::Transformations
+                    && !state.selected_transformations_tab
+                    && !state.selected_transformations.contains(&state.transformations)
+                {
+                    state.selected_transformations.push(state.transformations);
+                }
+                // If transformation(s) selected open the view popup to show the result.
+                else if state.selected_transformations_tab {
+                    state.popup_mapping_p2_p3 = true;
+                }
+            }
+            P2P3Tabs::Clear => {
+                // Close popup if open.
+                if state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = false;
+                }
+                // If mapping options have been chosen, clear mapping options.
+                else if !state.select_mapping_option {
+                    clear_mapping_options(state);
+                }
+                // Clear selected missing field
+                else {
+                    if state.page == Pages::ManualMappingP2 {
+                        state.missing_data_fields[state.selected_missing_field].1.clear();
+                        state.completed_missing_fields.retain(|&x| x != state.selected_missing_field);
+                    }
+                    else {
+                        state.optional_fields[state.selected_optional_field].1.clear();
+                        state.completed_missing_fields.retain(|&x| x != state.selected_optional_field);
+                    }
+
+                    if let Some(position) = state
+                        .completed_optional_fields
+                        .iter()
+                        .position(|&x| x == state.selected_input_field)
+                    {
+                        state.completed_optional_fields.remove(position);
+                    }
+
+                    clear_mapping_options(state);
+                }
+            }
+            P2P3Tabs::View => {
+                if !state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = true;
+                } else {
+                    confirm_mapping(state)  ;
+                }
+            }
+            _ => { 
+                // Complete a mapping from the view popup
+                if state.popup_mapping_p2_p3 {
+                    confirm_mapping(state);
+                }
+                else {
+                    state.p2_p3_tabs.next();
+                }
+
+            }
+        }
     }
 }
