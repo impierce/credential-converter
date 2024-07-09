@@ -1,7 +1,7 @@
-use crate::backend::{
+use crate::{backend::{
     jsonpointer::{JsonPath, JsonPointer},
     transformations::{DataLocation, Transformation},
-};
+}, state::AppState, trace_dbg};
 use jsonpath_rust::JsonPathFinder;
 use serde_json::{json, Map, Value};
 use std::{
@@ -136,4 +136,33 @@ pub fn merge(a: &mut Value, b: Value) {
         }
         (a, b) => *a = b,
     }
+}
+
+pub fn update_repository(state: &mut AppState) {
+    let output_format = state.mapping.output_format();
+
+    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
+
+    let source_value = state.candidate_data_value.clone().unwrap();
+
+    trace_dbg!(state.selected_missing_field);
+    if state.selected_missing_field == 0 {
+        return;
+    }
+
+    let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
+    trace_dbg!(&pointer);
+
+    let json_value = state.repository.get_mut(&output_format).unwrap();
+
+    let mut leaf_node = construct_leaf_node(&pointer);
+
+    if let Some(value) = leaf_node.pointer_mut(&pointer) {
+        *value = serde_json::from_str(&source_value).unwrap();
+    }
+
+    trace_dbg!(&leaf_node);
+
+    merge(json_value, leaf_node);
+    trace_dbg!(json_value);
 }

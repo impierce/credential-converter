@@ -13,7 +13,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     if state.overwrite_warning {
                         state.overwrite_warning = false;
                     } else {
-                        return Ok(true);
+                        state.exit_warning = !state.exit_warning;
                     }
                 }
                 Tab => {
@@ -51,7 +51,9 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     state.p1_prompts.next();
                 }
                 Enter => {
-                    handle_enter(state);
+                    if handle_enter_p1(state) {
+                        return Ok(true);
+                    }
                 }
                 Backspace => match state.p1_prompts {
                     P1Prompts::Input => {
@@ -119,7 +121,11 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
 ////////////     HELPERS     ////////////
 
-fn handle_enter(state: &mut AppState) {
+fn handle_enter_p1(state: &mut AppState) -> bool {
+    if state.exit_warning {
+        return true;
+    }
+
     // init paths for if statements
     let input_path = Path::new(&state.input_path);
     let output_path = Path::new(&state.output_path);
@@ -149,4 +155,6 @@ fn handle_enter(state: &mut AppState) {
     } else {
         state.p1_prompts.next();
     }
+
+    false
 }

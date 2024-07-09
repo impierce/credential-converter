@@ -10,7 +10,7 @@ use crate::{
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
-    popups::render_popup_mapping,
+    popups::{render_popup_exit_warning, render_popup_mapping},
     state::{translate, AppState, MappingOptions, P2P3Tabs},
     trace_dbg,
 };
@@ -177,43 +177,18 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
     if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
-            render_popup_mapping(
-                area.inner(&Margin {
-                    vertical: 4,
-                    horizontal: 20,
-                }),
-                buf,
-                state,
-            )
+            render_popup_mapping(area, buf, state);
         } else {
             match state.mapping_option {
-                MappingOptions::Transformations => render_popup_mapping(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                ),
-                MappingOptions::OneToMany => render_popup_mapping(
-                    //
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                ),
-                MappingOptions::ManyToOne => render_manytoone_bar(
-                    area.inner(&Margin {
-                        vertical: 4,
-                        horizontal: 20,
-                    }),
-                    buf,
-                    state,
-                ),
+                MappingOptions::Transformations => render_popup_mapping(area, buf, state),
+                MappingOptions::OneToMany => render_popup_mapping(area, buf, state), //todo
+                MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), //todo
                 _ => {} // DirectCopy
             }
         }
+    }
+    // Render warning if user wants to exit.
+    if state.exit_warning {
+        render_popup_exit_warning(area, buf);
     }
 }

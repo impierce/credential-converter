@@ -38,5 +38,6 @@
     "view": "Näytä",
     "field": "Kenttä",
     "value": "Arvo",
-    "missing_fields_incomplete": "\nKaikki puuttuvat kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
+    "missing_fields_incomplete": "\nKaikki puuttuvat kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
+    "exit_warning": "\n Oletko varma, että haluat lopettaa ohjelman nyt?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
 }

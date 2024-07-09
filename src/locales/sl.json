@@ -38,5 +38,6 @@
     "view": "Pogled",
     "field": "Polje",
     "value": "Vrednost",
-    "missing_fields_incomplete": "\nNiso vsa manjkajoča polja izpolnjena.\nNadaljevanje bo povzročilo neveljavno izhodno datoteko.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev."
+    "missing_fields_incomplete": "\nNiso vsa manjkajoča polja izpolnjena.\nNadaljevanje bo povzročilo neveljavno izhodno datoteko.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
+    "exit_warning": "\n Ste prepričani, da želite zapustiti program zdaj?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev."
 }

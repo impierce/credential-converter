@@ -10,7 +10,11 @@ use ratatui::{
     widgets::*,
 };
 
-pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    area = area.inner(&Margin {
+        vertical: 4,
+        horizontal: 24,
+    });
     Clear.render(area, buf);
     Block::new().style(Style::default().bg(Color::Black)).render(area, buf);
 
@@ -20,10 +24,10 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
     let [right_top, right_bottom] =
         Layout::vertical(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(right);
 
-    state.popup_path_area_p2 = left_top;
-    state.popup_output_path_p2 = right_top;
-    state.popup_value_area_p2 = left_bottom;
-    state.popup_output_result_p2 = right_bottom;
+    state.popup_path_area = left_top;
+    state.popup_output_path = right_top;
+    state.popup_value_area = left_bottom;
+    state.popup_output_result = right_bottom;
 
     selector(state);
 
@@ -129,7 +133,12 @@ pub fn render_popup_mapping(area: Rect, buf: &mut Buffer, state: &mut AppState) 
         .render(confirm_area, buf);
 }
 
-pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
+// Following popups have repetitive code, can be refactored
+pub fn render_popup_overwrite_warning(mut area: Rect, buf: &mut Buffer) {
+    area = area.inner(&Margin {
+        vertical: 4,
+        horizontal: 28,
+    });
     Clear.render(area, buf);
     Block::new()
         .style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
@@ -160,7 +169,11 @@ pub fn render_popup_overwrite_warning(area: Rect, buf: &mut Buffer) {
         );
 }
 
-pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
+pub fn render_popup_uncompleted_warning_p2(mut area: Rect, buf: &mut Buffer) {
+    area = area.inner(&Margin {
+        vertical: 4,
+        horizontal: 28,
+    });
     Clear.render(area, buf);
     Block::new()
         .style(Style::default().fg(Color::Red).bg(Color::Black))
@@ -175,6 +188,41 @@ pub fn render_popup_uncompleted_warning_p2(area: Rect, buf: &mut Buffer) {
         vertical_margin = (area.height - 4) / 2;
     } else {
         txt = format!("\n{}", txt).into();
+        vertical_margin = 0;
+    }
+
+    Paragraph::new(txt)
+        .centered()
+        .alignment(Alignment::Center)
+        .wrap(Wrap { trim: false })
+        .render(
+            area.inner(&Margin {
+                vertical: vertical_margin,
+                horizontal: 1,
+            }),
+            buf,
+        );
+}
+
+pub fn render_popup_exit_warning(mut area: Rect, buf: &mut Buffer) {
+    area = area.inner(&Margin {
+        vertical: 4,
+        horizontal: 28,
+    });
+    Clear.render(area, buf);
+    Block::new()
+        .style(Style::default().fg(Color::Red).bg(Color::Black))
+        .borders(Borders::ALL)
+        .render(area, buf);
+
+    let mut txt = translate("exit_warning");
+    let width: f32 = 50. / (area.width as f32 - 2.0);
+
+    let vertical_margin;
+    if area.height >= 4 && width <= 1.0 {
+        vertical_margin = (area.height - 4) / 2;
+    } else {
+        txt = "\n".to_owned() + &txt;
         vertical_margin = 0;
     }
 

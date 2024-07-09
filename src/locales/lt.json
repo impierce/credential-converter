@@ -38,5 +38,6 @@
     "view": "Peržiūra",
     "field": "Laukas",
     "value": "Vertė",
-    "missing_fields_incomplete": "\nNe visi trūkstami laukai užpildyti.\nTęsiant dabar, bus sugeneruotas neleistinas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
+    "missing_fields_incomplete": "\nNe visi trūkstami laukai užpildyti.\nTęsiant dabar, bus sugeneruotas neleistinas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
+    "exit_warning": "\n Ar tikrai norite dabar išeiti iš programos?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
 }

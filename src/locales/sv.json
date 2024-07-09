@@ -38,5 +38,6 @@
     "view": "Visa",
     "field": "Fält",
     "value": "Värde",
-    "missing_fields_incomplete": "\nInte alla saknade fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utdatafil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
+    "missing_fields_incomplete": "\nInte alla saknade fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utdatafil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
+    "exit_warning": "\n Är du säker på att du vill avsluta programmet nu?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
 }

@@ -38,5 +38,6 @@
     "view": "Skoða",
     "field": "Reitur",
     "value": "Gildi",
-    "missing_fields_incomplete": "\nEkki eru allir vantar reitir fylltir.\nÁframhald mun valda ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
+    "missing_fields_incomplete": "\nEkki eru allir vantar reitir fylltir.\nÁframhald mun valda ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
+    "exit_warning": "\n Ertu viss um að þú viljir hætta við forritið núna?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
 }

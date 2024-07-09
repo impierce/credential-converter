@@ -38,5 +38,6 @@
     "view": "Vizualizare",
     "field": "Câmp",
     "value": "Valoare",
-    "missing_fields_incomplete": "\nNu toate câmpurile lipsă au fost completate.\nContinuarea acum va duce la generarea unui fișier de ieșire invalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
+    "missing_fields_incomplete": "\nNu toate câmpurile lipsă au fost completate.\nContinuarea acum va duce la generarea unui fișier de ieșire invalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
+    "exit_warning": "\nSunteți sigur că doriți să ieșiți din program acum?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
 }

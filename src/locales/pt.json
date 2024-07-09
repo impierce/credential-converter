@@ -38,5 +38,6 @@
     "view": "Visualizar",
     "field": "Campo",
     "value": "Valor",
-    "missing_fields_incomplete": "\nNem todos os campos ausentes foram preenchidos.\nContinuar agora resultará em um arquivo de saída inválido.\nPressione 'Enter' para continuar, 'Esc' para voltar."
+    "missing_fields_incomplete": "\nNem todos os campos ausentes foram preenchidos.\nContinuar agora resultará em um arquivo de saída inválido.\nPressione 'Enter' para continuar, 'Esc' para voltar.",
+    "exit_warning": "\nTem certeza de que deseja sair do programa agora?\nTodo o progresso será perdido.\nPressione 'Enter' para continuar, 'Esc' para voltar."
 }

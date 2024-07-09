@@ -38,5 +38,6 @@
     "view": "Nézet",
     "field": "Mező",
     "value": "Érték",
-    "missing_fields_incomplete": "\nNem minden hiányzó mező van kitöltve.\nAzonnali folytatás érvénytelen kimeneti fájlt eredményezhet.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
+    "missing_fields_incomplete": "\nNem minden hiányzó mező van kitöltve.\nAzonnali folytatás érvénytelen kimeneti fájlt eredményezhet.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
+    "exit_warning": "\n Biztosan ki akarja most lépni a programból?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
 }

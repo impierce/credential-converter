@@ -38,5 +38,6 @@
     "view": "Weergeven",
     "field": "Veld",
     "value": "Waarde",
-    "missing_fields_incomplete": "\nNiet alle ontbrekende velden zijn ingevuld.\nDoorgaan zal een ongeldig uitvoerbestand opleveren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan."
+    "missing_fields_incomplete": "\nNiet alle ontbrekende velden zijn ingevuld.\nDoorgaan zal een ongeldig uitvoerbestand opleveren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
+    "exit_warning": "\n Weet u zeker dat u het programma nu wilt afsluiten?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan."
 }

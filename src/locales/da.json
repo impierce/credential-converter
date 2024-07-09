@@ -38,5 +38,6 @@
     "view": "Vis",
     "field": "Felt",
     "value": "Værdi",
-    "missing_fields_incomplete": "\nIkke alle manglende felter er udfyldt.\nFortsættelse nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
+    "missing_fields_incomplete": "\nIkke alle manglende felter er udfyldt.\nFortsættelse nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
+    "exit_warning": "\n Er du sikker på, at du vil afslutte programmet nu?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
 }

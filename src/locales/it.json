@@ -38,5 +38,6 @@
     "view": "Visualizza",
     "field": "Campo",
     "value": "Valore",
-    "missing_fields_incomplete": "\nNon tutti i campi mancanti sono stati completati.\nContinuare ora produrrà un file di output non valido.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro."
+    "missing_fields_incomplete": "\nNon tutti i campi mancanti sono stati completati.\nContinuare ora produrrà un file di output non valido.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro.",
+    "exit_warning": "\nSei sicuro di voler uscire dal programma ora?\nTutti i progressi verranno persi.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro."
 }
