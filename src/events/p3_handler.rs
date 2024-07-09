@@ -10,14 +10,7 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
         if key.kind == KeyEventKind::Press {
             match key.code {
                 Esc => {
-                    if handle_esc(state) {
-                        if !state.exit_warning {
-                            state.exit_warning = true;
-                        }
-                        else {
-                            return Ok(true);
-                        }
-                    }
+                    handle_esc(state);
                 }
                 Backspace => {
                     handle_backspace(state);
@@ -41,7 +34,9 @@ pub fn p3_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     handle_down(state);
                 }
                 Enter => {
-                    handle_enter(state);
+                    if handle_enter(state) {
+                        return Ok(true);
+                    }
                 }
                 Char(char) => {
                     handle_char(state, char);

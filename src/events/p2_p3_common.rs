@@ -9,25 +9,22 @@ use crate::{
 
 //////////     KEYBOARD EVENTS     //////////
 
-pub fn handle_esc(state: &mut AppState) -> bool {
+pub fn handle_esc(state: &mut AppState) {
     // Close popup warning P2
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
-        false
     }
     // Close popup mapping and reset scroll offsets
     else if state.popup_mapping_p2_p3 {
         clear_popup(state);
-        false
     }
     // clear mapping
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
         clear_mapping_options(state);
-        false
     }
-    // Close program
+    // Show exit program warning
     else {
-        true
+        state.exit_warning = !state.exit_warning;
     }
 }
 
@@ -433,11 +430,14 @@ pub fn confirm_mapping(state: &mut AppState) {
 }
 
 
-pub fn handle_enter(state: &mut AppState) {
+pub fn handle_enter(state: &mut AppState) -> bool {
     // Close warning, reset values and move to next page
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
         next_page(state);
+    }
+    else if state.exit_warning {
+        return true;
     }
     else {
         match state.p2_p3_tabs {
@@ -515,4 +515,5 @@ pub fn handle_enter(state: &mut AppState) {
             }
         }
     }
+    false
 }

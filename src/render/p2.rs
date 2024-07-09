@@ -2,7 +2,7 @@ use crate::{
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
-    popups::{render_popup_mapping, render_popup_uncompleted_warning_p2},
+    popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2},
     state::{AppState, MappingOptions, P2P3Tabs},
 };
 
@@ -140,7 +140,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     if state.uncompleted_warning {
         render_popup_uncompleted_warning_p2(area, buf);
-    } else if state.popup_mapping_p2_p3 {
+    } 
+    else if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
             render_popup_mapping(area, buf, state)
         } else {
@@ -151,5 +152,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 _ => {} // DirectCopy
             }
         }
+    }
+    // Render warning if user wants to exit.
+    if state.exit_warning {
+        render_popup_exit_warning(area, buf);
     }
 }

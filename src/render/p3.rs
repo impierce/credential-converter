@@ -10,7 +10,7 @@ use crate::{
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
-    popups::render_popup_mapping,
+    popups::{render_popup_exit_warning, render_popup_mapping},
     state::{AppState, MappingOptions, P2P3Tabs},
     trace_dbg,
 };
@@ -177,5 +177,9 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                 _ => {} // DirectCopy
             }
         }
+    }
+    // Render warning if user wants to exit.
+    if state.exit_warning {
+        render_popup_exit_warning(area, buf);
     }
 }
