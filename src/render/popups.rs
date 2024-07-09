@@ -222,7 +222,7 @@ pub fn render_popup_exit_warning(mut area: Rect, buf: &mut Buffer) {
     if area.height >= 4 && width <= 1.0 {
         vertical_margin = (area.height - 4) / 2;
     } else {
-        txt = "\n".to_owned() + &txt;
+        txt = format!("\n{}", txt).into();
         vertical_margin = 0;
     }
 
