@@ -38,5 +38,6 @@
     "view": "Zobrazit",
     "field": "Pole",
     "value": "Hodnota",
-    "missing_fields_incomplete": "\nNe všechna chybějící pole jsou vyplněna.\nPokračování nyní vytvoří neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat."
+    "missing_fields_incomplete": "\nNe všechna chybějící pole jsou vyplněna.\nPokračování nyní vytvoří neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
+    "exit_warning": "\n Opravdu chcete nyní ukončit program?\nVeškerý pokrok bude ztracen.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat."
 }

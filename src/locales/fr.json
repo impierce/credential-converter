@@ -38,5 +38,6 @@
     "view": "Voir",
     "field": "Champ",
     "value": "Valeur",
-    "missing_fields_incomplete": "\nTous les champs manquants ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
+    "missing_fields_incomplete": "\nTous les champs manquants ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
+    "exit_warning": "\n Êtes-vous sûr de vouloir quitter le programme maintenant ?\nTout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
 }

@@ -38,5 +38,6 @@
     "view": "Widok",
     "field": "Pole",
     "value": "Wartość",
-    "missing_fields_incomplete": "\nNie wszystkie brakujące pola zostały uzupełnione.\nKontynuacja teraz spowoduje nieprawidłowy plik wynikowy.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić."
+    "missing_fields_incomplete": "\nNie wszystkie brakujące pola zostały uzupełnione.\nKontynuacja teraz spowoduje nieprawidłowy plik wynikowy.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
+    "exit_warning": "\nCzy na pewno chcesz teraz wyjść z programu?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić."
 }

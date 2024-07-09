@@ -38,5 +38,6 @@
     "view": "Pregled",
     "field": "Polje",
     "value": "Vrijednost",
-    "missing_fields_incomplete": "\nNisu sva nedostajuća polja popunjena.\nNastavak sada će rezultirati nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
+    "missing_fields_incomplete": "\nNisu sva nedostajuća polja popunjena.\nNastavak sada će rezultirati nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
+    "exit_warning": "\n Jeste li sigurni da želite izaći iz programa sada?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
 }

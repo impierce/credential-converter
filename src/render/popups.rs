@@ -215,7 +215,7 @@ pub fn render_popup_exit_warning(mut area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
-    let mut txt = "\n Are you sure you want to exit the program now?\nAll progress will be lost.\nPress 'Enter' to continue, 'Esc' to go back.".to_string();
+    let mut txt = translate("exit_warning");
     let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;

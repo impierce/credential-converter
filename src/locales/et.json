@@ -38,5 +38,6 @@
     "view": "Vaade",
     "field": "Väli",
     "value": "Väärtus",
-    "missing_fields_incomplete": "\nKõik puuduvad väljad ei ole täidetud.\nJätkamine nüüd toob kaasa vigase väljundfaili.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi."
+    "missing_fields_incomplete": "\nKõik puuduvad väljad ei ole täidetud.\nJätkamine nüüd toob kaasa vigase väljundfaili.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
+    "exit_warning": "\n Kas olete kindel, et soovite programmi nüüd lõpetada?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi."
 }

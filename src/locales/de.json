@@ -38,5 +38,6 @@
     "view": "Ansicht",
     "field": "Feld",
     "value": "Wert",
-    "missing_fields_incomplete": "\nNicht alle fehlenden Felder sind ausgefüllt.\nWenn Sie jetzt fortfahren, wird eine ungültige Ausgabedatei erstellt.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
+    "missing_fields_incomplete": "\nNicht alle fehlenden Felder sind ausgefüllt.\nWenn Sie jetzt fortfahren, wird eine ungültige Ausgabedatei erstellt.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
+    "exit_warning": "\n Möchten Sie das Programm jetzt wirklich beenden?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
 }
