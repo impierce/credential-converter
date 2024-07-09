@@ -3,7 +3,7 @@ use crate::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
     popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2},
-    state::{AppState, MappingOptions, P2P3Tabs},
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
 
 use ratatui::{
@@ -15,8 +15,9 @@ use ratatui::{
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
+    let txt = format!("  {}  ", translate("manual_mapping"));
     Block::new()
-        .title("  Manual Mapping  ")
+        .title(txt)
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
@@ -77,7 +78,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Field", "Value"]).style(Style::new()))
+            .header(Row::new([translate("field"), translate("value")]).style(Style::new()))
             .highlight_style(inputfields_style),
         left_selector,
         buf,
@@ -103,7 +104,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new(vec!["Missing Field", "Result Value"]).style(Style::new()))
+            .header(Row::new([translate("missing_field"), translate("result_value")]).style(Style::new()))
             .highlight_style(missingfields_style),
         right_missing_fields,
         buf,
@@ -113,8 +114,14 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     // Render bottom mapping options bar
     if state.select_mapping_option {
-        let multiplicities = vec![" DirectCopy", "Transformations", "OneToMany", "ManyToOne"];
-        let [multiplicity_tabs, clear, view] = Layout::horizontal(vec![
+        let multiplicities = [
+            format!(" {}", translate("direct_copy")),
+            translate("transformations").to_string(),
+            translate("one_to_many").to_string(),
+            translate("many_to_one").to_string(),
+        ];
+
+        let [multiplicity_tabs, clear, view] = Layout::horizontal([
             Constraint::Percentage(100),
             Constraint::Length(7),
             Constraint::Length(6),

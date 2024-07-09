@@ -1,4 +1,5 @@
 use ratatui::layout::Rect;
+use std::borrow::Cow;
 use strum::{AsRefStr, Display, FromRepr};
 
 use crate::backend::{repository::Repository, transformations::Transformation};
@@ -199,7 +200,12 @@ pub enum Pages {
     EndP4,
 }
 
-// test
+//////////      HELPERS     //////////
+
+pub fn translate(tag: &str) -> Cow<str> {
+    rust_i18n::t!(tag, pwd = std::env::current_dir().unwrap().display())
+}
+
 #[macro_export]
 macro_rules! next_prev {
     ($my_type:ty, $min:expr, $max:expr) => {
@@ -229,7 +235,7 @@ macro_rules! next_prev {
         }
     };
 }
-//
+// todo: choose to use next_prev with or without loop or both
 
 // #[macro_export]
 // macro_rules! next_prev {
