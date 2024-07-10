@@ -39,7 +39,7 @@ pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, 
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
             MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
             MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {}
+            MappingOptions::DirectCopy => {}
         }
     }
 }
