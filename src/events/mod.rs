@@ -3,9 +3,9 @@ use crossterm::event::{self};
 
 pub mod p1_handler;
 pub mod p2_handler;
+pub mod p2_p3_common;
 pub mod p3_handler;
 pub mod p4_handler;
-pub mod p2_p3_common;
 
 pub use p1_handler::p1_handler;
 pub use p2_handler::p2_handler;

@@ -1,7 +1,5 @@
 use crate::{
-    mapping_bars::{
-        render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
-    },
+    mapping_bars::{render_manytoone_bar, render_mapping_bar},
     popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2},
     state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
@@ -112,43 +110,11 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     );
     // todo: render  output results
 
-    // Render bottom mapping options bar
-    if state.select_mapping_option {
-        let multiplicities = [
-            format!(" {}", translate("direct_copy")),
-            translate("transformations").to_string(),
-            translate("one_to_many").to_string(),
-            translate("many_to_one").to_string(),
-        ];
-
-        let [multiplicity_tabs, clear, view] = Layout::horizontal([
-            Constraint::Percentage(100),
-            Constraint::Length(7),
-            Constraint::Length(6),
-        ])
-        .areas(bottom);
-
-        Tabs::new(multiplicities)
-            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(mappingoptions_style)
-            .select(state.mapping_option as usize)
-            .divider("")
-            .render(multiplicity_tabs, buf);
-
-        render_mapping_bar_buttons(clear, view, state, buf);
-    } else {
-        match state.mapping_option {
-            MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
-            MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
-            MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {}
-        }
-    }
+    render_mapping_bar(bottom, buf, state, mappingoptions_style);
 
     if state.uncompleted_warning {
         render_popup_uncompleted_warning_p2(area, buf);
-    } 
-    else if state.popup_mapping_p2_p3 {
+    } else if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
             render_popup_mapping(area, buf, state)
         } else {
@@ -156,7 +122,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 MappingOptions::Transformations => render_popup_mapping(area, buf, state),
                 MappingOptions::OneToMany => render_popup_mapping(area, buf, state), //todo
                 MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), //todo
-                _ => {} // DirectCopy
+                MappingOptions::DirectCopy => {}                                                              // DirectCopy
             }
         }
     }

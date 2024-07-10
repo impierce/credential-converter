@@ -1,10 +1,45 @@
-use crate::state::{translate, AppState, P2P3Tabs};
+use crate::state::{translate, AppState, MappingOptions, P2P3Tabs};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     prelude::*,
     widgets::*,
 };
+
+pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, style: Style) {
+    // Render bottom mapping options bar
+    if state.select_mapping_option {
+        let multiplicities = [
+            format!(" {}", translate("direct_copy")),
+            translate("transformations").to_string(),
+            translate("one_to_many").to_string(),
+            translate("many_to_one").to_string(),
+        ];
+
+        let [multiplicity_tabs, clear, view] = Layout::horizontal([
+            Constraint::Percentage(100),
+            Constraint::Length(7),
+            Constraint::Length(6),
+        ])
+        .areas(bottom);
+
+        Tabs::new(multiplicities)
+            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+            .highlight_style(style)
+            .select(state.mapping_option as usize)
+            .divider("")
+            .render(multiplicity_tabs, buf);
+
+        render_mapping_bar_buttons(clear, view, state, buf);
+    } else {
+        match state.mapping_option {
+            MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
+            MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
+            MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
+            _ => {}
+        }
+    }
+}
 
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let tabs = [
@@ -17,7 +52,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
     let [transformations, selected, clear, view] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
         Constraint::Percentage(100), // take this 100% to the render_buttons fn
-        Constraint::Length(7), 
+        Constraint::Length(7),
         Constraint::Length(6),
     ])
     .areas(area);

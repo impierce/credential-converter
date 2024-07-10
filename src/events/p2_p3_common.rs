@@ -4,7 +4,9 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::{repository::update_repository, selector::selector}, state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations}, trace_dbg
+    backend::{repository::update_repository, selector::selector},
+    state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
+    trace_dbg,
 };
 
 //////////     KEYBOARD EVENTS     //////////
@@ -96,8 +98,7 @@ pub fn handle_up(state: &mut AppState) {
                 if state.selected_missing_field > 1 {
                     state.selected_missing_field -= 1;
                 }
-            }
-            else {
+            } else {
                 if state.selected_optional_field > 1 {
                     state.selected_optional_field -= 1;
                 }
@@ -129,8 +130,7 @@ pub fn handle_down(state: &mut AppState) {
                 if state.selected_missing_field <= state.amount_missing_fields {
                     state.selected_missing_field += 1;
                 }
-            }
-            else {
+            } else {
                 if state.selected_optional_field <= state.amount_optional_fields {
                     state.selected_optional_field += 1;
                 }
@@ -202,17 +202,14 @@ pub fn handle_char(state: &mut AppState, char: char) {
     }
 }
 
-
 pub fn handle_enter(state: &mut AppState) -> bool {
     // Close warning, reset values and move to next page
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
         next_page(state);
-    }
-    else if state.exit_warning {
+    } else if state.exit_warning {
         return true;
-    }
-    else {
+    } else {
         match state.p2_p3_tabs {
             P2P3Tabs::MappingOptions => {
                 if state.select_mapping_option {
@@ -221,7 +218,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                         selector(state);
                         confirm_mapping(state);
                     }
-                    // Switch from mapping options tab to respective tab 
+                    // Switch from mapping options tab to respective tab
                     else {
                         state.select_mapping_option = false;
                     }
@@ -237,8 +234,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 else if state.selected_transformations_tab {
                     if !state.popup_mapping_p2_p3 {
                         state.popup_mapping_p2_p3 = true;
-                    }
-                    else {
+                    } else {
                         confirm_mapping(state);
                     }
                 }
@@ -256,11 +252,14 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 else {
                     if state.page == Pages::ManualMappingP2 {
                         state.missing_data_fields[state.selected_missing_field].1.clear();
-                        state.completed_missing_fields.retain(|&x| x != state.selected_missing_field);
-                    }
-                    else {
+                        state
+                            .completed_missing_fields
+                            .retain(|&x| x != state.selected_missing_field);
+                    } else {
                         state.optional_fields[state.selected_optional_field].1.clear();
-                        state.completed_missing_fields.retain(|&x| x != state.selected_optional_field);
+                        state
+                            .completed_missing_fields
+                            .retain(|&x| x != state.selected_optional_field);
                     }
 
                     if let Some(position) = state
@@ -278,18 +277,16 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if !state.popup_mapping_p2_p3 {
                     state.popup_mapping_p2_p3 = true;
                 } else {
-                    confirm_mapping(state)  ;
+                    confirm_mapping(state);
                 }
             }
-            _ => { 
+            _ => {
                 // Complete a mapping from the view popup
                 if state.popup_mapping_p2_p3 {
                     confirm_mapping(state);
-                }
-                else {
+                } else {
                     state.p2_p3_tabs.next();
                 }
-
             }
         }
     }
@@ -402,7 +399,6 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     }
 }
 
-
 //////////     HELPERS     //////////
 
 pub fn next_page(state: &mut AppState) {
@@ -467,12 +463,12 @@ pub fn clear_button(state: &mut AppState) {
             state
                 .completed_missing_fields
                 .retain(|&x| x != state.selected_missing_field);
-        }
-        else {
+        } else {
             state.optional_fields[state.selected_optional_field].1.clear();
             state
                 .completed_optional_fields
-                .retain(|&x| x != state.selected_optional_field);}
+                .retain(|&x| x != state.selected_optional_field);
+        }
     }
 }
 
@@ -488,12 +484,12 @@ pub fn confirm_mapping(state: &mut AppState) {
 
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
     trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
-    
+
     update_repository(state);
 
     // Save completed fields and move active fields to next field
     state.completed_input_fields.push(state.selected_input_field);
-    
+
     if state.selected_input_field == state.input_fields.len() - 1 {
         state.selected_input_field = 1;
     } else {
@@ -509,8 +505,7 @@ pub fn confirm_mapping(state: &mut AppState) {
         } else {
             state.selected_missing_field += 1;
         }
-    }
-    else {
+    } else {
         if !state.completed_optional_fields.contains(&state.selected_optional_field) {
             state.completed_optional_fields.push(state.selected_optional_field);
         }
@@ -518,7 +513,7 @@ pub fn confirm_mapping(state: &mut AppState) {
             state.selected_optional_field = 1;
         } else {
             state.selected_optional_field += 1;
-        }        
+        }
     }
 
     clear_mapping_options(state);
