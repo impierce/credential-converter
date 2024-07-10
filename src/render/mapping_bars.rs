@@ -9,6 +9,7 @@ use ratatui::{
 pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, style: Style) {
     // Render bottom mapping options bar
     if state.select_mapping_option {
+        // Get the translation first to calculate how much space the texts need
         let multiplicities = [
             format!(" {}", translate("direct_copy")),
             translate("transformations").to_string(),
@@ -44,6 +45,7 @@ pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, 
 }
 
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let tabs = [
         format!(" {}", translate("lowercase")),
         translate("uppercase").to_string(),
@@ -108,6 +110,7 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
 }
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let txt = format!("  {} ", translate("enter_divider"));
     let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
     let view_len = format!(" {} ", translate("view")).chars().count() as u16;
@@ -145,6 +148,7 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 }
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let txt = format!("  {} ", translate("select_fields"));
     let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
     let view_len = format!(" {} ", translate("view")).chars().count() as u16;
