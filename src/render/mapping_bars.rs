@@ -15,11 +15,13 @@ pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, 
             translate("one_to_many").to_string(),
             translate("many_to_one").to_string(),
         ];
-
+        let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+        let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+    
         let [multiplicity_tabs, clear, view] = Layout::horizontal([
             Constraint::Percentage(100),
-            Constraint::Length(7),
-            Constraint::Length(6),
+            Constraint::Length(clear_len),
+            Constraint::Length(view_len),
         ])
         .areas(bottom);
 
@@ -48,12 +50,14 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
         translate("slice").to_string(),
         "Regex".to_string(),
     ];
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
 
     let [transformations, selected, clear, view] = Layout::horizontal(vec![
-        Constraint::Min(tabs.concat().len() as u16 + 10),
-        Constraint::Percentage(100), // take this 100% to the render_buttons fn
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Min(tabs.concat().chars().count() as u16 + 10),
+        Constraint::Percentage(100),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -105,11 +109,14 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = format!("  {} ", translate("enter_divider"));
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+
     let [txt_area, dividers, clear, view] = Layout::horizontal(vec![
-        Constraint::Min(txt.len() as u16),
+        Constraint::Min(txt.chars().count() as u16),
         Constraint::Percentage(100),
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -139,10 +146,13 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let txt = format!("  {} ", translate("select_fields"));
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+
     let [txt_area, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -159,6 +169,9 @@ pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 }
 
 pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
+    let clear_txt = format!(" {} ", translate("clear"));
+    let view_txt = format!(" {} ", translate("view"));
+ 
     state.clear_button = clear;
     state.view_button = view;
 
@@ -174,9 +187,7 @@ pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState,
         _ => {}
     }
 
-    let clear_txt = format!(" {} ", translate("clear"));
     Paragraph::new(clear_txt).style(clear_style).render(clear, buf);
-    let view_txt = format!(" {} ", translate("view"));
     Paragraph::new(view_txt).style(view_style).render(view, buf);
 }
 
