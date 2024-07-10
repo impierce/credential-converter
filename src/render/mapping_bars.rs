@@ -16,8 +16,8 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
 
     let [transformations, selected, clear, view] = Layout::horizontal(vec![
         Constraint::Min(tabs.concat().len() as u16 + 10),
-        Constraint::Percentage(100),
-        Constraint::Length(7),
+        Constraint::Percentage(100), // take this 100% to the render_buttons fn
+        Constraint::Length(7), 
         Constraint::Length(6),
     ])
     .areas(area);

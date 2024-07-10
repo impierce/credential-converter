@@ -202,6 +202,100 @@ pub fn handle_char(state: &mut AppState, char: char) {
     }
 }
 
+
+pub fn handle_enter(state: &mut AppState) -> bool {
+    // Close warning, reset values and move to next page
+    if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
+        state.uncompleted_warning = false;
+        next_page(state);
+    }
+    else if state.exit_warning {
+        return true;
+    }
+    else {
+        match state.p2_p3_tabs {
+            P2P3Tabs::MappingOptions => {
+                if state.select_mapping_option {
+                    // Fast-track mapping, Copy to output result value and reset values
+                    if state.mapping_option == MappingOptions::DirectCopy {
+                        selector(state);
+                        confirm_mapping(state);
+                    }
+                    // Switch from mapping options tab to respective tab 
+                    else {
+                        state.select_mapping_option = false;
+                    }
+                }
+                // Select a transformation if it hasn't already been selected
+                else if state.mapping_option == MappingOptions::Transformations
+                    && !state.selected_transformations_tab
+                    && !state.selected_transformations.contains(&state.transformations)
+                {
+                    state.selected_transformations.push(state.transformations);
+                }
+                // If transformation(s) selected open the view popup to show the result.
+                else if state.selected_transformations_tab {
+                    if !state.popup_mapping_p2_p3 {
+                        state.popup_mapping_p2_p3 = true;
+                    }
+                    else {
+                        confirm_mapping(state);
+                    }
+                }
+            }
+            P2P3Tabs::Clear => {
+                // Close popup if open.
+                if state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = false;
+                }
+                // If mapping options have been chosen, clear mapping options.
+                else if !state.select_mapping_option {
+                    clear_mapping_options(state);
+                }
+                // Clear selected missing field
+                else {
+                    if state.page == Pages::ManualMappingP2 {
+                        state.missing_data_fields[state.selected_missing_field].1.clear();
+                        state.completed_missing_fields.retain(|&x| x != state.selected_missing_field);
+                    }
+                    else {
+                        state.optional_fields[state.selected_optional_field].1.clear();
+                        state.completed_missing_fields.retain(|&x| x != state.selected_optional_field);
+                    }
+
+                    if let Some(position) = state
+                        .completed_optional_fields
+                        .iter()
+                        .position(|&x| x == state.selected_input_field)
+                    {
+                        state.completed_optional_fields.remove(position);
+                    }
+
+                    clear_mapping_options(state);
+                }
+            }
+            P2P3Tabs::View => {
+                if !state.popup_mapping_p2_p3 {
+                    state.popup_mapping_p2_p3 = true;
+                } else {
+                    confirm_mapping(state)  ;
+                }
+            }
+            _ => { 
+                // Complete a mapping from the view popup
+                if state.popup_mapping_p2_p3 {
+                    confirm_mapping(state);
+                }
+                else {
+                    state.p2_p3_tabs.next();
+                }
+
+            }
+        }
+    }
+    false
+}
+
 //////////     MOUSE EVENTS     //////////
 
 pub fn handle_scroll_down(state: &mut AppState, mouse_event: MouseEvent) {
@@ -307,6 +401,7 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
         state.page.prev();
     }
 }
+
 
 //////////     HELPERS     //////////
 
@@ -427,93 +522,4 @@ pub fn confirm_mapping(state: &mut AppState) {
     }
 
     clear_mapping_options(state);
-}
-
-
-pub fn handle_enter(state: &mut AppState) -> bool {
-    // Close warning, reset values and move to next page
-    if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
-        state.uncompleted_warning = false;
-        next_page(state);
-    }
-    else if state.exit_warning {
-        return true;
-    }
-    else {
-        match state.p2_p3_tabs {
-            P2P3Tabs::MappingOptions => {
-                if state.select_mapping_option {
-                    // Fast-track mapping, Copy to output result value and reset values
-                    if state.mapping_option == MappingOptions::DirectCopy {
-                        selector(state);
-                        confirm_mapping(state);
-                    }
-                    // Switch from mapping options tab to respective tab 
-                    else {
-                        state.select_mapping_option = false;
-                    }
-                }
-                // Select a transformation if it hasn't already been selected
-                else if state.mapping_option == MappingOptions::Transformations
-                    && !state.selected_transformations_tab
-                    && !state.selected_transformations.contains(&state.transformations)
-                {
-                    state.selected_transformations.push(state.transformations);
-                }
-                // If transformation(s) selected open the view popup to show the result.
-                else if state.selected_transformations_tab {
-                    state.popup_mapping_p2_p3 = true;
-                }
-            }
-            P2P3Tabs::Clear => {
-                // Close popup if open.
-                if state.popup_mapping_p2_p3 {
-                    state.popup_mapping_p2_p3 = false;
-                }
-                // If mapping options have been chosen, clear mapping options.
-                else if !state.select_mapping_option {
-                    clear_mapping_options(state);
-                }
-                // Clear selected missing field
-                else {
-                    if state.page == Pages::ManualMappingP2 {
-                        state.missing_data_fields[state.selected_missing_field].1.clear();
-                        state.completed_missing_fields.retain(|&x| x != state.selected_missing_field);
-                    }
-                    else {
-                        state.optional_fields[state.selected_optional_field].1.clear();
-                        state.completed_missing_fields.retain(|&x| x != state.selected_optional_field);
-                    }
-
-                    if let Some(position) = state
-                        .completed_optional_fields
-                        .iter()
-                        .position(|&x| x == state.selected_input_field)
-                    {
-                        state.completed_optional_fields.remove(position);
-                    }
-
-                    clear_mapping_options(state);
-                }
-            }
-            P2P3Tabs::View => {
-                if !state.popup_mapping_p2_p3 {
-                    state.popup_mapping_p2_p3 = true;
-                } else {
-                    confirm_mapping(state)  ;
-                }
-            }
-            _ => { 
-                // Complete a mapping from the view popup
-                if state.popup_mapping_p2_p3 {
-                    confirm_mapping(state);
-                }
-                else {
-                    state.p2_p3_tabs.next();
-                }
-
-            }
-        }
-    }
-    false
 }

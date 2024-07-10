@@ -6,13 +6,11 @@ use ratatui::{
 };
 
 use crate::{
-    backend::selector::selector,
     mapping_bars::{
         render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
     },
     popups::{render_popup_exit_warning, render_popup_mapping},
     state::{translate, AppState, MappingOptions, P2P3Tabs},
-    trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -144,34 +142,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
             MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
             MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {
-                // this is actually event handling and should be moved
-                selector(state);
-                state.selected_transformations_tab = false;
-                state.select_mapping_option = true;
-                state.selected_transformations.clear();
-                state.popup_offset_path = 0;
-                state.popup_offset_value = 0;
-                state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                state.completed_input_fields.push(state.selected_input_field);
-                state.completed_optional_fields.push(state.selected_optional_field);
-                state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
-                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                trace_dbg!(&state.optional_fields[state.selected_optional_field]);
-
-                if state.selected_input_field == state.input_fields.len() - 1 {
-                    state.selected_input_field = 1;
-                } else {
-                    state.selected_input_field += 1;
-                }
-
-                if state.selected_optional_field == state.optional_fields.len() - 1 {
-                    state.selected_optional_field = 1;
-                } else {
-                    state.selected_optional_field += 1;
-                }
-            } // DirectCopy
+            _ => {}
         }
     }
 
