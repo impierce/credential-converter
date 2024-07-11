@@ -29,9 +29,13 @@ Run the application with:
 cargo run
 ```
 
+## Usage
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
-## Default example files and logging
+![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/HEAD/.github/impierce-mapper_P1.png)
+
+
+### Default example files and logging
 `res/elm_example.json`: Example input file for ELM standard.  
 `res/mapping_empty.json`: An empty mapping file, useful for testing custom mappings.  
 `res/output_credential.json`: Example output file for the converted JSON.  
