@@ -30,7 +30,7 @@ cargo run
 ```
 ## Usage
 
-The link above contains a youtube video which is a walkthrough of the program.
+The link below contains a youtube video which is a walkthrough of the program.
 
 https://www.youtube.com/watch?v=TGc2OyFQqXs  
 
@@ -60,12 +60,12 @@ To remove the default file paths remove lines 34 - 38 from the `main.rs`:
 ```
 
 #### Keyboard & mouse layout
-Use the up and down arrows or tab and F2 to navigate between prompts.
-The left and right arrows enable you the choose within the prompts with tabbers.
-The normal keyboard layout can be used for entering file paths.
-All values are saved automatically.
-Enter can still be used as well to move to the next prompt.
-Clicking the complete button in the top right or enter on the last prompt will move you to the next page.
+Use the up and down arrows or tab and F2 to navigate between prompts.  
+The left and right arrows enable you the choose within the prompts with tabbers.  
+The normal keyboard layout can be used for entering file paths.  
+All values are saved automatically.  
+Enter can still be used as well to complete a prompt and to move to the next prompt.  
+Clicking the complete button in the top right or enter on the last prompt will move you to the next page.  
 Esc will prompt you to exit the program, losing all progress.
 
 ### Page 2, completing mandatory output-standard fields
@@ -83,9 +83,9 @@ The complete button in the top right will move you to the next page. If not all 
 ![impierce-mapper_P2.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P2.png)
 
 #### Keyboard & mouse layout
-Use the arrows, tab and F2 to navigate inside and between tabs.
-Enter will select a field/transformation/button, sometimes moving you to the next tab.
-The complete button, view button and clear button are also clickable.
+Use the arrows, tab and F2 to navigate inside and between tabs.  
+Enter will select a field/transformation/button, sometimes moving you to the next tab.  
+The complete button, view button and clear button are also clickable.  
 Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
 
 ## Contributing
