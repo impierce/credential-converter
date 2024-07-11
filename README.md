@@ -65,19 +65,28 @@ The left and right arrows enable you the choose within the prompts with tabbers.
 The normal keyboard layout can be used for entering file paths.
 All values are saved automatically.
 Enter can still be used as well to move to the next prompt.
-Clicking the complete button in the topright or enter on the last prompt will move you to the next page.
-Esc to exit.
+Clicking the complete button in the top right or enter on the last prompt will move you to the next page.
+Esc will prompt you to exit the program, losing all progress.
 
 ### Page 2, completing mandatory output-standard fields
 Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.  
+
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
-`Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.
+`Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
 *Currently `Slice`, `Regex`, `ManytoOne` and `OnetoMany` are not functional yet*.  
 
 The View button allows you to view the selected fields in full length in a popup, as the main page will truncate long texts. The tabs in the popup are scrollable. Transformations will also be displayed immediately. Navigation on the main page is still possible when the popup is open
 The Clear button will close either the popup first if this is open. Then, it will clear all selected mapping options. Finally, if there is no popup nor mapping options selected, it will clear the result-value from the selected output field.
+The complete button in the top right will move you to the next page. If not all fields on the right are green, this will render a popup warning informing you the output file will be invalid.
+
 
 ![impierce-mapper_P2.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P2.png)
+
+#### Keyboard & mouse layout
+Use the arrows, tab and F2 to navigate inside and between tabs.
+Enter will select a field/transformation/button, sometimes moving you to the next tab.
+The complete button, view button and clear button are also clickable.
+Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
 
 ## Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
