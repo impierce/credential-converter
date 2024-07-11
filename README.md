@@ -1,7 +1,7 @@
 # ELM - OpenBadges v3 Mapper
 
 ## Overview
-This project is a Rust-based application that converts JSON files written in the OpenBadges v3 standard to the ELM standard and vice versa. The application utilizes the ratatui and crossterm library to create the terminal user interface in which the mappings can be completed.
+This project is a [Rust](https://www.rust-lang.org/)-based application that converts JSON files written in the [OpenBadges v3](https://www.imsglobal.org/spec/ob/v3p0) standard to the [ELM](https://europass.europa.eu/en/node/2128) standard and vice versa. The application utilizes the [ratatui](https://ratatui.rs/) and the [crossterm](https://docs.rs/crossterm/latest/crossterm/) library to create the terminal user interface in which the mappings can be completed.
 
 ## Features
 - Bidirectional conversion between OpenBadges v3 and ELM. Extendable to any standard defined in JsonSchema.
@@ -10,7 +10,7 @@ This project is a Rust-based application that converts JSON files written in the
 - Forward compatibility with DESM: In the future, DESM will provide professionally curated mapping files which will be shipped as default with the program.
 
 ## Installation
-To run this project, ensure you have Rust installed. If not, you can install it from rust-lang.org.
+To run this project, ensure you have [Rust](https://www.rust-lang.org/) installed. If not, you can install it from rust-lang.org.
 
 Clone the repository:
 
@@ -32,10 +32,10 @@ cargo run
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
 ## Example files and logging
-res/elm_example.json: Example input file for ELM standard.  
-res/mapping_empty.json: An empty mapping file, useful for testing custom mappings.  
-res/output_credential.json: Example output file for the converted JSON.  
-res/custom_mapping.json: Example custom mapping file.  
+`res/elm_example.json`: Example input file for ELM standard.  
+`res/mapping_empty.json`: An empty mapping file, useful for testing custom mappings.  
+`res/output_credential.json`: Example output file for the converted JSON.  
+`res/custom_mapping.json`: Example custom mapping file.  
 
 
 Logs are kept in `logging_folder/impierce-mapper.log`. This file is overwritten upon each startup of the program.
