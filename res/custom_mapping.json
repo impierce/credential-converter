@@ -14,396 +14,374 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
-    },
-    "destination": {
-      "format": "OBv3",
-      "path": "$.@context.0"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "ELM",
-      "path": "$.@context"
-    },
-    "destination": {
-      "format": "OBv3",
-      "path": "$.@context.0"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   },
   {
@@ -421,7 +399,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
@@ -432,7 +410,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
@@ -443,7 +421,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.familyName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -454,7 +432,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -465,7 +443,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -476,7 +454,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -487,7 +465,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -498,7 +476,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -509,7 +487,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -520,7 +498,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -531,7 +509,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -542,7 +520,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -553,7 +531,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -564,7 +542,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -575,7 +553,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -586,7 +564,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -597,7 +575,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -608,7 +586,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -619,7 +597,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -630,7 +608,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -641,7 +619,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -652,7 +630,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -663,7 +641,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -674,7 +652,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -685,7 +663,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -696,7 +674,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -707,7 +685,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -718,7 +696,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -729,7 +707,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -740,7 +718,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -751,7 +729,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -762,7 +740,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -773,7 +751,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -784,7 +762,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -795,7 +773,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -806,7 +784,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -817,7 +795,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -828,7 +806,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -839,7 +817,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.fullName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -850,7 +828,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialProfiles"
     },
     "destination": {
       "format": "OBv3",
@@ -861,22 +839,22 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSchema"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.id"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.familyName.en"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context.0"
+      "path": "$.name"
     }
   }
 ]

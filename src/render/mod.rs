@@ -13,7 +13,7 @@ use ratatui::prelude::*;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    widgets::Block,
+    widgets::{Block, Clear},
 };
 
 use crate::state::{translate, AppState, Pages};
@@ -29,15 +29,18 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     }
 
     // Extra layout for the prev page & finish button
+    let complete_len = format!(" {} ", translate("complete")).chars().count() as u16;
+
     let [prev_button, _rest, complete_button] = Layout::horizontal(vec![
         Constraint::Length(3),
         Constraint::Percentage(100),
-        Constraint::Length(10),
+        Constraint::Length(complete_len),
     ])
     .areas(top);
     let [prev_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(prev_button);
     let [complete_button, _rest] =
         Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(complete_button);
+
     if state.page != Pages::InputPromptsP1 {
         state.prev_page_button = prev_button;
         render_prev_page_button(prev_button, frame.buffer_mut());
@@ -93,6 +96,7 @@ fn render_prev_page_button(area: Rect, buf: &mut Buffer) {
 }
 
 fn render_complete_button(area: Rect, buf: &mut Buffer) {
+    Clear.render(area, buf);
     Block::default()
         .title(format!(" {} ", translate("complete")))
         .style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))

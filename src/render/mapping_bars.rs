@@ -1,4 +1,4 @@
-use crate::state::{translate, AppState, P2P3Tabs};
+use crate::state::{translate, AppState, MappingOptions, P2P3Tabs};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,19 +6,60 @@ use ratatui::{
     widgets::*,
 };
 
+pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, style: Style) {
+    // Render bottom mapping options bar
+    if state.select_mapping_option {
+        // Get the translation first to calculate how much space the texts need
+        let multiplicities = [
+            format!(" {}", translate("direct_copy")),
+            translate("transformations").to_string(),
+            translate("one_to_many").to_string(),
+            translate("many_to_one").to_string(),
+        ];
+        let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+        let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+
+        let [multiplicity_tabs, clear, view] = Layout::horizontal([
+            Constraint::Percentage(100),
+            Constraint::Length(clear_len),
+            Constraint::Length(view_len),
+        ])
+        .areas(bottom);
+
+        Tabs::new(multiplicities)
+            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
+            .highlight_style(style)
+            .select(state.mapping_option as usize)
+            .divider("")
+            .render(multiplicity_tabs, buf);
+
+        render_mapping_bar_buttons(clear, view, state, buf);
+    } else {
+        match state.mapping_option {
+            MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
+            MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
+            MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
+            MappingOptions::DirectCopy => {}
+        }
+    }
+}
+
 pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let tabs = [
         format!(" {}", translate("lowercase")),
         translate("uppercase").to_string(),
         translate("slice").to_string(),
         "Regex".to_string(),
     ];
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
 
     let [transformations, selected, clear, view] = Layout::horizontal(vec![
-        Constraint::Min(tabs.concat().len() as u16 + 10),
+        Constraint::Min(tabs.concat().chars().count() as u16 + 10),
         Constraint::Percentage(100),
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -69,12 +110,16 @@ pub fn render_transformations_bar(area: Rect, buf: &mut Buffer, state: &mut AppS
 }
 
 pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let txt = format!("  {} ", translate("enter_divider"));
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+
     let [txt_area, dividers, clear, view] = Layout::horizontal(vec![
-        Constraint::Min(txt.len() as u16),
+        Constraint::Min(txt.chars().count() as u16),
         Constraint::Percentage(100),
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -103,11 +148,15 @@ pub fn render_onetomany_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 }
 
 pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+    // Get the translation first to calculate how much space the texts need
     let txt = format!("  {} ", translate("select_fields"));
+    let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
+    let view_len = format!(" {} ", translate("view")).chars().count() as u16;
+
     let [txt_area, clear, view] = Layout::horizontal(vec![
         Constraint::Min(txt.len() as u16 + 2),
-        Constraint::Length(7),
-        Constraint::Length(6),
+        Constraint::Length(clear_len),
+        Constraint::Length(view_len),
     ])
     .areas(area);
 
@@ -124,6 +173,9 @@ pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 }
 
 pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
+    let clear_txt = format!(" {} ", translate("clear"));
+    let view_txt = format!(" {} ", translate("view"));
+
     state.clear_button = clear;
     state.view_button = view;
 
@@ -139,9 +191,7 @@ pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState,
         _ => {}
     }
 
-    let clear_txt = format!(" {} ", translate("clear"));
     Paragraph::new(clear_txt).style(clear_style).render(clear, buf);
-    let view_txt = format!(" {} ", translate("view"));
     Paragraph::new(view_txt).style(view_style).render(view, buf);
 }
 

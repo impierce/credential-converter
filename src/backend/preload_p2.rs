@@ -12,6 +12,8 @@ use crate::{
     trace_dbg,
 };
 
+// todo: when going back to p1 and loading again, everything in backend is wiped because of this preload fn.
+// this is fine but then also state info must be wiped
 pub fn preload_p2(state: &mut AppState) {
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 

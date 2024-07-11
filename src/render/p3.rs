@@ -6,13 +6,9 @@ use ratatui::{
 };
 
 use crate::{
-    backend::selector::selector,
-    mapping_bars::{
-        render_manytoone_bar, render_mapping_bar_buttons, render_onetomany_bar, render_transformations_bar,
-    },
+    mapping_bars::{render_manytoone_bar, render_mapping_bar},
     popups::{render_popup_exit_warning, render_popup_mapping},
     state::{translate, AppState, MappingOptions, P2P3Tabs},
-    trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -68,7 +64,15 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .enumerate()
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_input_fields.contains(&index) {
+            if state
+                .completed_missing_fields
+                .iter()
+                .any(|&(_, second)| second == index)
+                || state
+                    .completed_optional_fields
+                    .iter()
+                    .any(|&(_, second)| second == index)
+            {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -94,7 +98,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .enumerate()
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_optional_fields.contains(&index) {
+            if state.completed_optional_fields.iter().any(|&(first, _)| first == index) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -115,65 +119,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     );
     // todo: render  output results
 
-    // Render bottom mapping options bar
-    if state.select_mapping_option {
-        let multiplicities = [
-            format!(" {}", translate("direct_copy")),
-            translate("transformations").to_string(),
-            translate("one_to_many").to_string(),
-            translate("many_to_one").to_string(),
-        ];
-
-        let [multiplicity_tabs, clear, view] = Layout::horizontal([
-            Constraint::Percentage(100),
-            Constraint::Length(7),
-            Constraint::Length(6),
-        ])
-        .areas(bottom);
-
-        Tabs::new(multiplicities)
-            .style(Style::default().fg(Color::White).bg(Color::DarkGray))
-            .highlight_style(mappingoptions_style)
-            .select(state.mapping_option as usize)
-            .divider("")
-            .render(multiplicity_tabs, buf);
-
-        render_mapping_bar_buttons(clear, view, state, buf);
-    } else {
-        match state.mapping_option {
-            MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
-            MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
-            MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
-            _ => {
-                // this is actually event handling and should be moved
-                selector(state);
-                state.selected_transformations_tab = false;
-                state.select_mapping_option = true;
-                state.selected_transformations.clear();
-                state.popup_offset_path = 0;
-                state.popup_offset_value = 0;
-                state.p2_p3_tabs = P2P3Tabs::InputFields;
-
-                state.completed_input_fields.push(state.selected_input_field);
-                state.completed_optional_fields.push(state.selected_optional_field);
-                state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
-                trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-                trace_dbg!(&state.optional_fields[state.selected_optional_field]);
-
-                if state.selected_input_field == state.input_fields.len() - 1 {
-                    state.selected_input_field = 1;
-                } else {
-                    state.selected_input_field += 1;
-                }
-
-                if state.selected_optional_field == state.optional_fields.len() - 1 {
-                    state.selected_optional_field = 1;
-                } else {
-                    state.selected_optional_field += 1;
-                }
-            } // DirectCopy
-        }
-    }
+    render_mapping_bar(bottom, buf, state, mappingoptions_style);
 
     if state.popup_mapping_p2_p3 {
         if state.select_mapping_option {
@@ -183,7 +129,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
                 MappingOptions::Transformations => render_popup_mapping(area, buf, state),
                 MappingOptions::OneToMany => render_popup_mapping(area, buf, state), //todo
                 MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), //todo
-                _ => {} // DirectCopy
+                MappingOptions::DirectCopy => {}                                     // DirectCopy
             }
         }
     }

@@ -45,22 +45,20 @@ pub struct AppState {
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
     pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_input_fields: Vec<usize>,
 
     // Mandatory fields extracted from the output json format
-    pub missing_data_field: Option<String>, //remove
     pub missing_data_fields: Vec<(String, String)>,
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
     pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_missing_fields: Vec<usize>,
+    pub completed_missing_fields: Vec<(usize, usize)>, // (missing_field_index, input_field_index)
 
     // Optional fields extracted from the output json format
     pub optional_fields: Vec<(String, String)>,
     pub amount_optional_fields: usize,
     pub selected_optional_field: usize,
     pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_optional_fields: Vec<usize>,
+    pub completed_optional_fields: Vec<(usize, usize)>, // (optional_field_index, input_field_index)
 
     // Backend
     pub candidate_data_value: Option<String>,
@@ -235,6 +233,7 @@ macro_rules! next_prev {
         }
     };
 }
+
 // todo: choose to use next_prev with or without loop or both
 
 // #[macro_export]
