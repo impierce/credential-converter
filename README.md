@@ -32,7 +32,7 @@ cargo run
 ## Usage
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
-![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/HEAD/.github/impierce-mapper_P1.png)
+![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/main/HEAD/.github/impierce-mapper_P1.png)
 
 
 ### Default example files and logging
