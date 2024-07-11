@@ -31,7 +31,7 @@ cargo run
 
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
-## Example files and logging
+## Default example files and logging
 `res/elm_example.json`: Example input file for ELM standard.  
 `res/mapping_empty.json`: An empty mapping file, useful for testing custom mappings.  
 `res/output_credential.json`: Example output file for the converted JSON.  
@@ -39,6 +39,15 @@ Upon starting the application, you'll be presented with a terminal interface to 
 
 
 Logs are kept in `logging_folder/impierce-mapper.log`. This file is overwritten upon each startup of the program.
+
+To remove the default file paths remove lines 34 - 38 from the `main.rs`:
+```sh
+        // Default example values, remove if no longer needed
+        input_path: "res/elm_example.json".to_string(),
+        mapping_path: "res/mapping_empty.json".to_string(),
+        output_path: "res/output_credential.json".to_string(),
+        custom_mapping_path: "res/custom_mapping.json".to_string(),
+```
 
 ## Keyboard & mouse layout
 // keys and perhaps a screenshot here x
