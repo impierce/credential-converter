@@ -65,8 +65,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .iter()
         .enumerate()
         .map(|(index, (key, value))| {
-            let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_input_fields.contains(&index) {
+            let mut row = Row::new(vec![key.as_str(), value.as_str()]); //todo
+            if state.completed_missing_fields.iter().any(|&(_, second)| second == index) || state.completed_optional_fields.iter().any(|&(_, second)| second == index) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -92,8 +92,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .enumerate()
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_missing_fields.contains(&index) {
-                row = row.style(Style::default().fg(Color::Green));
+            if state.completed_missing_fields.iter().any(|&(first, _)| first == index) {
+                            row = row.style(Style::default().fg(Color::Green));
             }
             row
         })

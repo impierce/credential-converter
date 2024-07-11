@@ -240,38 +240,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 }
             }
             P2P3Tabs::Clear => {
-                // Close popup if open.
-                if state.popup_mapping_p2_p3 {
-                    state.popup_mapping_p2_p3 = false;
-                }
-                // If mapping options have been chosen, clear mapping options.
-                else if !state.select_mapping_option {
-                    clear_mapping_options(state);
-                }
-                // Clear selected missing field
-                else {
-                    if state.page == Pages::ManualMappingP2 {
-                        state.missing_data_fields[state.selected_missing_field].1.clear();
-                        state
-                            .completed_missing_fields
-                            .retain(|&x| x != state.selected_missing_field);
-                    } else {
-                        state.optional_fields[state.selected_optional_field].1.clear();
-                        state
-                            .completed_missing_fields
-                            .retain(|&x| x != state.selected_optional_field);
-                    }
-
-                    if let Some(position) = state
-                        .completed_optional_fields
-                        .iter()
-                        .position(|&x| x == state.selected_input_field)
-                    {
-                        state.completed_optional_fields.remove(position);
-                    }
-
-                    clear_mapping_options(state);
-                }
+                clear_button(state);
             }
             P2P3Tabs::View => {
                 if !state.popup_mapping_p2_p3 {
@@ -456,20 +425,30 @@ pub fn clear_button(state: &mut AppState) {
     }
     // Clear selected missing field
     else {
-        // todo: no way yet to correctly clear the completed input fields (one field can be used for multipe output fields)
-        // todo: clear the mapping saved to the custom mapping file as well.
+        // if let Some(position) = state
+        //     .completed_input_fields
+        //     .iter()
+        //     .position(|&x| x == state.selected_input_field) // it shouldnt be the currently selected, but the one that was used for the mapping of the selected missing/optional field
+        // {
+        //     state.completed_input_fields.remove(position);
+        // }
+        
         if state.page == Pages::ManualMappingP2 {
             state.missing_data_fields[state.selected_missing_field].1.clear();
             state
                 .completed_missing_fields
-                .retain(|&x| x != state.selected_missing_field);
+                .retain(|&(first, _)| first != state.selected_missing_field);
         } else {
             state.optional_fields[state.selected_optional_field].1.clear();
             state
                 .completed_optional_fields
-                .retain(|&x| x != state.selected_optional_field);
+                .retain(|&(first, _)| first != state.selected_optional_field);
         }
+
+        clear_mapping_options(state);
     }
+    trace_dbg!(&state.completed_missing_fields);
+    trace_dbg!(&state.completed_optional_fields);
 }
 
 pub fn confirm_mapping(state: &mut AppState) {
@@ -485,30 +464,43 @@ pub fn confirm_mapping(state: &mut AppState) {
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
     trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
 
-    update_repository(state);
+    update_repository(state);    
 
-    // Save completed fields and move active fields to next field
-    state.completed_input_fields.push(state.selected_input_field);
-
-    if state.selected_input_field == state.input_fields.len() - 1 {
-        state.selected_input_field = 1;
-    } else {
-        state.selected_input_field += 1;
-    }
-
-    if state.page == Pages::ManualMappingP2 {
-        if !state.completed_missing_fields.contains(&state.selected_missing_field) {
-            state.completed_missing_fields.push(state.selected_missing_field);
+    if state.page == Pages::ManualMappingP2 { //hiero
+        // Save completed fields
+        if !state.completed_missing_fields.iter().any(|&(first, _)| first == state.selected_missing_field) {
+            state.completed_missing_fields.push((state.selected_missing_field, state.selected_input_field));
         }
+        else {
+            // Find the old mapping tuple and replace
+            for tuple in &mut state.completed_missing_fields {
+                if tuple.0 == state.selected_missing_field {
+                    *tuple = (state.selected_missing_field, state.selected_input_field);
+                    break;
+                }
+            }
+        }
+        // Move active fields to next field
         if state.selected_missing_field == state.missing_data_fields.len() - 1 {
             state.selected_missing_field = 1;
         } else {
             state.selected_missing_field += 1;
         }
     } else {
-        if !state.completed_optional_fields.contains(&state.selected_optional_field) {
-            state.completed_optional_fields.push(state.selected_optional_field);
+        // Save completed fields
+        if !state.completed_optional_fields.iter().any(|&(first, _)| first == state.selected_optional_field) {
+            state.completed_optional_fields.push((state.selected_optional_field, state.selected_input_field));
         }
+        else {
+            // Find the old mapping tuple and replace
+            for tuple in &mut state.completed_optional_fields {
+                if tuple.0 == state.selected_optional_field {
+                    *tuple = (state.selected_optional_field, state.selected_input_field);
+                    break;
+                }
+            }
+        }
+        // Move active fields to next field
         if state.selected_optional_field == state.optional_fields.len() - 1 {
             state.selected_optional_field = 1;
         } else {
@@ -516,5 +508,13 @@ pub fn confirm_mapping(state: &mut AppState) {
         }
     }
 
+    if state.selected_input_field == state.input_fields.len() - 1 {
+        state.selected_input_field = 1;
+    } else {
+        state.selected_input_field += 1;
+    }
+
+    trace_dbg!(&state.completed_missing_fields);
+    trace_dbg!(&state.completed_optional_fields);
     clear_mapping_options(state);
 }
