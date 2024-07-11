@@ -30,8 +30,10 @@ cargo run
 ```
 ## Usage
 
-[https://www.youtube.com/watch?v=TGc2OyFQqXs]
 The link above contains a youtube video which is a walkthrough of the program.
+
+https://www.youtube.com/watch?v=TGc2OyFQqXs  
+
 For a written walkthrough, including screenshots, and explanation on the keyboard and mouse usage read below.
 
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
@@ -43,7 +45,6 @@ Upon starting the application, you'll be presented with a terminal interface to 
 `res/mapping_empty.json`: An empty mapping file, useful for testing custom mappings.  
 `res/output_credential.json`: Example output file for the converted JSON.  
 `res/custom_mapping.json`: Example custom mapping file.  
-
 
 Logs are kept in `logging_folder/impierce-mapper.log`. This file is overwritten upon each startup of the program.
 
@@ -57,11 +58,12 @@ To remove the default file paths remove lines 34 - 38 from the `main.rs`:
 ```
 
 ### Keyboard & mouse layout
-Use the up and down arrows, tab or F2 to navigate between prompts.
-The left and right arrows enable you the choose from the tabbers.
+Use the up and down arrows or tab and F2 to navigate between prompts.
+The left and right arrows enable you the choose within the prompts with tabbers.
+The normal keyboard layout can be used for entering file paths.
+All values are saved automatically.
+Enter can still be used as well to move to the next prompt.
+Clicking the complete button in the topright or enter on the last prompt will move you to the next page.
+
 ## Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
-
-## License
-???
-This project is licensed under the MIT License. See the LICENSE file for details.
