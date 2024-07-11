@@ -17,15 +17,14 @@ Clone the repository:
 ```sh
 git clone https://github.com/impierce/impierce-mapper
 cd impierce-mapper
-Build the project:
 ```
 
+Build the project:
 ```sh
 cargo build
-Usage
-Run the application with:
 ```
 
+Run the application with:
 ```sh
 cargo run
 ```
