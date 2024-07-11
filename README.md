@@ -36,11 +36,13 @@ https://www.youtube.com/watch?v=TGc2OyFQqXs
 
 For a written walkthrough, including screenshots, and explanation on the keyboard and mouse usage read below.
 
-Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
+### Page 1, setting program arguments
+Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths. Yellow highlights the active field. Green indicates a valid path. Orange means a given output path will wipe and overwrite an existing file in that location. Red means it's invalid, which disables you from continuing to the next page.
+On the bottom you'll find a bar explaining the basic keys as well.
 
 ![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P1.png)
 
-### Default example files and logging
+#### Default example files and logging
 `res/elm_example.json`: Example input file for ELM standard.  
 `res/mapping_empty.json`: An empty mapping file, useful for testing custom mappings.  
 `res/output_credential.json`: Example output file for the converted JSON.  
@@ -57,13 +59,25 @@ To remove the default file paths remove lines 34 - 38 from the `main.rs`:
         custom_mapping_path: "res/custom_mapping.json".to_string(),
 ```
 
-### Keyboard & mouse layout
+#### Keyboard & mouse layout
 Use the up and down arrows or tab and F2 to navigate between prompts.
 The left and right arrows enable you the choose within the prompts with tabbers.
 The normal keyboard layout can be used for entering file paths.
 All values are saved automatically.
 Enter can still be used as well to move to the next prompt.
 Clicking the complete button in the topright or enter on the last prompt will move you to the next page.
+Esc to exit.
+
+### Page 2, completing mandatory output-standard fields
+Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.  
+`DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
+`Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.
+*Currently `Slice`, `Regex`, `ManytoOne` and `OnetoMany` are not functional yet*.  
+
+The View button allows you to view the selected fields in full length in a popup, as the main page will truncate long texts. The tabs in the popup are scrollable. Transformations will also be displayed immediately. Navigation on the main page is still possible when the popup is open
+The Clear button will close either the popup first if this is open. Then, it will clear all selected mapping options. Finally, if there is no popup nor mapping options selected, it will clear the result-value from the selected output field.
+
+![impierce-mapper_P2.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P2.png)
 
 ## Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
