@@ -31,7 +31,7 @@ fn main() -> Result<()> {
     let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
     terminal.clear()?;
     let mut state = AppState {
-        // TODO: remove these hardcoded paths
+        // Default example values, remove if no longer needed
         input_path: "res/elm_example.json".to_string(),
         mapping_path: "res/mapping_empty.json".to_string(),
         output_path: "res/output_credential.json".to_string(),
@@ -42,7 +42,7 @@ fn main() -> Result<()> {
             ("credentialSubject/e-Mail".to_string(), "".to_string()),
             ("credentialSubject/phoneNumber".to_string(), "".to_string()),
             ("credentialSubject/gender".to_string(), "".to_string()),
-        ], // todo: remove hard code testdata
+        ], // todo: load in optional fields properly
 
         selected_input_field: 1, // todo: what if none? Also after going back to tab 1 and changing file paths?
         selected_missing_field: 1, // todo: what if none?
