@@ -107,8 +107,8 @@ The complete button, view button and clear button are also clickable.
 Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
 
 ### Page 4, finished
-You are finished, the mapping is done.
-This page only displays the output paths where you will find the results of your mapping.
+You are finished, the mapping is done.  
+This page only displays the output paths where you will find the results of your mapping.  
 You can safely close the program using either Esc or clicking Complete. 
 
 ## Contributing
