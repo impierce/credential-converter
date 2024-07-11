@@ -14,21 +14,21 @@ To run this project, ensure you have Rust installed. If not, you can install it 
 
 Clone the repository:
 
-sh
-Copy code
+```sh
 git clone https://github.com/impierce/impierce-mapper
 cd impierce-mapper
 Build the project:
+```
 
-sh
-Copy code
+```sh
 cargo build
 Usage
 Run the application with:
+```
 
-sh
-Copy code
+```sh
 cargo run
+```
 
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
