@@ -41,6 +41,9 @@ res/custom_mapping.json: Example custom mapping file.
 Logging
 Logs are kept in `logging_folder/impierce-mapper.log`. This file is overwritten upon each startup of the program.
 
+Keyboard & mouse layout
+// keys and perhaps a screenshot here x
+
 Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
 
