@@ -33,11 +33,8 @@ Upon starting the application, you'll be presented with a terminal interface to 
 
 ## Example files and logging
 res/elm_example.json: Example input file for ELM standard.
-
 res/mapping_empty.json: An empty mapping file, useful for testing custom mappings.
-
 res/output_credential.json: Example output file for the converted JSON.
-
 res/custom_mapping.json: Example custom mapping file.
 
 
