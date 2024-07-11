@@ -45,7 +45,6 @@ pub struct AppState {
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
     pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    // pub completed_input_fields: Vec<usize>, // todo: double data at this point
 
     // Mandatory fields extracted from the output json format
     pub missing_data_fields: Vec<(String, String)>,

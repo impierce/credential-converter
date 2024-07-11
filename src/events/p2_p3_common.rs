@@ -423,16 +423,8 @@ pub fn clear_button(state: &mut AppState) {
     else if !state.select_mapping_option {
         clear_mapping_options(state);
     }
-    // Clear selected missing field
+    // Clear selected missing/optional field
     else {
-        // if let Some(position) = state
-        //     .completed_input_fields
-        //     .iter()
-        //     .position(|&x| x == state.selected_input_field) // it shouldnt be the currently selected, but the one that was used for the mapping of the selected missing/optional field
-        // {
-        //     state.completed_input_fields.remove(position);
-        // }
-
         if state.page == Pages::ManualMappingP2 {
             state.missing_data_fields[state.selected_missing_field].1.clear();
             state
@@ -447,8 +439,6 @@ pub fn clear_button(state: &mut AppState) {
 
         clear_mapping_options(state);
     }
-    trace_dbg!(&state.completed_missing_fields);
-    trace_dbg!(&state.completed_optional_fields);
 }
 
 pub fn confirm_mapping(state: &mut AppState) {
@@ -467,7 +457,6 @@ pub fn confirm_mapping(state: &mut AppState) {
     update_repository(state);
 
     if state.page == Pages::ManualMappingP2 {
-        //hiero
         // Save completed fields
         if !state
             .completed_missing_fields
@@ -525,7 +514,5 @@ pub fn confirm_mapping(state: &mut AppState) {
         state.selected_input_field += 1;
     }
 
-    trace_dbg!(&state.completed_missing_fields);
-    trace_dbg!(&state.completed_optional_fields);
     clear_mapping_options(state);
 }
