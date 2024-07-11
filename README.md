@@ -28,12 +28,15 @@ Run the application with:
 ```sh
 cargo run
 ```
-
 ## Usage
+
+[https://www.youtube.com/watch?v=TGc2OyFQqXs]
+The link above contains a youtube video which is a walkthrough of the program.
+For a written walkthrough, including screenshots, and explanation on the keyboard and mouse usage read below.
+
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths.
 
-![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/main/HEAD/.github/impierce-mapper_P1.png)
-
+![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P1.png)
 
 ### Default example files and logging
 `res/elm_example.json`: Example input file for ELM standard.  
@@ -53,9 +56,9 @@ To remove the default file paths remove lines 34 - 38 from the `main.rs`:
         custom_mapping_path: "res/custom_mapping.json".to_string(),
 ```
 
-## Keyboard & mouse layout
-// keys and perhaps a screenshot here x
-
+### Keyboard & mouse layout
+Use the up and down arrows, tab or F2 to navigate between prompts.
+The left and right arrows enable you the choose from the tabbers.
 ## Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
 
