@@ -13,7 +13,7 @@ use ratatui::prelude::*;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
-    widgets::{Block, Clear}
+    widgets::{Block, Clear},
 };
 
 use crate::state::{translate, AppState, Pages};
@@ -40,7 +40,7 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
     let [prev_button, _rest] = Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(prev_button);
     let [complete_button, _rest] =
         Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0)]).areas(complete_button);
-    
+
     if state.page != Pages::InputPromptsP1 {
         state.prev_page_button = prev_button;
         render_prev_page_button(prev_button, frame.buffer_mut());

@@ -66,7 +66,15 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .enumerate()
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]); //todo
-            if state.completed_missing_fields.iter().any(|&(_, second)| second == index) || state.completed_optional_fields.iter().any(|&(_, second)| second == index) {
+            if state
+                .completed_missing_fields
+                .iter()
+                .any(|&(_, second)| second == index)
+                || state
+                    .completed_optional_fields
+                    .iter()
+                    .any(|&(_, second)| second == index)
+            {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -93,7 +101,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .map(|(index, (key, value))| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
             if state.completed_missing_fields.iter().any(|&(first, _)| first == index) {
-                            row = row.style(Style::default().fg(Color::Green));
+                row = row.style(Style::default().fg(Color::Green));
             }
             row
         })
@@ -122,7 +130,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
                 MappingOptions::Transformations => render_popup_mapping(area, buf, state),
                 MappingOptions::OneToMany => render_popup_mapping(area, buf, state), //todo
                 MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), //todo
-                MappingOptions::DirectCopy => {}                                                              // DirectCopy
+                MappingOptions::DirectCopy => {}                                     // DirectCopy
             }
         }
     }

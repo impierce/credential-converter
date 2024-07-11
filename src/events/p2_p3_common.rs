@@ -432,7 +432,7 @@ pub fn clear_button(state: &mut AppState) {
         // {
         //     state.completed_input_fields.remove(position);
         // }
-        
+
         if state.page == Pages::ManualMappingP2 {
             state.missing_data_fields[state.selected_missing_field].1.clear();
             state
@@ -464,14 +464,20 @@ pub fn confirm_mapping(state: &mut AppState) {
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
     trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
 
-    update_repository(state);    
+    update_repository(state);
 
-    if state.page == Pages::ManualMappingP2 { //hiero
+    if state.page == Pages::ManualMappingP2 {
+        //hiero
         // Save completed fields
-        if !state.completed_missing_fields.iter().any(|&(first, _)| first == state.selected_missing_field) {
-            state.completed_missing_fields.push((state.selected_missing_field, state.selected_input_field));
-        }
-        else {
+        if !state
+            .completed_missing_fields
+            .iter()
+            .any(|&(first, _)| first == state.selected_missing_field)
+        {
+            state
+                .completed_missing_fields
+                .push((state.selected_missing_field, state.selected_input_field));
+        } else {
             // Find the old mapping tuple and replace
             for tuple in &mut state.completed_missing_fields {
                 if tuple.0 == state.selected_missing_field {
@@ -488,10 +494,15 @@ pub fn confirm_mapping(state: &mut AppState) {
         }
     } else {
         // Save completed fields
-        if !state.completed_optional_fields.iter().any(|&(first, _)| first == state.selected_optional_field) {
-            state.completed_optional_fields.push((state.selected_optional_field, state.selected_input_field));
-        }
-        else {
+        if !state
+            .completed_optional_fields
+            .iter()
+            .any(|&(first, _)| first == state.selected_optional_field)
+        {
+            state
+                .completed_optional_fields
+                .push((state.selected_optional_field, state.selected_input_field));
+        } else {
             // Find the old mapping tuple and replace
             for tuple in &mut state.completed_optional_fields {
                 if tuple.0 == state.selected_optional_field {

@@ -18,7 +18,7 @@ pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, 
         ];
         let clear_len = format!(" {} ", translate("clear")).chars().count() as u16;
         let view_len = format!(" {} ", translate("view")).chars().count() as u16;
-    
+
         let [multiplicity_tabs, clear, view] = Layout::horizontal([
             Constraint::Percentage(100),
             Constraint::Length(clear_len),
@@ -175,7 +175,7 @@ pub fn render_manytoone_bar(area: Rect, buf: &mut Buffer, state: &mut AppState) 
 pub fn render_mapping_bar_buttons(clear: Rect, view: Rect, state: &mut AppState, buf: &mut Buffer) {
     let clear_txt = format!(" {} ", translate("clear"));
     let view_txt = format!(" {} ", translate("view"));
- 
+
     state.clear_button = clear;
     state.view_button = view;
 
