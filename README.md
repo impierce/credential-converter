@@ -68,7 +68,7 @@ Enter can still be used as well to complete a prompt and to move to the next pro
 Clicking the complete button in the top right or enter on the last prompt will move you to the next page.  
 Esc will prompt you to exit the program, losing all progress.
 
-### Page 2, completing mandatory output-standard fields
+### Page 2, complete mandatory output fields
 Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.  
 
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
@@ -87,6 +87,29 @@ Use the arrows, tab and F2 to navigate inside and between tabs.
 Enter will select a field/transformation/button, sometimes moving you to the next tab.  
 The complete button, view button and clear button are also clickable.  
 Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
+
+### Page 3, completing optional fields
+Page 3 is completely optional, the mandatory part is finished in page 2.
+In this page you can choose to complete optional output fields.
+The layout and usage are the same as page 2.
+
+On the right are now the optional output fields.  
+*Currently the optional fields aren't loaded correctly yet, what is visible is dummy data.*  
+On the left are the same fields from the input file with the used fields still in green.
+This doesn't mean you can't use them again.
+
+![impierce-mapper_P3.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P3.png)
+
+#### Keyboard & mouse layout
+Use the arrows, tab and F2 to navigate inside and between tabs.  
+Enter will select a field/transformation/button, sometimes moving you to the next tab.  
+The complete button, view button and clear button are also clickable.  
+Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
+
+### Page 4, finished
+You are finished, the mapping is done.
+This page only displays the output paths where you will find the results of your mapping.
+You can safely close the program using either Esc or clicking Complete. 
 
 ## Contributing
 Feel free to fork this repository, submit issues, and make pull requests. Any contributions are welcome and appreciated.
