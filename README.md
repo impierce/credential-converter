@@ -28,6 +28,9 @@ Run the application with:
 ```sh
 cargo run
 ```
+
+*Warning: the ratatui library does not seem to handle different color settings in your terminal perfectly. This causes the colors to differ slightly between builds in different terminals. For reference please continue reading the readme, colors will be explained accompanied by screenshots.*
+
 ## Usage
 
 The link below contains a youtube video which is a walkthrough of the program.
@@ -40,7 +43,7 @@ For a written walkthrough, including screenshots, and explanation on the keyboar
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, and output file paths. Yellow highlights the active field. Green indicates a valid path. Orange means a given output path will wipe and overwrite an existing file in that location. Red means it's invalid, which disables you from continuing to the next page.
 On the bottom you'll find a bar explaining the basic keys as well.
 
-![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P1.png)
+![impierce-mapper_P1.png](https://github.com/impierce/impierce-mapper/raw/main/.github/impierce-mapper_P1.png)
 
 #### Default example files and logging
 `res/elm_example.json`: Example input file for ELM standard.  
@@ -80,7 +83,7 @@ The Clear button will close either the popup first if this is open. Then, it wil
 The complete button in the top right will move you to the next page. If not all fields on the right are green, this will render a popup warning informing you the output file will be invalid.
 
 
-![impierce-mapper_P2.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P2.png)
+![impierce-mapper_P2.png](https://github.com/impierce/impierce-mapper/raw/main/.github/impierce-mapper_P2.png)
 
 #### Keyboard & mouse layout
 Use the arrows, tab and F2 to navigate inside and between tabs.  
@@ -98,7 +101,7 @@ On the right are now the optional output fields.
 On the left are the same fields from the input file with the used fields still in green.
 This doesn't mean you can't use them again.
 
-![impierce-mapper_P3.png](https://github.com/impierce/impierce-mapper/raw/feat/README/.github/impierce-mapper_P3.png)
+![impierce-mapper_P3.png](https://github.com/impierce/impierce-mapper/raw/main/.github/impierce-mapper_P3.png)
 
 #### Keyboard & mouse layout
 Use the arrows, tab and F2 to navigate inside and between tabs.  
