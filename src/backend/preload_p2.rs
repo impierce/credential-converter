@@ -8,7 +8,7 @@ use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 use super::repository::{construct_leaf_node, merge};
 use crate::{
     backend::{leaf_nodes::get_leaf_nodes, repository::Repository, transformations::Transformation},
-    state::AppState,
+    state::{AppState, Mapping},
     trace_dbg,
 };
 
@@ -252,3 +252,57 @@ fn extract_between_backticks(s: &str) -> Option<String> {
     re.captures(s)
         .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
 }
+
+
+
+
+// testing
+
+pub fn resolve_schema(state: &mut AppState)
+{
+    init_state(state);
+
+    resolve_schema_root(state);
+
+}
+
+pub fn resolve_schema_root(state: &mut AppState)
+{
+    let properties = state.target_schema.get("properties").unwrap_or(&Value::Null);
+    let properties = state.target_schema.get("properties").unwrap_or(&Value::Null);
+
+
+}
+
+pub fn resolve_ref()
+{}
+
+pub fn resolve_def()
+{}
+
+pub fn init_state(state: &mut AppState)
+{
+    // Initialize paths
+    state.input_field_path = "$.".to_string();
+    state.missing_field_path = "$.".to_string();
+    state.optional_field_path = "$.".to_string();
+
+    // Init target_schema
+    match state.mapping {
+        Mapping::OBv3ToELM => {
+            state.target_schema = get_json("json/").unwrap(); // todo remove unwrap()
+        },
+        Mapping::ELMToOBv3 => {
+            state.target_schema = get_json("json/obv3/obv3_schema.json").unwrap(); // todo remove unwrap()
+        },
+    }
+}
+
+// use jsonpath_rust::{path, parser::model::JsonPath};
+
+// fn test ()
+// {
+//     let path = JsonPath::try_from(".abc.*").unwrap();
+//     let path2 = JsonPath::Chain(vec![path!("abc"), path!(*)]);
+//     assert_eq!(path, path2);
+// }

@@ -1,5 +1,6 @@
 use ratatui::layout::Rect;
-use std::borrow::Cow;
+use serde_json::Value;
+use std::{borrow::Cow, collections::HashMap};
 use strum::{AsRefStr, Display, FromRepr};
 
 use crate::backend::{repository::Repository, transformations::Transformation};
@@ -72,9 +73,7 @@ pub struct AppState {
     pub output_fields_area_p2_p3: Rect,
     pub popup_path_area: Rect,
     pub popup_value_area: Rect,
-    // pub popup_input_path_p2: Rect,
     pub popup_output_path: Rect,
-    // pub popup_input_value_p2: Rect,
     pub popup_output_result: Rect,
 
     // Areas for clicking
@@ -94,8 +93,13 @@ pub struct AppState {
     pub popup_amount_lines_output_path: usize,
     pub popup_amount_lines_result: usize,
 
-    // testcase
-    pub complete: bool, // change into button, thus a click event, not key press event
+    // test
+    pub target_schema: Value,
+    pub resolved_subsets: HashMap<String, Value>, // <JsonPath, Value>
+
+    pub input_field_path: String,
+    pub missing_field_path: String,
+    pub optional_field_path: String,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, AsRefStr)]
