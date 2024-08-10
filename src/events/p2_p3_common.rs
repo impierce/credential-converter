@@ -4,7 +4,7 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::{repository::update_repository, selector::selector},
+    backend::{repository::update_repository, resolve::{update_display_section, update_path}, selector::selector},
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
@@ -254,6 +254,8 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if state.popup_mapping_p2_p3 {
                     confirm_mapping(state);
                 } else {
+                    update_path(state);
+                    update_display_section(state);
                     state.p2_p3_tabs.next();
                 }
             }

@@ -32,10 +32,10 @@ fn main() -> Result<()> {
     terminal.clear()?;
     let mut state = AppState {
         // Default example values, remove if no longer needed
-        input_path: "res/elm_example.json".to_string(),
-        mapping_path: "res/mapping_empty.json".to_string(),
-        output_path: "res/output_credential.json".to_string(),
-        custom_mapping_path: "res/custom_mapping.json".to_string(),
+        input_path: "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string(),
+        mapping_path: "json/mapping/mapping_empty.json".to_string(),
+        output_path: "json/output_credential.json".to_string(),
+        custom_mapping_path: "json/mapping/custom_mapping.json".to_string(),
 
         optional_fields: vec![
             ("".to_string(), "".to_string()),

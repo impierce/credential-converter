@@ -95,11 +95,15 @@ pub struct AppState {
 
     // test
     pub target_schema: Value,
-    pub resolved_subsets: HashMap<String, Value>, // <JsonPath, Value>
+    pub resolved_subsets: HashMap<String, Value>, // <JsonPointer, Value> JsonPointers is unnecessary complexity for now.
 
-    pub input_field_path: String,
-    pub missing_field_path: String,
-    pub optional_field_path: String,
+    pub input_field_pointer: String,
+
+    pub missing_field_pointer: String,
+    pub missing_display_section: Vec<(String, String)>,
+
+    pub optional_field_pointer: String,
+    pub optional_display_section: Vec<(String, String)>,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, AsRefStr)]

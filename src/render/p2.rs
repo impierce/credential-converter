@@ -1,9 +1,8 @@
 use crate::{
-    mapping_bars::{render_manytoone_bar, render_mapping_bar},
-    popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2},
-    state::{translate, AppState, MappingOptions, P2P3Tabs},
+    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2}, state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg
 };
 
+use std::ops::Deref;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -91,21 +90,32 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         &mut table_state,
     );
 
-    // Render right tab containing missing fields
-    state.amount_missing_fields = state.missing_data_fields.len() - 2; // todo
     let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
-    let rows: Vec<Row> = state
-        .missing_data_fields
+    let mut missing_data_fields: Vec<(String, String)> = state
+        .resolved_subsets
+        .get("/required")
+        .and_then(|v| v.as_object())
+        .expect("error: couldn't retrieve required fields from Json Schema.")
+        .iter()
+        .map(|(key, value)| (key.to_string(), value_to_str(value)))
+        .collect();
+
+    missing_data_fields.insert(0, ("".to_string(), "".to_string()));
+    state.amount_missing_fields = state.missing_data_fields.len() - 2;
+
+    let rows: Vec<Row> = missing_data_fields
         .iter()
         .enumerate()
         .map(|(index, (key, value))| {
-            let mut row = Row::new(vec![key.as_str(), value.as_str()]);
+            let mut row = Row::new(vec![key.deref(), value.deref()]);
             if state.completed_missing_fields.iter().any(|&(first, _)| first == index) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
         })
         .collect();
+
+    ////
 
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
@@ -128,8 +138,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         } else {
             match state.mapping_option {
                 MappingOptions::Transformations => render_popup_mapping(area, buf, state),
-                MappingOptions::OneToMany => render_popup_mapping(area, buf, state), //todo
-                MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), //todo
+                MappingOptions::OneToMany => render_popup_mapping(area, buf, state), // todo
+                MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), // todo
                 MappingOptions::DirectCopy => {}                                     // DirectCopy
             }
         }

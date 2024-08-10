@@ -2,12 +2,12 @@ use core::panic;
 use digital_credential_data_models::{elmv3::EuropassEdcCredential, obv3::AchievementCredential};
 use regex::Regex;
 use serde::{de::DeserializeOwned, Serialize};
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 
 use super::repository::{construct_leaf_node, merge};
 use crate::{
-    backend::{leaf_nodes::get_leaf_nodes, repository::Repository, transformations::Transformation},
+    backend::{leaf_nodes::get_leaf_nodes, repository::Repository, resolve::update_display_section, transformations::Transformation},
     state::{AppState, Mapping},
     trace_dbg,
 };
@@ -15,6 +15,8 @@ use crate::{
 // todo: when going back to p1 and loading again, everything in backend is wiped because of this preload fn.
 // this is fine but then also state info must be wiped
 pub fn preload_p2(state: &mut AppState) {
+    get_missing_data_fieldss(state); // testing
+
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
     // Load the input file
@@ -253,56 +255,93 @@ fn extract_between_backticks(s: &str) -> Option<String> {
         .and_then(|caps| caps.get(1).map(|m| m.as_str().to_string()))
 }
 
-
-
-
 // testing
-
-pub fn resolve_schema(state: &mut AppState)
-{
+pub fn get_missing_data_fieldss(state: &mut AppState) {
     init_state(state);
 
-    resolve_schema_root(state);
+    update_display_section(state);
 
+    // get_required_fields(&mut state.target_schema, "", &mut tmp_map);
+    // resolve_logic_construct(&mut state.target_schema, "", &mut tmp_map);
+
+    // state
+    //     .resolved_subsets
+    //     .insert(state.missing_field_pointer.clone(), Value::from(tmp_map));
+
+    trace_dbg!(&state.resolved_subsets);
 }
 
-pub fn resolve_schema_root(state: &mut AppState)
-{
-    let properties = state.target_schema.get("properties").unwrap_or(&Value::Null);
-    let properties = state.target_schema.get("properties").unwrap_or(&Value::Null);
-
-
-}
-
-pub fn resolve_ref()
-{}
-
-pub fn resolve_def()
-{}
-
-pub fn init_state(state: &mut AppState)
-{
+pub fn init_state(state: &mut AppState) {
     // Initialize paths
-    state.input_field_path = "$.".to_string();
-    state.missing_field_path = "$.".to_string();
-    state.optional_field_path = "$.".to_string();
+    state.input_field_pointer = "/".to_string();
+    state.missing_field_pointer = "/required".to_string();
+    state.optional_field_pointer = "/".to_string();
 
     // Init target_schema
     match state.mapping {
         Mapping::OBv3ToELM => {
-            state.target_schema = get_json("json/").unwrap(); // todo remove unwrap()
-        },
+            state.target_schema = get_json("json/ebsi-elm/vcdm2.0-europass-edc-schema/schema.json").unwrap();
+            // todo remove unwrap()
+        }
         Mapping::ELMToOBv3 => {
-            state.target_schema = get_json("json/obv3/obv3_schema.json").unwrap(); // todo remove unwrap()
-        },
+            state.target_schema = get_json("json/obv3/obv3_schema.json").unwrap();
+            // todo remove unwrap()
+        }
     }
 }
 
-// use jsonpath_rust::{path, parser::model::JsonPath};
+pub fn get_required_fields(schema: &mut Value, path: &str, tmp_map: &mut Map<String, Value>) {
+    let properties_path = path.to_owned() + "/properties";
+    let required_path = path.to_owned() + "/required";
 
-// fn test ()
-// {
-//     let path = JsonPath::try_from(".abc.*").unwrap();
-//     let path2 = JsonPath::Chain(vec![path!("abc"), path!(*)]);
-//     assert_eq!(path, path2);
+    if let Some(properties) = schema.pointer(properties_path.as_str()) {
+        if let Some(required) = schema.pointer(required_path.as_str()) {
+            if let Some(required) = required.as_array() {
+                for key in required {
+                    if let Some(key) = key.as_str() {
+                        tmp_map.insert(key.to_string(), properties[key].clone());
+                    }
+                }
+            }
+        }
+    }
+}
+
+pub fn resolve_logic_construct(schema: &mut Value, path: &str, map: &mut Map<String, Value>) {
+    if let Some(schema) = schema.pointer(path) {
+        if let Some(all_of) = schema.get("allOf") {
+            if let Some(all_of_elmnts) = all_of.as_array() {
+                for i in 0..all_of_elmnts.len() {
+                    map.insert(path.to_owned() + "/allOf/" + i.to_string().as_str(), Value::Null);
+                }
+            }
+        }
+        if let Some(any_of) = schema.get("anyOf") {
+            if let Some(any_of_elmnts) = any_of.as_array() {
+                for i in 0..any_of_elmnts.len() {
+                    map.insert(path.to_owned() + "/anyOf/" + i.to_string().as_str(), Value::Null);
+                }
+            }
+        }
+        if let Some(one_of) = schema.get("oneOf") {
+            if let Some(one_of_elmnts) = one_of.as_array() {
+                for i in 0..one_of_elmnts.len() {
+                    map.insert(path.to_owned() + "/oneOf/" + i.to_string().as_str(), Value::Null);
+                }
+            }
+        }
+        if let Some(not) = schema.get("not") {
+            if let Some(not_elmnts) = not.as_array() {
+                for i in 0..not_elmnts.len() {
+                    map.insert(path.to_owned() + "/not/" + i.to_string().as_str(), Value::Null);
+                }
+            }
+        }
+    }
+}
+
+// pub fn resolve_ref(ref_: String) -> Value {
+//     // let
 // }
+
+// pub fn resolve_def() {}
