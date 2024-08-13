@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
@@ -6,9 +8,7 @@ use ratatui::{
 };
 
 use crate::{
-    mapping_bars::{render_manytoone_bar, render_mapping_bar},
-    popups::{render_popup_exit_warning, render_popup_mapping},
-    state::{translate, AppState, MappingOptions, P2P3Tabs},
+    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping}, state::{translate, AppState, MappingOptions, P2P3Tabs}
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -90,20 +90,55 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     );
 
     // Render right tab containing optional fields
-    state.amount_optional_fields = state.optional_fields.len() - 2; // todo
+
+    ////
     let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
+
+    state.optional_display_subset = state
+        .resolved_subsets
+        .get(&state.optional_field_pointer)
+        .and_then(|v| v.as_object())
+        .expect("error: couldn't retrieve optional fields from Json Schema.")
+        .iter()
+        .map(|(key, value)| (key.to_string(), value_to_str(value)))
+        .collect();
+
+    state.optional_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
+    if let Some(i) = state.optional_display_subset.iter().position(|(key, _)| key == "Your input >>") {
+        let your_input_field = state.optional_display_subset.remove(i);
+        state.optional_display_subset.insert(0, your_input_field);
+    }
+    state.optional_display_subset.insert(0, ("".to_string(), "".to_string()));
+    state.amount_optional_fields = state.optional_display_subset.len() - 1;
+
     let rows: Vec<Row> = state
-        .optional_fields
+        .optional_display_subset
         .iter()
         .enumerate()
         .map(|(index, (key, value))| {
-            let mut row = Row::new(vec![key.as_str(), value.as_str()]);
+            let mut row = Row::new(vec![key.deref(), value.deref()]);
             if state.completed_optional_fields.iter().any(|&(first, _)| first == index) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
         })
         .collect();
+
+    ////
+
+    // let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
+    // let rows: Vec<Row> = state
+    //     .optional_fields
+    //     .iter()
+    //     .enumerate()
+    //     .map(|(index, (key, value))| {
+    //         let mut row = Row::new(vec![key.as_str(), value.as_str()]);
+    //         if state.completed_optional_fields.iter().any(|&(first, _)| first == index) {
+    //             row = row.style(Style::default().fg(Color::Green));
+    //         }
+    //         row
+    //     })
+    //     .collect();
 
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])

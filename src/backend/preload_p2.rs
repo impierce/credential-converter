@@ -7,8 +7,10 @@ use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 
 use super::repository::{construct_leaf_node, merge};
 use crate::{
-    backend::{leaf_nodes::get_leaf_nodes, repository::Repository, resolve::update_display_section, transformations::Transformation},
-    state::{AppState, Mapping},
+    backend::{
+        leaf_nodes::get_leaf_nodes, repository::Repository, transformations::Transformation,
+    },
+    state::{AppState, Mapping, P2P3Tabs, Pages},
     trace_dbg,
 };
 
@@ -67,7 +69,7 @@ pub fn preload_p2(state: &mut AppState) {
     }
 
     trace_dbg!(&output_format);
-    trace_dbg!(&state.repository);
+    // trace_dbg!(&state.repository);
     let json_value = state.repository.get(&output_format).unwrap().clone();
 
     state.missing_data_fields = [
@@ -257,45 +259,28 @@ fn extract_between_backticks(s: &str) -> Option<String> {
 
 // testing
 pub fn get_missing_data_fieldss(state: &mut AppState) {
-    init_state(state);
+    init_schema(state);
 
-    update_display_section(state);
-
-    // get_required_fields(&mut state.target_schema, "", &mut tmp_map);
-    // resolve_logic_construct(&mut state.target_schema, "", &mut tmp_map);
-
-    // state
-    //     .resolved_subsets
-    //     .insert(state.missing_field_pointer.clone(), Value::from(tmp_map));
-
-    trace_dbg!(&state.resolved_subsets);
+    update_display_section(state, false);
 }
 
-pub fn init_state(state: &mut AppState) {
-    // Initialize paths
-    state.input_field_pointer = "/".to_string();
-    state.missing_field_pointer = "/required".to_string();
-    state.optional_field_pointer = "/".to_string();
-
+pub fn init_schema(state: &mut AppState) {
     // Init target_schema
     match state.mapping {
         Mapping::OBv3ToELM => {
-            state.target_schema = get_json("json/ebsi-elm/vcdm2.0-europass-edc-schema/schema.json").unwrap();
-            // todo remove unwrap()
+            state.target_schema = get_json("json/ebsi-elm/vcdm2.0-europass-edc-schema/schema.json").expect("error: couldn't retrieve Europass EDC ELM schema");
         }
         Mapping::ELMToOBv3 => {
-            state.target_schema = get_json("json/obv3/obv3_schema.json").unwrap();
-            // todo remove unwrap()
+            state.target_schema = get_json("json/obv3/obv3_schema.json").expect("error: couldn't retrieve OpenBadges version 3 schema");
         }
     }
 }
 
-pub fn get_required_fields(schema: &mut Value, path: &str, tmp_map: &mut Map<String, Value>) {
-    let properties_path = path.to_owned() + "/properties";
-    let required_path = path.to_owned() + "/required";
+// All of the below is common to P2 & P3
 
-    if let Some(properties) = schema.pointer(properties_path.as_str()) {
-        if let Some(required) = schema.pointer(required_path.as_str()) {
+pub fn get_required_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>) {
+    if let Some(properties) = schema.get("properties") {
+        if let Some(required) = schema.get("required") {
             if let Some(required) = required.as_array() {
                 for key in required {
                     if let Some(key) = key.as_str() {
@@ -307,7 +292,16 @@ pub fn get_required_fields(schema: &mut Value, path: &str, tmp_map: &mut Map<Str
     }
 }
 
-pub fn resolve_logic_construct(schema: &mut Value, path: &str, map: &mut Map<String, Value>) {
+pub fn get_optional_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>) {
+    if let Some(properties) = schema.get("properties") {
+        for key in properties.as_object().expect("error: invalid property key-value pair in schema") {
+            tmp_map.insert(key.0.clone(), key.1.clone());
+        }
+    }
+}
+
+
+pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String, Value>) {
     if let Some(schema) = schema.pointer(path) {
         if let Some(all_of) = schema.get("allOf") {
             if let Some(all_of_elmnts) = all_of.as_array() {
@@ -340,8 +334,127 @@ pub fn resolve_logic_construct(schema: &mut Value, path: &str, map: &mut Map<Str
     }
 }
 
-// pub fn resolve_ref(ref_: String) -> Value {
-//     // let
-// }
+pub fn update_path(state: &mut AppState, forward_back: bool) {
+    if forward_back {
+        if state.page == Pages::ManualMappingP2 && state.p2_p3_tabs == P2P3Tabs::OutputFields && state.missing_display_subset[state.selected_missing_field].1 == "<Object>" {
+            state.missing_field_pointer = state.missing_field_pointer.to_owned()
+                + "/"
+                + state.missing_display_subset[state.selected_missing_field].0.as_str();
+            state.selected_missing_field = 1;
+        } else if state.page == Pages::UnusedDataP3 && state.p2_p3_tabs == P2P3Tabs::OutputFields && state.optional_display_subset[state.selected_optional_field].1 == "<Object>" {
+            state.optional_field_pointer = state.optional_field_pointer.to_owned()
+                + "/"
+                + state.optional_display_subset[state.selected_optional_field].0.as_str();
+            state.selected_optional_field = 1;
+        } else if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: implement input field similar structure // if state.input_display_section[state.selected_input_field].1 == "<Object>" {
+            // state.input_field_pointer = state.input_field_pointer.to_owned()
+            //     + "/"
+            //     + state.input_display_section[state.selected_input_field].0.as_str();
+            // state.selected_input_field = 1;
+        }
+    } else {
+        if state.page == Pages::ManualMappingP2 && state.p2_p3_tabs == P2P3Tabs::OutputFields && state.missing_field_pointer != "/required" {
+            state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
+            state.selected_missing_field = 1;
+        } else if state.page == Pages::UnusedDataP3 && state.p2_p3_tabs == P2P3Tabs::OutputFields && state.optional_field_pointer != "/optional" {
+            truncate_until_char(&state.optional_field_pointer, '/');
+            state.selected_optional_field = 1;
+        } else if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: 
+            // truncate_until_char(&state.input_field_pointer, '/');
+            // state.selected_input_field = 1;
+        }
+    }
+}
 
-// pub fn resolve_def() {}
+pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
+    let mut tmp_map = Map::new();
+    let mut path = "";
+
+    // Custom logic needed for preloading page 2 & 3
+    if state.page == Pages::InputPromptsP1 {
+        get_required_fields(&mut state.target_schema, &mut tmp_map);
+        resolve_logic_construct(&mut state.target_schema, path, &mut tmp_map);
+        path = "/required";
+        state.missing_field_pointer = path.to_string();
+    } else if preload_p3 {
+        get_optional_fields(&mut state.target_schema, &mut tmp_map);
+        resolve_logic_construct(&mut state.target_schema, path, &mut tmp_map);
+        path = "/optional";
+        state.optional_field_pointer = path.to_string();
+    } else if state.page == Pages::ManualMappingP2 {
+        if state.resolved_subsets.contains_key(&state.missing_field_pointer) {
+            return ;
+        }
+
+        path = &state.missing_field_pointer;
+        let subset_path = truncate_until_char(path, '/');
+        let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
+        let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
+
+        resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
+        get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
+        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+
+        // When a key-value contains no required field nor any logical construct, also not in a $ref or $def,
+        // then we are left with 2 possibilities: either just the key is required but all fields within the key are optional, --> what to do?
+        // or it's a leaf node. In the latter case we can resolve the leaf node with this function
+        if tmp_map.is_empty() { // this should actually also check that type != object, if it is an object then it might be the frequent case where an object (key) is required but all fields within the object are optional
+            tmp_map = subset.get_mut(key).unwrap().as_object().unwrap().clone(); // todo remove unwrap
+            tmp_map.insert("Your input >>".to_string(), Value::Null);
+            // resolve_leaf_node(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+        }
+    } else if state.page == Pages::UnusedDataP3 {
+        if state.resolved_subsets.contains_key(&state.optional_field_pointer) {
+            return ;
+        }
+        
+        path = &state.optional_field_pointer;
+        let subset_path = truncate_until_char(path, '/');
+        let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
+        let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
+
+        resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
+        get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
+        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+
+        if tmp_map.is_empty() { // this should actually also check that type != object, if it is an object then it might be the edge case where an object (key) is required but all fields within the object are optional
+            tmp_map = subset.get_mut(key).unwrap().as_object().unwrap().clone(); // todo remove unwrap
+            tmp_map.insert("Your input >>".to_string(), Value::Null);
+        }
+    }
+
+    state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
+    //state.missing_display_subset = value_to_str(state.resolved_subsets.get(path).unwrap());
+    trace_dbg!(&state.resolved_subsets);
+}
+
+
+/// This function takes a ref and replaces the subschema/Value with the resolved ref, entirely.
+/// All specs until the latest haven't allowed any additional fields inside the ref object.
+/// So practically this function is not fully compliant with the latest specs.
+/// However, additional fields inside a ref object in the latest draft are quite complex to utilize and still strongly discouraged.
+pub fn resolve_ref(schema: &mut Value, root: Value) {
+    if let Some(schema_obj) = schema.as_object() {
+        if let Some(ref_) = schema_obj.get("$ref") {
+            if let Some(ref_str) = ref_.as_str() {
+                // at this point it's fair to assume the json schema ref is invalid if it contains something else than a string.
+                if ref_str.starts_with("#/") {
+                    let tmp = root.pointer(ref_str.trim_start_matches("#")).unwrap().clone();
+                    *schema = tmp;
+                } else {
+                    let path = truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
+                        + ref_str.trim_start_matches('.'); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
+                    let tmp = get_json(path).unwrap();
+                    *schema = tmp;
+                }
+            }
+        }
+    }
+}
+
+fn truncate_until_char(s: &str, ch: char) -> &str {
+    match s.rfind(ch) {
+        Some(pos) => &s[..pos],
+        None => s,
+    }
+}

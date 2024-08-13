@@ -1,14 +1,17 @@
 use crate::{
-    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2}, state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg
+    backend::resolve::value_to_str,
+    mapping_bars::{render_manytoone_bar, render_mapping_bar},
+    popups::{render_popup_exit_warning, render_popup_mapping, render_popup_uncompleted_warning_p2},
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
 
-use std::ops::Deref;
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Rect},
     prelude::*,
     widgets::*,
 };
+use std::ops::Deref;
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
@@ -91,19 +94,26 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     );
 
     let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
-    let mut missing_data_fields: Vec<(String, String)> = state
+    ////
+    state.missing_display_subset = state
         .resolved_subsets
-        .get("/required")
+        .get(&state.missing_field_pointer)
         .and_then(|v| v.as_object())
         .expect("error: couldn't retrieve required fields from Json Schema.")
         .iter()
         .map(|(key, value)| (key.to_string(), value_to_str(value)))
         .collect();
 
-    missing_data_fields.insert(0, ("".to_string(), "".to_string()));
-    state.amount_missing_fields = state.missing_data_fields.len() - 2;
+    state.missing_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
+    if let Some(i) = state.missing_display_subset.iter().position(|(key, _)| key == "Your input >>") {
+        let your_input_field = state.missing_display_subset.remove(i);
+        state.missing_display_subset.insert(0, your_input_field);
+    }
+    state.missing_display_subset.insert(0, ("".to_string(), "".to_string()));
+    state.amount_missing_fields = state.missing_display_subset.len() - 1;
 
-    let rows: Vec<Row> = missing_data_fields
+    let rows: Vec<Row> = state
+        .missing_display_subset
         .iter()
         .enumerate()
         .map(|(index, (key, value))| {

@@ -7,7 +7,7 @@ use crate::backend::{repository::Repository, transformations::Transformation};
 
 //////////      STRUCTS & ENUMS     //////////
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct AppState {
     // Main pages of the program
     pub page: Pages,
@@ -98,12 +98,13 @@ pub struct AppState {
     pub resolved_subsets: HashMap<String, Value>, // <JsonPointer, Value> JsonPointers is unnecessary complexity for now.
 
     pub input_field_pointer: String,
+    pub input_display_section: Vec<(String, String)>,
 
     pub missing_field_pointer: String,
-    pub missing_display_section: Vec<(String, String)>,
+    pub missing_display_subset: Vec<(String, String)>,
 
     pub optional_field_pointer: String,
-    pub optional_display_section: Vec<(String, String)>,
+    pub optional_display_subset: Vec<(String, String)>,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, AsRefStr)]

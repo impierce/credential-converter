@@ -9,7 +9,7 @@
       "$ref" : "/json/ebsi-elm/vcdm2.0-attestation-schema/schema.json"
     },
     {
-      "$ref" : "#/defs/RefreshService"
+      "$ref" : "#/$defs/RefreshService"
     }
   ],
   "properties": {

@@ -13,7 +13,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Repository(HashMap<String, Value>);
 
 impl DerefMut for Repository {

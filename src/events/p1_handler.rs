@@ -145,8 +145,8 @@ fn handle_enter_p1(state: &mut AppState) -> bool {
         && mapping_path.is_file()
         && !state.output_path.is_empty()
     {
-        state.page.next();
         preload_p2(state);
+        state.page.next();
         state.overwrite_warning = false;
     }
     // Close overwrite warning if user is not at the end of the prompts or some prompts are valid and stay on page.

@@ -4,7 +4,7 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::{repository::update_repository, resolve::{update_display_section, update_path}, selector::selector},
+    backend::{preload_p2::{update_display_section, update_path}, repository::update_repository, selector::{input_to_output, selector}},
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
@@ -26,7 +26,11 @@ pub fn handle_esc(state: &mut AppState) {
     }
     // Show exit program warning
     else {
-        state.exit_warning = !state.exit_warning;
+        update_path(state, false);
+        update_display_section(state, false);
+        trace_dbg!(&state.missing_field_pointer);
+        trace_dbg!(&state.missing_display_subset);
+        // state.exit_warning = !state.exit_warning; // todo: tmp
     }
 }
 
@@ -207,6 +211,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
         next_page(state);
+        update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
     } else if state.exit_warning {
         return true;
     } else {
@@ -215,7 +220,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if state.select_mapping_option {
                     // Fast-track mapping, Copy to output result value and reset values
                     if state.mapping_option == MappingOptions::DirectCopy {
-                        selector(state);
+                        input_to_output(state);
                         confirm_mapping(state);
                     }
                     // Switch from mapping options tab to respective tab
@@ -254,8 +259,8 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if state.popup_mapping_p2_p3 {
                     confirm_mapping(state);
                 } else {
-                    update_path(state);
-                    update_display_section(state);
+                    update_path(state, true);
+                    update_display_section(state, false);
                     state.p2_p3_tabs.next();
                 }
             }
