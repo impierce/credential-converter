@@ -3,10 +3,11 @@ use crate::{
         jsonpointer::{JsonPath, JsonPointer},
         transformations::{DataLocation, Transformation},
     },
-    state::AppState,
+    state::{AppState, Pages},
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
+use serde::de::value;
 use serde_json::{json, Map, Value};
 use std::{
     collections::HashMap,
@@ -64,15 +65,20 @@ impl Repository {
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 
-                let destination_credential = self.entry(destination_format).or_insert(json!({}));
+                trace_dbg!(&destination_path);
+                let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
+                trace_dbg!(&pointer);
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
+                trace_dbg!(&leaf_node);
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    trace_dbg!(&value);
                     *value = transformation.apply(source_value);
+                    trace_dbg!(&value);
                 }
-
+                trace_dbg!(&leaf_node);
                 merge(destination_credential, leaf_node);
             }
             Transformation::ManyToOne {
@@ -117,7 +123,7 @@ pub fn construct_leaf_node(path: &str) -> Value {
     // Split the input string by '/' and filter out any empty parts
     let parts: Vec<&str> = path.split('/').filter(|&s| !s.is_empty()).collect();
 
-    // Initialize the root of the JSON structure as null
+    // Initialize the root of the JSON structure as null // todo: isn't this actually the value of the leaf node, not the root?
     let mut current_value = Value::Null;
 
     // Iterate through the parts in reverse order to build the nested structure
@@ -131,6 +137,7 @@ pub fn construct_leaf_node(path: &str) -> Value {
 }
 
 pub fn merge(a: &mut Value, b: Value) {
+    // todo: here anything non object is actually simply overwritten. So here we need to introduce type checking of the Value b.
     match (a, b) {
         (a @ &mut Value::Object(_), Value::Object(b)) => {
             let a = a.as_object_mut().unwrap();
@@ -144,29 +151,21 @@ pub fn merge(a: &mut Value, b: Value) {
 
 pub fn update_repository(state: &mut AppState) {
     let output_format = state.mapping.output_format();
-
-    // let (_, source_value) = state.input_fields[state.selected_input_field].clone();
-
-    let source_value = state.candidate_data_value.clone().unwrap();
-
-    trace_dbg!(state.selected_missing_field);
-    if state.selected_missing_field == 0 {
-        return;
+    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required");
+    if state.page == Pages::UnusedDataP3 {
+        output_pointer = state.optional_field_pointer.trim_start_matches("/optional");
     }
+    let source_value = state.candidate_data_value.clone().unwrap();
+    let output_json = state.repository.get_mut(&output_format).unwrap();
 
-    let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
-    trace_dbg!(&pointer);
+    let mut leaf_node = construct_leaf_node(&output_pointer);
 
-    let json_value = state.repository.get_mut(&output_format).unwrap();
-
-    let mut leaf_node = construct_leaf_node(&pointer);
-
-    if let Some(value) = leaf_node.pointer_mut(&pointer) {
+    if let Some(value) = leaf_node.pointer_mut(&output_pointer) {
         *value = serde_json::from_str(&source_value).unwrap();
     }
 
     trace_dbg!(&leaf_node);
 
-    merge(json_value, leaf_node);
-    trace_dbg!(json_value);
+    merge(output_json, leaf_node);
+    trace_dbg!(output_json);
 }

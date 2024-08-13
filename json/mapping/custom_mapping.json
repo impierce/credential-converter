@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.fullName.en"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.required.credentialSubject.achievement.criteria"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.required.credentialSubject.achievement.description"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.identifier"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.required.credentialSubject.achievement.description"
+    }
+  }
+]

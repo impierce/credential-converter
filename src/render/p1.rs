@@ -103,7 +103,6 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
             .fg(Color::Red)
             .render(output_path, buf);
     } else if !path.is_file() {
-        trace_dbg!(&state.output_path);
         Paragraph::new(state.output_path.as_str())
             .block(output_prompt)
             .fg(Color::Green)

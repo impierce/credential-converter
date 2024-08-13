@@ -1,4 +1,5 @@
 use crossterm::event::MouseEvent;
+use serde_json::Value;
 use std::char;
 use std::io::Write;
 
@@ -28,8 +29,8 @@ pub fn handle_esc(state: &mut AppState) {
     else {
         update_path(state, false);
         update_display_section(state, false);
-        trace_dbg!(&state.missing_field_pointer);
-        trace_dbg!(&state.missing_display_subset);
+        // trace_dbg!(&state.missing_field_pointer);
+        // trace_dbg!(&state.missing_display_subset);
         // state.exit_warning = !state.exit_warning; // todo: tmp
     }
 }
@@ -453,13 +454,24 @@ pub fn confirm_mapping(state: &mut AppState) {
     state.p2_p3_tabs = P2P3Tabs::InputFields;
 
     if state.page == Pages::ManualMappingP2 {
-        state.missing_data_fields[state.selected_missing_field].1 = state.candidate_data_value.clone().unwrap();
+        // let mut output = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap().get("Your input >>").unwrap();
+        // output = &Value::from(state.candidate_data_value.clone().unwrap());
+        // state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap().get_mut("Your input >>").unwrap() = &Value::from(state.candidate_data_value.clone().unwrap());
+        let candidate_data_value = state.candidate_data_value.clone().unwrap();
+
+        // Use `get_mut` to get a mutable reference to the inner map
+        let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
+
+        // Use `get_mut` again to get a mutable reference to the specific field, and assign directly
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(candidate_data_value);
+    
+    
     } else {
         state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
     }
 
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-    trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
+    // trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
 
     update_repository(state);
 

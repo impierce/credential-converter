@@ -22,8 +22,11 @@ pub fn selector(state: &mut AppState) {
 
         let (source_pointer, _source_value) = state.input_fields[state.selected_input_field].clone();
 
-        let pointer = state.missing_data_fields[state.selected_missing_field].0.clone();
-        let destination_path: JsonPath = JsonPointer(pointer.clone()).into();
+        let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required");
+        if state.page == Pages::UnusedDataP3 {
+            output_pointer = state.optional_field_pointer.trim_start_matches("/optional");
+        }
+        let destination_path: JsonPath = JsonPointer(output_pointer.to_string()).into();
 
         let mut temp_repository = Repository::from(state.repository.clone());
 
@@ -68,8 +71,8 @@ pub fn selector(state: &mut AppState) {
         temp_repository.apply_transformation(transformation.clone());
         state.mappings.push(transformation);
 
-        //trace_dbg!(&pointer);
-        let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&pointer).unwrap();
+        trace_dbg!(&output_pointer);
+        let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&output_pointer).unwrap();
 
         state.candidate_data_value = Some(candidate_data_value.to_string());
     }

@@ -424,8 +424,8 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     }
 
     state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
-    //state.missing_display_subset = value_to_str(state.resolved_subsets.get(path).unwrap());
-    trace_dbg!(&state.resolved_subsets);
+    // state.missing_display_subset = value_to_str(state.resolved_subsets.get(path).unwrap());
+    // trace_dbg!(&state.resolved_subsets);
 }
 
 
