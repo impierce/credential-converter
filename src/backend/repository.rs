@@ -65,20 +65,20 @@ impl Repository {
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 
-                trace_dbg!(&destination_path);
+                // trace_dbg!(&destination_path);
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
-                trace_dbg!(&pointer);
+                // trace_dbg!(&pointer);
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-                trace_dbg!(&leaf_node);
+                // trace_dbg!(&leaf_node);
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    trace_dbg!(&value);
+                    // trace_dbg!(&value);
                     *value = transformation.apply(source_value);
-                    trace_dbg!(&value);
+                    // trace_dbg!(&value);
                 }
-                trace_dbg!(&leaf_node);
+                // trace_dbg!(&leaf_node);
                 merge(destination_credential, leaf_node);
             }
             Transformation::ManyToOne {
@@ -164,8 +164,8 @@ pub fn update_repository(state: &mut AppState) {
         *value = serde_json::from_str(&source_value).unwrap();
     }
 
-    trace_dbg!(&leaf_node);
+    // trace_dbg!(&leaf_node);
 
     merge(output_json, leaf_node);
-    trace_dbg!(output_json);
+    // trace_dbg!(output_json);
 }

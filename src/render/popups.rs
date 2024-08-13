@@ -69,7 +69,9 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
         state.popup_amount_lines_output_path =
-            state.missing_data_fields[state.selected_missing_field].0.len() / (right.width as usize - 2);
+            (state.missing_field_pointer.clone() + "/" + &state.missing_display_subset[state.selected_missing_field].0)
+                .len()
+                / (right.width as usize - 2); // todo: need to refactor
         state.popup_amount_lines_result =
             state.candidate_data_value.as_ref().unwrap().len() / (right.width as usize - 2);
     }
@@ -98,17 +100,19 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
             buf,
         );
 
-    Paragraph::new(state.missing_data_fields[state.selected_missing_field].0.as_str())
-        .wrap(Wrap { trim: false })
-        .remove_modifier(Modifier::BOLD)
-        .scroll((state.popup_offset_output_path, 0))
-        .render(
-            right_top.inner(&Margin {
-                horizontal: 1,
-                vertical: 1,
-            }),
-            buf,
-        );
+    Paragraph::new(
+        state.missing_field_pointer.clone() + "/" + &state.missing_display_subset[state.selected_missing_field].0,
+    )
+    .wrap(Wrap { trim: false })
+    .remove_modifier(Modifier::BOLD)
+    .scroll((state.popup_offset_output_path, 0))
+    .render(
+        right_top.inner(&Margin {
+            horizontal: 1,
+            vertical: 1,
+        }),
+        buf,
+    );
 
     Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
         .wrap(Wrap { trim: false })

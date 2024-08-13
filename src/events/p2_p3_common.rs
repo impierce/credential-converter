@@ -340,7 +340,7 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-        if state.missing_data_fields.len() - 1 == state.completed_missing_fields.len() {
+        if state.missing_display_subset.len() - 1 == state.completed_missing_fields.len() { // todo: len() fetch incorrectly in multiple locations
             next_page(state);
         } else if state.page == Pages::UnusedDataP3 {
             next_page(state);

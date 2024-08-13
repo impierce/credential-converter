@@ -16,7 +16,7 @@ pub fn selector(state: &mut AppState) {
     .concat();
     // This function shows the outcome of the transformation selected in the togglebar not the outcome of the Vec of selected transformations: state.selected_transformations.
     for transformation in selected_transformations.iter() {
-        trace_dbg!(transformation);
+        // trace_dbg!(transformation);
 
         let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
@@ -71,7 +71,7 @@ pub fn selector(state: &mut AppState) {
         temp_repository.apply_transformation(transformation.clone());
         state.mappings.push(transformation);
 
-        trace_dbg!(&output_pointer);
+        // trace_dbg!(&output_pointer);
         let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&output_pointer).unwrap();
 
         state.candidate_data_value = Some(candidate_data_value.to_string());
