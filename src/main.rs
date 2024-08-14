@@ -33,9 +33,10 @@ fn main() -> Result<()> {
     let mut state = AppState {
         // Default example values, remove if no longer needed
         input_path: "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string(),
-        mapping_path: "json/mapping/mapping_empty.json".to_string(),
+        // mapping_path: "json/mapping/mapping_empty.json".to_string(),
+        mapping_path: "json/mapping/custom_mapping.json".to_string(),
         output_path: "json/output_credential.json".to_string(),
-        custom_mapping_path: "json/mapping/custom_mapping.json".to_string(),
+        // custom_mapping_path: "json/mapping/custom_mapping.json".to_string(),
 
         selected_input_field: 1, // todo: what if none? Also after going back to tab 1 and changing file paths?
         selected_missing_field: 1, // todo: what if none?

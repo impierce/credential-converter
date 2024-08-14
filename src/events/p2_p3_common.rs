@@ -400,9 +400,11 @@ pub fn create_output_files(state: &mut AppState) {
         .unwrap();
 
     // Create Mapping File
-    let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
-    file.write_all(serde_json::to_string_pretty(&state.mappings).unwrap().as_bytes())
-        .unwrap();
+    if !state.custom_mapping_path.is_empty() {
+        let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
+        file.write_all(serde_json::to_string_pretty(&state.mappings).unwrap().as_bytes())
+            .unwrap();
+    }
 }
 
 pub fn clear_mapping_options(state: &mut AppState) {
@@ -454,24 +456,17 @@ pub fn confirm_mapping(state: &mut AppState) {
     state.p2_p3_tabs = P2P3Tabs::InputFields;
 
     if state.page == Pages::ManualMappingP2 {
-        // let mut output = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap().get("Your input >>").unwrap();
-        // output = &Value::from(state.candidate_data_value.clone().unwrap());
-        // state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap().get_mut("Your input >>").unwrap() = &Value::from(state.candidate_data_value.clone().unwrap());
-        let candidate_data_value = state.candidate_data_value.clone().unwrap();
-
-        // Use `get_mut` to get a mutable reference to the inner map
         let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
 
-        // Use `get_mut` again to get a mutable reference to the specific field, and assign directly
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(candidate_data_value);
-    
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap()); //todo: remove unwrap
     
     } else {
-        state.optional_fields[state.selected_optional_field].1 = state.candidate_data_value.clone().unwrap();
+        let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
+
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap()); //todo: remove unwrap
     }
 
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-    // trace_dbg!(state.missing_data_fields.clone()[state.selected_missing_field].to_owned());
 
     update_repository(state);
 
@@ -495,7 +490,7 @@ pub fn confirm_mapping(state: &mut AppState) {
             }
         }
         // Move active fields to next field
-        if state.selected_missing_field == state.missing_data_fields.len() - 1 {
+        if state.selected_missing_field == state.missing_display_subset.len() - 1 {
             state.selected_missing_field = 1;
         } else {
             state.selected_missing_field += 1;
@@ -520,7 +515,7 @@ pub fn confirm_mapping(state: &mut AppState) {
             }
         }
         // Move active fields to next field
-        if state.selected_optional_field == state.optional_fields.len() - 1 {
+        if state.selected_optional_field == state.optional_display_subset.len() - 1 {
             state.selected_optional_field = 1;
         } else {
             state.selected_optional_field += 1;

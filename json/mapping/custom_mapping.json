@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.@context"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.fullName.en"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.issuer"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.issued"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.validFrom"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.issuer.legalName.en"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.validFrom"
+    }
+  }
+]

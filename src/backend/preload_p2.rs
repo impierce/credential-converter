@@ -59,6 +59,7 @@ pub fn preload_p2(state: &mut AppState) {
         //     }
         // }
 
+        trace_dbg!(&state.repository);
         state.repository.apply_transformations(transformations);
     }
 
@@ -288,8 +289,9 @@ pub fn resolve_ref(schema: &mut Value, root: Value) {
                     let tmp = root.pointer(ref_str.trim_start_matches("#")).unwrap().clone();
                     *schema = tmp;
                 } else {
-                    let path = truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
-                        + ref_str.trim_start_matches('.'); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
+                    let mut path = (truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
+                        + ref_str.trim_start_matches('.')); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
+                    path = path.trim_start_matches("file://").to_string(); // todo: this is hard-coded logic assuming we will ship the schemas as well, not allowing for http:// paths.
                     trace_dbg!(&path);
                     let tmp = get_json(path).unwrap();
                     *schema = tmp;

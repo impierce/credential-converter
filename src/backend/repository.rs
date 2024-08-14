@@ -6,6 +6,7 @@ use crate::{
     state::{AppState, Pages},
 };
 use jsonpath_rust::JsonPathFinder;
+use regex::Regex;
 use serde_json::{json, Map, Value};
 use std::{
     collections::HashMap,
@@ -149,10 +150,22 @@ pub fn merge(a: &mut Value, b: Value) {
 
 pub fn update_repository(state: &mut AppState) {
     let output_format = state.mapping.output_format();
-    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required");
+    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required").to_string(); // todo: remove subset paths segment is double code, also in selector
     if state.page == Pages::UnusedDataP3 {
-        output_pointer = state.optional_field_pointer.trim_start_matches("/optional");
+        output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
     }
+    if output_pointer.contains("/allOf") || output_pointer.contains("/anyOf") || output_pointer.contains("/oneOf") || output_pointer.contains("/not"){
+        let re_allof = Regex::new(r"allOf/.*/").unwrap();
+        let re_anyof = Regex::new(r"anyOf/.*/").unwrap();
+        let re_oneof = Regex::new(r"oneOf/.*/").unwrap();
+        let re_not = Regex::new(r"not/.*/").unwrap();
+    
+        output_pointer = re_allof.replace_all(&output_pointer, "").to_string();
+        output_pointer = re_anyof.replace_all(&output_pointer, "").to_string();
+        output_pointer = re_oneof.replace_all(&output_pointer, "").to_string();
+        output_pointer = re_not.replace_all(&output_pointer, "").to_string();
+    }
+
     let source_value = state.candidate_data_value.clone().unwrap();
     let output_json = state.repository.get_mut(&output_format).unwrap();
 
