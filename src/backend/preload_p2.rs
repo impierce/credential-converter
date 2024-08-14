@@ -62,7 +62,6 @@ pub fn preload_p2(state: &mut AppState) {
         trace_dbg!(&state.repository);
         state.repository.apply_transformations(transformations, state.mapping);
     }
-
 }
 
 pub fn get_missing_data_fields(state: &mut AppState) {
@@ -124,7 +123,7 @@ pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String,
                         //     map.insert("allOf[".to_owned() + value + "]", e.clone()); // perhaps inserting it as such could be problematic when using the pointer in a later stage
                         // }
                         // else {
-                            map.insert("allOf/".to_owned() + &i.to_string(), e.clone());
+                        map.insert("allOf/".to_owned() + &i.to_string(), e.clone());
                         // }
                     }
                 }
@@ -184,7 +183,12 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
             && state.missing_field_pointer != "/required"
         {
             state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
-            if state.missing_field_pointer.ends_with("allOf") || state.missing_field_pointer.ends_with("anyOf") || state.missing_field_pointer.ends_with("oneOf") || state.missing_field_pointer.ends_with("not") { // todo could be done more elegantly
+            if state.missing_field_pointer.ends_with("allOf")
+                || state.missing_field_pointer.ends_with("anyOf")
+                || state.missing_field_pointer.ends_with("oneOf")
+                || state.missing_field_pointer.ends_with("not")
+            {
+                // todo could be done more elegantly
                 state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
             }
             state.selected_missing_field = 1;
@@ -193,7 +197,12 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
             && state.optional_field_pointer != "/optional"
         {
             truncate_until_char(&state.optional_field_pointer, '/');
-            if state.optional_field_pointer.ends_with("allOf") || state.optional_field_pointer.ends_with("anyOf") || state.optional_field_pointer.ends_with("oneOf") || state.optional_field_pointer.ends_with("not") { // todo could be done more elegantly
+            if state.optional_field_pointer.ends_with("allOf")
+                || state.optional_field_pointer.ends_with("anyOf")
+                || state.optional_field_pointer.ends_with("oneOf")
+                || state.optional_field_pointer.ends_with("not")
+            {
+                // todo could be done more elegantly
                 state.optional_field_pointer = truncate_until_char(&state.optional_field_pointer, '/').to_string();
             }
             state.selected_optional_field = 1;
@@ -226,7 +235,12 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         path = &state.missing_field_pointer;
         let mut subset_path = truncate_until_char(path, '/');
-        if subset_path.ends_with("allOf") || subset_path.ends_with("anyOf") || subset_path.ends_with("oneOf") || subset_path.ends_with("not") { // todo could be done more elegantly
+        if subset_path.ends_with("allOf")
+            || subset_path.ends_with("anyOf")
+            || subset_path.ends_with("oneOf")
+            || subset_path.ends_with("not")
+        {
+            // todo could be done more elegantly
             subset_path = truncate_until_char(&subset_path, '/');
         }
 
@@ -289,8 +303,8 @@ pub fn resolve_ref(schema: &mut Value, root: Value) {
                     let tmp = root.pointer(ref_str.trim_start_matches("#")).unwrap().clone();
                     *schema = tmp;
                 } else {
-                    let mut path = (truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
-                        + ref_str.trim_start_matches('.')); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
+                    let mut path = truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
+                        + ref_str.trim_start_matches('.'); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
                     path = path.trim_start_matches("file://").to_string(); // todo: this is hard-coded logic assuming we will ship the schemas as well, not allowing for http:// paths.
                     trace_dbg!(&path);
                     let tmp = get_json(path).unwrap();
@@ -318,7 +332,6 @@ where
 
     serde_json::from_reader(reader)
 }
-
 
 // Regex
 

@@ -3,7 +3,8 @@ use crate::{
         jsonpointer::{JsonPath, JsonPointer},
         transformations::{DataLocation, Transformation},
     },
-    state::{AppState, Mapping, Pages}, trace_dbg,
+    state::{AppState, Mapping, Pages},
+    trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
 use regex::Regex;
@@ -162,12 +163,16 @@ pub fn update_repository(state: &mut AppState) {
     if state.page == Pages::UnusedDataP3 {
         output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
     }
-    if output_pointer.contains("/allOf") || output_pointer.contains("/anyOf") || output_pointer.contains("/oneOf") || output_pointer.contains("/not"){
+    if output_pointer.contains("/allOf")
+        || output_pointer.contains("/anyOf")
+        || output_pointer.contains("/oneOf")
+        || output_pointer.contains("/not")
+    {
         let re_allof = Regex::new(r"allOf/.*/").unwrap();
         let re_anyof = Regex::new(r"anyOf/.*/").unwrap();
         let re_oneof = Regex::new(r"oneOf/.*/").unwrap();
         let re_not = Regex::new(r"not/.*/").unwrap();
-    
+
         output_pointer = re_allof.replace_all(&output_pointer, "").to_string();
         output_pointer = re_anyof.replace_all(&output_pointer, "").to_string();
         output_pointer = re_oneof.replace_all(&output_pointer, "").to_string();

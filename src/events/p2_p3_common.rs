@@ -5,7 +5,11 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::{preload_p2::{update_display_section, update_path}, repository::update_repository, selector::input_to_output},
+    backend::{
+        preload_p2::{update_display_section, update_path},
+        repository::update_repository,
+        selector::input_to_output,
+    },
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };
@@ -340,7 +344,8 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-        if state.missing_display_subset.len() - 1 == state.completed_missing_fields.len() { // todo: len() fetch incorrectly in multiple locations
+        if state.missing_display_subset.len() - 1 == state.completed_missing_fields.len() {
+            // todo: len() fetch incorrectly in multiple locations
             next_page(state);
         } else if state.page == Pages::UnusedDataP3 {
             next_page(state);
@@ -458,12 +463,13 @@ pub fn confirm_mapping(state: &mut AppState) {
     if state.page == Pages::ManualMappingP2 {
         let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
 
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap()); //todo: remove unwrap
-    
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
+    //todo: remove unwrap
     } else {
         let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
 
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap()); //todo: remove unwrap
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
+        //todo: remove unwrap
     }
 
     trace_dbg!(state.candidate_data_value.as_ref().unwrap());

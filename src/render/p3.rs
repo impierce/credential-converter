@@ -8,7 +8,10 @@ use ratatui::{
 };
 
 use crate::{
-    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping}, state::{translate, AppState, MappingOptions, P2P3Tabs}
+    backend::resolve::value_to_str,
+    mapping_bars::{render_manytoone_bar, render_mapping_bar},
+    popups::{render_popup_exit_warning, render_popup_mapping},
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -104,11 +107,17 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .collect();
 
     state.optional_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
-    if let Some(i) = state.optional_display_subset.iter().position(|(key, _)| key == "Your input >>") {
+    if let Some(i) = state
+        .optional_display_subset
+        .iter()
+        .position(|(key, _)| key == "Your input >>")
+    {
         let your_input_field = state.optional_display_subset.remove(i);
         state.optional_display_subset.insert(0, your_input_field);
     }
-    state.optional_display_subset.insert(0, ("".to_string(), "".to_string()));
+    state
+        .optional_display_subset
+        .insert(0, ("".to_string(), "".to_string()));
     state.amount_optional_fields = state.optional_display_subset.len() - 2;
 
     let rows: Vec<Row> = state

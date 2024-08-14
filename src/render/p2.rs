@@ -105,7 +105,11 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .collect();
 
     state.missing_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
-    if let Some(i) = state.missing_display_subset.iter().position(|(key, _)| key == "Your input >>") {
+    if let Some(i) = state
+        .missing_display_subset
+        .iter()
+        .position(|(key, _)| key == "Your input >>")
+    {
         let your_input_field = state.missing_display_subset.remove(i);
         state.missing_display_subset.insert(0, your_input_field);
     }

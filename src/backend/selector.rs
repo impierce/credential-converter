@@ -73,7 +73,11 @@ pub fn selector(state: &mut AppState) {
         state.mappings.push(transformation);
 
         // trace_dbg!(&output_pointer);
-        let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&output_pointer).unwrap();
+        let candidate_data_value = temp_repository
+            .get(&output_format)
+            .unwrap()
+            .pointer(&output_pointer)
+            .unwrap();
 
         state.candidate_data_value = Some(candidate_data_value.to_string());
     }
@@ -87,25 +91,29 @@ pub fn input_to_output(state: &mut AppState) {
     .concat();
 
     for transformation in selected_transformations.iter() {
-        // 
+        //
         let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
         let source_pointer: JsonPath = JsonPointer(state.input_fields[state.selected_input_field].0.clone()).into();
         let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required").to_string(); // todo: remove subset paths segment is double code, also in selector
         if state.page == Pages::UnusedDataP3 {
             output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
         }
-        if output_pointer.contains("/allOf") || output_pointer.contains("/anyOf") || output_pointer.contains("/oneOf") || output_pointer.contains("/not"){
+        if output_pointer.contains("/allOf")
+            || output_pointer.contains("/anyOf")
+            || output_pointer.contains("/oneOf")
+            || output_pointer.contains("/not")
+        {
             let re_allof = Regex::new(r"allOf/.*/").unwrap();
             let re_anyof = Regex::new(r"anyOf/.*/").unwrap();
             let re_oneof = Regex::new(r"oneOf/.*/").unwrap();
             let re_not = Regex::new(r"not/.*/").unwrap();
-        
+
             output_pointer = re_allof.replace_all(&output_pointer, "").to_string();
             output_pointer = re_anyof.replace_all(&output_pointer, "").to_string();
             output_pointer = re_oneof.replace_all(&output_pointer, "").to_string();
             output_pointer = re_not.replace_all(&output_pointer, "").to_string();
-        }    
-        
+        }
+
         let destination_path: JsonPath = JsonPointer(output_pointer.clone()).into();
 
         let transformation = match transformation {
@@ -151,7 +159,11 @@ pub fn input_to_output(state: &mut AppState) {
         state.mappings.push(transformation);
 
         //trace_dbg!(&pointer);
-        let candidate_data_value = temp_repository.get(&output_format).unwrap().pointer(&output_pointer).unwrap();
+        let candidate_data_value = temp_repository
+            .get(&output_format)
+            .unwrap()
+            .pointer(&output_pointer)
+            .unwrap();
 
         state.candidate_data_value = Some(candidate_data_value.to_string());
     }

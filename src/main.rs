@@ -37,7 +37,6 @@ fn main() -> Result<()> {
         mapping_path: "json/mapping/custom_mapping.json".to_string(),
         output_path: "json/output_credential.json".to_string(),
         // custom_mapping_path: "json/mapping/custom_mapping.json".to_string(),
-
         selected_input_field: 1, // todo: what if none? Also after going back to tab 1 and changing file paths?
         selected_missing_field: 1, // todo: what if none?
         selected_optional_field: 1, // todo: what if none?
