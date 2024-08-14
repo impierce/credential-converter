@@ -5,7 +5,7 @@ use std::io::Write;
 
 use super::is_mouse_over_area;
 use crate::{
-    backend::{preload_p2::{update_display_section, update_path}, repository::update_repository, selector::{input_to_output, selector}},
+    backend::{preload_p2::{update_display_section, update_path}, repository::update_repository, selector::input_to_output},
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
 };

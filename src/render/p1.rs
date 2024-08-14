@@ -1,7 +1,6 @@
 use crate::{
     popups::{render_popup_exit_warning, render_popup_overwrite_warning},
     state::{translate, AppState, P1Prompts},
-    trace_dbg,
 };
 use ratatui::{
     buffer::Buffer,
