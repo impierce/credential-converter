@@ -376,12 +376,18 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
             && state.missing_field_pointer != "/required"
         {
             state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
+            if state.missing_field_pointer.ends_with("allOf") || state.missing_field_pointer.ends_with("anyOf") || state.missing_field_pointer.ends_with("oneOf") || state.missing_field_pointer.ends_with("not") { // todo could be done more elegantly
+                state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
+            }
             state.selected_missing_field = 1;
         } else if state.page == Pages::UnusedDataP3
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
             && state.optional_field_pointer != "/optional"
         {
             truncate_until_char(&state.optional_field_pointer, '/');
+            if state.optional_field_pointer.ends_with("allOf") || state.optional_field_pointer.ends_with("anyOf") || state.optional_field_pointer.ends_with("oneOf") || state.optional_field_pointer.ends_with("not") { // todo could be done more elegantly
+                state.optional_field_pointer = truncate_until_char(&state.optional_field_pointer, '/').to_string();
+            }
             state.selected_optional_field = 1;
         } else if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo:
              // truncate_until_char(&state.input_field_pointer, '/');
@@ -412,10 +418,10 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         path = &state.missing_field_pointer;
         let mut subset_path = truncate_until_char(path, '/');
-        trace_dbg!(&subset_path);
-        if subset_path.ends_with("allOf") || subset_path.ends_with("anyOf") || subset_path.ends_with("oneOf") || subset_path.ends_with("not") {
+        if subset_path.ends_with("allOf") || subset_path.ends_with("anyOf") || subset_path.ends_with("oneOf") || subset_path.ends_with("not") { // todo could be done more elegantly
             subset_path = truncate_until_char(&subset_path, '/');
         }
+
         trace_dbg!(&subset_path);
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());

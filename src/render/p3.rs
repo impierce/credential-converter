@@ -109,7 +109,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         state.optional_display_subset.insert(0, your_input_field);
     }
     state.optional_display_subset.insert(0, ("".to_string(), "".to_string()));
-    state.amount_optional_fields = state.optional_display_subset.len() - 1;
+    state.amount_optional_fields = state.optional_display_subset.len() - 2;
 
     let rows: Vec<Row> = state
         .optional_display_subset
