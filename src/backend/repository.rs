@@ -3,7 +3,7 @@ use crate::{
         jsonpointer::{JsonPath, JsonPointer},
         transformations::{DataLocation, Transformation},
     },
-    state::{AppState, Pages},
+    state::{AppState, Mapping, Pages}, trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
 use regex::Regex;
@@ -41,7 +41,7 @@ impl Repository {
     //     Self(HashMap::new())
     // }
 
-    pub fn apply_transformation(&mut self, transformation: Transformation) {
+    pub fn apply_transformation(&mut self, transformation: Transformation, mapping: Mapping) {
         match transformation {
             Transformation::OneToOne {
                 type_: transformation,
@@ -56,12 +56,20 @@ impl Repository {
                         path: destination_path,
                     },
             } => {
+                if source_format != mapping.input_format() || destination_format != mapping.output_format() {
+                    return;
+                }
+
+                trace_dbg!(&source_format);
                 let source_credential = self.get(&source_format).unwrap();
 
                 if source_path == "$.@context" {
                     source_path = r#"$["@context"]"#.to_string();
                 };
+                trace_dbg!(&source_path);
+                trace_dbg!(source_credential);
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
+                trace_dbg!(&finder);
                 let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
 
                 // trace_dbg!(&destination_path);
@@ -111,9 +119,9 @@ impl Repository {
         }
     }
 
-    pub fn apply_transformations(&mut self, transformations: Vec<Transformation>) {
+    pub fn apply_transformations(&mut self, transformations: Vec<Transformation>, mapping: Mapping) {
         for transformation in transformations {
-            self.apply_transformation(transformation)
+            self.apply_transformation(transformation, mapping);
         }
     }
 }

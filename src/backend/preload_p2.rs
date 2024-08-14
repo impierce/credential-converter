@@ -60,7 +60,7 @@ pub fn preload_p2(state: &mut AppState) {
         // }
 
         trace_dbg!(&state.repository);
-        state.repository.apply_transformations(transformations);
+        state.repository.apply_transformations(transformations, state.mapping);
     }
 
 }

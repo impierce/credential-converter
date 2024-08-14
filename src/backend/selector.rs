@@ -69,7 +69,7 @@ pub fn selector(state: &mut AppState) {
             },
         };
 
-        temp_repository.apply_transformation(transformation.clone());
+        temp_repository.apply_transformation(transformation.clone(), state.mapping);
         state.mappings.push(transformation);
 
         // trace_dbg!(&output_pointer);
@@ -147,7 +147,7 @@ pub fn input_to_output(state: &mut AppState) {
         };
 
         let mut temp_repository = Repository::from(state.repository.clone());
-        temp_repository.apply_transformation(transformation.clone());
+        temp_repository.apply_transformation(transformation.clone(), state.mapping);
         state.mappings.push(transformation);
 
         //trace_dbg!(&pointer);
