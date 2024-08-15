@@ -153,6 +153,7 @@ pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String,
     }
 }
 
+#[allow(clippy::collapsible_else_if)]
 pub fn update_path(state: &mut AppState, forward_back: bool) {
     if forward_back {
         if state.page == Pages::ManualMappingP2

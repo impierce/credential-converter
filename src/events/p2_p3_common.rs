@@ -103,14 +103,10 @@ pub fn handle_up(state: &mut AppState) {
         }
         // Scroll up through output fields
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::ManualMappingP2 {
-                if state.selected_missing_field > 1 {
-                    state.selected_missing_field -= 1;
-                }
-            } else {
-                if state.selected_optional_field > 1 {
-                    state.selected_optional_field -= 1;
-                }
+            if state.page == Pages::ManualMappingP2 && state.selected_missing_field > 1 {
+                state.selected_missing_field -= 1;
+            } else if state.selected_optional_field > 1 {
+                state.selected_optional_field -= 1;
             }
         }
         // Move between tabs
@@ -135,14 +131,10 @@ pub fn handle_down(state: &mut AppState) {
             }
         }
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::ManualMappingP2 {
-                if state.selected_missing_field <= state.amount_missing_fields {
-                    state.selected_missing_field += 1;
-                }
-            } else {
-                if state.selected_optional_field <= state.amount_optional_fields {
-                    state.selected_optional_field += 1;
-                }
+            if state.page == Pages::ManualMappingP2 && state.selected_missing_field <= state.amount_missing_fields {
+                state.selected_missing_field += 1;
+            } else if state.selected_optional_field <= state.amount_optional_fields {
+                state.selected_optional_field += 1;
             }
         }
         _ => {}
