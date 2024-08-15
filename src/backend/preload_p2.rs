@@ -220,12 +220,12 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     // Custom logic needed for preloading page 2 & 3
     if state.page == Pages::InputPromptsP1 {
         get_required_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&mut state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
         path = "/required";
         state.missing_field_pointer = path.to_string();
     } else if preload_p3 {
         get_optional_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&mut state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
         path = "/optional";
         state.optional_field_pointer = path.to_string();
     } else if state.page == Pages::ManualMappingP2 {
@@ -241,7 +241,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
             || subset_path.ends_with("not")
         {
             // todo could be done more elegantly
-            subset_path = truncate_until_char(&subset_path, '/');
+            subset_path = truncate_until_char(subset_path, '/');
         }
 
         trace_dbg!(&subset_path);
@@ -259,7 +259,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         // or it's a leaf node. In the latter case we can resolve the leaf node with this function
         if tmp_map.is_empty() {
             // this should actually also check that type != object, if it is an object then it might be the frequent case where an object (key) is required but all fields within the object are optional
-            tmp_map = subset.get_mut(key).unwrap().as_object().unwrap().clone(); // todo remove unwrap
+            tmp_map.clone_from(subset.get_mut(key).unwrap().as_object().unwrap()); // todo remove unwrap
             tmp_map.insert("Your input >>".to_string(), Value::Null);
             // resolve_leaf_node(subset.get_mut(key).unwrap(), key, &mut tmp_map);
         }
@@ -280,7 +280,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         if tmp_map.is_empty() {
             // this should actually also check that type != object, if it is an object then it might be the edge case where an object (key) is required but all fields within the object are optional
-            tmp_map = subset.get_mut(key).unwrap().as_object().unwrap().clone(); // todo remove unwrap
+            tmp_map.clone_from(subset.get_mut(key).unwrap().as_object().unwrap()); // todo remove unwrap
             tmp_map.insert("Your input >>".to_string(), Value::Null);
         }
     }
@@ -300,7 +300,7 @@ pub fn resolve_ref(schema: &mut Value, root: Value) {
             if let Some(ref_str) = ref_.as_str() {
                 // at this point it's fair to assume the json schema ref is invalid if it contains something else than a string.
                 if ref_str.starts_with("#/") {
-                    let tmp = root.pointer(ref_str.trim_start_matches("#")).unwrap().clone();
+                    let tmp = root.pointer(ref_str.trim_start_matches('#')).unwrap().clone();
                     *schema = tmp;
                 } else {
                     let mut path = truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()

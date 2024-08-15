@@ -3,7 +3,6 @@ use regex::Regex;
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        repository::Repository,
         transformations::{DataLocation, OneToOne, Transformation},
     },
     state::{AppState, Pages, Transformations},
@@ -29,7 +28,7 @@ pub fn selector(state: &mut AppState) {
         }
         let destination_path: JsonPath = JsonPointer(output_pointer.to_string()).into();
 
-        let mut temp_repository = Repository::from(state.repository.clone());
+        let mut temp_repository = state.repository.clone();
 
         let transformation = match transformation {
             Transformations::LowerCase => Transformation::OneToOne {
@@ -76,14 +75,14 @@ pub fn selector(state: &mut AppState) {
         let candidate_data_value = temp_repository
             .get(&output_format)
             .unwrap()
-            .pointer(&output_pointer)
+            .pointer(output_pointer)
             .unwrap();
 
         state.candidate_data_value = Some(candidate_data_value.to_string());
     }
 }
 
-pub fn input_to_output(state: &mut AppState) {
+pub fn input_to_output(state: &mut AppState) { // todo: move all selector functionality to input_to_output
     let selected_transformations = [
         vec![Transformations::DirectCopy],
         state.selected_transformations.clone(),
@@ -154,7 +153,7 @@ pub fn input_to_output(state: &mut AppState) {
             },
         };
 
-        let mut temp_repository = Repository::from(state.repository.clone());
+        let mut temp_repository = state.repository.clone();
         temp_repository.apply_transformation(transformation.clone(), state.mapping);
         state.mappings.push(transformation);
 
