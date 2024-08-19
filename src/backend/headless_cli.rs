@@ -12,29 +12,36 @@ use std::fs::read_dir;
 use std::io::Result;
 use std::path::Path;
 
-pub fn run_headless(cli_args: Args, state: &mut AppState) -> Result<()> {
+pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     check_args(&cli_args)?;
     trace_dbg!(&cli_args);
-    complete_appstate_headless(cli_args, state);
+    complete_appstate_headless(&cli_args, state);
 
-    state.repository = Repository::from(HashMap::from_iter(vec![
-        (
-            state.mapping.input_format(),
-            get_json(&state.input_path).expect("No source file found"),
-        ),
-        (state.mapping.output_format(), json!({})),
-    ]));
+    if cli_args.input_file.is_some() {
+        load_files_apply_transformations(state);
+    }
+    else if cli_args.input_directory.is_some() {
+        trace_dbg!("Running batch conversion");
 
-    trace_dbg!("Successfully loaded the input file");
+        if !Path::new(&cli_args.output_directory.clone().unwrap()).is_dir() {
+            std::fs::create_dir_all(&cli_args.output_directory.clone().unwrap().clone()).unwrap();
+            trace_dbg!("Created the output directory");
+        }
 
-    let rdr = std::fs::File::open(&state.mapping_path).unwrap();
-    let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-
-    trace_dbg!("Successfully loaded the mapping file");
-
-    state.repository.apply_transformations(transformations, state.mapping);
+        for entry in read_dir(cli_args.input_directory.clone().unwrap()).unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
     
-    create_output_files(state);
+            if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
+                state.input_path = path.to_str().unwrap().to_string();
+                state.output_path = format!("{}_{}", cli_args.output_directory.clone().unwrap(), state.mapping.output_format());
+                load_files_apply_transformations(state);
+            } else if path.is_dir() {
+                cli_args.input_directory = Some(path.to_str().unwrap().to_string());
+                let _ = run_headless(cli_args, state);
+            }
+        }
+    }
 
     Ok(())
 }
@@ -53,7 +60,7 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
             panic!("The input directory path does not exist: {}", input_dir);
         }
         let mut json_count: usize = 0;
-        json_count = check_input_dir(&input_dir, json_count);
+        json_count = check_input_dir(&input_dir, &mut json_count);
 
         if json_count == 0 {
             panic!("The input directory does not contain any json files: {}", input_dir);
@@ -76,30 +83,53 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
     Ok(())
 }
 
-pub fn check_input_dir(input_dir: &str, mut json_count: usize) -> usize {
+pub fn load_files_apply_transformations(state: &mut AppState) {
+    let rdr = std::fs::File::open(&state.mapping_path).unwrap();
+    let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+
+    trace_dbg!("Successfully loaded the mapping file");
+
+    state.repository = Repository::from(HashMap::from_iter(vec![
+        (
+            state.mapping.input_format(),
+            get_json(&state.input_path).expect("No source file found"),
+        ),
+        (state.mapping.output_format(), json!({})),
+    ]));
+
+    trace_dbg!("Successfully loaded the input file");
+
+    state.repository.apply_transformations(transformations, state.mapping);
+    
+    create_output_files(state);
+}
+
+pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
     for entry in read_dir(input_dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
 
-        if path.is_file() && path.ends_with(".json") {
-            json_count += 1;
+        if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
+            *json_count += 1;
         } else if path.is_dir() {
             check_input_dir(path.to_str().unwrap(), json_count);
         }
     }
-    json_count
+    let dbg_msg = format!("The input directory contains {} json files", *json_count);
+    trace_dbg!(dbg_msg);
+    *json_count
 }
 
-pub fn complete_appstate_headless(args: Args, state: &mut AppState) {
-    state.mapping = args.conversion.unwrap();
-    state.mapping_path = args.mapping_file.unwrap();
-    if let Some(input_f) = args.input_file {
+pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
+    state.mapping = args.conversion.clone().unwrap();
+    state.mapping_path = args.mapping_file.clone().unwrap();
+    if let Some(input_f) = args.input_file.clone() {
         state.input_path = input_f;
-        state.output_path = args.output_file.unwrap();
+        state.output_path = args.output_file.clone().unwrap();
     }
-    else if let Some(input_dir) = args.input_directory {
+    else if let Some(input_dir) = args.input_directory.clone() {
         state.input_path = input_dir;
-        state.output_path = args.output_directory.unwrap();
+        state.output_path = args.output_directory.clone().unwrap();
     }
 }
 
@@ -133,4 +163,7 @@ pub struct Args {
 
     // #[arg(short, long)]
     // suffix_output: String,
+
+    // #[arg(short, long)] // opt for going into nested directories or not
+    // nested: bool, 
 }

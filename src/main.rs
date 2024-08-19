@@ -34,8 +34,8 @@ fn main() -> Result<()> {
     if std::env::args().len() > 1 {
         trace_dbg!("Arguments detected, running headless conversion");
 
-        let cli_args = Args::parse();
-        run_headless(cli_args, &mut state)?;
+        let mut cli_args = Args::parse();
+        run_headless(&mut cli_args, &mut state)?;
     } else {
         trace_dbg!("No arguments detected, starting the TUI");
 
