@@ -6,3 +6,4 @@ pub mod repository;
 pub mod resolve;
 pub mod selector;
 pub mod transformations;
+pub mod headless_cli;
