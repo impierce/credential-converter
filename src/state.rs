@@ -1,3 +1,4 @@
+use clap::ValueEnum;
 use ratatui::layout::Rect;
 use serde_json::Value;
 use std::{borrow::Cow, collections::HashMap};
@@ -157,7 +158,7 @@ pub enum P1Prompts {
     CustomMapping,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, ValueEnum, Display)]
 pub enum Mapping {
     OBv3ToELM = 0,
     #[default]
