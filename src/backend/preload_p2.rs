@@ -323,7 +323,7 @@ fn truncate_until_char(s: &str, ch: char) -> &str {
     }
 }
 
-fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
+pub fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
 where
     T: DeserializeOwned,
 {

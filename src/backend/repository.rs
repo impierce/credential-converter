@@ -71,7 +71,10 @@ impl Repository {
                 trace_dbg!(source_credential);
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 trace_dbg!(&finder);
-                let source_value = finder.find().as_array().unwrap().first().unwrap().clone();
+                let source_value = match finder.find().as_array() { // todo: still need to investigate other find() return types
+                    Some(array) => array.first().unwrap().clone(),
+                    None => { return ;}
+                };
 
                 // trace_dbg!(&destination_path);
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
@@ -118,6 +121,7 @@ impl Repository {
 
             _ => todo!(),
         }
+        trace_dbg!("Successfully completed transformation");
     }
 
     pub fn apply_transformations(&mut self, transformations: Vec<Transformation>, mapping: Mapping) {

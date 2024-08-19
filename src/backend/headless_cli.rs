@@ -1,7 +1,13 @@
+use crate::backend::preload_p2::get_json;
+use crate::backend::repository::Repository;
+use crate::backend::transformations::Transformation;
+use crate::p2_p3_common::create_output_files;
 use crate::state::{AppState, Mapping};
 use crate::trace_dbg;
 
 use clap::Parser;
+use serde_json::json;
+use std::collections::HashMap;
 use std::fs::read_dir;
 use std::io::Result;
 use std::path::Path;
@@ -9,7 +15,26 @@ use std::path::Path;
 pub fn run_headless(cli_args: Args, state: &mut AppState) -> Result<()> {
     check_args(&cli_args)?;
     trace_dbg!(&cli_args);
-    complete_state_headless(cli_args, state);
+    complete_appstate_headless(cli_args, state);
+
+    state.repository = Repository::from(HashMap::from_iter(vec![
+        (
+            state.mapping.input_format(),
+            get_json(&state.input_path).expect("No source file found"),
+        ),
+        (state.mapping.output_format(), json!({})),
+    ]));
+
+    trace_dbg!("Successfully loaded the input file");
+
+    let rdr = std::fs::File::open(&state.mapping_path).unwrap();
+    let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+
+    trace_dbg!("Successfully loaded the mapping file");
+
+    state.repository.apply_transformations(transformations, state.mapping);
+    
+    create_output_files(state);
 
     Ok(())
 }
@@ -65,24 +90,16 @@ pub fn check_input_dir(input_dir: &str, mut json_count: usize) -> usize {
     json_count
 }
 
-pub fn complete_state_headless(args: Args, state: &mut AppState) {
+pub fn complete_appstate_headless(args: Args, state: &mut AppState) {
+    state.mapping = args.conversion.unwrap();
+    state.mapping_path = args.mapping_file.unwrap();
     if let Some(input_f) = args.input_file {
         state.input_path = input_f;
+        state.output_path = args.output_file.unwrap();
     }
-    if let Some(input_dir) = args.input_directory {
+    else if let Some(input_dir) = args.input_directory {
         state.input_path = input_dir;
-    }
-    if let Some(output_f) = args.output_file {
-        state.output_path = output_f;
-    }
-    if let Some(output_dir) = args.output_directory {
-        state.output_path = output_dir;
-    }
-    if let Some(mapping_f) = args.mapping_file {
-        state.mapping_path = mapping_f;
-    }
-    if let Some(conversion) = args.conversion {
-        state.mapping = conversion;
+        state.output_path = args.output_directory.unwrap();
     }
 }
 
