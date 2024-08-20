@@ -34,7 +34,7 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     
             if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
                 state.input_path = path.to_str().unwrap().to_string();
-                state.output_path = format!("{}_{}", cli_args.output_directory.clone().unwrap(), state.mapping.output_format());
+                state.output_path = format!("{}{}_{}", cli_args.output_directory.clone().unwrap(), path.file_name().and_then(|s| s.to_str()).unwrap(), state.mapping.output_format());
                 load_files_apply_transformations(state);
             } else if path.is_dir() {
                 cli_args.input_directory = Some(path.to_str().unwrap().to_string());

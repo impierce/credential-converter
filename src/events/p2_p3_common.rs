@@ -392,6 +392,7 @@ pub fn create_output_files(state: &mut AppState) {
     let json_value = state.repository.get_mut(&output_format).unwrap();
 
     // Create Output File
+    trace_dbg!(&state.output_path);
     let mut file = std::fs::File::create(&state.output_path).unwrap();
     file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
         .unwrap();
