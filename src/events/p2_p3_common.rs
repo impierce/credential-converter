@@ -433,14 +433,16 @@ pub fn clear_button(state: &mut AppState) {
         clear_mapping_options(state);
     }
     // Clear selected missing/optional field
+    // todo: bandaid code, not fully implemented yet
     else {
         if state.page == Pages::ManualMappingP2 {
-            state.missing_data_fields[state.selected_missing_field].1.clear();
+            trace_dbg!(&state.missing_display_subset[state.selected_missing_field]);
+            state.missing_display_subset.get_mut(state.selected_missing_field).unwrap().1 = String::new();
             state
                 .completed_missing_fields
                 .retain(|(first, _)| first != &state.missing_field_pointer);
         } else {
-            state.optional_fields[state.selected_optional_field].1.clear();
+            state.optional_display_subset[state.selected_optional_field].1.clear();
             state
                 .completed_optional_fields
                 .retain(|(first, _)| first != &state.optional_field_pointer);

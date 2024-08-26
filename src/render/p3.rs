@@ -11,7 +11,7 @@ use crate::{
     backend::resolve::value_to_str,
     mapping_bars::{render_manytoone_bar, render_mapping_bar},
     popups::{render_popup_exit_warning, render_popup_mapping},
-    state::{translate, AppState, MappingOptions, P2P3Tabs},
+    state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -95,6 +95,10 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
 
     ////
     let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
+
+    trace_dbg!(&state.optional_field_pointer);
+    trace_dbg!(&state.optional_display_subset);
+    trace_dbg!(&state.resolved_subsets);
 
     state.optional_display_subset = state
         .resolved_subsets
