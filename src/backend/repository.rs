@@ -38,10 +38,6 @@ impl From<HashMap<String, Value>> for Repository {
 }
 
 impl Repository {
-    // fn new() -> Self {
-    //     Self(HashMap::new())
-    // }
-
     pub fn apply_transformation(&mut self, transformation: Transformation, mapping: Mapping) {
         match transformation {
             Transformation::OneToOne {

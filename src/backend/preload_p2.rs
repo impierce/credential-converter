@@ -8,6 +8,8 @@ use crate::{
     trace_dbg,
 };
 
+use super::desm_mapping::apply_desm_mapping;
+
 // todo: when going back to p1 and loading again, everything in backend is wiped because of this preload fn.
 // this is fine but then also state info must be wiped
 pub fn preload_p2(state: &mut AppState) {
@@ -43,24 +45,17 @@ pub fn preload_p2(state: &mut AppState) {
 
     // Load the mapping file
     {
-        let rdr = std::fs::File::open(&state.mapping_path).unwrap();
-        let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
+        if state.mapping_path == "DESM" {
+            apply_desm_mapping(state);
+        } else {
+            let rdr = std::fs::File::open(&state.mapping_path).unwrap();
+            let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
 
-        trace_dbg!("Successfully loaded the mapping file");
+            trace_dbg!("Successfully loaded the mapping file");
 
-        // Load the custom mapping file
-        // { // todo: I added the custom_mapping_path as the destination to save the manual mappings to. not to load mappings from, thats the mapping_path
-        //     if !state.custom_mapping_path.is_empty() && Path::new(&state.custom_mapping_path).is_file() && state.custom_mapping_path.ends_with(".json"){
-        //         let rdr = std::fs::File::open(&state.custom_mapping_path).unwrap();
-        //         let mut custom_transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-        //         transformations.append(&mut custom_transformations);
-
-        //         trace_dbg!("Successfully loaded the custom mapping file");
-        //     }
-        // }
-
-        trace_dbg!(&state.repository);
-        state.repository.apply_transformations(transformations, state.mapping);
+            trace_dbg!(&state.repository);
+            state.repository.apply_transformations(transformations, state.mapping);
+        }
     }
 }
 

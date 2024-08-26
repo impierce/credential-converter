@@ -7,3 +7,4 @@ pub mod resolve;
 pub mod selector;
 pub mod transformations;
 pub mod headless_cli;
+pub mod desm_mapping;

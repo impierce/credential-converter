@@ -389,6 +389,7 @@ pub fn next_page(state: &mut AppState) {
 
 pub fn create_output_files(state: &mut AppState) {
     let output_format = state.mapping.output_format();
+    trace_dbg!(&output_format); // testing
     let json_value = state.repository.get_mut(&output_format).unwrap();
 
     // Create Output File

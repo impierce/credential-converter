@@ -1,3 +1,4 @@
+use crate::backend::desm_mapping::apply_desm_mapping;
 use crate::backend::preload_p2::get_json;
 use crate::backend::repository::Repository;
 use crate::backend::transformations::Transformation;
@@ -72,11 +73,13 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
         }
     }
     if let Some(mapping_f) = &cli_args.mapping_file{
-        if !Path::new(&mapping_f).is_file() {
-            panic!("The mapping file path does not exist: {}", &mapping_f);
-        }
-        else if !mapping_f.ends_with(".json") {
-            panic!("The mapping file is not a json file: {}", &mapping_f);
+        if mapping_f != "DESM" {
+            if !Path::new(&mapping_f).is_file() {
+                panic!("The mapping file path does not exist: {}", &mapping_f);
+            }
+            else if !mapping_f.ends_with(".json") {
+                panic!("The mapping file is not a json file: {}", &mapping_f);
+            }
         }
     }
 
@@ -84,11 +87,6 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
 }
 
 pub fn load_files_apply_transformations(state: &mut AppState) {
-    let rdr = std::fs::File::open(&state.mapping_path).unwrap();
-    let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-
-    trace_dbg!("Successfully loaded the mapping file");
-
     state.repository = Repository::from(HashMap::from_iter(vec![
         (
             state.mapping.input_format(),
@@ -99,8 +97,18 @@ pub fn load_files_apply_transformations(state: &mut AppState) {
 
     trace_dbg!("Successfully loaded the input file");
 
-    state.repository.apply_transformations(transformations, state.mapping);
+    if state.mapping_path == "DESM" {
+        apply_desm_mapping(state);
+    }
+    else {
+        let rdr = std::fs::File::open(&state.mapping_path).unwrap();
+        let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
     
+        trace_dbg!("Successfully loaded the mapping file");
+
+        state.repository.apply_transformations(transformations, state.mapping);      
+    }
+
     create_output_files(state);
 }
 
@@ -138,7 +146,7 @@ pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
 
 
 #[derive(Parser, Debug)]
-#[command(version = "1.0.0", about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert a file in .json format\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with _<conversion_destination_format>\nPaths to existing output files/directories will be overwritten.\nThe correct arguments need to be passed to the executable.\nRead more below:")]
+#[command(version = "1.0.0", about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert a file in .json format\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with _<conversion_destination_format>\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nThe correct arguments need to be passed to the executable.\nRead more below:")]
 pub struct Args {
     #[arg(short, long, requires_all = ["mapping_file", "output_file"], conflicts_with_all = ["input_directory", "output_directory"])]
     input_file: Option<String>, // if present cant have input_directory, and must have output_file
