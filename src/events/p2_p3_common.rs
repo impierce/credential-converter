@@ -438,12 +438,12 @@ pub fn clear_button(state: &mut AppState) {
             state.missing_data_fields[state.selected_missing_field].1.clear();
             state
                 .completed_missing_fields
-                .retain(|&(first, _)| first != state.selected_missing_field);
+                .retain(|(first, _)| first != &state.missing_field_pointer);
         } else {
             state.optional_fields[state.selected_optional_field].1.clear();
             state
                 .completed_optional_fields
-                .retain(|&(first, _)| first != state.selected_optional_field);
+                .retain(|(first, _)| first != &state.optional_field_pointer);
         }
 
         clear_mapping_options(state);
@@ -454,73 +454,101 @@ pub fn confirm_mapping(state: &mut AppState) {
     clear_popup(state);
     state.p2_p3_tabs = P2P3Tabs::InputFields;
 
+    // todo: refactor duplicate code between pages
     if state.page == Pages::ManualMappingP2 {
         let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
 
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
-    //todo: remove unwrap
+        //todo: remove unwrap & refactor input field
+        if output_map.get_mut("Your input >>").is_some() && state.selected_missing_field == 1 {
+            *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
+            
+            // Save completed fields
+            if !state
+                .completed_missing_fields
+                .iter()
+                .any(|(first, _)| first == &state.missing_field_pointer)
+            {
+                state
+                    .completed_missing_fields
+                    .push((state.missing_field_pointer.clone(), state.input_fields[state.selected_input_field].0.clone())); // todo: also here we still need to refactor input fields according to the outputfields
+
+                trace_dbg!(&state.missing_field_pointer);
+                trace_dbg!(&state.input_fields[state.selected_input_field].0);
+                trace_dbg!(&state.completed_missing_fields);
+                trace_dbg!(&state.missing_display_subset);
+            } else {
+                // Find the old mapping tuple and replace
+                for tuple in &mut state.completed_missing_fields {
+                    if tuple.0 == state.missing_field_pointer {
+                        *tuple = (state.missing_field_pointer.clone(), state.input_fields[state.selected_input_field].0.clone());
+                        break;
+                    }
+                }
+                trace_dbg!(&state.missing_field_pointer);
+                trace_dbg!(&state.input_fields[state.selected_input_field].0);
+                trace_dbg!(&state.completed_missing_fields);
+                trace_dbg!(&state.missing_display_subset);
+            }
+
+            trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+            update_repository(state);
+
+            // Move active fields to next field
+            if state.selected_missing_field == state.missing_display_subset.len() - 1 {
+                state.selected_missing_field = 1;
+            } else {
+                state.selected_missing_field += 1;
+            }
+        }
     } else {
         let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
 
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
         //todo: remove unwrap
-    }
+        if output_map.get_mut("Your input >>").is_some() && state.selected_optional_field == 1 {
 
-    trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-
-    update_repository(state);
-
-    if state.page == Pages::ManualMappingP2 {
-        // Save completed fields
-        if !state
-            .completed_missing_fields
-            .iter()
-            .any(|&(first, _)| first == state.selected_missing_field)
-        {
-            state
-                .completed_missing_fields
-                .push((state.selected_missing_field, state.selected_input_field));
-        } else {
-            // Find the old mapping tuple and replace
-            for tuple in &mut state.completed_missing_fields {
-                if tuple.0 == state.selected_missing_field {
-                    *tuple = (state.selected_missing_field, state.selected_input_field);
-                    break;
-                }
-            }
-        }
-        // Move active fields to next field
-        if state.selected_missing_field == state.missing_display_subset.len() - 1 {
-            state.selected_missing_field = 1;
-        } else {
-            state.selected_missing_field += 1;
-        }
-    } else {
-        // Save completed fields
-        if !state
-            .completed_optional_fields
-            .iter()
-            .any(|&(first, _)| first == state.selected_optional_field)
-        {
-            state
+            *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
+            
+            // Save completed fields
+            if !state
                 .completed_optional_fields
-                .push((state.selected_optional_field, state.selected_input_field));
-        } else {
-            // Find the old mapping tuple and replace
-            for tuple in &mut state.completed_optional_fields {
-                if tuple.0 == state.selected_optional_field {
-                    *tuple = (state.selected_optional_field, state.selected_input_field);
-                    break;
+                .iter()
+                .any(|(first, _)| first == &state.optional_field_pointer)
+            {
+                state
+                    .completed_optional_fields
+                    .push((state.optional_field_pointer.clone(), state.input_fields[state.selected_input_field].0.clone()));
+            
+                    trace_dbg!(&state.optional_field_pointer);
+                    trace_dbg!(&state.input_fields[state.selected_input_field].0);
+                    trace_dbg!(&state.completed_optional_fields);
+                    trace_dbg!(&state.optional_display_subset);
+            } else {
+                // Find the old mapping tuple and replace
+                for tuple in &mut state.completed_optional_fields {
+                    if tuple.0 == state.optional_field_pointer {
+                        *tuple = (state.optional_field_pointer.clone(), state.input_fields[state.selected_input_field].0.clone());
+                        break;
+                    }
                 }
+
+                trace_dbg!(&state.optional_field_pointer);
+                trace_dbg!(&state.input_fields[state.selected_input_field].0);
+                trace_dbg!(&state.completed_optional_fields);
+                trace_dbg!(&state.optional_display_subset);
+            }
+
+            trace_dbg!(state.candidate_data_value.as_ref().unwrap());
+            update_repository(state);
+            
+            // Move active fields to next field
+            if state.selected_optional_field == state.optional_display_subset.len() - 1 {
+                state.selected_optional_field = 1;
+            } else {
+                state.selected_optional_field += 1;
             }
         }
-        // Move active fields to next field
-        if state.selected_optional_field == state.optional_display_subset.len() - 1 {
-            state.selected_optional_field = 1;
-        } else {
-            state.selected_optional_field += 1;
-        }
     }
+
 
     if state.selected_input_field == state.input_fields.len() - 1 {
         state.selected_input_field = 1;

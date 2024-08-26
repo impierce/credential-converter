@@ -65,17 +65,16 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let rows: Vec<Row> = state
         .input_fields
         .iter()
-        .enumerate()
-        .map(|(index, (key, value))| {
+        .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]); //todo
             if state
                 .completed_missing_fields
                 .iter()
-                .any(|&(_, second)| second == index)
+                .any(|(_, second)| second == key)
                 || state
                     .completed_optional_fields
                     .iter()
-                    .any(|&(_, second)| second == index)
+                    .any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
             }
@@ -119,10 +118,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     let rows: Vec<Row> = state
         .missing_display_subset
         .iter()
-        .enumerate()
-        .map(|(index, (key, value))| {
+        .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state.completed_missing_fields.iter().any(|&(first, _)| first == index) {
+            if state.completed_missing_fields.iter().any(|(first, _)| first.ends_with(key)) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row

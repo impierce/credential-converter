@@ -114,7 +114,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     }
 
     let path = Path::new(&state.mapping_path);
-    if !path.exists() || !path.is_file() {
+    if !path.is_file() && state.mapping_path != "DESM" { // !path.exists() || 
         Paragraph::new(state.mapping_path.as_str())
             .block(mapping_file_prompt)
             .fg(Color::Red)

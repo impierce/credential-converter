@@ -64,8 +64,8 @@ pub fn build_transformations_from_csv_parsed(source_csv_mapping: Vec<DesmCSVPars
                 // Todo: please note that also this hardcoded pathbuilding with "$." is terrible, but as long as DESM remains path agnostic, we can only work with the assertion at the root level.
                 transformations.push( Transformation::OneToOne {
                     type_: OneToOne::copy,
-                    source: DataLocation { format: src_e.mapped_schema.clone(), path: "$.".to_owned() + &src_e.mapped_term_name },
-                    destination: DataLocation {format: outp_e.mapped_schema.clone(), path: "$.".to_owned() + &outp_e.mapped_term_name }
+                    source: DataLocation { format: src_e.mapped_schema.clone(), path: "$.".to_owned() + to_camel_case(&src_e.mapped_term_name).as_str() },
+                    destination: DataLocation {format: outp_e.mapped_schema.clone(), path: "$.".to_owned() + to_camel_case(&outp_e.mapped_term_name).as_str() }
                 });
             }
         }
@@ -84,6 +84,26 @@ pub struct DesmCSVParsed {
     mapping_predicate_label: String,
     #[serde(rename = "Mapped term origin")]
     mapped_schema: String
+}
+
+// HELPER
+
+fn to_camel_case(input: &str) -> String {
+    let mut result = String::new();
+    let mut capitalize_next = false;
+
+    for c in input.chars() {
+        if c.is_whitespace() {
+            capitalize_next = true;
+        } else if capitalize_next {
+            result.push(c.to_ascii_uppercase());
+            capitalize_next = false;
+        } else {
+            result.push(c.to_ascii_lowercase());
+        }
+    }
+
+    result
 }
 
 #[cfg(test)]

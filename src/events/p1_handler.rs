@@ -142,7 +142,7 @@ fn handle_enter_p1(state: &mut AppState) -> bool {
     // Check if user is at the end (overwrite warning will only pop up at the end) and if the other prompts are valid and go to next page.
     else if (state.p1_prompts == P1Prompts::CustomMapping || state.overwrite_warning)
         && input_path.is_file()
-        && mapping_path.is_file()
+        && (mapping_path.is_file() || state.mapping_path == "DESM")
         && !state.output_path.is_empty()
     {
         preload_p2(state);

@@ -311,7 +311,7 @@ pub fn resolve_ref(schema: &mut Value, root: Value) {
     }
 }
 
-fn truncate_until_char(s: &str, ch: char) -> &str {
+pub fn truncate_until_char(s: &str, ch: char) -> &str {
     match s.rfind(ch) {
         Some(pos) => &s[..pos],
         None => s,

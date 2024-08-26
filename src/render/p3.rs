@@ -64,17 +64,16 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let rows: Vec<Row> = state
         .input_fields
         .iter()
-        .enumerate()
-        .map(|(index, (key, value))| {
+        .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
             if state
                 .completed_missing_fields
                 .iter()
-                .any(|&(_, second)| second == index)
+                .any(|(_, second)| second == key)
                 || state
                     .completed_optional_fields
                     .iter()
-                    .any(|&(_, second)| second == index)
+                    .any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
             }
@@ -123,10 +122,9 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     let rows: Vec<Row> = state
         .optional_display_subset
         .iter()
-        .enumerate()
-        .map(|(index, (key, value))| {
+        .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state.completed_optional_fields.iter().any(|&(first, _)| first == index) {
+            if state.completed_optional_fields.iter().any(|(first, _)| first == key) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row

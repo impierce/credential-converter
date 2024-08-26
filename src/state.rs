@@ -53,14 +53,14 @@ pub struct AppState {
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
     pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_missing_fields: Vec<(usize, usize)>, // (missing_field_index, input_field_index)
+    pub completed_missing_fields: Vec<(String, String)>, // (missing_field_index, input_field_index) // need to refactor this to work with paths
 
     // Optional fields extracted from the output json format
     pub optional_fields: Vec<(String, String)>,
     pub amount_optional_fields: usize,
     pub selected_optional_field: usize,
     pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_optional_fields: Vec<(usize, usize)>, // (optional_field_index, input_field_index)
+    pub completed_optional_fields: Vec<(String, String)>, // (optional_field_index, input_field_index)
 
     // Backend
     pub candidate_data_value: Option<String>,
