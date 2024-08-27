@@ -483,6 +483,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "credential-converter"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap 4.5.7",
+ "color-eyre",
+ "config",
+ "crossterm",
+ "csv",
+ "digital-credential-data-models",
+ "directories",
+ "dotenvy",
+ "jsonpath-rust",
+ "jsonschema",
+ "lazy_static",
+ "num-derive",
+ "num-traits",
+ "ratatui",
+ "regex",
+ "reqwest 0.12.5",
+ "rust-i18n",
+ "serde",
+ "serde_json",
+ "serde_path_to_error",
+ "strum",
+ "tokio",
+ "tracing",
+ "tracing-error",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "crossbeam-deque"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1154,38 +1186,6 @@ dependencies = [
  "same-file",
  "walkdir",
  "winapi-util",
-]
-
-[[package]]
-name = "impierce-mapper"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap 4.5.7",
- "color-eyre",
- "config",
- "crossterm",
- "csv",
- "digital-credential-data-models",
- "directories",
- "dotenvy",
- "jsonpath-rust",
- "jsonschema",
- "lazy_static",
- "num-derive",
- "num-traits",
- "ratatui",
- "regex",
- "reqwest 0.12.5",
- "rust-i18n",
- "serde",
- "serde_json",
- "serde_path_to_error",
- "strum",
- "tokio",
- "tracing",
- "tracing-error",
- "tracing-subscriber",
 ]
 
 [[package]]

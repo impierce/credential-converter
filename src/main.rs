@@ -41,11 +41,10 @@ fn main() -> Result<()> {
 
         // Default example values, remove if no longer needed
         state.input_path = "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string();
-        // mapping_path = "json/mapping/mapping_empty.json".to_string();
-        // state.mapping_path = "json/mapping/custom_mapping.json".to_string();
-        state.mapping_path = "DESM".to_string();
+        state.mapping_path = "json/mapping/mapping_empty.json".to_string();
         state.output_path = "json/output_credential.json".to_string();
-        // custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
+        state.custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
+
         state.selected_input_field = 1; // todo: what if none? Also after going back to tab 1 and changing file paths?
         state.selected_missing_field = 1; // todo: what if none?
         state.selected_optional_field = 1; // todo: what if none?
