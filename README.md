@@ -111,6 +111,9 @@ The complete button in the top right will move you to the next page. If not all 
 
 ![credential-converter_P2.png](https://github.com/impierce/credential-converter/raw/main/.github/credential-converter_P2.png)
 
+
+![credential-converter_P2_input_field.png](https://github.com/impierce/credential-converter/raw/main/.github/credential-converter_P2_input_field.png)
+
 #### Keyboard & mouse layout
 Use the arrows, tab and F2 to navigate inside and between tabs.  
 Enter will select a field/transformation/button, sometimes moving you to the next tab.  
