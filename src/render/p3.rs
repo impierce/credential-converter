@@ -8,10 +8,7 @@ use ratatui::{
 };
 
 use crate::{
-    backend::resolve::value_to_str,
-    mapping_bars::{render_manytoone_bar, render_mapping_bar},
-    popups::{render_popup_exit_warning, render_popup_mapping},
-    state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg,
+    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping}, render_breadcrumbs, state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -22,8 +19,13 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .render(area, buf);
 
     // Layout
-    let [_title, page, bottom] =
-        Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0), Constraint::Length(1)]).areas(area);
+    let [_title, breadcrumbs, page, bottom] = Layout::vertical(vec![
+        Constraint::Length(1),
+        Constraint::Length(1),
+        Constraint::Min(0),
+        Constraint::Length(1),
+    ])
+    .areas(area);
     let [mut left_selector, mut right_optional_fields] =
         Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]).areas(page);
     Block::new().borders(Borders::RIGHT).render(left_selector, buf);
@@ -163,7 +165,8 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         buf,
         &mut table_state,
     );
-    // todo: render  output results
+
+    render_breadcrumbs(state, breadcrumbs, buf);
 
     render_mapping_bar(bottom, buf, state, mappingoptions_style);
 

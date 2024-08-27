@@ -13,6 +13,8 @@ use ratatui::{
 };
 use std::ops::Deref;
 
+use super::render_breadcrumbs;
+
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
     let txt = format!("  {}  ", translate("manual_mapping"));
@@ -23,8 +25,13 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .render(area, buf);
 
     // Layout
-    let [_title, page, bottom] =
-        Layout::vertical(vec![Constraint::Length(1), Constraint::Min(0), Constraint::Length(1)]).areas(area);
+    let [_title, breadcrumbs, page, bottom] = Layout::vertical(vec![
+        Constraint::Length(1),
+        Constraint::Length(1),
+        Constraint::Min(0),
+        Constraint::Length(1),
+    ])
+    .areas(area);
     let [mut left_selector, mut right_missing_fields] =
         Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Min(0)]).areas(page);
     Block::new().borders(Borders::RIGHT).render(left_selector, buf);
@@ -67,14 +74,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]); //todo
-            if state
-                .completed_missing_fields
-                .iter()
-                .any(|(_, second)| second == key)
-                || state
-                    .completed_optional_fields
-                    .iter()
-                    .any(|(_, second)| second == key)
+            if state.completed_missing_fields.iter().any(|(_, second)| second == key)
+                || state.completed_optional_fields.iter().any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
             }
@@ -120,7 +121,11 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state.completed_missing_fields.iter().any(|(first, _)| first.ends_with(key)) {
+            if state
+                .completed_missing_fields
+                .iter()
+                .any(|(first, _)| first.ends_with(key))
+            {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -138,7 +143,8 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         buf,
         &mut table_state,
     );
-    // todo: render  output results
+
+    render_breadcrumbs(state, breadcrumbs, buf);
 
     render_mapping_bar(bottom, buf, state, mappingoptions_style);
 
@@ -156,7 +162,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             }
         }
     }
-    // Render warning if user wants to exit.
+
     if state.exit_warning {
         render_popup_exit_warning(area, buf);
     }

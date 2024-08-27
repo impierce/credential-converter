@@ -103,3 +103,25 @@ fn render_complete_button(area: Rect, buf: &mut Buffer) {
         .title_alignment(Alignment::Center)
         .render(area, buf);
 }
+
+pub fn render_breadcrumbs(state: &mut AppState, area: Rect, buf: &mut Buffer) {
+    let [input_breadcrum, output_breadcrumb] =
+        Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(area);
+
+    Block::new()
+        .title(state.input_fields[state.selected_input_field].0.as_str())
+        .title_alignment(Alignment::Center)
+        .style(Modifier::ITALIC)
+        .render(input_breadcrum, buf);
+    
+    let mut breadcrumb_str = state.missing_field_pointer.clone();
+    if state.page == Pages::UnusedDataP3 {
+        breadcrumb_str = state.optional_field_pointer.clone();
+    }
+
+    Block::new()
+        .title(breadcrumb_str)
+        .title_alignment(Alignment::Center)
+        .style(Modifier::ITALIC)
+        .render(output_breadcrumb, buf);
+}
