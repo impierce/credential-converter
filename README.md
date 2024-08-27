@@ -5,9 +5,11 @@ This project is a [Rust](https://www.rust-lang.org/)-based application that conv
 
 ## Features
 - Bidirectional conversion between OpenBadges v3 and ELM. Extendable to any standard defined in JsonSchema.
+- Supports importing mappings from DESM CSV files.
 - Interactive Terminal Interface: select your input files and output paths, complete mappings and transformations.
 - Support for custom mapping files: the program allows you to save all your mappings to a custom mapping file for future use.
-- Forward compatibility with DESM: In the future, DESM will provide professionally curated mapping files which will be shipped as default with the program.
+- Headless/automated execution by calling the program with commandline arguments
+- Automated batch conversion between formats taking a directory as input
 
 ## Installation
 To run this project, ensure you have [Rust](https://www.rust-lang.org/) installed. If not, you can install it from rust-lang.org.
@@ -28,12 +30,32 @@ Run the application with:
 ```sh
 cargo run
 ```
+For headless/automated execution:
+
+Run with -h (--help) for more information on what arguments to pass
+```sh
+cargo run -- -h
+```
+
+example:
+```sh
+cargo run -- -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
+```
+
+Or find the executable in the `/target/debug` folder named after the repo name `credential-converter`.
+```sh
+./target/debug/credential-converter
+```
+```sh
+./target/debug/credential-converter -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
+```
 
 *Warning: the ratatui library does not seem to handle different color settings in your terminal perfectly. This causes the colors to differ slightly between builds in different terminals. For reference please continue reading the readme, colors will be explained accompanied by screenshots.*
 
 ## Usage
 
 The link below contains a youtube video which is a walkthrough of the program.
+The output fields section has since been updated to have a folder like layout, DESM and the headless interface are not included in the demo.
 
 https://www.youtube.com/watch?v=TGc2OyFQqXs  
 
