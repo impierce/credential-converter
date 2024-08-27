@@ -30,12 +30,12 @@ pub fn handle_esc(state: &mut AppState) {
         clear_mapping_options(state);
     }
     // Show exit program warning
-    else {
+    else if state.p2_p3_tabs == P2P3Tabs::OutputFields {
         update_path(state, false);
         update_display_section(state, false);
-        // trace_dbg!(&state.missing_field_pointer);
-        // trace_dbg!(&state.missing_display_subset);
-        // state.exit_warning = !state.exit_warning; // todo: tmp
+    }
+    else {
+        state.exit_warning = !state.exit_warning;
     }
 }
 

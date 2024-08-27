@@ -50,12 +50,14 @@ Or find the executable in the `/target/debug` folder named after the repo name `
 ./target/debug/credential-converter -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
 ```
 
+
+
 *Warning: the ratatui library does not seem to handle different color settings in your terminal perfectly. This causes the colors to differ slightly between builds in different terminals. For reference please continue reading the readme, colors will be explained accompanied by screenshots.*
 
 ## Usage
 
 The link below contains a youtube video which is a walkthrough of the program.
-The output fields section has since been updated to have a folder like layout, DESM and the headless interface, incl. batch conversions, are not included in the demo.
+The program has since been updated to have a folder like layout for the output fields, DESM and the headless interface, incl. batch conversions, are also not included in the demo. Nonetheless, the video gives a proper tour of the UX of the CLI.
 
 https://www.youtube.com/watch?v=TGc2OyFQqXs  
 
@@ -94,7 +96,9 @@ Clicking the complete button in the top right or enter on the last prompt will m
 Esc will prompt you to exit the program, losing all progress.
 
 ### Page 2, complete mandatory output fields
-Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.  
+Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.
+
+Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values.
 
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
 `Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
@@ -119,7 +123,6 @@ In this page you can choose to complete optional output fields.
 The layout and usage are the same as page 2.
 
 On the right are now the optional output fields.  
-*Currently the optional fields aren't loaded correctly yet, what is visible is dummy data.*  
 On the left are the same fields from the input file with the used fields still in green.
 This doesn't mean you can't use them again.
 
