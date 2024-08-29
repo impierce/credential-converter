@@ -2,7 +2,6 @@ mod backend;
 mod events;
 mod render;
 mod state;
-mod translations;
 
 use backend::headless_cli::run_headless;
 use backend::headless_cli::Args;
