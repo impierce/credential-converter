@@ -41,7 +41,7 @@ pub fn desm_csv_parser(path: &str) -> Vec<DesmCSVParsed> {
         let result: Result<DesmCSVParsed, csv::Error> = line;
         if let Ok(mut entry) = result {
             // Todo: ugly hardcode, but can only develop this further in tandem with DESM when their output is more mature.
-            if entry.mapped_schema == "ELM Micro-Credential".to_string() {
+            if entry.mapped_schema == "ELM Micro-Credential" {
                 entry.mapped_schema = "ELM".to_string();
             } else if entry.mapped_schema.starts_with("ob:") || entry.mapped_schema == "Open Badges 3.0 (3.0)" {
                 entry.mapped_schema = "OBv3".to_string();

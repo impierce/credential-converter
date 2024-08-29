@@ -14,9 +14,9 @@ use std::io::Result;
 use std::path::Path;
 
 pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
-    check_args(&cli_args)?;
+    check_args(cli_args)?;
     trace_dbg!(&cli_args);
-    complete_appstate_headless(&cli_args, state);
+    complete_appstate_headless(cli_args, state);
 
     if cli_args.input_file.is_some() {
         load_files_apply_transformations(state);
@@ -24,7 +24,7 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
         trace_dbg!("Running batch conversion");
 
         if !Path::new(&cli_args.output_directory.clone().unwrap()).is_dir() {
-            std::fs::create_dir_all(&cli_args.output_directory.clone().unwrap().clone()).unwrap();
+            std::fs::create_dir_all(cli_args.output_directory.clone().unwrap().clone()).unwrap();
             trace_dbg!("Created the output directory");
         }
 
@@ -64,7 +64,7 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
             panic!("The input directory path does not exist: {}", input_dir);
         }
         let mut json_count: usize = 0;
-        json_count = check_input_dir(&input_dir, &mut json_count);
+        json_count = check_input_dir(input_dir, &mut json_count);
 
         if json_count == 0 {
             panic!("The input directory does not contain any json files: {}", input_dir);
@@ -130,7 +130,7 @@ pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
 }
 
 pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
-    state.mapping = args.conversion.clone().unwrap();
+    state.mapping = args.conversion.unwrap();
     state.mapping_path = args.mapping_file.clone().unwrap();
     if let Some(input_f) = args.input_file.clone() {
         state.input_path = input_f;

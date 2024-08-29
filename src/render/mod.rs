@@ -116,7 +116,7 @@ pub fn render_breadcrumbs(state: &mut AppState, area: Rect, buf: &mut Buffer) {
 
     let mut breadcrumb_str = state.missing_field_pointer.clone();
     if state.page == Pages::UnusedDataP3 {
-        breadcrumb_str = state.optional_field_pointer.clone();
+        breadcrumb_str.clone_from(&state.optional_field_pointer);
     }
 
     Block::new()
