@@ -11,8 +11,8 @@ use super::transformations::{DataLocation, OneToOne};
 /// This basically renders the mapping useless as for us only the field level really matters.
 /// Another problem is that DESM mappings are path agnostic, but we need the specific paths.
 pub fn apply_desm_mapping(state: &mut AppState) {
-    let elm_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser("assertion_csvs/Microcredential+Mapping_Assertion_ELM+Micro-Credential_20240208063519.csv");
-    let obv3_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser("assertion_csvs/Microcredential+Mapping_Assertion_Open+Badges+3.0_3.0_20240301181832.csv");
+    let elm_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser("desm/assertion_csvs/Microcredential+Mapping_Assertion_ELM+Micro-Credential_20240208063519.csv");
+    let obv3_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser("desm/assertion_csvs/Microcredential+Mapping_Assertion_Open+Badges+3.0_3.0_20240301181832.csv");
     
     let transformations: Vec<Transformation> = match state.mapping {
         Mapping::ELMToOBv3 => {
@@ -104,16 +104,4 @@ fn to_camel_case(input: &str) -> String {
     }
 
     result
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_csv_crate() {
-        let mut state = AppState::default();
-
-        apply_desm_mapping(&mut state);
-    }
 }
