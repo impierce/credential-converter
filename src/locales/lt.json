@@ -1,5 +1,5 @@
 {
-    "intro": "\nŠis įrankis skirtas kredencialų konvertavimui tarp OpenBadges ir ELM formatų.\n\nJis priima JSON failą kaip įvestį ir sugeneruoja naują, suvestą JSON failą. Nesuvienyti laukai gali būti suvesti rankiniu būdu. Rankiniai suvedimai gali būti išsaugoti į pritaikytą suvedimo failą ateities naudojimui.\n\nAbsoliutiniams keliams pradėkite su '/', o dėl reliatyvių kelių dabartinis katalogas yra: %{pwd}",
+    "intro": "\nŠis įrankis skirtas kredencialų konvertavimui tarp OpenBadges ir ELM formatų.\n\nJis priima JSON failą kaip įvestį ir išveda naują, suvestą JSON failą. DESM suvedimams tiesiog įveskite 'DESM' suvedimo failo lauke, kitu atveju nurodykite kelią. Nesuvesti laukai gali būti suvesti rankiniu būdu. Rankiniai suvedimai gali būti išsaugoti į pritaikytą suvedimo failą ateities naudojimui.\n\nAbsoliutiniams keliams pradėkite su '/', o esamas katalogas yra: %{pwd}",
     "input_path": "Įvesties kelias",
     "output_path": "Išvesties kelias",
     "choose_mapping": "Pasirinkti suvedimą",
@@ -39,5 +39,6 @@
     "field": "Laukas",
     "value": "Vertė",
     "missing_fields_incomplete": "\nNe visi trūkstami laukai užpildyti.\nTęsiant dabar, bus sugeneruotas neleistinas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
-    "exit_warning": "\n Ar tikrai norite dabar išeiti iš programos?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
+    "exit_warning": "\n Ar tikrai norite dabar išeiti iš programos?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
+    "return_to_p1_warning": "\n Ar tikrai norite grįžti į 1 puslapį?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
 }

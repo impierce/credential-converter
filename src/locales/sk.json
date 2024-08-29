@@ -1,5 +1,5 @@
 {
-    "intro": "\nTento nástroj slúži na konverziu prihlasovacích údajov medzi formátmi OpenBadges a ELM.\n\nPríjma JSON súbor ako vstup a generuje nový, zmapovaný JSON súbor. Nezmapované polia je možné mapovať manuálne. Manuálne mapovania je možné uložiť do vlastného súboru mapovania pre budúce použitie.\n\nPre absolútne cesty začnite s '/', pre relatívne cesty je aktuálny adresár: %{pwd}",
+    "intro": "\nTento nástroj je určený na konverziu údajov medzi formátmi OpenBadges a ELM.\n\nPri vstupe prijíma json súbor a výstupom je nový, mapovaný json súbor. Pre DESM mapovania jednoducho zadajte 'DESM' do poľa pre mapovanie súborov, inak uveďte cestu. Nemapované polia môžu byť mapované manuálne. Manuálne mapovania môžu byť uložené do vlastného súboru mapovania pre budúce použitie.\n\nPre absolútne cesty začnite s '/', pre relatívne cesty je aktuálny adresár: %{pwd}",
     "input_path": "Vstupná cesta",
     "output_path": "Výstupná cesta",
     "choose_mapping": "Vyberte mapovanie",
@@ -39,5 +39,6 @@
     "field": "Pole",
     "value": "Hodnota",
     "missing_fields_incomplete": "\nNie všetky chýbajúce polia boli vyplnené.\nPokračovanie vytvorí neplatný výstupný súbor.\nStlačte 'Enter' pre pokračovanie, 'Esc' pre návrat.",
-    "exit_warning": "\n Ste si istí, že chcete teraz ukončiť program?\nVšetky zmeny budú stratené.\nStlačte 'Enter' pre pokračovanie, 'Esc' pre návrat."
+    "exit_warning": "\n Ste si istí, že chcete teraz ukončiť program?\nVšetky zmeny budú stratené.\nStlačte 'Enter' pre pokračovanie, 'Esc' pre návrat.",
+    "return_to_p1_warning": "\n Ste si istí, že chcete vrátiť sa na stránku 1?\nVšetky zmeny budú stratené.\nStlačte 'Enter' pre pokračovanie, 'Esc' pre návrat."
 }

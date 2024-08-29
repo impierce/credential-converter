@@ -1,5 +1,5 @@
 {
-    "intro": "\nTämä työkalu on tehty tunnistetietojen muuntamiseen OpenBadges- ja ELM-formaattien välillä.\n\nSe ottaa JSON-tiedoston syötteenä ja tuottaa uuden, määrätyn JSON-tiedoston. Määrittämättömät kentät voidaan määrittää manuaalisesti. Manuaaliset määritykset voidaan tallentaa mukautettuun määritystiedostoon tulevaa käyttöä varten.\n\nAbsoluuttisia polkuja varten aloita '/'-merkillä, suhteellisille poluille nykyinen kansio on: %{pwd}",
+    "intro": "\nTämä työkalu on tehty tunnusten muuntamiseen OpenBadges- ja ELM-muotojen välillä.\n\nSe ottaa json-tiedoston syötteenä ja tuottaa uuden, kartoitetun json-tiedoston. DESM-kartoituksia varten kirjoita 'DESM' kartoitustiedostokenttään, muuten määritä polku. Kartoittamattomat kentät voidaan kartoittaa manuaalisesti. Manuaaliset kartoitukset voidaan tallentaa mukautettuun kartoitustiedostoon tulevaa käyttöä varten.\n\nAbsoluuttisille poluille aloita '/'-merkillä, suhteellisille poluille nykyinen hakemisto on: %{pwd}",
     "input_path": "Syöttöpolku",
     "output_path": "Tulostuspolku",
     "choose_mapping": "Valitse kartoitus",
@@ -39,5 +39,6 @@
     "field": "Kenttä",
     "value": "Arvo",
     "missing_fields_incomplete": "\nKaikki puuttuvat kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
-    "exit_warning": "\n Oletko varma, että haluat lopettaa ohjelman nyt?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
+    "exit_warning": "\n Oletko varma, että haluat lopettaa ohjelman nyt?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
+    "return_to_p1_warning": "\n Oletko varma, että haluat palata sivulle 1?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
 }

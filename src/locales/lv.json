@@ -1,5 +1,5 @@
 {
-    "intro": "\nŠis rīks ir paredzēts akreditāciju pārveidošanai starp OpenBadges un ELM formātiem.\n\nTas ņem JSON failu kā ievadi un izveido jaunu, kartētu JSON failu. Neiekartotie lauki var tikt iekartoti manuāli. Manuālās kartēšanas var saglabāt pielāgotās kartēšanas failā turpmākai lietošanai.\n\nAbsolūtajiem ceļiem sāciet ar '/', bet attiecīgajiem ceļiem pašreizējais katalogs ir: %{pwd}",
+    "intro": "\nŠis rīks ir paredzēts akreditāciju pārveidošanai starp OpenBadges un ELM formātiem.\n\nTas pieņem json failu kā ievadi un izvada jaunu, kartētu json failu. DESM kartēšanai vienkārši ierakstiet 'DESM' kartēšanas faila jautājumā, citādi norādiet ceļu. Neatkarīgi no tā, vai kartēšana ir veikta, lauki var tikt kartēti manuāli. Manuālās kartēšanas var saglabāt pielāgotā kartēšanas failā nākotnes izmantošanai.\n\nAbsolūtiem ceļiem sāciet ar '/', bet attiecīgiem ceļiem pašreizējais katalogs ir: %{pwd}",
     "input_path": "Ievades ceļš",
     "output_path": "Izvades ceļš",
     "choose_mapping": "Izvēlēties kartēšanu",
@@ -39,5 +39,6 @@
     "field": "Lauks",
     "value": "Vērtība",
     "missing_fields_incomplete": "\nNav visi trūkstošie lauki aizpildīti.\nTurpinot tagad, tiks radīts nederīgs izvades fails.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
-    "exit_warning": "\n Vai tiešām vēlaties tagad iziet no programmas?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ."
+    "exit_warning": "\n Vai tiešām vēlaties tagad iziet no programmas?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
+    "return_to_p1_warning": "\n Vai tiešām vēlaties atgriezties uz 1. lapu?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ."
 }

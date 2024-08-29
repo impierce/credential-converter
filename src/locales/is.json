@@ -1,5 +1,5 @@
 {
-    "intro": "\nÞessi tól er hannað til að breyta auðkenningargögnum milli sniða OpenBadges og ELM.\n\nÞað tekur inn JSON skrá sem inntak og býr til nýja, mælda JSON skrá. Ekki mældir reitir geta verið mældir handvirkt. Handvirkt mældir geta verið vistaðir í sérsniðna mælingaskrá til framtíðarnotkunar.\n\nFyrir alfræðilegar slóðir byrja með '/', fyrir hlutfallslegar slóðir er núverandi skráarsafn: %{pwd}",
+    "intro": "\nÞessi tól er hannað til að breyta auðkenni milli OpenBadges og ELM sniða.\n\nÞað tekur við json skrá sem inntak og skilar nýrri, kortlagðri json skrá. Fyrir DESM kortlagningar skrifaðu einfaldlega 'DESM' í mælingaskráar spyrninni, annars tilgreindu slóð. Ókortlagðir reitir geta verið kortlagðir handvirkt. Handvirkt kortlagningar geta verið vistaðar í sérsniðna kortlagningarskrá fyrir framtíðar notkun.\n\nFyrir alvöru slóðir byrjaðu með '/', fyrir hlutfallslegar slóðir er núverandi skráarsafn: %{pwd}",
     "input_path": "Innslegin slóð",
     "output_path": "Útslegin slóð",
     "choose_mapping": "Veldu mælingar",
@@ -39,5 +39,6 @@
     "field": "Reitur",
     "value": "Gildi",
     "missing_fields_incomplete": "\nEkki eru allir vantar reitir fylltir.\nÁframhald mun valda ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
-    "exit_warning": "\n Ertu viss um að þú viljir hætta við forritið núna?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
+    "exit_warning": "\n Ertu viss um að þú viljir hætta við forritið núna?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
+    "return_to_p1_warning": "\n Ertu viss um að þú viljir fara til baka á síðu 1?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
 }

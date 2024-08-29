@@ -1,5 +1,5 @@
 {
-    "intro": "\nTo narzędzie służy do konwertowania poświadczeń między formatami OpenBadges i ELM.\n\nPrzyjmuje plik JSON jako wejście i generuje nowy, zmapowany plik JSON. Niezmapowane pola można mapować ręcznie. Ręczne mapowania można zapisać do niestandardowego pliku mapowania na przyszłość.\n\nDla bezwzględnych ścieżek zaczynających się od '/', dla względnych bieżący katalog to: %{pwd}",
+    "intro": "\nTen narzędzie służy do konwertowania poświadczeń między formatami OpenBadges i ELM.\n\nPrzyjmuje plik json jako wejście i generuje nowy, zmapowany plik json. Dla mapowań DESM po prostu wpisz 'DESM' w polu mapowania, w przeciwnym razie określ ścieżkę. Niesparowane pola można mapować ręcznie. Mapowania ręczne można zapisać w niestandardowym pliku mapowania do późniejszego użycia.\n\nDla ścieżek bezwzględnych zacznij od '/', dla ścieżek względnych bieżący katalog to: %{pwd}",
     "input_path": "Ścieżka wejściowa",
     "output_path": "Ścieżka wyjściowa",
     "choose_mapping": "Wybierz mapowanie",
@@ -39,5 +39,6 @@
     "field": "Pole",
     "value": "Wartość",
     "missing_fields_incomplete": "\nNie wszystkie brakujące pola zostały uzupełnione.\nKontynuacja teraz spowoduje nieprawidłowy plik wynikowy.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
-    "exit_warning": "\nCzy na pewno chcesz teraz wyjść z programu?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić."
+    "exit_warning": "\nCzy na pewno chcesz teraz wyjść z programu?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
+    "return_to_p1_warning": "\nCzy na pewno chcesz wrócić do strony 1?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić."
 }

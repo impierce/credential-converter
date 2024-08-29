@@ -1,5 +1,5 @@
 {
-    "intro": "\nOvaj alat služi za pretvaranje vjerodajnica između formata OpenBadges i ELM.\n\nPrima JSON datoteku kao ulaz i generira novu, mapiranu JSON datoteku. Nemapirana polja mogu se mapirati ručno. Ručna mapiranja mogu se spremiti u prilagođenu datoteku za mapiranje za buduću upotrebu.\n\nZa apsolutne putanje započnite s '/', za relativne putanje trenutni direktorij je: %{pwd}",
+    "intro": "\nOvaj alat je napravljen za konvertiranje vjerodajnica između formata OpenBadges i ELM.\n\nPrihvaća json datoteku kao ulaz i izlazi novu, mapiranu json datoteku. Za DESM mapiranja jednostavno upišite 'DESM' u polje za mapiranje, inače navedite putanju. Nemapirana polja mogu se mapirati ručno. Ručna mapiranja mogu se spremiti u prilagođenu datoteku mapiranja za buduću upotrebu.\n\nZa apsolutne putanje započnite s '/', za relativne putanje trenutni direktorij je: %{pwd}",
     "input_path": "Ulazni put",
     "output_path": "Izlazni put",
     "choose_mapping": "Odaberi mapiranje",
@@ -39,5 +39,6 @@
     "field": "Polje",
     "value": "Vrijednost",
     "missing_fields_incomplete": "\nNisu sva nedostajuća polja popunjena.\nNastavak sada će rezultirati nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
-    "exit_warning": "\n Jeste li sigurni da želite izaći iz programa sada?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
+    "exit_warning": "\n Jeste li sigurni da želite izaći iz programa sada?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
+    "return_to_p1_warning": "\n Jeste li sigurni da želite se vratiti na stranicu 1?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
 }

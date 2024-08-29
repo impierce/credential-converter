@@ -242,3 +242,39 @@ pub fn render_popup_exit_warning(mut area: Rect, buf: &mut Buffer) {
             buf,
         );
 }
+
+pub fn render_popup_lose_progress_warning(mut area: Rect, buf: &mut Buffer)
+{
+    area = area.inner(&Margin {
+        vertical: 4,
+        horizontal: 28,
+    });
+    Clear.render(area, buf);
+    Block::new()
+        .style(Style::default().fg(Color::Red).bg(Color::Black))
+        .borders(Borders::ALL)
+        .render(area, buf);
+
+    let mut txt = translate("return_to_p1_warning");
+    let width: f32 = 50. / (area.width as f32 - 2.0);
+
+    let vertical_margin;
+    if area.height >= 4 && width <= 1.0 {
+        vertical_margin = (area.height - 4) / 2;
+    } else {
+        txt = format!("\n{}", txt).into();
+        vertical_margin = 0;
+    }
+
+    Paragraph::new(txt)
+        .centered()
+        .alignment(Alignment::Center)
+        .wrap(Wrap { trim: false })
+        .render(
+            area.inner(&Margin {
+                vertical: vertical_margin,
+                horizontal: 1,
+            }),
+            buf,
+        );
+}

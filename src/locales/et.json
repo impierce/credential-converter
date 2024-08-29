@@ -1,5 +1,5 @@
 {
-    "intro": "\nSee tööriist on loodud autentimisandmete konverteerimiseks OpenBadges'i ja ELM formaatide vahel.\n\nSee võtab sisendina JSON faili ja genereerib uue, kaardistatud JSON faili. Kaardistamata välju saab kaardistada käsitsi. Käsitsi kaardistusi saab tulevikus kasutamiseks salvestada kohandatud kaardistusfaili.\n\nAbsoluutsete teede jaoks alustage '/', suhteliste teede jaoks on praegune kaust: %{pwd}",
+    "intro": "\nSee tööriist on loodud autentimiste teisendamiseks OpenBadges ja ELM vahel.\n\nSee võtab sisendina json-faili ja väljastab uue, kaardistatud json-faili. DESM kaardistuste jaoks tippige lihtsalt 'DESM' kaardistusfaili küsimiseks, muidu määrake tee. Kaardistamata väljad saab kaardistada käsitsi. Käsitsi kaardistusi saab tulevaseks kasutamiseks salvestada kohandatud kaardistusfaili.\n\nAbsoluutsete teede jaoks alustage '/', suhteliste teede korral on praegune kataloog: %{pwd}",
     "input_path": "Sisendtee",
     "output_path": "Väljundtee",
     "choose_mapping": "Vali kaardistamine",
@@ -39,5 +39,6 @@
     "field": "Väli",
     "value": "Väärtus",
     "missing_fields_incomplete": "\nKõik puuduvad väljad ei ole täidetud.\nJätkamine nüüd toob kaasa vigase väljundfaili.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
-    "exit_warning": "\n Kas olete kindel, et soovite programmi nüüd lõpetada?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi."
+    "exit_warning": "\n Kas olete kindel, et soovite programmi nüüd lõpetada?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
+    "return_to_p1_warning": "\n Kas olete kindel, et soovite naasta lehele 1?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi."
 }

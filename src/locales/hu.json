@@ -1,5 +1,5 @@
 {
-    "intro": "\nEz az eszköz az OpenBadges és az ELM formátumok közötti hitelesítő adatok konvertálására szolgál.\n\nJSON fájlt vesz bemenetként, és új, leképezett JSON fájlt állít elő. A nem leképezett mezőket kézzel is leképezheti. A kézi leképezéseket egyéni leképezési fájlba mentheti későbbi használatra.\n\nAbszolút elérési útvonalak esetén '/'-ral kezdje, relatív elérési útvonalak esetén az aktuális könyvtár: %{pwd}",
+    "intro": "\nEz az eszköz az OpenBadges és az ELM formátumok közötti hitelesítő adatok konvertálására készült.\n\nEgy json fájlt vesz bemenetként, és új, leképezett json fájlt ad ki. DESM leképezések esetén egyszerűen írja be a 'DESM' szót a leképezési fájl felugró ablakában, egyébként adja meg az útvonalat. A nem leképezett mezőket kézzel is leképezheti. A kézi leképezéseket egy egyedi leképezési fájlba mentheti a későbbi használat érdekében.\n\nAbszolút útvonalak esetén kezdje a '/' karakterrel, a relatív útvonalak esetén a jelenlegi könyvtár: %{pwd}",
     "input_path": "Bemeneti útvonal",
     "output_path": "Kimeneti útvonal",
     "choose_mapping": "Leképezés kiválasztása",
@@ -39,5 +39,6 @@
     "field": "Mező",
     "value": "Érték",
     "missing_fields_incomplete": "\nNem minden hiányzó mező van kitöltve.\nAzonnali folytatás érvénytelen kimeneti fájlt eredményezhet.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
-    "exit_warning": "\n Biztosan ki akarja most lépni a programból?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
+    "exit_warning": "\n Biztosan ki akarja most lépni a programból?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
+    "return_to_p1_warning": "\n Biztosan vissza akar térni az 1. oldalra?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
 }

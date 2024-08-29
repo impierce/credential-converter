@@ -1,5 +1,5 @@
 {
-    "intro": "\nEsta herramienta está hecha para convertir credenciales entre los formatos OpenBadges y ELM.\n\nToma un archivo JSON como entrada y genera el nuevo archivo JSON mapeado. Los campos no mapeados se pueden mapear manualmente. Los mapeos manuales se pueden guardar en un archivo de mapeo personalizado para uso futuro.\n\nPara rutas absolutas comience con '/', para rutas relativas el directorio actual es: %{pwd}",
+    "intro": "\nEsta herramienta está hecha para convertir credenciales entre los formatos OpenBadges y ELM.\n\nToma un archivo json como entrada y genera el nuevo archivo json mapeado. Para mapeos DESM simplemente escriba 'DESM' en el cuadro de diálogo de archivo de mapeo, de lo contrario especifique una ruta. Los campos no mapeados pueden ser mapeados manualmente. Los mapeos manuales pueden ser guardados en un archivo de mapeo personalizado para uso futuro.\n\nPara rutas absolutas comience con '/', para rutas relativas el directorio actual es: %{pwd}",
     "input_path": "Ruta de entrada",
     "output_path": "Ruta de salida",
     "choose_mapping": "Elegir mapeo",
@@ -39,5 +39,6 @@
     "field": "Campo",
     "value": "Valor",
     "missing_fields_incomplete": "\nNo se han completado todos los campos faltantes.\nContinuar ahora generará un archivo de salida no válido.\nPresione 'Enter' para continuar, 'Esc' para volver.",
-    "exit_warning": "\n ¿Está seguro de que desea salir del programa ahora?\nTodo el progreso se perderá.\nPresione 'Enter' para continuar, 'Esc' para volver."
+    "exit_warning": "\n ¿Está seguro de que desea salir del programa ahora?\nTodo el progreso se perderá.\nPresione 'Enter' para continuar, 'Esc' para volver.",
+    "return_to_p1_warning": "\n ¿Está seguro de que desea volver a la página 1?\n Todo el progreso se perderá.\nPresione 'Enter' para continuar, 'Esc' para volver."
 }

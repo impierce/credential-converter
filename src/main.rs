@@ -45,9 +45,10 @@ fn main() -> Result<()> {
         state.output_path = "json/output_credential.json".to_string();
         state.custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
 
-        state.selected_input_field = 1; // todo: what if none? Also after going back to tab 1 and changing file paths?
-        state.selected_missing_field = 1; // todo: what if none?
-        state.selected_optional_field = 1; // todo: what if none?
+        // Currently it's set to 1 due to the empty line added above the field lists for spacing
+        state.selected_input_field = 1; 
+        state.selected_missing_field = 1;
+        state.selected_optional_field = 1;
         state.select_mapping_option = true;
 
         // Initialize the alternate terminal screen, its input and the backend for it.

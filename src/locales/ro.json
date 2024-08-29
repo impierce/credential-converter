@@ -1,5 +1,5 @@
 {
-    "intro": "\nAcest instrument este destinat conversiei de credențiale între formatele OpenBadges și ELM.\n\nPrimește un fișier JSON ca intrare și generează un fișier JSON nou, mapeat. Câmpurile nemapate pot fi mapate manual. Mapările manuale pot fi salvate într-un fișier de mapare personalizat pentru utilizare ulterioară.\n\nPentru căi absolute începeți cu '/', iar pentru căi relative directorul curent este: %{pwd}",
+    "intro": "\nAcest instrument este creat pentru conversia certificatelor între formatele OpenBadges și ELM.\n\nPreia un fișier json ca intrare și furnizează noul fișier json mapat ca ieșire. Pentru mapările DESM, pur și simplu tastați 'DESM' în promptul fișierului de mapare, altfel specificați o cale. Câmpurile ne-mapați pot fi mapate manual. Mapările manuale pot fi salvate într-un fișier de mapare personalizat pentru utilizare ulterioară.\n\nPentru căile absolute începeți cu '/', pentru căile relative directorul curent este: %{pwd}",
     "input_path": "Cale de Intrare",
     "output_path": "Cale de Ieșire",
     "choose_mapping": "Alegeți maparea",
@@ -39,5 +39,6 @@
     "field": "Câmp",
     "value": "Valoare",
     "missing_fields_incomplete": "\nNu toate câmpurile lipsă au fost completate.\nContinuarea acum va duce la generarea unui fișier de ieșire invalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
-    "exit_warning": "\nSunteți sigur că doriți să ieșiți din program acum?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
+    "exit_warning": "\nSunteți sigur că doriți să ieșiți din program acum?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
+    "return_to_p1_warning": "\nSunteți sigur că doriți să reveniți la pagina 1?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
 }

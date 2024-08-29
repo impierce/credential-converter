@@ -13,7 +13,7 @@ use ratatui::{
 };
 use std::ops::Deref;
 
-use super::render_breadcrumbs;
+use super::{popups::render_popup_lose_progress_warning, render_breadcrumbs};
 
 pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
@@ -163,6 +163,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         }
     }
 
+    if state.return_to_p1_warning {
+        render_popup_lose_progress_warning(area, buf);
+    }
     if state.exit_warning {
         render_popup_exit_warning(area, buf);
     }

@@ -65,3 +65,23 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 
     Ok(false)
 }
+
+/// When user returns to P1 to select the input, output paths etc. we don't have any caching or whatever,
+/// so this simply restarts the logic even if the same paths etc. are kept.
+/// Therefore we need to clean the rest of the state as well when this happens.
+pub fn clear_progress(state: &mut AppState) {
+    state.selected_input_field = 1; 
+    state.selected_missing_field = 1;
+    state.selected_optional_field = 1;
+    state.select_mapping_option = true;
+    state.completed_missing_fields.clear();
+    state.completed_optional_fields.clear();
+    state.input_fields.clear();
+    state.input_display_section.clear();
+    state.input_field_pointer.clear();
+    state.resolved_subsets.clear();
+    state.missing_display_subset.clear();
+    state.missing_field_pointer.clear();
+    state.optional_display_subset.clear();
+    state.optional_field_pointer.clear();    
+}

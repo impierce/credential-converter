@@ -1,5 +1,5 @@
 {
-    "intro": "\nDette værktøj er lavet til at konvertere legitimationsoplysninger mellem OpenBadges- og ELM-formatet.\n\nDet tager en json-fil som input og udsender den nye, kortlagte json-fil. Ikke-kortlagte felter kan kortlægges manuelt. Manuelle kortlægninger kan gemmes i en tilpasset kortlægningsfil til fremtidig brug.\n\nFor absolutte stier start med '/', for relative stier er den aktuelle mappe: %{pwd}",
+    "intro": "\nDette værktøj er lavet til at konvertere legitimationsoplysninger mellem OpenBadges og ELM-formatet.\n\nDet tager en json-fil som input og giver den nye, kortlagte json-fil som output. For DESM-kortlægninger skal du blot skrive 'DESM' i kortlægningsfilprompten, ellers specificer en sti. Ukortlagte felter kan kortlægges manuelt. Manuelle kortlægninger kan gemmes i en tilpasset kortlægningsfil til fremtidig brug.\n\nFor absolutte stier start med '/', for relative stier er den aktuelle mappe: %{pwd}",
     "input_path": "Inputsti",
     "output_path": "Outputsti",
     "choose_mapping": "Vælg kortlægning",
@@ -39,5 +39,6 @@
     "field": "Felt",
     "value": "Værdi",
     "missing_fields_incomplete": "\nIkke alle manglende felter er udfyldt.\nFortsættelse nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
-    "exit_warning": "\n Er du sikker på, at du vil afslutte programmet nu?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
+    "exit_warning": "\n Er du sikker på, at du vil afslutte programmet nu?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
+    "return_to_p1_warning": "\n Er du sikker på, at du vil vende tilbage til side 1?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
 }

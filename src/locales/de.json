@@ -1,5 +1,5 @@
 {
-    "intro": "\nDieses Tool dient zur Konvertierung von Anmeldeinformationen zwischen dem OpenBadges- und dem ELM-Format.\n\nEs nimmt eine JSON-Datei als Eingabe und gibt die neue, abgebildete JSON-Datei aus. Nicht abgebildete Felder können manuell zugeordnet werden. Manuelle Zuordnungen können in einer benutzerdefinierten Zuordnungsdatei für die zukünftige Verwendung gespeichert werden.\n\nFür absolute Pfade beginnen Sie mit '/', für relative Pfade ist das aktuelle Verzeichnis: %{pwd}",
+    "intro": "\nDieses Tool dient zur Konvertierung von Anmeldeinformationen zwischen den Formaten OpenBadges und ELM.\n\nEs nimmt eine JSON-Datei als Eingabe und gibt die neue, zugeordnete JSON-Datei aus. Für DESM-Zuordnungen geben Sie einfach 'DESM' in die Zuordnungsdatei ein, andernfalls geben Sie einen Pfad an. Nicht zugeordnete Felder können manuell zugeordnet werden. Manuelle Zuordnungen können in einer benutzerdefinierten Zuordnungsdatei für zukünftige Verwendung gespeichert werden.\n\nFür absolute Pfade beginnen Sie mit '/', für relative Pfade ist das aktuelle Verzeichnis: %{pwd}",
     "input_path": "Eingabepfad",
     "output_path": "Ausgabepfad",
     "choose_mapping": "Zuordnung wählen",
@@ -39,5 +39,6 @@
     "field": "Feld",
     "value": "Wert",
     "missing_fields_incomplete": "\nNicht alle fehlenden Felder sind ausgefüllt.\nWenn Sie jetzt fortfahren, wird eine ungültige Ausgabedatei erstellt.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
-    "exit_warning": "\n Möchten Sie das Programm jetzt wirklich beenden?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
+    "exit_warning": "\n Möchten Sie das Programm jetzt wirklich beenden?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
+    "return_to_p1_warning": "\n Möchten Sie wirklich zur Seite 1 zurückkehren?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
 }

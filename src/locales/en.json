@@ -39,5 +39,6 @@
     "field": "Field",
     "value": "Value",
     "missing_fields_incomplete": "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.",
-    "exit_warning": "\n Are you sure you want to exit the program now?\nAll progress will be lost.\nPress 'Enter' to continue, 'Esc' to go back."
+    "exit_warning": "\n Are you sure you want to exit the program now?\nAll progress will be lost.\nPress 'Enter' to continue, 'Esc' to go back.",
+    "return_to_p1_warning": "\n Are you sure you want to retun to page 1?\n All progrss will be lost.\nPress 'Enter' to continue, 'Esc' to go back."
 }

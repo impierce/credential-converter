@@ -22,6 +22,7 @@ pub fn preload_p2(state: &mut AppState) {
         if let Ok(input_value) = serde_json::from_reader(rdr) {
             let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
             if !leaf_nodes.is_empty() {
+                // todo: This line is added for spacing, should refactor to add the spacing through the layout.
                 let mut input_fields = vec![(String::new(), String::new())];
         
                 for (key, value) in leaf_nodes {
@@ -252,11 +253,8 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
             subset_path = truncate_until_char(subset_path, '/');
         }
 
-        trace_dbg!(&subset_path);
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
-        trace_dbg!(&subset);
-        trace_dbg!(&key);
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
         get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap

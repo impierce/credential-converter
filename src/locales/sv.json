@@ -1,5 +1,5 @@
 {
-    "intro": "\nDet här verktyget är avsett för att konvertera autentiseringsuppgifter mellan OpenBadges och ELM-format.\n\nDet tar en JSON-fil som ingång och genererar en ny, kartlagd JSON-fil. Ej kartlagda fält kan kartläggas manuellt. Manuella kartläggningar kan sparas i en anpassad kartläggningsfil för framtida bruk.\n\nFör absoluta sökvägar börja med '/', för relativa sökvägar är aktuell katalog: %{pwd}",
+    "intro": "\nDet här verktyget är gjort för att konvertera referenser mellan OpenBadges och ELM-formaten.\n\nDet tar en json-fil som inmatning och ger ut en ny, kartlagd json-fil. För DESM-kartläggningar skriv bara 'DESM' i kartläggningsfilens prompt, annars ange en sökväg. Okartlagda fält kan kartläggas manuellt. Manuella kartläggningar kan sparas till en anpassad kartläggningsfil för framtida användning.\n\nFör absoluta sökvägar börja med '/', för relativa sökvägar är den aktuella katalogen: %{pwd}",
     "input_path": "Inmatningsväg",
     "output_path": "Utmatningsväg",
     "choose_mapping": "Välj kartläggning",
@@ -39,5 +39,6 @@
     "field": "Fält",
     "value": "Värde",
     "missing_fields_incomplete": "\nInte alla saknade fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utdatafil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
-    "exit_warning": "\n Är du säker på att du vill avsluta programmet nu?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
+    "exit_warning": "\n Är du säker på att du vill avsluta programmet nu?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
+    "return_to_p1_warning": "\n Är du säker på att du vill återgå till sida 1?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
 }

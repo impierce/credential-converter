@@ -1,5 +1,5 @@
 {
-    "intro": "\nCet outil est conçu pour convertir des identifiants entre les formats OpenBadges et ELM.\n\nIl prend un fichier JSON en entrée et génère le nouveau fichier JSON cartographié. Les champs non cartographiés peuvent être cartographiés manuellement. Les mappings manuels peuvent être enregistrés dans un fichier de mapping personnalisé pour une utilisation future.\n\nPour les chemins absolus, commencez par '/', pour les chemins relatifs, le répertoire courant est : %{pwd}",
+    "intro": "\nCet outil est conçu pour convertir des informations d'identification entre les formats OpenBadges et ELM.\n\nIl prend un fichier json en entrée et génère un nouveau fichier json mappé. Pour les mappages DESM, tapez simplement 'DESM' dans le champ de fichier de mappage, sinon spécifiez un chemin. Les champs non mappés peuvent être mappés manuellement. Les mappages manuels peuvent être enregistrés dans un fichier de mappage personnalisé pour une utilisation future.\n\nPour les chemins absolus, commencez par '/', pour les chemins relatifs, le répertoire actuel est : %{pwd}",
     "input_path": "Chemin d'entrée",
     "output_path": "Chemin de sortie",
     "choose_mapping": "Choisir la cartographie",
@@ -39,5 +39,6 @@
     "field": "Champ",
     "value": "Valeur",
     "missing_fields_incomplete": "\nTous les champs manquants ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
-    "exit_warning": "\n Êtes-vous sûr de vouloir quitter le programme maintenant ?\nTout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
+    "exit_warning": "\n Êtes-vous sûr de vouloir quitter le programme maintenant ?\nTout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
+    "return_to_p1_warning": "\n Êtes-vous sûr de vouloir revenir à la page 1 ?\n Tout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
 }

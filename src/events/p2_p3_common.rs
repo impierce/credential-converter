@@ -3,7 +3,7 @@ use serde_json::Value;
 use std::char;
 use std::io::Write;
 
-use super::is_mouse_over_area;
+use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::{
     backend::{
         preload_p2::{update_display_section, update_path},
@@ -17,19 +17,18 @@ use crate::{
 //////////     KEYBOARD EVENTS     //////////
 
 pub fn handle_esc(state: &mut AppState) {
-    // Close popup warning P2
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
     }
-    // Close popup mapping and reset scroll offsets
     else if state.popup_mapping_p2_p3 {
         clear_popup(state);
     }
-    // clear mapping
     else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
         clear_mapping_options(state);
     }
-    // Show exit program warning
+    else if state.return_to_p1_warning {
+        state.return_to_p1_warning = false;
+    }
     else if state.p2_p3_tabs == P2P3Tabs::OutputFields {
         update_path(state, false);
         update_display_section(state, false);
@@ -210,7 +209,15 @@ pub fn handle_enter(state: &mut AppState) -> bool {
         update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
     } else if state.exit_warning {
         return true;
-    } else {
+    } else if state.return_to_p1_warning {
+        clear_mapping_options(state);
+        clear_popup(state);
+        clear_progress(state);
+        state.return_to_p1_warning = false;
+
+        state.page.prev();
+    }
+    else {
         match state.p2_p3_tabs {
             P2P3Tabs::MappingOptions => {
                 if state.select_mapping_option {
@@ -355,7 +362,9 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
             clear_popup(state);
         } else if state.uncompleted_warning {
             state.uncompleted_warning = false;
-        } else {
+        } else if state.page == Pages::ManualMappingP2 {
+            state.return_to_p1_warning = true;
+        } else { 
             clear_mapping_options(state);
             clear_popup(state);
 

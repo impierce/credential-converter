@@ -1,5 +1,5 @@
 {
-    "intro": "\nTa orodje je namenjeno pretvarjanju poverilnic med formatoma OpenBadges in ELM.\n\nSprejme JSON datoteko kot vhod in ustvari nov, preslikan JSON datoteko. Nepreslikana polja je mogoče preslikati ročno. Ročna preslikovanja je mogoče shraniti v prilagojeni datoteki preslikovanja za prihodnjo uporabo.\n\nZa absolutne poti začnite z '/', za relativne poti je trenutni imenik: %{pwd}",
+    "intro": "\nTa orodje je namenjeno pretvarjanju poverilnic med formatoma OpenBadges in ELM.\n\nKot vhod sprejme json datoteko in izvozi nov, preslikan json datoteko. Za DESM preslikave preprosto vnesite 'DESM' v polje za datoteko preslikave, sicer navedite pot. Nepreslikana polja je mogoče preslikati ročno. Ročne preslikave je mogoče shraniti v prilagojeno datoteko preslikave za prihodnjo uporabo.\n\nZa absolutne poti začnite z '/', za relativne poti je trenutni imenik: %{pwd}",
     "input_path": "Vhodna pot",
     "output_path": "Izhodna pot",
     "choose_mapping": "Izberi preslikavo",
@@ -39,5 +39,6 @@
     "field": "Polje",
     "value": "Vrednost",
     "missing_fields_incomplete": "\nNiso vsa manjkajoča polja izpolnjena.\nNadaljevanje bo povzročilo neveljavno izhodno datoteko.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
-    "exit_warning": "\n Ste prepričani, da želite zapustiti program zdaj?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev."
+    "exit_warning": "\n Ste prepričani, da želite zapustiti program zdaj?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
+    "return_to_p1_warning": "\n Ste prepričani, da se želite vrniti na stran 1?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev."
 }

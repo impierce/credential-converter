@@ -1,5 +1,5 @@
 {
-    "intro": "\nDeze tool is gemaakt voor het omzetten van inloggegevens tussen het OpenBadges- en het ELM-formaat.\n\nHet neemt een json-bestand als invoer en geeft het nieuwe, gemapte json-bestand als uitvoer. Niet-gemapte velden kunnen handmatig worden gemapt. Handmatige mappings kunnen worden opgeslagen in een aangepast mappingbestand voor toekomstig gebruik.\n\nVoor absolute paden begin met '/', voor relatieve paden is de huidige map: %{pwd}",
+    "intro": "\nDeze tool is gemaakt voor het converteren van credentials tussen de OpenBadges en de ELM formatten.\n\nHet neemt een json-bestand als invoer en geeft het nieuwe, gemapte json-bestand als uitvoer. Voor DESM-mappingen typt u eenvoudigweg 'DESM' in het mappingbestandprompt, anders specificeert u een pad. Niet-gemapte velden kunnen handmatig worden gemapt. Handmatige mappings kunnen worden opgeslagen in een aangepast mappingbestand voor toekomstig gebruik.\n\nVoor absolute paden begin met '/', voor relatieve paden is de huidige map: %{pwd}",
     "input_path": "Invoerpad",
     "output_path": "Uitvoerpad",
     "choose_mapping": "Kies mapping",
@@ -39,5 +39,6 @@
     "field": "Veld",
     "value": "Waarde",
     "missing_fields_incomplete": "\nNiet alle ontbrekende velden zijn ingevuld.\nDoorgaan zal een ongeldig uitvoerbestand opleveren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
-    "exit_warning": "\n Weet u zeker dat u het programma nu wilt afsluiten?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan."
+    "exit_warning": "\n Weet u zeker dat u het programma nu wilt afsluiten?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
+    "return_to_p1_warning": "\n Weet u zeker dat u terug wilt naar pagina 1?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan."
 }
