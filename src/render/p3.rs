@@ -8,7 +8,12 @@ use ratatui::{
 };
 
 use crate::{
-    backend::resolve::value_to_str, mapping_bars::{render_manytoone_bar, render_mapping_bar}, popups::{render_popup_exit_warning, render_popup_mapping}, render_breadcrumbs, state::{translate, AppState, MappingOptions, P2P3Tabs}, trace_dbg
+    backend::resolve::value_to_str,
+    mapping_bars::{render_manytoone_bar, render_mapping_bar},
+    popups::{render_popup_exit_warning, render_popup_mapping},
+    render_breadcrumbs,
+    state::{translate, AppState, MappingOptions, P2P3Tabs},
+    trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -68,14 +73,8 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state
-                .completed_missing_fields
-                .iter()
-                .any(|(_, second)| second == key)
-                || state
-                    .completed_optional_fields
-                    .iter()
-                    .any(|(_, second)| second == key)
+            if state.completed_missing_fields.iter().any(|(_, second)| second == key)
+                || state.completed_optional_fields.iter().any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
             }

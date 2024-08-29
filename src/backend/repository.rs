@@ -67,9 +67,12 @@ impl Repository {
                 // trace_dbg!(source_credential);
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
                 // trace_dbg!(&finder);
-                let source_value = match finder.find().as_array() { // todo: still need to investigate other find() return types
+                let source_value = match finder.find().as_array() {
+                    // todo: still need to investigate other find() return types
                     Some(array) => array.first().unwrap().clone(),
-                    None => { return ;}
+                    None => {
+                        return;
+                    }
                 };
 
                 // trace_dbg!(&destination_path);

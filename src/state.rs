@@ -160,8 +160,10 @@ pub enum P1Prompts {
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, ValueEnum, Display)]
 pub enum Mapping {
+    #[clap(name = "OBv3toELM")]
     OBv3ToELM = 0,
     #[default]
+    #[clap(name = "ELMtoOBv3")]
     ELMToOBv3,
 }
 

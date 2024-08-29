@@ -20,8 +20,7 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
 
     if cli_args.input_file.is_some() {
         load_files_apply_transformations(state);
-    }
-    else if cli_args.input_directory.is_some() {
+    } else if cli_args.input_directory.is_some() {
         trace_dbg!("Running batch conversion");
 
         if !Path::new(&cli_args.output_directory.clone().unwrap()).is_dir() {
@@ -32,10 +31,15 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
         for entry in read_dir(cli_args.input_directory.clone().unwrap()).unwrap() {
             let entry = entry.unwrap();
             let path = entry.path();
-    
+
             if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
                 state.input_path = path.to_str().unwrap().to_string();
-                state.output_path = format!("{}{}_{}", cli_args.output_directory.clone().unwrap(), path.file_name().and_then(|s| s.to_str()).unwrap(), state.mapping.output_format());
+                state.output_path = format!(
+                    "{}{}_{}",
+                    cli_args.output_directory.clone().unwrap(),
+                    path.file_name().and_then(|s| s.to_str()).unwrap(),
+                    state.mapping.output_format()
+                );
                 load_files_apply_transformations(state);
             } else if path.is_dir() {
                 cli_args.input_directory = Some(path.to_str().unwrap().to_string());
@@ -51,8 +55,7 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
     if let Some(input_f) = &cli_args.input_file {
         if !Path::new(&input_f).is_file() {
             panic!("The input file path does not exist: {}", &input_f);
-        }
-        else if !input_f.ends_with(".json") {
+        } else if !input_f.ends_with(".json") {
             panic!("The input file is not a json file: {}", &input_f);
         }
     }
@@ -72,12 +75,11 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
             panic!("The output file path doesn't end with \".json\": {}", output_f);
         }
     }
-    if let Some(mapping_f) = &cli_args.mapping_file{
+    if let Some(mapping_f) = &cli_args.mapping_file {
         if mapping_f != "DESM" {
             if !Path::new(&mapping_f).is_file() {
                 panic!("The mapping file path does not exist: {}", &mapping_f);
-            }
-            else if !mapping_f.ends_with(".json") {
+            } else if !mapping_f.ends_with(".json") {
                 panic!("The mapping file is not a json file: {}", &mapping_f);
             }
         }
@@ -99,14 +101,13 @@ pub fn load_files_apply_transformations(state: &mut AppState) {
 
     if state.mapping_path == "DESM" {
         apply_desm_mapping(state);
-    }
-    else {
+    } else {
         let rdr = std::fs::File::open(&state.mapping_path).unwrap();
         let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-    
+
         trace_dbg!("Successfully loaded the mapping file");
 
-        state.repository.apply_transformations(transformations, state.mapping);      
+        state.repository.apply_transformations(transformations, state.mapping);
     }
 
     create_output_files(state);
@@ -134,26 +135,26 @@ pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
     if let Some(input_f) = args.input_file.clone() {
         state.input_path = input_f;
         state.output_path = args.output_file.clone().unwrap();
-    }
-    else if let Some(input_dir) = args.input_directory.clone() {
+    } else if let Some(input_dir) = args.input_directory.clone() {
         state.input_path = input_dir;
         state.output_path = args.output_directory.clone().unwrap();
     }
 }
 
-
 ///// STRUCTS /////
 
-
 #[derive(Parser, Debug)]
-#[command(version = "1.0.0", about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert a file in .json format\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with _<conversion_destination_format>\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nThe correct arguments need to be passed to the executable.\nRead more below:")]
+#[command(
+    version = "1.0.0",
+    about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert a file in .json format\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with _<conversion_destination_format>\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nThe correct arguments need to be passed to the executable.\nRead more below:"
+)]
 pub struct Args {
     #[arg(short, long, requires_all = ["mapping_file", "output_file"], conflicts_with_all = ["input_directory", "output_directory"])]
-    input_file: Option<String>, // if present cant have input_directory, and must have output_file
+    input_file: Option<String>,
 
     #[arg(short = 'b', long, requires_all = ["mapping_file", "output_directory"], conflicts_with_all = ["input_file", "output_file"])]
-    input_directory: Option<String>, // this demands an output_directory
-    
+    input_directory: Option<String>,
+
     #[arg(short, long, requires_all = ["mapping_file", "input_file"], conflicts_with_all = ["input_directory", "output_directory"])]
     output_file: Option<String>,
 
@@ -163,9 +164,8 @@ pub struct Args {
     #[arg(short, long, required_if_eq_any = [("conversion", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
     mapping_file: Option<String>,
 
-    #[arg(short, long, value_enum , required_if_eq_any = [("mapping_file", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
+    #[arg(short, long, value_enum, required_if_eq_any = [("mapping_file", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
     conversion: Option<Mapping>,
-
     // #[arg(short, long)] // todo: nice feature for in the future
     // prefix_output: String,
 
@@ -173,5 +173,5 @@ pub struct Args {
     // suffix_output: String,
 
     // #[arg(short, long)] // opt for going into nested directories or not
-    // nested: bool, 
+    // nested: bool,
 }

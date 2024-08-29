@@ -4,21 +4,20 @@ mod render;
 mod state;
 mod translations;
 
-
+use backend::headless_cli::run_headless;
 use backend::headless_cli::Args;
+use backend::logging::initialize_logging;
 use events::*;
 use render::*;
 use state::AppState;
-use backend::headless_cli::run_headless;
-use backend::logging::initialize_logging;
 
+use clap::Parser;
 use crossterm::event::DisableMouseCapture;
 use crossterm::event::EnableMouseCapture;
 use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use std::io::{stdout, Result};
-use clap::Parser;
 
 // Load I18n macro, for allow you use `t!` macro in anywhere.
 #[macro_use]
@@ -40,7 +39,8 @@ fn main() -> Result<()> {
         trace_dbg!("No arguments detected, starting the TUI");
 
         // Default example values, remove if no longer needed
-        state.input_path = "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string();
+        state.input_path =
+            "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string();
         state.mapping_path = "json/mapping/mapping_empty.json".to_string();
         state.output_path = "json/output_credential.json".to_string();
         state.custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
@@ -55,19 +55,19 @@ fn main() -> Result<()> {
         enable_raw_mode()?;
         let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
         terminal.clear()?;
-    
+
         loop {
             terminal.draw(|frame| {
                 let area = frame.size();
                 state.area = area;
                 render_page(frame, area, &mut state);
             })?;
-    
+
             if events_handler(&mut state)? {
                 break;
             };
         }
-    
+
         execute!(stdout(), LeaveAlternateScreen, DisableMouseCapture)?;
         disable_raw_mode()?;
     }

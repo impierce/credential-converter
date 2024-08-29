@@ -1,3 +1,5 @@
+pub mod desm_mapping;
+pub mod headless_cli;
 pub mod jsonpointer;
 pub mod leaf_nodes;
 pub mod logging;
@@ -6,5 +8,3 @@ pub mod repository;
 pub mod resolve;
 pub mod selector;
 pub mod transformations;
-pub mod headless_cli;
-pub mod desm_mapping;

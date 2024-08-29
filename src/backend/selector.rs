@@ -82,7 +82,8 @@ pub fn selector(state: &mut AppState) {
     }
 }
 
-pub fn input_to_output(state: &mut AppState) { // todo: move all selector functionality to input_to_output
+pub fn input_to_output(state: &mut AppState) {
+    // todo: move all selector functionality to input_to_output
     let selected_transformations = [
         vec![Transformations::DirectCopy],
         state.selected_transformations.clone(),
