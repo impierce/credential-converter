@@ -108,11 +108,13 @@ pub fn render_breadcrumbs(state: &mut AppState, area: Rect, buf: &mut Buffer) {
     let [input_breadcrum, output_breadcrumb] =
         Layout::horizontal(vec![Constraint::Percentage(50), Constraint::Percentage(50)]).areas(area);
 
-    Block::new()
-        .title(state.input_fields[state.selected_input_field].0.as_str())
-        .title_alignment(Alignment::Center)
-        .style(Modifier::ITALIC)
-        .render(input_breadcrum, buf);
+    if !state.input_fields.is_empty() {
+        Block::new()
+            .title(state.input_fields[state.selected_input_field].0.as_str())
+            .title_alignment(Alignment::Center)
+            .style(Modifier::ITALIC)
+            .render(input_breadcrum, buf);
+    }
 
     let mut breadcrumb_str = state.missing_field_pointer.clone();
     if state.page == Pages::UnusedDataP3 {

@@ -13,35 +13,47 @@ use super::desm_mapping::apply_desm_mapping;
 // todo: when going back to p1 and loading again, everything in backend is wiped because of this preload fn.
 // this is fine but then also state info must be wiped
 pub fn preload_p2(state: &mut AppState) {
-    get_missing_data_fields(state); // testing
+    get_missing_data_fields(state);
 
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
 
     // Load the input file
-    {
-        let rdr = std::fs::File::open(&state.input_path).unwrap();
-        let input_value: Value = serde_json::from_reader(rdr).unwrap();
-        let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
-        let mut input_fields = vec![(String::new(), String::new())];
-
-        for (key, value) in leaf_nodes {
-            input_fields.push((key, value.to_string()));
+    if let Ok(rdr) = std::fs::File::open(&state.input_path) {
+        if let Ok(input_value) = serde_json::from_reader(rdr) {
+            let leaf_nodes: HashMap<String, Value> = get_leaf_nodes(input_value);
+            if !leaf_nodes.is_empty() {
+                let mut input_fields = vec![(String::new(), String::new())];
+        
+                for (key, value) in leaf_nodes {
+                    input_fields.push((key, value.to_string()));
+                }
+        
+                input_fields.sort();
+                state.amount_input_fields = input_fields.len() - 2;
+                state.input_fields = input_fields;
+        
+                state.repository = Repository::from(HashMap::from_iter(vec![
+                    (
+                        input_format.to_string(),
+                        get_json(&state.input_path).expect("No source file found"),
+                    ),
+                    (output_format.to_string(), json!({})),
+                ]));
+        
+                trace_dbg!("Successfully loaded the input file");
+            }
+            else {
+                trace_dbg!("Empty input file");
+            }
         }
-
-        input_fields.sort();
-        state.amount_input_fields = input_fields.len() - 2;
-        state.input_fields = input_fields;
-
-        state.repository = Repository::from(HashMap::from_iter(vec![
-            (
-                input_format.to_string(),
-                get_json(&state.input_path).expect("No source file found"),
-            ),
-            (output_format.to_string(), json!({})),
-        ]));
-
-        trace_dbg!("Successfully loaded the input file");
+        else {
+            trace_dbg!("Input file is not a .json file or invalid");
+        }
     }
+    else {
+        trace_dbg!("File in input path doesnt exist or could not be read");
+    }
+
 
     // Load the mapping file
     {
