@@ -243,8 +243,7 @@ pub fn render_popup_exit_warning(mut area: Rect, buf: &mut Buffer) {
         );
 }
 
-pub fn render_popup_lose_progress_warning(mut area: Rect, buf: &mut Buffer)
-{
+pub fn render_popup_lose_progress_warning(mut area: Rect, buf: &mut Buffer) {
     area = area.inner(&Margin {
         vertical: 4,
         horizontal: 28,

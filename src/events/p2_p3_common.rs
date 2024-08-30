@@ -19,17 +19,13 @@ use crate::{
 pub fn handle_esc(state: &mut AppState) {
     if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
         state.uncompleted_warning = false;
-    }
-    else if state.popup_mapping_p2_p3 {
+    } else if state.popup_mapping_p2_p3 {
         clear_popup(state);
-    }
-    else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
+    } else if state.p2_p3_tabs == P2P3Tabs::MappingOptions && !state.select_mapping_option {
         clear_mapping_options(state);
-    }
-    else if state.return_to_p1_warning {
+    } else if state.return_to_p1_warning {
         state.return_to_p1_warning = false;
-    }
-    else if state.p2_p3_tabs == P2P3Tabs::OutputFields {
+    } else if state.p2_p3_tabs == P2P3Tabs::OutputFields {
         update_path(state, false);
         update_display_section(state, false);
     } else {
@@ -216,8 +212,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
         state.return_to_p1_warning = false;
 
         state.page.prev();
-    }
-    else {
+    } else {
         match state.p2_p3_tabs {
             P2P3Tabs::MappingOptions => {
                 if state.select_mapping_option {
@@ -364,7 +359,7 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
             state.uncompleted_warning = false;
         } else if state.page == Pages::ManualMappingP2 {
             state.return_to_p1_warning = true;
-        } else { 
+        } else {
             clear_mapping_options(state);
             clear_popup(state);
 

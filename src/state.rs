@@ -48,7 +48,7 @@ pub struct AppState {
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
     pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub input_field_pointer: String, // todo: not in use yet
+    pub input_field_pointer: String,        // todo: not in use yet
     pub input_display_section: Vec<(String, String)>, // todo: not in use yet
 
     // Mandatory fields extracted from the output json format
@@ -66,7 +66,7 @@ pub struct AppState {
     pub completed_optional_fields: Vec<(String, String)>, // (optional_field_index, input_field_index)
     pub optional_field_pointer: String,
     pub optional_display_subset: Vec<(String, String)>,
-    
+
     // Backend
     pub target_schema: Value,
     pub resolved_subsets: HashMap<String, Value>, // <JsonPointer, Value> JsonPointers is unnecessary complexity for now.

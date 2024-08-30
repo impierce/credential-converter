@@ -45,7 +45,7 @@ fn main() -> Result<()> {
         state.custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
 
         // Currently it's set to 1 due to the empty line added above the field lists for spacing
-        state.selected_input_field = 1; 
+        state.selected_input_field = 1;
         state.selected_missing_field = 1;
         state.selected_optional_field = 1;
         state.select_mapping_option = true;

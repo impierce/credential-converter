@@ -70,7 +70,7 @@ pub fn p2_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
 /// so this simply restarts the logic even if the same paths etc. are kept.
 /// Therefore we need to clean the rest of the state as well when this happens.
 pub fn clear_progress(state: &mut AppState) {
-    state.selected_input_field = 1; 
+    state.selected_input_field = 1;
     state.selected_missing_field = 1;
     state.selected_optional_field = 1;
     state.select_mapping_option = true;
@@ -83,5 +83,5 @@ pub fn clear_progress(state: &mut AppState) {
     state.missing_display_subset.clear();
     state.missing_field_pointer.clear();
     state.optional_display_subset.clear();
-    state.optional_field_pointer.clear();    
+    state.optional_field_pointer.clear();
 }
