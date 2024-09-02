@@ -146,7 +146,7 @@ pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
 #[derive(Parser, Debug)]
 #[command(
     version = "1.0.0",
-    about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert a file in .json format\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with _<conversion_destination_format>\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nThe correct arguments need to be passed to the executable.\nRead more below:"
+    about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert file to file in .json format.\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with \"_<conversion_destination_format>\"\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nPassing incorrect arguments will return helpful error messages.\nRead more below:"
 )]
 pub struct Args {
     #[arg(short, long, requires_all = ["mapping_file", "output_file"], conflicts_with_all = ["input_directory", "output_directory"])]
@@ -161,7 +161,7 @@ pub struct Args {
     #[arg(short = 'd', long, requires_all = ["mapping_file", "input_directory"], conflicts_with_all = ["input_file", "output_file"])]
     output_directory: Option<String>,
 
-    #[arg(short, long, required_if_eq_any = [("conversion", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
+    #[arg(short, long, required_if_eq_any = [("conversion", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")], requires = "conversion")]
     mapping_file: Option<String>,
 
     #[arg(short, long, value_enum, required_if_eq_any = [("mapping_file", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
