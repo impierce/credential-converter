@@ -47,14 +47,14 @@ pub struct AppState {
     pub input_fields: Vec<(String, String)>,
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
-    pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
+    // pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
     pub input_field_pointer: String,        // todo: not in use yet
     pub input_display_section: Vec<(String, String)>, // todo: not in use yet
 
     // Mandatory fields extracted from the output json format
     pub amount_missing_fields: usize,
     pub selected_missing_field: usize,
-    pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
+    // pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
     pub completed_missing_fields: Vec<(String, String)>, // todo :need to refactor this to work with paths
     pub missing_field_pointer: String,
     pub missing_display_subset: Vec<(String, String)>,
@@ -62,7 +62,7 @@ pub struct AppState {
     // Optional fields extracted from the output json format
     pub amount_optional_fields: usize,
     pub selected_optional_field: usize,
-    pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
+    // pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
     pub completed_optional_fields: Vec<(String, String)>, // (optional_field_index, input_field_index)
     pub optional_field_pointer: String,
     pub optional_display_subset: Vec<(String, String)>,
