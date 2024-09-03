@@ -118,7 +118,7 @@ The complete button in the top right will move you to the next page. If not all 
 Use the arrows, tab and F2 to navigate inside and between tabs.  
 Enter will select a field/transformation/button, sometimes moving you to the next tab.  
 The complete button, view button and clear button are also clickable.  
-Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
+Esc when the outfields tab is active is used to go back up the folder structure, the opposite of enter. Otherwise it works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
 
 ### Page 3, completing optional fields
 Page 3 is completely optional, the mandatory part is finished in page 2.
@@ -135,7 +135,7 @@ This doesn't mean you can't use them again.
 Use the arrows, tab and F2 to navigate inside and between tabs.  
 Enter will select a field/transformation/button, sometimes moving you to the next tab.  
 The complete button, view button and clear button are also clickable.  
-Esc works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
+Esc when the outfields tab is active is used to go back up the folder structure, the opposite of enter. Otherwise it works similar as the clear button as it closes the popup if open or clears the mapping options if selected. If none are selected and the popup is closed, it will prompt to exit the program as usual.
 
 ### Page 4, finished
 You are finished, the mapping is done.  
