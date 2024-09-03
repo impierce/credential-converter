@@ -439,17 +439,36 @@ pub fn clear_button(state: &mut AppState) {
     // todo: bandaid code, not fully implemented yet
     else {
         if state.page == Pages::ManualMappingP2 {
-            trace_dbg!(&state.missing_display_subset[state.selected_missing_field]);
-            state
-                .missing_display_subset
-                .get_mut(state.selected_missing_field)
+            if let Some(_) = state
+                .resolved_subsets
+                .get(&state.missing_field_pointer)
                 .unwrap()
-                .1 = String::new();
+                .get("Your input >>")
+            {
+                *state
+                    .resolved_subsets
+                    .get_mut(&state.missing_field_pointer)
+                    .unwrap()
+                    .get_mut("Your input >>")
+                    .unwrap() = Value::Null;
+            }
             state
                 .completed_missing_fields
                 .retain(|(first, _)| first != &state.missing_field_pointer);
         } else {
-            state.optional_display_subset[state.selected_optional_field].1.clear();
+            if let Some(_) = state
+                .resolved_subsets
+                .get(&state.optional_field_pointer)
+                .unwrap()
+                .get("Your input >>")
+            {
+                *state
+                    .resolved_subsets
+                    .get_mut(&state.optional_field_pointer)
+                    .unwrap()
+                    .get_mut("Your input >>")
+                    .unwrap() = Value::Null;
+            }
             state
                 .completed_optional_fields
                 .retain(|(first, _)| first != &state.optional_field_pointer);
@@ -482,10 +501,6 @@ pub fn confirm_mapping(state: &mut AppState) {
                     state.input_fields[state.selected_input_field].0.clone(),
                 )); // todo: also here we still need to refactor input fields according to the outputfields
 
-                trace_dbg!(&state.missing_field_pointer);
-                trace_dbg!(&state.input_fields[state.selected_input_field].0);
-                trace_dbg!(&state.completed_missing_fields);
-                trace_dbg!(&state.missing_display_subset);
             } else {
                 // Find the old mapping tuple and replace
                 for tuple in &mut state.completed_missing_fields {
@@ -497,12 +512,9 @@ pub fn confirm_mapping(state: &mut AppState) {
                         break;
                     }
                 }
-                trace_dbg!(&state.missing_field_pointer);
-                trace_dbg!(&state.input_fields[state.selected_input_field].0);
-                trace_dbg!(&state.completed_missing_fields);
-                trace_dbg!(&state.missing_display_subset);
             }
-
+            
+            trace_dbg!(&state.completed_missing_fields);
             trace_dbg!(state.candidate_data_value.as_ref().unwrap());
             update_repository(state);
 
@@ -531,10 +543,6 @@ pub fn confirm_mapping(state: &mut AppState) {
                     state.input_fields[state.selected_input_field].0.clone(),
                 ));
 
-                trace_dbg!(&state.optional_field_pointer);
-                trace_dbg!(&state.input_fields[state.selected_input_field].0);
-                trace_dbg!(&state.completed_optional_fields);
-                trace_dbg!(&state.optional_display_subset);
             } else {
                 // Find the old mapping tuple and replace
                 for tuple in &mut state.completed_optional_fields {
@@ -547,12 +555,9 @@ pub fn confirm_mapping(state: &mut AppState) {
                     }
                 }
 
-                trace_dbg!(&state.optional_field_pointer);
-                trace_dbg!(&state.input_fields[state.selected_input_field].0);
-                trace_dbg!(&state.completed_optional_fields);
-                trace_dbg!(&state.optional_display_subset);
             }
-
+            
+            trace_dbg!(&state.completed_optional_fields);
             trace_dbg!(state.candidate_data_value.as_ref().unwrap());
             update_repository(state);
 

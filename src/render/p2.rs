@@ -124,7 +124,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
             if state
                 .completed_missing_fields
                 .iter()
-                .any(|(first, _)| first.ends_with(key))
+                .any(|(first, _)| first.to_string() == state.missing_field_pointer || first.to_string() == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()) // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {
                 row = row.style(Style::default().fg(Color::Green));
             }

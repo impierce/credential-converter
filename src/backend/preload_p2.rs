@@ -60,7 +60,7 @@ pub fn preload_p2(state: &mut AppState) {
 
             trace_dbg!("Successfully loaded the mapping file");
 
-            trace_dbg!(&state.repository);
+            // trace_dbg!(&state.repository);
             state.repository.apply_transformations(transformations, state.mapping);
         }
     }
@@ -199,7 +199,7 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
             && state.optional_field_pointer != "/optional"
         {
-            truncate_until_char(&state.optional_field_pointer, '/');
+            state.optional_field_pointer = truncate_until_char(&state.optional_field_pointer, '/').to_string();
             if state.optional_field_pointer.ends_with("allOf")
                 || state.optional_field_pointer.ends_with("anyOf")
                 || state.optional_field_pointer.ends_with("oneOf")
@@ -258,7 +258,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         // then we are left with 2 possibilities: either just the key is required but all fields within the key are optional, --> what to do?
         // or it's a leaf node. In the latter case we can resolve the leaf node with this function
         if tmp_map.is_empty() {
-            // this should actually also check that type != object, if it is an object then it might be the frequent case where an object (key) is required but all fields within the object are optional
+            // this should actually also check that type != object, if it is an object then it might be the case where an object (key) is required but all fields within the object are optional
             tmp_map.clone_from(subset.get_mut(key).unwrap().as_object().unwrap()); // todo remove unwrap
             tmp_map.insert("Your input >>".to_string(), Value::Null);
             // resolve_leaf_node(subset.get_mut(key).unwrap(), key, &mut tmp_map);

@@ -13,7 +13,6 @@ use crate::{
     popups::{render_popup_exit_warning, render_popup_mapping},
     render_breadcrumbs,
     state::{translate, AppState, MappingOptions, P2P3Tabs},
-    trace_dbg,
 };
 
 pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
@@ -97,10 +96,6 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     ////
     let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
 
-    trace_dbg!(&state.optional_field_pointer);
-    trace_dbg!(&state.optional_display_subset);
-    trace_dbg!(&state.resolved_subsets);
-
     state.optional_display_subset = state
         .resolved_subsets
         .get(&state.optional_field_pointer)
@@ -129,7 +124,11 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state.completed_optional_fields.iter().any(|(first, _)| first == key) {
+            if state
+                .completed_optional_fields
+                .iter()
+                .any(|(first, _)| first.to_string() == state.optional_field_pointer || first.to_string() == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()) // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
+            {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
