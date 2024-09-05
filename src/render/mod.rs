@@ -6,8 +6,8 @@ pub mod p4;
 pub mod popups;
 
 use p1::render_description_input_p1;
-use p2::render_manual_mapping_p2;
-use p3::render_lost_data_p3;
+use p2::render_required_data_p2;
+use p3::render_optional_data_p3;
 use p4::render_end_p4;
 use ratatui::prelude::*;
 use ratatui::{
@@ -23,8 +23,8 @@ pub fn render_page(frame: &mut Frame, area: Rect, state: &mut AppState) {
 
     match state.page {
         Pages::InputPromptsP1 => render_description_input_p1(top, frame.buffer_mut(), state),
-        Pages::ManualMappingP2 => render_manual_mapping_p2(top, frame.buffer_mut(), state),
-        Pages::UnusedDataP3 => render_lost_data_p3(top, frame.buffer_mut(), state),
+        Pages::RequiredDataP2 => render_required_data_p2(top, frame.buffer_mut(), state),
+        Pages::OptionalDataP3 => render_optional_data_p3(top, frame.buffer_mut(), state),
         Pages::EndP4 => render_end_p4(top, frame.buffer_mut(), state),
     }
 
@@ -117,7 +117,7 @@ pub fn render_breadcrumbs(state: &mut AppState, area: Rect, buf: &mut Buffer) {
     }
 
     let mut breadcrumb_str = state.missing_field_pointer.clone();
-    if state.page == Pages::UnusedDataP3 {
+    if state.page == Pages::OptionalDataP3 {
         breadcrumb_str.clone_from(&state.optional_field_pointer);
     }
 

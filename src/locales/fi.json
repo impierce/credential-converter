@@ -6,8 +6,8 @@
     "choose_mapping_file": "Valitse kartoitustiedosto",
     "save_custom_mapping": "Tallenna mukautettu kartoitus",
     "language_selector": "Kielen valitsin",
-    "manual_mapping": "Manuaalinen kartoitus",
-    "unused_data": "Käyttämätön data",
+    "required_data": "Pakollinen data",
+    "optional_data": "Valinnainen data",
     "optional_field": "Valinnainen kenttä",
     "result_value": "Tuloksen arvo",
     "direct_copy": "Suora kopio",
@@ -19,7 +19,7 @@
     "input_value": "Syötteen arvo",
     "output_result": "Tulosteen tulos",
     "confirm": "Vahvista",
-    "missing_field": "Puuttuva kenttä",
+    "required_field": "Pakollinen kenttä",
     "file_exists": "\nTiedosto on jo olemassa polulla tai poluilla oranssissa laatikossa(tai laatikoissa).\nTiedosto(t) korvataan, jos jatkat.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
     "navigate": "Navigoi",
     "next_field": "Seuraava kenttä",
@@ -38,7 +38,7 @@
     "view": "Näytä",
     "field": "Kenttä",
     "value": "Arvo",
-    "missing_fields_incomplete": "\nKaikki puuttuvat kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
+    "required_fields_incomplete": "\nKaikki pakolliset kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
     "exit_warning": "\n Oletko varma, että haluat lopettaa ohjelman nyt?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
     "return_to_p1_warning": "\n Oletko varma, että haluat palata sivulle 1?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
 }

@@ -6,8 +6,8 @@
     "choose_mapping_file": "Vælg kortlægningsfil",
     "save_custom_mapping": "Gem tilpasset kortlægning til",
     "language_selector": "Sprogvælger",
-    "manual_mapping": "Manuel kortlægning",
-    "unused_data": "Ubrugt data",
+    "required_data": "Påkrævede data",
+    "optional_data": "Valgfri data",
     "optional_field": "Valgfrit felt",
     "result_value": "Resultatværdi",
     "direct_copy": "Direkte kopi",
@@ -19,7 +19,7 @@
     "input_value": "Inputværdi",
     "output_result": "Outputresultat",
     "confirm": "Bekræft",
-    "missing_field": "Mangler felt",
+    "required_field": "Påkrævet felt",
     "file_exists": "\nEn fil eksisterer allerede på stien/stierne i den/de orange boks(e).\nFilen/filene vil blive overskrevet, hvis du fortsætter.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
     "navigate": "Naviger",
     "next_field": "Næste felt",
@@ -38,7 +38,7 @@
     "view": "Vis",
     "field": "Felt",
     "value": "Værdi",
-    "missing_fields_incomplete": "\nIkke alle manglende felter er udfyldt.\nFortsættelse nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
+    "required_fields_incomplete": "\nIkke alle påkrævede felter er udfyldt.\nAt fortsætte nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
     "exit_warning": "\n Er du sikker på, at du vil afslutte programmet nu?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
     "return_to_p1_warning": "\n Er du sikker på, at du vil vende tilbage til side 1?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
 }

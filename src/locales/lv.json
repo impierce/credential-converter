@@ -6,8 +6,8 @@
     "choose_mapping_file": "Izvēlēties kartēšanas failu",
     "save_custom_mapping": "Saglabāt pielāgotu kartēšanu šeit",
     "language_selector": "Valodas atlasītājs",
-    "manual_mapping": "Manuālā kartēšana",
-    "unused_data": "Nepieciešami dati",
+    "required_data": "Nepieciešamie dati",
+    "optional_data": "Papildu dati",
     "optional_field": "Izvēles lauks",
     "result_value": "Rezultāta vērtība",
     "direct_copy": "Tiešā kopija",
@@ -19,7 +19,7 @@
     "input_value": "Ievades vērtība",
     "output_result": "Izvades rezultāts",
     "confirm": "Apstiprināt",
-    "missing_field": "Trūkstošais lauks",
+    "required_field": "Nepieciešamais lauks",
     "file_exists": "\nFails jau pastāv oranžajos lodziņos norādītajos ceļos.\nFails(-i) tiks pārrakstīti, ja turpināsiet.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
     "navigate": "Navigēt",
     "next_field": "Nākamais lauks",
@@ -38,7 +38,7 @@
     "view": "Skatīt",
     "field": "Lauks",
     "value": "Vērtība",
-    "missing_fields_incomplete": "\nNav visi trūkstošie lauki aizpildīti.\nTurpinot tagad, tiks radīts nederīgs izvades fails.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
+    "required_fields_incomplete": "\nVisi nepieciešamie lauki nav aizpildīti.\nTurpinot, tiks izveidots nederīgs izvades fails.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
     "exit_warning": "\n Vai tiešām vēlaties tagad iziet no programmas?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
     "return_to_p1_warning": "\n Vai tiešām vēlaties atgriezties uz 1. lapu?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ."
 }

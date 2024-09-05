@@ -158,22 +158,22 @@ pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String,
 #[allow(clippy::collapsible_else_if)]
 pub fn update_path(state: &mut AppState, forward_back: bool) {
     if forward_back {
-        if state.page == Pages::ManualMappingP2
+        if state.page == Pages::RequiredDataP2
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
-            && state.missing_display_subset[state.selected_missing_field].1 == "<Object>"
+            && state.output_display_subset[state.selected_output_field].1 == "<Object>"
         {
             state.missing_field_pointer = state.missing_field_pointer.to_owned()
                 + "/"
-                + state.missing_display_subset[state.selected_missing_field].0.as_str();
-            state.selected_missing_field = 1;
-        } else if state.page == Pages::UnusedDataP3
+                + state.output_display_subset[state.selected_output_field].0.as_str();
+            state.selected_output_field = 1;
+        } else if state.page == Pages::OptionalDataP3
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
-            && state.optional_display_subset[state.selected_optional_field].1 == "<Object>"
+            && state.output_display_subset[state.selected_output_field].1 == "<Object>"
         {
             state.optional_field_pointer = state.optional_field_pointer.to_owned()
                 + "/"
-                + state.optional_display_subset[state.selected_optional_field].0.as_str();
-            state.selected_optional_field = 1;
+                + state.output_display_subset[state.selected_output_field].0.as_str();
+            state.selected_output_field = 1;
         } else if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: implement input field similar structure // if state.input_display_section[state.selected_input_field].1 == "<Object>" {
              // state.input_field_pointer = state.input_field_pointer.to_owned()
              //     + "/"
@@ -181,7 +181,7 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
              // state.selected_input_field = 1;
         }
     } else {
-        if state.page == Pages::ManualMappingP2
+        if state.page == Pages::RequiredDataP2
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
             && state.missing_field_pointer != "/required"
         {
@@ -194,8 +194,8 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
                 // todo could be done more elegantly
                 state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
             }
-            state.selected_missing_field = 1;
-        } else if state.page == Pages::UnusedDataP3
+            state.selected_output_field = 1;
+        } else if state.page == Pages::OptionalDataP3
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
             && state.optional_field_pointer != "/optional"
         {
@@ -208,7 +208,7 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
                 // todo could be done more elegantly
                 state.optional_field_pointer = truncate_until_char(&state.optional_field_pointer, '/').to_string();
             }
-            state.selected_optional_field = 1;
+            state.selected_output_field = 1;
         } else if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo:
              // truncate_until_char(&state.input_field_pointer, '/');
              // state.selected_input_field = 1;
@@ -231,7 +231,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
         path = "/optional";
         state.optional_field_pointer = path.to_string();
-    } else if state.page == Pages::ManualMappingP2 {
+    } else if state.page == Pages::RequiredDataP2 {
         if state.resolved_subsets.contains_key(&state.missing_field_pointer) {
             return;
         }
@@ -263,7 +263,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
             tmp_map.insert("Your input >>".to_string(), Value::Null);
             // resolve_leaf_node(subset.get_mut(key).unwrap(), key, &mut tmp_map);
         }
-    } else if state.page == Pages::UnusedDataP3 {
+    } else if state.page == Pages::OptionalDataP3 {
         if state.resolved_subsets.contains_key(&state.optional_field_pointer) {
             return;
         }

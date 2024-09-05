@@ -6,8 +6,8 @@
     "choose_mapping_file": "Veldu mælingaskrá",
     "save_custom_mapping": "Vista sérsniðna mælingu í",
     "language_selector": "Tungumála valkostur",
-    "manual_mapping": "Handvirkt mæling",
-    "unused_data": "Ónotað gögn",
+    "required_data": "Skyld gögn",
+    "optional_data": "Valfrjálst gögn",
     "optional_field": "Valfrjálst reitur",
     "result_value": "Útkoma gildi",
     "direct_copy": "Beint afrit",
@@ -19,7 +19,7 @@
     "input_value": "Inntaks gildi",
     "output_result": "Útkomu niðurstaða",
     "confirm": "Staðfesta",
-    "missing_field": "Vantar reit",
+    "required_field": "Skyldur reitur",
     "file_exists": "\nSkrá er þegar til á slóðum í appelsínugulum kassum.\nSkráin verður yfirskrifuð ef þú heldur áfram.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
     "navigate": "Sigla",
     "next_field": "Næsta reitur",
@@ -38,7 +38,7 @@
     "view": "Skoða",
     "field": "Reitur",
     "value": "Gildi",
-    "missing_fields_incomplete": "\nEkki eru allir vantar reitir fylltir.\nÁframhald mun valda ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
+    "required_fields_incomplete": "\nEkki allir skyldir reitir eru fylltir út.\nAð halda áfram nú mun skila ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
     "exit_warning": "\n Ertu viss um að þú viljir hætta við forritið núna?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
     "return_to_p1_warning": "\n Ertu viss um að þú viljir fara til baka á síðu 1?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
 }

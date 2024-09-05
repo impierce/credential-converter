@@ -6,8 +6,8 @@
     "choose_mapping_file": "Odaberi datoteku mapiranja",
     "save_custom_mapping": "Spremi prilagođeno mapiranje u",
     "language_selector": "Odabir jezika",
-    "manual_mapping": "Ručno mapiranje",
-    "unused_data": "Neiskorišteni podaci",
+    "required_data": "Obavezni podaci",
+    "optional_data": "Opcionalni podaci",
     "optional_field": "Opcionalno polje",
     "result_value": "Vrijednost rezultata",
     "direct_copy": "Izravno kopiranje",
@@ -19,7 +19,7 @@
     "input_value": "Ulazna vrijednost",
     "output_result": "Rezultat izlaza",
     "confirm": "Potvrdi",
-    "missing_field": "Nedostaje polje",
+    "required_field": "Obavezno polje",
     "file_exists": "\nDatoteka već postoji na putanjama u narančastim okvir(ima).\nDatoteka(e) će se prepisati ako nastavite.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
     "navigate": "Navigiraj",
     "next_field": "Sljedeće polje",
@@ -38,7 +38,7 @@
     "view": "Pregled",
     "field": "Polje",
     "value": "Vrijednost",
-    "missing_fields_incomplete": "\nNisu sva nedostajuća polja popunjena.\nNastavak sada će rezultirati nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
+    "required_fields_incomplete": "\nNisu sva obavezna polja popunjena.\nNastavljanje sada rezultirat će nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
     "exit_warning": "\n Jeste li sigurni da želite izaći iz programa sada?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
     "return_to_p1_warning": "\n Jeste li sigurni da želite se vratiti na stranicu 1?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
 }

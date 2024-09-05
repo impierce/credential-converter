@@ -46,8 +46,8 @@ fn main() -> Result<()> {
 
         // Currently it's set to 1 due to the empty line added above the field lists for spacing
         state.selected_input_field = 1;
-        state.selected_missing_field = 1;
-        state.selected_optional_field = 1;
+        state.selected_output_field = 1;
+        state.selected_output_field = 1;
         state.select_mapping_option = true;
 
         // Initialize the alternate terminal screen, its input and the backend for it.

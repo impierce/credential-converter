@@ -22,10 +22,10 @@ pub fn events_handler(state: &mut AppState) -> Result<bool, std::io::Error> {
             Pages::InputPromptsP1 => {
                 quit = p1_handler(event, state)?;
             }
-            Pages::ManualMappingP2 => {
+            Pages::RequiredDataP2 => {
                 quit = p2_handler(event, state)?;
             }
-            Pages::UnusedDataP3 => {
+            Pages::OptionalDataP3 => {
                 quit = p3_handler(event, state)?;
             }
             Pages::EndP4 => {

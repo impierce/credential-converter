@@ -6,8 +6,8 @@
     "choose_mapping_file": "Elegir archivo de mapeo",
     "save_custom_mapping": "Guardar mapeo personalizado en",
     "language_selector": "Selector de idioma",
-    "manual_mapping": "Mapeo manual",
-    "unused_data": "Datos no utilizados",
+    "required_data": "Datos requeridos",
+    "optional_data": "Datos opcionales",
     "optional_field": "Campo opcional",
     "result_value": "Valor del resultado",
     "direct_copy": "Copia directa",
@@ -19,7 +19,7 @@
     "input_value": "Valor de entrada",
     "output_result": "Resultado de salida",
     "confirm": "Confirmar",
-    "missing_field": "Campo faltante",
+    "required_field": "Campo requerido",
     "file_exists": "\nYa existe un archivo en la(s) ruta(s) en el/los cuadro(s) naranja(s).\nEl/los archivo(s) se sobrescribirán si continúa.\nPresione 'Enter' para continuar, 'Esc' para volver.",
     "navigate": "Navegar",
     "next_field": "Siguiente campo",
@@ -38,7 +38,7 @@
     "view": "Ver",
     "field": "Campo",
     "value": "Valor",
-    "missing_fields_incomplete": "\nNo se han completado todos los campos faltantes.\nContinuar ahora generará un archivo de salida no válido.\nPresione 'Enter' para continuar, 'Esc' para volver.",
+    "required_fields_incomplete": "\nNo se han completado todos los campos requeridos.\nContinuar ahora generará un archivo de salida no válido.\nPresione 'Enter' para continuar, 'Esc' para volver.",
     "exit_warning": "\n ¿Está seguro de que desea salir del programa ahora?\nTodo el progreso se perderá.\nPresione 'Enter' para continuar, 'Esc' para volver.",
     "return_to_p1_warning": "\n ¿Está seguro de que desea volver a la página 1?\n Todo el progreso se perderá.\nPresione 'Enter' para continuar, 'Esc' para volver."
 }

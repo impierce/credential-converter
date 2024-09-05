@@ -6,8 +6,8 @@
     "choose_mapping_file": "Vali kaardistusfail",
     "save_custom_mapping": "Salvesta kohandatud kaardistus",
     "language_selector": "Keele valija",
-    "manual_mapping": "Käsitsi kaardistamine",
-    "unused_data": "Kasutamata andmed",
+    "required_data": "Nõutavad andmed",
+    "optional_data": "Valikulised andmed",
     "optional_field": "Valikuline väli",
     "result_value": "Tulemuse väärtus",
     "direct_copy": "Otsekopeerimine",
@@ -19,7 +19,7 @@
     "input_value": "Sisendi väärtus",
     "output_result": "Väljundi tulemus",
     "confirm": "Kinnita",
-    "missing_field": "Puuduv väli",
+    "required_field": "Nõutav väli",
     "file_exists": "\nFail eksisteerib juba tee(de)l oranžis kastis/kastides.\nFail(id) kirjutatakse üle, kui jätkate.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
     "navigate": "Navigeeri",
     "next_field": "Järgmine väli",
@@ -38,7 +38,7 @@
     "view": "Vaade",
     "field": "Väli",
     "value": "Väärtus",
-    "missing_fields_incomplete": "\nKõik puuduvad väljad ei ole täidetud.\nJätkamine nüüd toob kaasa vigase väljundfaili.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
+    "required_fields_incomplete": "\nKõik nõutavad väljad pole täidetud.\nJätkamine nüüd toob kaasa vigase väljundfaili.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
     "exit_warning": "\n Kas olete kindel, et soovite programmi nüüd lõpetada?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi.",
     "return_to_p1_warning": "\n Kas olete kindel, et soovite naasta lehele 1?\nKogu progress kaob.\nVajutage 'Enter', et jätkata, 'Esc', et minna tagasi."
 }

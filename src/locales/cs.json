@@ -6,8 +6,8 @@
     "choose_mapping_file": "Vyberte soubor s mapováním",
     "save_custom_mapping": "Uložit vlastní mapování do",
     "language_selector": "Výběr jazyka",
-    "manual_mapping": "Ruční mapování",
-    "unused_data": "Nepoužitá data",
+    "required_data": "Povinná data",
+    "optional_data": "Volitelná data",
     "optional_field": "Volitelné pole",
     "result_value": "Výsledná hodnota",
     "direct_copy": "Přímé kopírování",
@@ -19,7 +19,7 @@
     "input_value": "Vstupní hodnota",
     "output_result": "Výstupní výsledek",
     "confirm": "Potvrdit",
-    "missing_field": "Chybějící pole",
+    "required_field": "Povinné pole",
     "file_exists": "\nSoubor již existuje v cestě/cestách v oranžovém poli/polích.\nSoubor/soubory budou přepsány, pokud budete pokračovat.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
     "navigate": "Navigovat",
     "next_field": "Další pole",
@@ -38,7 +38,7 @@
     "view": "Zobrazit",
     "field": "Pole",
     "value": "Hodnota",
-    "missing_fields_incomplete": "\nNe všechna chybějící pole jsou vyplněna.\nPokračování nyní vytvoří neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
+    "required_fields_incomplete": "\nNejsou vyplněna všechna povinná pole.\nPokračování nyní vytvoří neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
     "exit_warning": "\n Opravdu chcete nyní ukončit program?\nVeškerý pokrok bude ztracen.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
     "return_to_p1_warning": "\n Opravdu chcete vrátit se na stránku 1?\nVeškerý pokrok bude ztracen.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat."
 }

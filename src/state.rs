@@ -47,32 +47,26 @@ pub struct AppState {
     pub input_fields: Vec<(String, String)>,
     pub amount_input_fields: usize,
     pub selected_input_field: usize,
-    // pub selected_input_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub input_field_pointer: String,        // todo: not in use yet
+    pub input_field_pointer: String,                  // todo: not in use yet
     pub input_display_section: Vec<(String, String)>, // todo: not in use yet
 
-    // Mandatory fields extracted from the output json format
-    pub amount_missing_fields: usize,
-    pub selected_missing_field: usize,
-    // pub selected_missing_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_missing_fields: Vec<(String, String)>, // todo :need to refactor this to work with paths
+    // Fields extracted from the output json schema.
+    pub output_display_subset: Vec<(String, String)>,
+    pub selected_output_field: usize,
+    pub amount_output_fields: usize,
+    pub output_pointer: String,
+    
     pub missing_field_pointer: String,
-    pub missing_display_subset: Vec<(String, String)>,
-
-    // Optional fields extracted from the output json format
-    pub amount_optional_fields: usize,
-    pub selected_optional_field: usize,
-    // pub selected_optional_fields: Vec<String>, //string or usize? For ManyToOne, currently not in use
-    pub completed_optional_fields: Vec<(String, String)>, // (optional_field_index, input_field_index)
     pub optional_field_pointer: String,
-    pub optional_display_subset: Vec<(String, String)>,
-
+    pub completed_required_fields: Vec<(String, String)>, // (required_field_path, input_field_path)
+    pub completed_optional_fields: Vec<(String, String)>, // (optional_field_path, input_field_path)
+    
     // Backend
     pub target_schema: Value,
     pub resolved_subsets: HashMap<String, Value>, // <JsonPointer, Value> JsonPointers is unnecessary complexity for now.
-    pub candidate_data_value: Option<String>,
+    pub candidate_output_value: Option<String>,
     pub repository: Repository,
-    pub mappings: Vec<Transformation>,
+    pub performed_mappings: Vec<Transformation>,
 
     // Total Area
     pub area: Rect,
@@ -200,8 +194,8 @@ pub enum Transformations {
 pub enum Pages {
     #[default]
     InputPromptsP1 = 0,
-    ManualMappingP2,
-    UnusedDataP3,
+    RequiredDataP2,
+    OptionalDataP3,
     EndP4,
 }
 

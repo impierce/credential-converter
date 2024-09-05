@@ -6,8 +6,8 @@
     "choose_mapping_file": "Leképezési fájl kiválasztása",
     "save_custom_mapping": "Egyedi leképezés mentése ide",
     "language_selector": "Nyelv kiválasztó",
-    "manual_mapping": "Kézi leképezés",
-    "unused_data": "Nem használt adatok",
+    "required_data": "Kötelező adat",
+    "optional_data": "Opcionális adat",
     "optional_field": "Opcionális mező",
     "result_value": "Eredmény értéke",
     "direct_copy": "Közvetlen másolás",
@@ -19,7 +19,7 @@
     "input_value": "Bemeneti érték",
     "output_result": "Kimeneti eredmény",
     "confirm": "Megerősítés",
-    "missing_field": "Hiányzó mező",
+    "required_field": "Kötelező mező",
     "file_exists": "\nEgy fájl már létezik az útvonalon(k) az orange box(ok)ban.\nA fájl(ok) felül lesz(nek) írva, ha folytatja.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
     "navigate": "Navigálás",
     "next_field": "Következő mező",
@@ -38,7 +38,7 @@
     "view": "Nézet",
     "field": "Mező",
     "value": "Érték",
-    "missing_fields_incomplete": "\nNem minden hiányzó mező van kitöltve.\nAzonnali folytatás érvénytelen kimeneti fájlt eredményezhet.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
+    "required_fields_incomplete": "\nNem minden kötelező mezőt töltött ki.\nHa most folytatja, érvénytelen kimeneti fájl jön létre.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
     "exit_warning": "\n Biztosan ki akarja most lépni a programból?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
     "return_to_p1_warning": "\n Biztosan vissza akar térni az 1. oldalra?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
 }

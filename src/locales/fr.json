@@ -6,8 +6,8 @@
     "choose_mapping_file": "Choisir le fichier de cartographie",
     "save_custom_mapping": "Enregistrer la cartographie personnalisée sous",
     "language_selector": "Sélecteur de langue",
-    "manual_mapping": "Cartographie manuelle",
-    "unused_data": "Données inutilisées",
+    "required_data": "Données requises",
+    "optional_data": "Données facultatives",
     "optional_field": "Champ facultatif",
     "result_value": "Valeur du résultat",
     "direct_copy": "Copie directe",
@@ -19,7 +19,7 @@
     "input_value": "Valeur d'entrée",
     "output_result": "Résultat de sortie",
     "confirm": "Confirmer",
-    "missing_field": "Champ manquant",
+    "required_field": "Champ requis",
     "file_exists": "\nUn fichier existe déjà dans le(s) chemin(s) dans le(s) cadre(s) orange(s).\nLe(s) fichier(s) seront écrasé(s) si vous continuez.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
     "navigate": "Naviguer",
     "next_field": "Champ suivant",
@@ -38,7 +38,7 @@
     "view": "Voir",
     "field": "Champ",
     "value": "Valeur",
-    "missing_fields_incomplete": "\nTous les champs manquants ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
+    "required_fields_incomplete": "\nTous les champs requis ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
     "exit_warning": "\n Êtes-vous sûr de vouloir quitter le programme maintenant ?\nTout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
     "return_to_p1_warning": "\n Êtes-vous sûr de vouloir revenir à la page 1 ?\n Tout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
 }

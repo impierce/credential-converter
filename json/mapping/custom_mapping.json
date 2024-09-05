@@ -2,45 +2,23 @@
   {
     "type_": "copy",
     "source": {
-      "format": "OBv3",
+      "format": "ELM",
       "path": "$.@context"
     },
     "destination": {
-      "format": "ELM",
-      "path": "$.credentialSubject"
+      "format": "OBv3",
+      "path": "$.required.@context"
     }
   },
   {
     "type_": "copy",
     "source": {
-      "format": "OBv3",
-      "path": "$.credentialSubject.fullName.en"
+      "format": "ELM",
+      "path": "$.credentialSubject.familyName.en"
     },
     "destination": {
-      "format": "ELM",
-      "path": "$.issuer"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
       "format": "OBv3",
-      "path": "$.issued"
-    },
-    "destination": {
-      "format": "ELM",
-      "path": "$.validFrom"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "OBv3",
-      "path": "$.issuer.legalName.en"
-    },
-    "destination": {
-      "format": "ELM",
-      "path": "$.validFrom"
+      "path": "$.required.id"
     }
   }
 ]

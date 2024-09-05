@@ -1,7 +1,4 @@
-use crate::{
-    backend::selector::selector,
-    state::{translate, AppState},
-};
+use crate::state::{translate, AppState};
 
 use ratatui::{
     buffer::Buffer,
@@ -28,8 +25,6 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
     state.popup_output_path = right_top;
     state.popup_value_area = left_bottom;
     state.popup_output_result = right_bottom;
-
-    selector(state);
 
     Block::new()
         .title(format!("  {}  ", translate("input_path")))
@@ -69,11 +64,11 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
         state.popup_amount_lines_output_path =
-            (state.missing_field_pointer.clone() + "/" + &state.missing_display_subset[state.selected_missing_field].0)
+            (state.missing_field_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0)
                 .len()
                 / (right.width as usize - 2); // todo: need to refactor
         state.popup_amount_lines_result =
-            state.candidate_data_value.as_ref().unwrap().len() / (right.width as usize - 2);
+            state.candidate_output_value.as_ref().unwrap().len() / (right.width as usize - 2);
     }
 
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
@@ -101,7 +96,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         );
 
     Paragraph::new(
-        state.missing_field_pointer.clone() + "/" + &state.missing_display_subset[state.selected_missing_field].0,
+        state.missing_field_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0,
     )
     .wrap(Wrap { trim: false })
     .remove_modifier(Modifier::BOLD)
@@ -114,7 +109,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         buf,
     );
 
-    Paragraph::new(state.candidate_data_value.as_ref().unwrap().as_str())
+    Paragraph::new(state.candidate_output_value.as_ref().unwrap().as_str())
         .wrap(Wrap { trim: false })
         .remove_modifier(Modifier::BOLD)
         .scroll((state.popup_offset_result, 0))

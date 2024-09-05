@@ -15,9 +15,9 @@ use std::ops::Deref;
 
 use super::{popups::render_popup_lose_progress_warning, render_breadcrumbs};
 
-pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Main title at the top of p2
-    let txt = format!("  {}  ", translate("manual_mapping"));
+    let txt = format!("  {}  ", translate("required_data"));
     Block::new()
         .title(txt)
         .title_alignment(Alignment::Center)
@@ -74,7 +74,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]); //todo
-            if state.completed_missing_fields.iter().any(|(_, second)| second == key)
+            if state.completed_required_fields.iter().any(|(_, second)| second == key)
                 || state.completed_optional_fields.iter().any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
@@ -93,9 +93,9 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         &mut table_state,
     );
 
-    let mut table_state = TableState::default().with_selected(Some(state.selected_missing_field));
+    let mut table_state = TableState::default().with_selected(Some(state.selected_output_field));
     ////
-    state.missing_display_subset = state
+    state.output_display_subset = state
         .resolved_subsets
         .get(&state.missing_field_pointer)
         .and_then(|v| v.as_object())
@@ -104,27 +104,28 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
         .map(|(key, value)| (key.to_string(), value_to_str(value)))
         .collect();
 
-    state.missing_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
+    state.output_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
     if let Some(i) = state
-        .missing_display_subset
+        .output_display_subset
         .iter()
         .position(|(key, _)| key == "Your input >>")
     {
-        let your_input_field = state.missing_display_subset.remove(i);
-        state.missing_display_subset.insert(0, your_input_field);
+        let your_input_field = state.output_display_subset.remove(i);
+        state.output_display_subset.insert(0, your_input_field);
     }
-    state.missing_display_subset.insert(0, ("".to_string(), "".to_string()));
-    state.amount_missing_fields = state.missing_display_subset.len() - 2;
+    state.output_display_subset.insert(0, ("".to_string(), "".to_string()));
+    state.amount_output_fields = state.output_display_subset.len() - 2;
 
     let rows: Vec<Row> = state
-        .missing_display_subset
+        .output_display_subset
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state
-                .completed_missing_fields
-                .iter()
-                .any(|(first, _)| first.to_string() == state.missing_field_pointer || first.to_string() == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()) // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
+            if state.completed_required_fields.iter().any(|(first, _)| {
+                first.to_string() == state.missing_field_pointer
+                    || first.to_string() == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()
+            })
+            // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {
                 row = row.style(Style::default().fg(Color::Green));
             }
@@ -137,7 +138,7 @@ pub fn render_manual_mapping_p2(area: Rect, buf: &mut Buffer, state: &mut AppSta
     StatefulWidget::render(
         Table::new(rows, [Constraint::Percentage(50), Constraint::Percentage(50)])
             .block(Block::new())
-            .header(Row::new([translate("missing_field"), translate("result_value")]).style(Style::new()))
+            .header(Row::new([translate("required_field"), translate("result_value")]).style(Style::new()))
             .highlight_style(missingfields_style),
         right_missing_fields,
         buf,

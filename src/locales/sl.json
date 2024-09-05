@@ -6,8 +6,8 @@
     "choose_mapping_file": "Izberi datoteko preslikave",
     "save_custom_mapping": "Shrani prilagojeno preslikavo v",
     "language_selector": "Izbirnik jezika",
-    "manual_mapping": "Ročna preslikava",
-    "unused_data": "Neuporabljeni podatki",
+    "required_data": "Obvezni podatki",
+    "optional_data": "Neobvezni podatki",
     "optional_field": "Neobvezno polje",
     "result_value": "Vrednost rezultata",
     "direct_copy": "Neposredno kopiranje",
@@ -19,7 +19,7 @@
     "input_value": "Vhodna vrednost",
     "output_result": "Izhodni rezultat",
     "confirm": "Potrdi",
-    "missing_field": "Manjkajoče polje",
+    "required_field": "Obvezno polje",
     "file_exists": "\nDatoteka že obstaja na poti/potiah označenih z oranžnimi okvirji.\nDatoteke bodo prepisane, če nadaljujete.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
     "navigate": "Krmarjenje",
     "next_field": "Naslednje polje",
@@ -38,7 +38,7 @@
     "view": "Pogled",
     "field": "Polje",
     "value": "Vrednost",
-    "missing_fields_incomplete": "\nNiso vsa manjkajoča polja izpolnjena.\nNadaljevanje bo povzročilo neveljavno izhodno datoteko.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
+    "required_fields_incomplete": "\nNiso vsa obvezna polja izpolnjena.\nNadaljevanje zdaj bo rezultiralo v neveljavno izhodno datoteko.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
     "exit_warning": "\n Ste prepričani, da želite zapustiti program zdaj?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev.",
     "return_to_p1_warning": "\n Ste prepričani, da se želite vrniti na stran 1?\nVsa napredka bo izgubljen.\nPritisnite 'Enter' za nadaljevanje, 'Esc' za vrnitev."
 }

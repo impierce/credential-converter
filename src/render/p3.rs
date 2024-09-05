@@ -15,9 +15,9 @@ use crate::{
     state::{translate, AppState, MappingOptions, P2P3Tabs},
 };
 
-pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
+pub fn render_optional_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     Block::new()
-        .title(format!("  {}  ", translate("unused_data")))
+        .title(format!("  {}  ", translate("optional_data")))
         .title_alignment(Alignment::Center)
         .borders(Borders::TOP)
         .render(area, buf);
@@ -72,7 +72,7 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_missing_fields.iter().any(|(_, second)| second == key)
+            if state.completed_required_fields.iter().any(|(_, second)| second == key)
                 || state.completed_optional_fields.iter().any(|(_, second)| second == key)
             {
                 row = row.style(Style::default().fg(Color::Green));
@@ -94,9 +94,9 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
     // Render right tab containing optional fields
 
     ////
-    let mut table_state = TableState::default().with_selected(Some(state.selected_optional_field));
+    let mut table_state = TableState::default().with_selected(Some(state.selected_output_field));
 
-    state.optional_display_subset = state
+    state.output_display_subset = state
         .resolved_subsets
         .get(&state.optional_field_pointer)
         .and_then(|v| v.as_object())
@@ -105,29 +105,28 @@ pub fn render_lost_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppState) {
         .map(|(key, value)| (key.to_string(), value_to_str(value)))
         .collect();
 
-    state.optional_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
+    state.output_display_subset.sort_by(|a, b| a.0.cmp(&b.0));
     if let Some(i) = state
-        .optional_display_subset
+        .output_display_subset
         .iter()
         .position(|(key, _)| key == "Your input >>")
     {
-        let your_input_field = state.optional_display_subset.remove(i);
-        state.optional_display_subset.insert(0, your_input_field);
+        let your_input_field = state.output_display_subset.remove(i);
+        state.output_display_subset.insert(0, your_input_field);
     }
-    state
-        .optional_display_subset
-        .insert(0, ("".to_string(), "".to_string()));
-    state.amount_optional_fields = state.optional_display_subset.len() - 2;
+    state.output_display_subset.insert(0, ("".to_string(), "".to_string()));
+    state.amount_output_fields = state.output_display_subset.len() - 2;
 
     let rows: Vec<Row> = state
-        .optional_display_subset
+        .output_display_subset
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state
-                .completed_optional_fields
-                .iter()
-                .any(|(first, _)| first.to_string() == state.optional_field_pointer || first.to_string() == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()) // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
+            if state.completed_optional_fields.iter().any(|(first, _)| {
+                first.to_string() == state.optional_field_pointer
+                    || first.to_string() == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()
+            })
+            // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {
                 row = row.style(Style::default().fg(Color::Green));
             }

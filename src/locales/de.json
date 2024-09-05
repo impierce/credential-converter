@@ -6,8 +6,8 @@
     "choose_mapping_file": "Zuordnungsdatei wählen",
     "save_custom_mapping": "Benutzerdefinierte Zuordnung speichern unter",
     "language_selector": "Sprachauswahl",
-    "manual_mapping": "Manuelle Zuordnung",
-    "unused_data": "Ungenutzte Daten",
+    "required_data": "Erforderliche Daten",
+    "optional_data": "Optionale Daten",
     "optional_field": "Optionales Feld",
     "result_value": "Ergebniswert",
     "direct_copy": "Direktkopie",
@@ -19,7 +19,7 @@
     "input_value": "Eingabewert",
     "output_result": "Ausgabeergebnis",
     "confirm": "Bestätigen",
-    "missing_field": "Fehlendes Feld",
+    "required_field": "Erforderliches Feld",
     "file_exists": "\nEine Datei existiert bereits im Pfad/in den Pfaden im orangefarbenen Feld/den orangefarbenen Feldern.\nDie Datei(en) werden überschrieben, wenn Sie fortfahren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
     "navigate": "Navigieren",
     "next_field": "Nächstes Feld",
@@ -38,7 +38,7 @@
     "view": "Ansicht",
     "field": "Feld",
     "value": "Wert",
-    "missing_fields_incomplete": "\nNicht alle fehlenden Felder sind ausgefüllt.\nWenn Sie jetzt fortfahren, wird eine ungültige Ausgabedatei erstellt.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
+    "required_fields_incomplete": "\nNicht alle erforderlichen Felder sind ausgefüllt.\nEin Fortfahren jetzt würde eine ungültige Ausgabedatei erzeugen.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
     "exit_warning": "\n Möchten Sie das Programm jetzt wirklich beenden?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
     "return_to_p1_warning": "\n Möchten Sie wirklich zur Seite 1 zurückkehren?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
 }

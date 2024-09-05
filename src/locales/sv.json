@@ -6,8 +6,8 @@
     "choose_mapping_file": "Välj kartläggningsfil",
     "save_custom_mapping": "Spara anpassad kartläggning till",
     "language_selector": "Språkväljare",
-    "manual_mapping": "Manuell kartläggning",
-    "unused_data": "Oanvända data",
+    "required_data": "Obligatorisk data",
+    "optional_data": "Valfria data",
     "optional_field": "Valfritt fält",
     "result_value": "Resultatvärde",
     "direct_copy": "Direktkopiering",
@@ -19,7 +19,7 @@
     "input_value": "Inmatningsvärde",
     "output_result": "Utmatningsresultat",
     "confirm": "Bekräfta",
-    "missing_field": "Saknat fält",
+    "required_field": "Obligatoriskt fält",
     "file_exists": "\nEn fil finns redan på vägen/vägarna markerade med orangea ramar.\nFilerna kommer att skrivas över om du fortsätter.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
     "navigate": "Navigera",
     "next_field": "Nästa fält",
@@ -38,7 +38,7 @@
     "view": "Visa",
     "field": "Fält",
     "value": "Värde",
-    "missing_fields_incomplete": "\nInte alla saknade fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utdatafil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
+    "required_fields_incomplete": "\nInte alla obligatoriska fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utmatningsfil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
     "exit_warning": "\n Är du säker på att du vill avsluta programmet nu?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
     "return_to_p1_warning": "\n Är du säker på att du vill återgå till sida 1?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
 }

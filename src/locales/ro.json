@@ -6,8 +6,8 @@
     "choose_mapping_file": "Alegeți fișierul de mapare",
     "save_custom_mapping": "Salvați maparea personalizată în",
     "language_selector": "Selector de Limbă",
-    "manual_mapping": "Mapare Manuală",
-    "unused_data": "Date Neutilizate",
+    "required_data": "Date Necesare",
+    "optional_data": "Date Opționale",
     "optional_field": "Câmp Opțional",
     "result_value": "Valoare Rezultat",
     "direct_copy": "Copiere Directă",
@@ -19,7 +19,7 @@
     "input_value": "Valoare de Intrare",
     "output_result": "Rezultat de Ieșire",
     "confirm": "Confirmare",
-    "missing_field": "Câmp Lipsă",
+    "required_field": "Câmp Necesar",
     "file_exists": "\nExistă deja un fișier în cale(a)le din câmpurile portocalii.\nFișierele vor fi suprascrise dacă continuați.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
     "navigate": "Navigare",
     "next_field": "Următorul Câmp",
@@ -38,7 +38,7 @@
     "view": "Vizualizare",
     "field": "Câmp",
     "value": "Valoare",
-    "missing_fields_incomplete": "\nNu toate câmpurile lipsă au fost completate.\nContinuarea acum va duce la generarea unui fișier de ieșire invalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
+    "required_fields_incomplete": "\nNu toate câmpurile necesare sunt completate.\nContinuarea acum va produce un fișier de ieșire nevalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
     "exit_warning": "\nSunteți sigur că doriți să ieșiți din program acum?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
     "return_to_p1_warning": "\nSunteți sigur că doriți să reveniți la pagina 1?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
 }

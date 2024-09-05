@@ -6,8 +6,8 @@
     "choose_mapping_file": "Choose Mapping File",
     "save_custom_mapping": "Save Custom Mapping To",
     "language_selector": "Language Selector",
-    "manual_mapping": "Manual Mapping",
-    "unused_data": "Unused Data",
+    "required_data": "Required Data",
+    "optional_data": "Optional Data",
     "optional_field": "Optional Field",
     "result_value": "Result Value",
     "direct_copy": "DirectCopy",
@@ -19,7 +19,7 @@
     "input_value": "Input Value",
     "output_result": "Output Result",
     "confirm": "Confirm",
-    "missing_field": "Missing Field",
+    "required_field": "Required Field",
     "file_exists": "\nA file already exists in the path(s) in the orange box(es).\nThe file(s) will be overwritten if you continue.\nPress 'Enter' to continue, 'Esc' to go back.",
     "navigate": "Navigate",
     "next_field": "Next Field",
@@ -38,7 +38,7 @@
     "view": "View",
     "field": "Field",
     "value": "Value",
-    "missing_fields_incomplete": "\n Not all missing fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.",
+    "required_fields_incomplete": "\n Not all required fields are completed.\nContinuing now will render an invalid output file.\nPress 'Enter' to continue, 'Esc' to go back.",
     "exit_warning": "\n Are you sure you want to exit the program now?\nAll progress will be lost.\nPress 'Enter' to continue, 'Esc' to go back.",
     "return_to_p1_warning": "\n Are you sure you want to retun to page 1?\n All progrss will be lost.\nPress 'Enter' to continue, 'Esc' to go back."
 }

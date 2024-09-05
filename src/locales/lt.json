@@ -6,8 +6,8 @@
     "choose_mapping_file": "Pasirinkti suvedimo failą",
     "save_custom_mapping": "Išsaugoti pritaikytą suvedimą į",
     "language_selector": "Kalbos pasirinkimas",
-    "manual_mapping": "Rankinis suvedimas",
-    "unused_data": "Nenaudojami duomenys",
+    "required_data": "Privalomi duomenys",
+    "optional_data": "Papildomi duomenys",
     "optional_field": "Neprivalomas laukas",
     "result_value": "Rezultato vertė",
     "direct_copy": "Tiesioginis kopijavimas",
@@ -19,7 +19,7 @@
     "input_value": "Įvesties vertė",
     "output_result": "Išvesties rezultatas",
     "confirm": "Patvirtinti",
-    "missing_field": "Trūkstamas laukas",
+    "required_field": "Privalomas laukas",
     "file_exists": "\nFailas jau egzistuoja nurodytuose keliuose oranžiniuose langeliuose.\nFailas (-ai) bus perrašytas (-i), jei tęsite.\nPaspauskite 'Enter', jei norite tęsti, 'Esc', jei norite grįžti atgal.",
     "navigate": "Naviguoti",
     "next_field": "Kitas laukas",
@@ -38,7 +38,7 @@
     "view": "Peržiūra",
     "field": "Laukas",
     "value": "Vertė",
-    "missing_fields_incomplete": "\nNe visi trūkstami laukai užpildyti.\nTęsiant dabar, bus sugeneruotas neleistinas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
+    "required_fields_incomplete": "\nNe visi privalomi laukai užpildyti.\nTęsiant dabar bus sugeneruotas netinkamas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
     "exit_warning": "\n Ar tikrai norite dabar išeiti iš programos?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
     "return_to_p1_warning": "\n Ar tikrai norite grįžti į 1 puslapį?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
 }

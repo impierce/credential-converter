@@ -6,9 +6,9 @@ use std::io::Write;
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::{
     backend::{
+        candidate_value::set_candidate_output_value,
         preload_p2::{update_display_section, update_path},
         repository::update_repository,
-        selector::input_to_output,
     },
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
@@ -17,7 +17,7 @@ use crate::{
 //////////     KEYBOARD EVENTS     //////////
 
 pub fn handle_esc(state: &mut AppState) {
-    if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
+    if state.uncompleted_warning && state.page == Pages::RequiredDataP2 {
         state.uncompleted_warning = false;
     } else if state.popup_mapping_p2_p3 {
         clear_popup(state);
@@ -97,10 +97,10 @@ pub fn handle_up(state: &mut AppState) {
         }
         // Scroll up through output fields
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::ManualMappingP2 && state.selected_missing_field > 1 {
-                state.selected_missing_field -= 1;
-            } else if state.selected_optional_field > 1 {
-                state.selected_optional_field -= 1;
+            if state.page == Pages::RequiredDataP2 && state.selected_output_field > 1 {
+                state.selected_output_field -= 1;
+            } else if state.selected_output_field > 1 {
+                state.selected_output_field -= 1;
             }
         }
         // Move between tabs
@@ -125,10 +125,10 @@ pub fn handle_down(state: &mut AppState) {
             }
         }
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::ManualMappingP2 && state.selected_missing_field <= state.amount_missing_fields {
-                state.selected_missing_field += 1;
-            } else if state.selected_optional_field <= state.amount_optional_fields {
-                state.selected_optional_field += 1;
+            if state.page == Pages::RequiredDataP2 && state.selected_output_field <= state.amount_output_fields {
+                state.selected_output_field += 1;
+            } else if state.selected_output_field <= state.amount_output_fields {
+                state.selected_output_field += 1;
             }
         }
         _ => {}
@@ -199,7 +199,7 @@ pub fn handle_char(state: &mut AppState, char: char) {
 
 pub fn handle_enter(state: &mut AppState) -> bool {
     // Close warning, reset values and move to next page
-    if state.uncompleted_warning && state.page == Pages::ManualMappingP2 {
+    if state.uncompleted_warning && state.page == Pages::RequiredDataP2 {
         state.uncompleted_warning = false;
         next_page(state);
         update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
@@ -218,8 +218,12 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if state.select_mapping_option {
                     // Fast-track mapping, Copy to output result value and reset values
                     if state.mapping_option == MappingOptions::DirectCopy {
-                        input_to_output(state);
-                        confirm_mapping(state);
+                        // "Your input >>" needs to be selected to perform the mapping
+                        if state.output_display_subset[1].0 == "Your input >>".to_string()
+                            && state.selected_output_field == 1
+                        {
+                            confirm_mapping(state);
+                        }
                     }
                     // Switch from mapping options tab to respective tab
                     else {
@@ -236,8 +240,11 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 // If transformation(s) selected open the view popup to show the result.
                 else if state.selected_transformations_tab {
                     if !state.popup_mapping_p2_p3 {
+                        set_candidate_output_value(state, false);
                         state.popup_mapping_p2_p3 = true;
-                    } else {
+                    } else if state.output_display_subset[1].0 == "Your input >>".to_string()
+                        && state.selected_output_field == 1
+                    {
                         confirm_mapping(state);
                     }
                 }
@@ -247,15 +254,23 @@ pub fn handle_enter(state: &mut AppState) -> bool {
             }
             P2P3Tabs::View => {
                 if !state.popup_mapping_p2_p3 {
+                    set_candidate_output_value(state, false);
                     state.popup_mapping_p2_p3 = true;
-                } else {
+                } else if state.output_display_subset[1].0 == "Your input >>".to_string()
+                    && state.selected_output_field == 1
+                {
                     confirm_mapping(state);
                 }
             }
             _ => {
                 // Complete a mapping from the view popup
                 if state.popup_mapping_p2_p3 {
-                    confirm_mapping(state);
+                    // "Your input >>" needs to be selected to perform the mapping
+                    if state.output_display_subset[1].0 == "Your input >>".to_string()
+                        && state.selected_output_field == 1
+                    {
+                        confirm_mapping(state);
+                    }
                 } else {
                     update_path(state, true);
                     update_display_section(state, false);
@@ -277,9 +292,9 @@ pub fn handle_scroll_down(state: &mut AppState, mouse_event: MouseEvent) {
         {
             state.selected_input_field += 1;
         } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
-            && state.selected_missing_field <= state.amount_missing_fields
+            && state.selected_output_field <= state.amount_output_fields
         {
-            state.selected_missing_field += 1;
+            state.selected_output_field += 1;
         }
     }
     // Scroll within tabs of the view popup
@@ -310,9 +325,9 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
         {
             state.selected_input_field -= 1;
         } else if is_mouse_over_area(state.output_fields_area_p2_p3, mouse_event.column, mouse_event.row)
-            && state.selected_missing_field > 1
+            && state.selected_output_field > 1
         {
-            state.selected_missing_field -= 1;
+            state.selected_output_field -= 1;
         }
     }
     // Scroll within tabs of the view popup
@@ -337,27 +352,32 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-        if state.missing_display_subset.len() - 1 == state.completed_missing_fields.len() {
+        if state.output_display_subset.len() - 1 == state.completed_required_fields.len() {
+            // todo: refactor if statement
             // todo: len() fetch incorrectly in multiple locations
             next_page(state);
-        } else if state.page == Pages::UnusedDataP3 {
+        } else if state.page == Pages::OptionalDataP3 {
             next_page(state);
             create_output_files(state);
         } else {
             state.uncompleted_warning = true;
         }
     } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
+        set_candidate_output_value(state, false);
         state.popup_mapping_p2_p3 = true;
     } else if is_mouse_over_area(state.clear_button, mouse_event.column, mouse_event.row) {
         clear_button(state);
     } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
-        confirm_mapping(state);
+        // "Your input >>" needs to be selected to perform the mapping
+        if state.output_display_subset[1].0 == "Your input >>".to_string() && state.selected_output_field == 1 {
+            confirm_mapping(state);
+        }
     } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
         if state.popup_mapping_p2_p3 {
             clear_popup(state);
         } else if state.uncompleted_warning {
             state.uncompleted_warning = false;
-        } else if state.page == Pages::ManualMappingP2 {
+        } else if state.page == Pages::RequiredDataP2 {
             state.return_to_p1_warning = true;
         } else {
             clear_mapping_options(state);
@@ -384,8 +404,8 @@ pub fn next_page(state: &mut AppState) {
 
     state.p2_p3_tabs = P2P3Tabs::InputFields;
     state.selected_input_field = 1;
-    state.selected_missing_field = 1;
-    state.selected_optional_field = 1;
+    state.selected_output_field = 1;
+    state.selected_output_field = 1;
 
     state.page.next();
 }
@@ -404,8 +424,12 @@ pub fn create_output_files(state: &mut AppState) {
     // Create Mapping File
     if !state.custom_mapping_path.is_empty() {
         let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
-        file.write_all(serde_json::to_string_pretty(&state.mappings).unwrap().as_bytes())
-            .unwrap();
+        file.write_all(
+            serde_json::to_string_pretty(&state.performed_mappings)
+                .unwrap()
+                .as_bytes(),
+        )
+        .unwrap();
     }
 }
 
@@ -438,7 +462,7 @@ pub fn clear_button(state: &mut AppState) {
     // Clear selected missing/optional field
     // todo: bandaid code, not fully implemented yet
     else {
-        if state.page == Pages::ManualMappingP2 {
+        if state.page == Pages::RequiredDataP2 {
             if let Some(_) = state
                 .resolved_subsets
                 .get(&state.missing_field_pointer)
@@ -453,7 +477,7 @@ pub fn clear_button(state: &mut AppState) {
                     .unwrap() = Value::Null;
             }
             state
-                .completed_missing_fields
+                .completed_required_fields
                 .retain(|(first, _)| first != &state.missing_field_pointer);
         } else {
             if let Some(_) = state
@@ -479,95 +503,86 @@ pub fn clear_button(state: &mut AppState) {
 }
 
 pub fn confirm_mapping(state: &mut AppState) {
+    trace_dbg!("1111");
+
+    set_candidate_output_value(state, true);
+    update_repository(state);
+    update_resolved_subset(state);
+    save_completed_fields(state);
+    move_active_fields(state);
+
+    trace_dbg!(&state.completed_optional_fields);
+    trace_dbg!(state.candidate_output_value.as_ref().unwrap());
+
     clear_popup(state);
-    state.p2_p3_tabs = P2P3Tabs::InputFields;
+    clear_mapping_options(state);
+}
 
-    // todo: refactor duplicate code between pages
-    if state.page == Pages::ManualMappingP2 {
+///// HELPERS /////
+
+fn update_resolved_subset(state: &mut AppState) {
+    if state.page == Pages::RequiredDataP2 {
         let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
-
-        //todo: remove unwrap & refactor input field
-        if output_map.get_mut("Your input >>").is_some() && state.selected_missing_field == 1 {
-            *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
-
-            // Save completed fields
-            if !state
-                .completed_missing_fields
-                .iter()
-                .any(|(first, _)| first == &state.missing_field_pointer)
-            {
-                state.completed_missing_fields.push((
-                    state.missing_field_pointer.clone(),
-                    state.input_fields[state.selected_input_field].0.clone(),
-                )); // todo: also here we still need to refactor input fields according to the outputfields
-
-            } else {
-                // Find the old mapping tuple and replace
-                for tuple in &mut state.completed_missing_fields {
-                    if tuple.0 == state.missing_field_pointer {
-                        *tuple = (
-                            state.missing_field_pointer.clone(),
-                            state.input_fields[state.selected_input_field].0.clone(),
-                        );
-                        break;
-                    }
-                }
-            }
-            
-            trace_dbg!(&state.completed_missing_fields);
-            trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-            update_repository(state);
-
-            // Move active fields to next field
-            if state.selected_missing_field == state.missing_display_subset.len() - 1 {
-                state.selected_missing_field = 1;
-            } else {
-                state.selected_missing_field += 1;
-            }
-        }
-    } else {
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone().unwrap());
+    } else if state.page == Pages::OptionalDataP3 {
         let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone().unwrap());
+    }
+}
 
-        //todo: remove unwrap
-        if output_map.get_mut("Your input >>").is_some() && state.selected_optional_field == 1 {
-            *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_data_value.clone().unwrap());
-
-            // Save completed fields
-            if !state
-                .completed_optional_fields
-                .iter()
-                .any(|(first, _)| first == &state.optional_field_pointer)
-            {
-                state.completed_optional_fields.push((
-                    state.optional_field_pointer.clone(),
-                    state.input_fields[state.selected_input_field].0.clone(),
-                ));
-
-            } else {
-                // Find the old mapping tuple and replace
-                for tuple in &mut state.completed_optional_fields {
-                    if tuple.0 == state.optional_field_pointer {
-                        *tuple = (
-                            state.optional_field_pointer.clone(),
-                            state.input_fields[state.selected_input_field].0.clone(),
-                        );
-                        break;
-                    }
+fn save_completed_fields(state: &mut AppState) {
+    if state.page == Pages::RequiredDataP2 {
+        if !state
+            .completed_required_fields
+            .iter()
+            .any(|(first, _)| first == &state.missing_field_pointer)
+        {
+            state.completed_required_fields.push((
+                state.missing_field_pointer.clone(),
+                state.input_fields[state.selected_input_field].0.clone(),
+            )); // todo: also here we still need to refactor input fields according to the outputfields
+        } else {
+            // Find the old mapping tuple and replace
+            for tuple in &mut state.completed_required_fields {
+                if tuple.0 == state.missing_field_pointer {
+                    *tuple = (
+                        state.missing_field_pointer.clone(),
+                        state.input_fields[state.selected_input_field].0.clone(),
+                    );
+                    break;
                 }
-
-            }
-            
-            trace_dbg!(&state.completed_optional_fields);
-            trace_dbg!(state.candidate_data_value.as_ref().unwrap());
-            update_repository(state);
-
-            // Move active fields to next field
-            if state.selected_optional_field == state.optional_display_subset.len() - 1 {
-                state.selected_optional_field = 1;
-            } else {
-                state.selected_optional_field += 1;
             }
         }
+    } else if state.page == Pages::OptionalDataP3 {
+        if !state
+            .completed_optional_fields
+            .iter()
+            .any(|(first, _)| first == &state.optional_field_pointer)
+        {
+            state.completed_optional_fields.push((
+                state.optional_field_pointer.clone(),
+                state.input_fields[state.selected_input_field].0.clone(),
+            ));
+        } else {
+            // Find the old mapping tuple and replace
+            for tuple in &mut state.completed_optional_fields {
+                if tuple.0 == state.optional_field_pointer {
+                    *tuple = (
+                        state.optional_field_pointer.clone(),
+                        state.input_fields[state.selected_input_field].0.clone(),
+                    );
+                    break;
+                }
+            }
+        }
+    }
+}
+
+fn move_active_fields(state: &mut AppState) {
+    if state.selected_output_field == state.output_display_subset.len() - 1 {
+        state.selected_output_field = 1;
+    } else {
+        state.selected_output_field += 1;
     }
 
     if state.selected_input_field == state.input_fields.len() - 1 {
@@ -576,5 +591,5 @@ pub fn confirm_mapping(state: &mut AppState) {
         state.selected_input_field += 1;
     }
 
-    clear_mapping_options(state);
+    state.p2_p3_tabs = P2P3Tabs::InputFields;
 }

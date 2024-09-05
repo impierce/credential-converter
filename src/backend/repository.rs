@@ -3,11 +3,10 @@ use crate::{
         jsonpointer::{JsonPath, JsonPointer},
         transformations::{DataLocation, Transformation},
     },
-    state::{AppState, Mapping, Pages},
+    state::{AppState, Mapping},
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
-use regex::Regex;
 use serde_json::{json, Map, Value};
 use std::{
     collections::HashMap,
@@ -161,28 +160,11 @@ pub fn merge(a: &mut Value, b: Value) {
 }
 
 pub fn update_repository(state: &mut AppState) {
+    // set_output_pointer(state) has already been set in set_candidate_output_value(state)
+    let output_pointer = state.output_pointer.clone();
     let output_format = state.mapping.output_format();
-    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required").to_string(); // todo: remove subset paths segment is double code, also in selector
-    if state.page == Pages::UnusedDataP3 {
-        output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
-    }
-    if output_pointer.contains("/allOf")
-        || output_pointer.contains("/anyOf")
-        || output_pointer.contains("/oneOf")
-        || output_pointer.contains("/not")
-    {
-        let re_allof = Regex::new(r"allOf/.*/").unwrap();
-        let re_anyof = Regex::new(r"anyOf/.*/").unwrap();
-        let re_oneof = Regex::new(r"oneOf/.*/").unwrap();
-        let re_not = Regex::new(r"not/.*/").unwrap();
 
-        output_pointer = re_allof.replace_all(&output_pointer, "").to_string();
-        output_pointer = re_anyof.replace_all(&output_pointer, "").to_string();
-        output_pointer = re_oneof.replace_all(&output_pointer, "").to_string();
-        output_pointer = re_not.replace_all(&output_pointer, "").to_string();
-    }
-
-    let source_value = state.candidate_data_value.clone().unwrap();
+    let source_value = state.candidate_output_value.clone().unwrap();
     let output_json = state.repository.get_mut(&output_format).unwrap();
 
     let mut leaf_node = construct_leaf_node(&output_pointer);
@@ -191,8 +173,5 @@ pub fn update_repository(state: &mut AppState) {
         *value = serde_json::from_str(&source_value).unwrap();
     }
 
-    // trace_dbg!(&leaf_node);
-
     merge(output_json, leaf_node);
-    // trace_dbg!(output_json);
 }
