@@ -11,7 +11,7 @@ pub fn value_to_str(value: &Value) -> String {
             } else {
                 let mut str_ = "[".to_string();
                 for e in a {
-                    str_ = str_ + value_to_str(e).as_str() + ", "; //again we don't how many levels nested array/objects
+                    str_ = str_ + value_to_str(e).as_str() + ", ";
                 }
                 str_.truncate(str_.len() - 2);
                 str_ += "]";

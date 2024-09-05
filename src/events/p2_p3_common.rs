@@ -97,9 +97,7 @@ pub fn handle_up(state: &mut AppState) {
         }
         // Scroll up through output fields
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::RequiredDataP2 && state.selected_output_field > 1 {
-                state.selected_output_field -= 1;
-            } else if state.selected_output_field > 1 {
+            if state.selected_output_field > 1 {
                 state.selected_output_field -= 1;
             }
         }
@@ -125,9 +123,7 @@ pub fn handle_down(state: &mut AppState) {
             }
         }
         P2P3Tabs::OutputFields => {
-            if state.page == Pages::RequiredDataP2 && state.selected_output_field <= state.amount_output_fields {
-                state.selected_output_field += 1;
-            } else if state.selected_output_field <= state.amount_output_fields {
+            if state.selected_output_field <= state.amount_output_fields {
                 state.selected_output_field += 1;
             }
         }
@@ -219,7 +215,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     // Fast-track mapping, Copy to output result value and reset values
                     if state.mapping_option == MappingOptions::DirectCopy {
                         // "Your input >>" needs to be selected to perform the mapping
-                        if state.output_display_subset[1].0 == "Your input >>".to_string()
+                        if state.output_display_subset[1].0 == *"Your input >>"
                             && state.selected_output_field == 1
                         {
                             confirm_mapping(state);
@@ -242,7 +238,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     if !state.popup_mapping_p2_p3 {
                         set_candidate_output_value(state, false);
                         state.popup_mapping_p2_p3 = true;
-                    } else if state.output_display_subset[1].0 == "Your input >>".to_string()
+                    } else if state.output_display_subset[1].0 == *"Your input >>"
                         && state.selected_output_field == 1
                     {
                         confirm_mapping(state);
@@ -256,7 +252,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if !state.popup_mapping_p2_p3 {
                     set_candidate_output_value(state, false);
                     state.popup_mapping_p2_p3 = true;
-                } else if state.output_display_subset[1].0 == "Your input >>".to_string()
+                } else if state.output_display_subset[1].0 == *"Your input >>"
                     && state.selected_output_field == 1
                 {
                     confirm_mapping(state);
@@ -266,7 +262,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 // Complete a mapping from the view popup
                 if state.popup_mapping_p2_p3 {
                     // "Your input >>" needs to be selected to perform the mapping
-                    if state.output_display_subset[1].0 == "Your input >>".to_string()
+                    if state.output_display_subset[1].0 == *"Your input >>"
                         && state.selected_output_field == 1
                     {
                         confirm_mapping(state);
@@ -353,8 +349,7 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
         if state.output_display_subset.len() - 1 == state.completed_required_fields.len() {
-            // todo: refactor if statement
-            // todo: len() fetch incorrectly in multiple locations
+            // todo: refactor completed fields checking for p2
             next_page(state);
         } else if state.page == Pages::OptionalDataP3 {
             next_page(state);
@@ -369,7 +364,7 @@ pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
         clear_button(state);
     } else if is_mouse_over_area(state.confirm_button, mouse_event.column, mouse_event.row) {
         // "Your input >>" needs to be selected to perform the mapping
-        if state.output_display_subset[1].0 == "Your input >>".to_string() && state.selected_output_field == 1 {
+        if state.output_display_subset[1].0 == *"Your input >>" && state.selected_output_field == 1 {
             confirm_mapping(state);
         }
     } else if is_mouse_over_area(state.prev_page_button, mouse_event.column, mouse_event.row) {
@@ -463,11 +458,11 @@ pub fn clear_button(state: &mut AppState) {
     // todo: bandaid code, not fully implemented yet
     else {
         if state.page == Pages::RequiredDataP2 {
-            if let Some(_) = state
+            if state
                 .resolved_subsets
                 .get(&state.missing_field_pointer)
                 .unwrap()
-                .get("Your input >>")
+                .get("Your input >>").is_some()
             {
                 *state
                     .resolved_subsets
@@ -480,11 +475,11 @@ pub fn clear_button(state: &mut AppState) {
                 .completed_required_fields
                 .retain(|(first, _)| first != &state.missing_field_pointer);
         } else {
-            if let Some(_) = state
+            if state
                 .resolved_subsets
                 .get(&state.optional_field_pointer)
                 .unwrap()
-                .get("Your input >>")
+                .get("Your input >>").is_some()
             {
                 *state
                     .resolved_subsets

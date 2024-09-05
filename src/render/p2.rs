@@ -122,8 +122,8 @@ pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppStat
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
             if state.completed_required_fields.iter().any(|(first, _)| {
-                first.to_string() == state.missing_field_pointer
-                    || first.to_string() == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()
+                *first == state.missing_field_pointer
+                    || *first == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()
             })
             // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {

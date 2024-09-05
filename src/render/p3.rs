@@ -123,8 +123,8 @@ pub fn render_optional_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppStat
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
             if state.completed_optional_fields.iter().any(|(first, _)| {
-                first.to_string() == state.optional_field_pointer
-                    || first.to_string() == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()
+                *first == state.optional_field_pointer
+                    || *first == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()
             })
             // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {

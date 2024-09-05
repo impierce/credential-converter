@@ -22,7 +22,7 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
     set_output_pointer(state);
 
     for transformation in selected_transformations.iter() {
-        let transformation = define_transformation(state, transformation.clone());
+        let transformation = define_transformation(state, *transformation);
 
         // todo: Can we we just get the key pointed to instead of copynig the entire repository?
         let mut temp_repository = state.repository.clone();
@@ -51,7 +51,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
 
     match transformation {
         Transformations::LowerCase => {
-            return Transformation::OneToOne {
+            Transformation::OneToOne {
                 type_: OneToOne::toLowerCase,
                 source: DataLocation {
                     format: input_format.clone(),
@@ -64,7 +64,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
             }
         }
         Transformations::UpperCase => {
-            return Transformation::OneToOne {
+            Transformation::OneToOne {
                 type_: OneToOne::toUpperCase,
                 source: DataLocation {
                     format: input_format.clone(),
@@ -79,7 +79,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
         Transformations::DirectCopy | _ => {
-            return Transformation::OneToOne {
+            Transformation::OneToOne {
                 type_: OneToOne::copy,
                 source: DataLocation {
                     format: input_format.clone(),
@@ -91,7 +91,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
                 },
             }
         }
-    };
+    }
 }
 
 pub fn set_output_pointer(state: &mut AppState) {

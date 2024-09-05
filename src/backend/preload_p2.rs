@@ -60,8 +60,8 @@ pub fn preload_p2(state: &mut AppState) {
 
             trace_dbg!("Successfully loaded the mapping file");
 
-            // trace_dbg!(&state.repository);
             state.repository.apply_transformations(transformations, state.mapping);
+            // todo: add applied transformation to completed fields
         }
     }
 }
