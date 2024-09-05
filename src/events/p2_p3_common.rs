@@ -6,7 +6,11 @@ use std::io::Write;
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::{
     backend::{
-        candidate_value::{set_candidate_output_value, set_output_pointer}, jsonpointer::{JsonPath, JsonPointer}, preload_p2::{update_display_section, update_path}, repository::update_repository, transformations::Transformation
+        candidate_value::{set_candidate_output_value, set_output_pointer},
+        jsonpointer::{JsonPath, JsonPointer},
+        preload_p2::{update_display_section, update_path},
+        repository::update_repository,
+        transformations::Transformation,
     },
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
@@ -213,9 +217,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     // Fast-track mapping, Copy to output result value and reset values
                     if state.mapping_option == MappingOptions::DirectCopy {
                         // "Your input >>" needs to be selected to perform the mapping
-                        if state.output_display_subset[1].0 == *"Your input >>"
-                            && state.selected_output_field == 1
-                        {
+                        if state.output_display_subset[1].0 == *"Your input >>" && state.selected_output_field == 1 {
                             confirm_mapping(state);
                         }
                     }
@@ -236,9 +238,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     if !state.popup_mapping_p2_p3 {
                         set_candidate_output_value(state, false);
                         state.popup_mapping_p2_p3 = true;
-                    } else if state.output_display_subset[1].0 == *"Your input >>"
-                        && state.selected_output_field == 1
-                    {
+                    } else if state.output_display_subset[1].0 == *"Your input >>" && state.selected_output_field == 1 {
                         confirm_mapping(state);
                     }
                 }
@@ -250,9 +250,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 if !state.popup_mapping_p2_p3 {
                     set_candidate_output_value(state, false);
                     state.popup_mapping_p2_p3 = true;
-                } else if state.output_display_subset[1].0 == *"Your input >>"
-                    && state.selected_output_field == 1
-                {
+                } else if state.output_display_subset[1].0 == *"Your input >>" && state.selected_output_field == 1 {
                     confirm_mapping(state);
                 }
             }
@@ -260,9 +258,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 // Complete a mapping from the view popup
                 if state.popup_mapping_p2_p3 {
                     // "Your input >>" needs to be selected to perform the mapping
-                    if state.output_display_subset[1].0 == *"Your input >>"
-                        && state.selected_output_field == 1
-                    {
+                    if state.output_display_subset[1].0 == *"Your input >>" && state.selected_output_field == 1 {
                         confirm_mapping(state);
                     }
                 } else {
@@ -347,8 +343,8 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
         if state.output_display_subset.len() - 1 == state.completed_required_fields.len() {
-            // todo: refactor completed fields checking for p2
             next_page(state);
+            update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
         } else if state.page == Pages::OptionalDataP3 {
             next_page(state);
             create_output_files(state);
@@ -453,14 +449,14 @@ pub fn clear_button(state: &mut AppState) {
         clear_mapping_options(state);
     }
     // Clear selected missing/optional field
-    // todo: bandaid code, not fully implemented yet
     else {
         if state.page == Pages::RequiredDataP2 {
             if state
                 .resolved_subsets
                 .get(&state.missing_field_pointer)
                 .unwrap()
-                .get("Your input >>").is_some()
+                .get("Your input >>")
+                .is_some()
             {
                 *state
                     .resolved_subsets
@@ -477,7 +473,8 @@ pub fn clear_button(state: &mut AppState) {
                 .resolved_subsets
                 .get(&state.optional_field_pointer)
                 .unwrap()
-                .get("Your input >>").is_some()
+                .get("Your input >>")
+                .is_some()
             {
                 *state
                     .resolved_subsets
@@ -491,6 +488,11 @@ pub fn clear_button(state: &mut AppState) {
                 .retain(|(first, _)| first != &state.optional_field_pointer);
         }
 
+        // todo: check if set_output_pointer can simply only be called whener update_path is called
+        set_output_pointer(state);
+        state
+            .repository
+            .clear_mapping(state.output_pointer.clone(), state.mapping);
         clear_performed_transformation(state);
         clear_mapping_options(state);
     }
@@ -587,19 +589,11 @@ fn move_active_fields(state: &mut AppState) {
 }
 
 fn clear_performed_transformation(state: &mut AppState) {
-    set_output_pointer(state);
     let output_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
-    state.performed_mappings.retain(|transformation| 
-        match transformation {
-            Transformation::OneToOne {
-                destination,
-                ..
-            } => {
-                destination.path != output_path.to_string()
-            }
-            // other Transformations are not implemented yet
-            _ => false,
-        }
-    );
+    state.performed_mappings.retain(|transformation| match transformation {
+        Transformation::OneToOne { destination, .. } => destination.path != output_path.to_string(),
+        // other Transformations are not implemented yet
+        _ => false,
+    });
 }

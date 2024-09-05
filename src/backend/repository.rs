@@ -59,6 +59,7 @@ impl Repository {
                 trace_dbg!(&source_format);
                 let source_credential = self.get(&source_format).unwrap();
 
+                // custom code to handle the special character '@' in the source_path
                 if source_path == "$.@context" {
                     source_path = r#"$["@context"]"#.to_string();
                 };
@@ -121,6 +122,20 @@ impl Repository {
             self.apply_transformation(transformation, mapping);
         }
     }
+
+    pub fn clear_mapping(&mut self, mut output_pointer: String, mapping: Mapping) {
+        trace_dbg!(&output_pointer);
+
+        let output_json = self.get_mut(&mapping.output_format()).unwrap();
+        trace_dbg!(&output_json);
+
+        output_pointer = output_pointer.trim_start_matches("/").to_string();
+        let keys: Vec<String> = output_pointer.split('/').map(|s| s.to_string()).collect();
+        trace_dbg!(&keys);
+
+        remove_key_recursive(output_json, &keys);
+        trace_dbg!(&output_json);
+    }
 }
 
 pub fn construct_leaf_node(path: &str) -> Value {
@@ -168,4 +183,31 @@ pub fn update_repository(state: &mut AppState) {
     }
 
     merge(output_json, leaf_node);
+}
+
+fn remove_key_recursive(current_json: &mut Value, keys: &[String]) -> bool {
+    if let Some((first, rest)) = keys.split_first() {
+        trace_dbg!(first);
+        trace_dbg!(rest);
+        if let Some(obj) = current_json.as_object_mut() {
+            if rest.is_empty() {
+                trace_dbg!(1);
+                // If it's the last key, remove the key from the object
+                obj.remove(first);
+            } else if let Some(child) = obj.get_mut(first) {
+                trace_dbg!(2);
+                // Recursively traverse deeper layers
+                if remove_key_recursive(child, rest) {
+                    trace_dbg!(3);
+                    // If the child is now empty, remove it
+                    obj.remove(first);
+                }
+            }
+
+            // Return true if the current object is empty
+            return obj.is_empty();
+        }
+    }
+
+    false
 }

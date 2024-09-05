@@ -50,47 +50,41 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
     let destination_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
     match transformation {
-        Transformations::LowerCase => {
-            Transformation::OneToOne {
-                type_: OneToOne::toLowerCase,
-                source: DataLocation {
-                    format: input_format.clone(),
-                    path: source_pointer.to_string(),
-                },
-                destination: DataLocation {
-                    format: output_format.clone(),
-                    path: destination_path.to_string(),
-                },
-            }
-        }
-        Transformations::UpperCase => {
-            Transformation::OneToOne {
-                type_: OneToOne::toUpperCase,
-                source: DataLocation {
-                    format: input_format.clone(),
-                    path: source_pointer.to_string(),
-                },
-                destination: DataLocation {
-                    format: output_format.clone(),
-                    path: destination_path.to_string(),
-                },
-            }
-        }
+        Transformations::LowerCase => Transformation::OneToOne {
+            type_: OneToOne::toLowerCase,
+            source: DataLocation {
+                format: input_format.clone(),
+                path: source_pointer.to_string(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
+        Transformations::UpperCase => Transformation::OneToOne {
+            type_: OneToOne::toUpperCase,
+            source: DataLocation {
+                format: input_format.clone(),
+                path: source_pointer.to_string(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
-        Transformations::DirectCopy | _ => {
-            Transformation::OneToOne {
-                type_: OneToOne::copy,
-                source: DataLocation {
-                    format: input_format.clone(),
-                    path: source_pointer.to_string(),
-                },
-                destination: DataLocation {
-                    format: output_format.clone(),
-                    path: destination_path.to_string(),
-                },
-            }
-        }
+        Transformations::DirectCopy | _ => Transformation::OneToOne {
+            type_: OneToOne::copy,
+            source: DataLocation {
+                format: input_format.clone(),
+                path: source_pointer.to_string(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
     }
 }
 
