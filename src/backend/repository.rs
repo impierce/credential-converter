@@ -187,18 +187,12 @@ pub fn update_repository(state: &mut AppState) {
 
 fn remove_key_recursive(current_json: &mut Value, keys: &[String]) -> bool {
     if let Some((first, rest)) = keys.split_first() {
-        trace_dbg!(first);
-        trace_dbg!(rest);
         if let Some(obj) = current_json.as_object_mut() {
             if rest.is_empty() {
-                trace_dbg!(1);
-                // If it's the last key, remove the key from the object
                 obj.remove(first);
             } else if let Some(child) = obj.get_mut(first) {
-                trace_dbg!(2);
                 // Recursively traverse deeper layers
                 if remove_key_recursive(child, rest) {
-                    trace_dbg!(3);
                     // If the child is now empty, remove it
                     obj.remove(first);
                 }
