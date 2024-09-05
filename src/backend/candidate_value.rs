@@ -95,9 +95,9 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
 }
 
 pub fn set_output_pointer(state: &mut AppState) {
-    let mut output_pointer = state.missing_field_pointer.trim_start_matches("required/").to_string();
+    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required").to_string();
     if state.page == Pages::OptionalDataP3 {
-        output_pointer = state.optional_field_pointer.trim_start_matches("optional/").to_string();
+        output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
     }
     output_pointer = get_clean_pointer(output_pointer.to_string());
     state.output_pointer = output_pointer.clone();
@@ -121,5 +121,6 @@ pub fn get_clean_pointer(mut pointer: String) -> String {
         let re_not = Regex::new(r"not/.*/").unwrap();
         pointer = re_not.replace_all(&pointer, "").to_string();
     }
+
     pointer
 }

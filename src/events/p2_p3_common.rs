@@ -6,9 +6,7 @@ use std::io::Write;
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::{
     backend::{
-        candidate_value::set_candidate_output_value,
-        preload_p2::{update_display_section, update_path},
-        repository::update_repository,
+        candidate_value::{set_candidate_output_value, set_output_pointer}, jsonpointer::{JsonPath, JsonPointer}, preload_p2::{update_display_section, update_path}, repository::update_repository, transformations::Transformation
     },
     state::{AppState, MappingOptions, P2P3Tabs, Pages, Transformations},
     trace_dbg,
@@ -493,13 +491,12 @@ pub fn clear_button(state: &mut AppState) {
                 .retain(|(first, _)| first != &state.optional_field_pointer);
         }
 
+        clear_performed_transformation(state);
         clear_mapping_options(state);
     }
 }
 
 pub fn confirm_mapping(state: &mut AppState) {
-    trace_dbg!("1111");
-
     set_candidate_output_value(state, true);
     update_repository(state);
     update_resolved_subset(state);
@@ -587,4 +584,22 @@ fn move_active_fields(state: &mut AppState) {
     }
 
     state.p2_p3_tabs = P2P3Tabs::InputFields;
+}
+
+fn clear_performed_transformation(state: &mut AppState) {
+    set_output_pointer(state);
+    let output_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
+
+    state.performed_mappings.retain(|transformation| 
+        match transformation {
+            Transformation::OneToOne {
+                destination,
+                ..
+            } => {
+                destination.path != output_path.to_string()
+            }
+            // other Transformations are not implemented yet
+            _ => false,
+        }
+    );
 }

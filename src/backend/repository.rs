@@ -62,10 +62,9 @@ impl Repository {
                 if source_path == "$.@context" {
                     source_path = r#"$["@context"]"#.to_string();
                 };
-                trace_dbg!(&source_path);
-                // trace_dbg!(source_credential);
+
                 let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
-                // trace_dbg!(&finder);
+
                 let source_value = match finder.find().as_array() {
                     // todo: still need to investigate other find() return types
                     Some(array) => array.first().unwrap().clone(),
@@ -74,20 +73,15 @@ impl Repository {
                     }
                 };
 
-                // trace_dbg!(&destination_path);
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
-                // trace_dbg!(&pointer);
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-                // trace_dbg!(&leaf_node);
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    // trace_dbg!(&value);
                     *value = transformation.apply(source_value);
-                    // trace_dbg!(&value);
                 }
-                // trace_dbg!(&leaf_node);
+
                 merge(destination_credential, leaf_node);
             }
             Transformation::ManyToOne {
