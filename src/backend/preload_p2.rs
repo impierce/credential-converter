@@ -247,7 +247,6 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
             subset_path = truncate_until_char(subset_path, '/');
         }
 
-        trace_dbg!(&state.resolved_subsets);
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
 
