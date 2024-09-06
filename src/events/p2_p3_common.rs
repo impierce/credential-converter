@@ -1,8 +1,8 @@
 use crossterm::event::MouseEvent;
 use serde_json::Value;
+use std::io::Write;
 use std::path::Path;
 use std::{char, fs::File};
-use std::io::Write;
 
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::backend::preload_p2::get_json;
@@ -419,14 +419,9 @@ pub fn create_output_files(state: &mut AppState) {
             transformations.extend(state.performed_mappings.iter().cloned());
 
             let mut file = File::create(&state.custom_mapping_path).unwrap();
-            file.write_all(
-                serde_json::to_string_pretty(&transformations)
-                    .unwrap()
-                    .as_bytes(),
-            )
-            .unwrap();
-        }
-        else {
+            file.write_all(serde_json::to_string_pretty(&transformations).unwrap().as_bytes())
+                .unwrap();
+        } else {
             let mut file = File::create(&state.custom_mapping_path).unwrap();
             file.write_all(
                 serde_json::to_string_pretty(&state.performed_mappings)
