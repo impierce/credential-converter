@@ -1,6 +1,6 @@
 use crate::{
     popups::{render_popup_exit_warning, render_popup_overwrite_warning},
-    state::{translate, AppState, P1Prompts},
+    state::{translate, AppState, P1Prompts}
 };
 use ratatui::{
     buffer::Buffer,
@@ -83,7 +83,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
 
     // Checking paths for validity/overwriting.
     let path = Path::new(&state.input_path);
-    if !path.is_file() {
+    if !path.is_file() || !state.input_path.ends_with(".json") {
         Paragraph::new(state.input_path.as_str())
             .block(input_prompt)
             .fg(Color::Red)
@@ -96,7 +96,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     }
 
     let path = Path::new(&state.output_path);
-    if state.output_path.is_empty() {
+    if state.output_path.is_empty() || !state.output_path.ends_with(".json") {
         Paragraph::new(state.output_path.as_str())
             .block(output_prompt)
             .fg(Color::Red)
@@ -114,7 +114,7 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
     }
 
     let path = Path::new(&state.mapping_path);
-    if !path.is_file() && state.mapping_path != "DESM" {
+    if (!path.is_file() || !state.mapping_path.ends_with(".json")) && state.mapping_path != "DESM" {
         // !path.exists() ||
         Paragraph::new(state.mapping_path.as_str())
             .block(mapping_file_prompt)
@@ -150,16 +150,15 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         .render(tabs_center, buf);
 
     // Custom mapping prompt
-    let path = Path::new(&state.custom_mapping_path);
     if state.custom_mapping_path.is_empty() {
         Paragraph::new(state.custom_mapping_path.as_str())
             .block(custom_mapping_prompt)
             .fg(Color::White)
             .render(custom_mapping, buf);
-    } else if path.is_file() {
+    } else if !state.custom_mapping_path.ends_with(".json") {
         Paragraph::new(state.custom_mapping_path.as_str())
             .block(custom_mapping_prompt)
-            .fg(Color::Rgb(240, 160, 100))
+            .fg(Color::Red)
             .render(custom_mapping, buf);
     } else {
         Paragraph::new(state.custom_mapping_path.as_str())
