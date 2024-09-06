@@ -102,6 +102,7 @@ pub fn load_files_apply_transformations(state: &mut AppState) {
     if state.mapping_path == "DESM" {
         apply_desm_mapping(state);
     } else {
+        // todo: remove unwrap
         let rdr = std::fs::File::open(&state.mapping_path).unwrap();
         let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
 
