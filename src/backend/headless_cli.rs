@@ -71,7 +71,7 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
         }
     }
     if let Some(output_f) = &cli_args.output_file {
-        if output_f.ends_with(".json") {
+        if !output_f.ends_with(".json") {
             panic!("The output file path doesn't end with \".json\": {}", output_f);
         }
     }

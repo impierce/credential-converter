@@ -56,7 +56,6 @@ impl Repository {
                     return;
                 }
 
-                trace_dbg!(&source_format);
                 let source_credential = self.get(&source_format).unwrap();
 
                 // custom code to handle the special character '@' in the source_path
@@ -90,6 +89,12 @@ impl Repository {
                 sources,
                 destination,
             } => {
+                if sources.iter().any(|source| source.format != mapping.input_format())
+                    || destination.format != mapping.output_format()
+                {
+                    return;
+                }
+
                 let source_values = sources
                     .iter()
                     .map(|source| {
