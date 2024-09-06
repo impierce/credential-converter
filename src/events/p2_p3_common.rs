@@ -1,9 +1,11 @@
 use crossterm::event::MouseEvent;
 use serde_json::Value;
-use std::char;
 use std::io::Write;
+use std::path::Path;
+use std::{char, fs::File};
 
 use super::{is_mouse_over_area, p2_handler::clear_progress};
+use crate::backend::preload_p2::get_json;
 use crate::{
     backend::{
         candidate_value::{set_candidate_output_value, set_output_pointer},
@@ -399,9 +401,9 @@ pub fn next_page(state: &mut AppState) {
     state.page.next();
 }
 
+/// It is recommended not to alter the custom mapping files manually, since this will likely result in an error.
 pub fn create_output_files(state: &mut AppState) {
     let output_format = state.mapping.output_format();
-    trace_dbg!(&output_format); // testing
     let json_value = state.repository.get_mut(&output_format).unwrap();
 
     // Create Output File
@@ -410,15 +412,24 @@ pub fn create_output_files(state: &mut AppState) {
     file.write_all(serde_json::to_string_pretty(&json_value).unwrap().as_bytes())
         .unwrap();
 
-    // Create Mapping File
+    // Create Mapping File if empty, otherwise append to it.
     if !state.custom_mapping_path.is_empty() {
-        let mut file = std::fs::File::create(&state.custom_mapping_path).unwrap();
-        file.write_all(
-            serde_json::to_string_pretty(&state.performed_mappings)
-                .unwrap()
-                .as_bytes(),
-        )
-        .unwrap();
+        if Path::new(&state.custom_mapping_path).is_file() {
+            let mut transformations: Vec<Transformation> = get_json(&state.custom_mapping_path).unwrap();
+            transformations.extend(state.performed_mappings.iter().cloned());
+
+            let mut file = File::create(&state.custom_mapping_path).unwrap();
+            file.write_all(serde_json::to_string_pretty(&transformations).unwrap().as_bytes())
+                .unwrap();
+        } else {
+            let mut file = File::create(&state.custom_mapping_path).unwrap();
+            file.write_all(
+                serde_json::to_string_pretty(&state.performed_mappings)
+                    .unwrap()
+                    .as_bytes(),
+            )
+            .unwrap();
+        }
     }
 }
 
