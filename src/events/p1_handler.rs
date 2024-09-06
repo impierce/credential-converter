@@ -100,18 +100,18 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                 // init paths for if statements
                 let input_path = Path::new(&state.input_path);
                 let mapping_path = Path::new(&state.mapping_path);
-                let output_path = Path::new(&state.output_path);
-                let custom_mapping_path = Path::new(&state.custom_mapping_path);
 
-                // Check if user is at the end of the prompts and if one of the prompts will overwrite a file and show overwrite warning.
-                if (output_path.is_file() || custom_mapping_path.is_file()) && !state.overwrite_warning {
-                    state.overwrite_warning = true;
-                }
                 // Check if all prompts are valid and go to next page.
-                else if input_path.is_file() && mapping_path.is_file() && !state.output_path.is_empty() {
-                    state.page.next();
+                if input_path.is_file()
+                    && state.input_path.ends_with(".json")
+                    && (mapping_path.is_file() && state.mapping_path.ends_with(".json") || state.mapping_path == "DESM")
+                    && !state.output_path.is_empty()
+                    && state.output_path.ends_with(".json")
+                    && (state.custom_mapping_path.is_empty() || state.custom_mapping_path.ends_with(".json"))
+                    && !state.overwrite_warning
+                {
                     preload_p2(state);
-                    state.overwrite_warning = false;
+                    state.page.next();
                 }
             }
         }
@@ -130,24 +130,23 @@ fn handle_enter_p1(state: &mut AppState) -> bool {
     let input_path = Path::new(&state.input_path);
     let output_path = Path::new(&state.output_path);
     let mapping_path = Path::new(&state.mapping_path);
-    let custom_mapping_path = Path::new(&state.custom_mapping_path);
 
     // Check if user is at the end of the prompts and if one of the prompts will overwrite a file and show overwrite warning.
-    if state.p1_prompts == P1Prompts::CustomMapping
-        && (output_path.is_file() || custom_mapping_path.is_file())
-        && !state.overwrite_warning
-    {
+    if state.p1_prompts == P1Prompts::CustomMapping && output_path.is_file() && !state.overwrite_warning {
         state.overwrite_warning = true;
     }
     // Check if user is at the end (overwrite warning will only pop up at the end) and if the other prompts are valid and go to next page.
-    else if (state.p1_prompts == P1Prompts::CustomMapping || state.overwrite_warning)
+    else if state.p1_prompts == P1Prompts::CustomMapping
         && input_path.is_file()
-        && (mapping_path.is_file() || state.mapping_path == "DESM")
+        && state.input_path.ends_with(".json")
+        && (mapping_path.is_file() && state.mapping_path.ends_with(".json") || state.mapping_path == "DESM")
         && !state.output_path.is_empty()
+        && state.output_path.ends_with(".json")
+        && (state.custom_mapping_path.is_empty() || state.custom_mapping_path.ends_with(".json"))
+        && !state.overwrite_warning
     {
         preload_p2(state);
         state.page.next();
-        state.overwrite_warning = false;
     }
     // Close overwrite warning if user is not at the end of the prompts or some prompts are valid and stay on page.
     else if state.overwrite_warning {
