@@ -110,9 +110,11 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         );
 
     let mut output_pointer = state.output_pointer.clone();
-    if output_pointer.is_empty() {
-        output_pointer = "/".to_string();
+    if state.output_display_subset[state.selected_output_field].0 != "Your input >>" {
+        output_pointer.push_str("/");
+        output_pointer.push_str(&state.output_display_subset[state.selected_output_field].0);
     }
+
     Paragraph::new(output_pointer)
     .wrap(Wrap { trim: false })
     .remove_modifier(Modifier::BOLD)
