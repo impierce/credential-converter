@@ -103,7 +103,8 @@ Esc will prompt you to exit the program, losing all progress.
 ### Page 2, complete mandatory output fields
 Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.
 
-Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values.
+Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values. `Your input >>` fields are always accompanied by fields giving information about the input expected. 
+Clicking on `View` will open the mapping popup. On the top left you will see the `Input Path` and below the `Input Value`. On the top right you will see the `Output Path` and below either the `Result Value` or the `Output Field Information`. The former displays the candidate value which is ready to be mapped by clicking `Confirm`. The latter displays the informational/non_input field content.
 
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
 `Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
