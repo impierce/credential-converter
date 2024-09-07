@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informácie o výstupnom poli",
     "intro": "\nTento nástroj je určený na konverziu údajov medzi formátmi OpenBadges a ELM.\n\nPri vstupe prijíma json súbor a výstupom je nový, mapovaný json súbor. Pre DESM mapovania jednoducho zadajte 'DESM' do poľa pre mapovanie súborov, inak uveďte cestu. Nemapované polia môžu byť mapované manuálne. Manuálne mapovania môžu byť uložené do vlastného súboru mapovania pre budúce použitie.\n\nPre absolútne cesty začnite s '/', pre relatívne cesty je aktuálny adresár: %{pwd}",
     "input_path": "Vstupná cesta",
     "output_path": "Výstupná cesta",

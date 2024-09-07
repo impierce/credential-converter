@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Išvesties lauko informacija",
     "intro": "\nŠis įrankis skirtas kredencialų konvertavimui tarp OpenBadges ir ELM formatų.\n\nJis priima JSON failą kaip įvestį ir išveda naują, suvestą JSON failą. DESM suvedimams tiesiog įveskite 'DESM' suvedimo failo lauke, kitu atveju nurodykite kelią. Nesuvesti laukai gali būti suvesti rankiniu būdu. Rankiniai suvedimai gali būti išsaugoti į pritaikytą suvedimo failą ateities naudojimui.\n\nAbsoliutiniams keliams pradėkite su '/', o esamas katalogas yra: %{pwd}",
     "input_path": "Įvesties kelias",
     "output_path": "Išvesties kelias",

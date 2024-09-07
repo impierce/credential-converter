@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informații Câmp de Ieșire",
     "intro": "\nAcest instrument este creat pentru conversia certificatelor între formatele OpenBadges și ELM.\n\nPreia un fișier json ca intrare și furnizează noul fișier json mapat ca ieșire. Pentru mapările DESM, pur și simplu tastați 'DESM' în promptul fișierului de mapare, altfel specificați o cale. Câmpurile ne-mapați pot fi mapate manual. Mapările manuale pot fi salvate într-un fișier de mapare personalizat pentru utilizare ulterioară.\n\nPentru căile absolute începeți cu '/', pentru căile relative directorul curent este: %{pwd}",
     "input_path": "Cale de Intrare",
     "output_path": "Cale de Ieșire",

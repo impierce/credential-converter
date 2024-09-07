@@ -103,15 +103,17 @@ Esc will prompt you to exit the program, losing all progress.
 ### Page 2, complete mandatory output fields
 Page 2 is focused on the output file. Every standard has a minimum set of mandatory fields which need to be completed in order to render a valid Json file. These mandatory fields are listed on the right. The fields from the input file are listed on the left. Fields on both sides which have been mapped already will appear green. On the bottom you will find the mapping bar, containing all mapping options.
 
-Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values.
+Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values. `Your input >>` fields are always accompanied by fields giving information about the input expected. 
+
+The `View` button will open the mapping popup, allowing you to view the selected fields in full length in a popup, as the main page will truncate long texts. The tabs in the popup are scrollable. On the top left you will see the `Input Path` and below the `Input Value`. On the top right you will see the `Output Path` and below either the `Result Value` or the `Output Field Information`. The former displays the candidate value which is ready to be mapped by clicking `Confirm`. The latter displays the informational/non_input field content.Transformations will also be displayed immediately. Navigation on the main page is still possible when the popup is open.
+
+
+The `Clear` button will close either the popup first if this is open. Then, it will clear all selected mapping options. Finally, if there is no popup nor mapping options selected, it will clear the result-value from the selected output field.
+The `Complete` button in the top right will move you to the next page. If not all fields on the right are green, this will render a popup warning informing you the output file will be invalid.
 
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
 `Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
 *Currently `Slice`, `Regex`, `ManytoOne` and `OnetoMany` are not functional yet*.  
-
-The View button allows you to view the selected fields in full length in a popup, as the main page will truncate long texts. The tabs in the popup are scrollable. Transformations will also be displayed immediately. Navigation on the main page is still possible when the popup is open
-The Clear button will close either the popup first if this is open. Then, it will clear all selected mapping options. Finally, if there is no popup nor mapping options selected, it will clear the result-value from the selected output field.
-The complete button in the top right will move you to the next page. If not all fields on the right are green, this will render a popup warning informing you the output file will be invalid.
 
 
 ![credential-converter_P2.png](https://github.com/impierce/credential-converter/raw/main/.github/credential-converter_P2.png)

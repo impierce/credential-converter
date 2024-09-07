@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Úttaksvöllur upplýsingar",
     "intro": "\nÞessi tól er hannað til að breyta auðkenni milli OpenBadges og ELM sniða.\n\nÞað tekur við json skrá sem inntak og skilar nýrri, kortlagðri json skrá. Fyrir DESM kortlagningar skrifaðu einfaldlega 'DESM' í mælingaskráar spyrninni, annars tilgreindu slóð. Ókortlagðir reitir geta verið kortlagðir handvirkt. Handvirkt kortlagningar geta verið vistaðar í sérsniðna kortlagningarskrá fyrir framtíðar notkun.\n\nFyrir alvöru slóðir byrjaðu með '/', fyrir hlutfallslegar slóðir er núverandi skráarsafn: %{pwd}",
     "input_path": "Innslegin slóð",
     "output_path": "Útslegin slóð",

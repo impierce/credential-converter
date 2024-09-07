@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informations sur le champ de sortie",
     "intro": "\nCet outil est conçu pour convertir des informations d'identification entre les formats OpenBadges et ELM.\n\nIl prend un fichier json en entrée et génère un nouveau fichier json mappé. Pour les mappages DESM, tapez simplement 'DESM' dans le champ de fichier de mappage, sinon spécifiez un chemin. Les champs non mappés peuvent être mappés manuellement. Les mappages manuels peuvent être enregistrés dans un fichier de mappage personnalisé pour une utilisation future.\n\nPour les chemins absolus, commencez par '/', pour les chemins relatifs, le répertoire actuel est : %{pwd}",
     "input_path": "Chemin d'entrée",
     "output_path": "Chemin de sortie",

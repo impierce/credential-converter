@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Väljundvälja info",
     "intro": "\nSee tööriist on loodud autentimiste teisendamiseks OpenBadges ja ELM vahel.\n\nSee võtab sisendina json-faili ja väljastab uue, kaardistatud json-faili. DESM kaardistuste jaoks tippige lihtsalt 'DESM' kaardistusfaili küsimiseks, muidu määrake tee. Kaardistamata väljad saab kaardistada käsitsi. Käsitsi kaardistusi saab tulevaseks kasutamiseks salvestada kohandatud kaardistusfaili.\n\nAbsoluutsete teede jaoks alustage '/', suhteliste teede korral on praegune kataloog: %{pwd}",
     "input_path": "Sisendtee",
     "output_path": "Väljundtee",

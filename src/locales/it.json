@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informazioni sul campo di output",
     "intro": "\nQuesto strumento è stato creato per convertire le credenziali tra i formati OpenBadges e ELM.\n\nPrende un file json come input e produce il nuovo file json mappato. Per le mappature DESM, digitare semplicemente 'DESM' nel prompt del file di mappatura, altrimenti specificare un percorso. I campi non mappati possono essere mappati manualmente. Le mappature manuali possono essere salvate in un file di mappatura personalizzato per un uso futuro.\n\nPer i percorsi assoluti inizia con '/', per i percorsi relativi la directory corrente è: %{pwd}",
     "input_path": "Percorso di input",
     "output_path": "Percorso di output",

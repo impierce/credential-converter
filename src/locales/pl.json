@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informacje o polu wyjściowym",
     "intro": "\nTen narzędzie służy do konwertowania poświadczeń między formatami OpenBadges i ELM.\n\nPrzyjmuje plik json jako wejście i generuje nowy, zmapowany plik json. Dla mapowań DESM po prostu wpisz 'DESM' w polu mapowania, w przeciwnym razie określ ścieżkę. Niesparowane pola można mapować ręcznie. Mapowania ręczne można zapisać w niestandardowym pliku mapowania do późniejszego użycia.\n\nDla ścieżek bezwzględnych zacznij od '/', dla ścieżek względnych bieżący katalog to: %{pwd}",
     "input_path": "Ścieżka wejściowa",
     "output_path": "Ścieżka wyjściowa",

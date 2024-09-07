@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informationen zum Ausgabefeld",
     "intro": "\nDieses Tool dient zur Konvertierung von Anmeldeinformationen zwischen den Formaten OpenBadges und ELM.\n\nEs nimmt eine JSON-Datei als Eingabe und gibt die neue, zugeordnete JSON-Datei aus. Für DESM-Zuordnungen geben Sie einfach 'DESM' in die Zuordnungsdatei ein, andernfalls geben Sie einen Pfad an. Nicht zugeordnete Felder können manuell zugeordnet werden. Manuelle Zuordnungen können in einer benutzerdefinierten Zuordnungsdatei für zukünftige Verwendung gespeichert werden.\n\nFür absolute Pfade beginnen Sie mit '/', für relative Pfade ist das aktuelle Verzeichnis: %{pwd}",
     "input_path": "Eingabepfad",
     "output_path": "Ausgabepfad",

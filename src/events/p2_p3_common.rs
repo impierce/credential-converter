@@ -8,9 +8,9 @@ use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::backend::preload_p2::get_json;
 use crate::{
     backend::{
-        candidate_value::{set_candidate_output_value, set_output_pointer},
+        candidate_value::set_candidate_output_value,
         jsonpointer::{JsonPath, JsonPointer},
-        preload_p2::{update_display_section, update_path},
+        preload_p2::{update_display_section, update_pointer},
         repository::update_repository,
         transformations::Transformation,
     },
@@ -30,7 +30,7 @@ pub fn handle_esc(state: &mut AppState) {
     } else if state.return_to_p1_warning {
         state.return_to_p1_warning = false;
     } else if state.p2_p3_tabs == P2P3Tabs::OutputFields {
-        update_path(state, false);
+        update_pointer(state, false);
         update_display_section(state, false);
     } else {
         state.exit_warning = !state.exit_warning;
@@ -264,9 +264,11 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                         confirm_mapping(state);
                     }
                 } else {
-                    update_path(state, true);
+                    update_pointer(state, true);
                     update_display_section(state, false);
-                    state.p2_p3_tabs.next();
+                    if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: tmp fix until input fields also implemented similar to output fields.
+                        state.p2_p3_tabs.next();
+                    } 
                 }
             }
         }
@@ -464,21 +466,21 @@ pub fn clear_button(state: &mut AppState) {
         if state.page == Pages::RequiredDataP2 {
             if state
                 .resolved_subsets
-                .get(&state.missing_field_pointer)
+                .get(&state.required_field_pointer)
                 .unwrap()
                 .get("Your input >>")
                 .is_some()
             {
                 *state
                     .resolved_subsets
-                    .get_mut(&state.missing_field_pointer)
+                    .get_mut(&state.required_field_pointer)
                     .unwrap()
                     .get_mut("Your input >>")
                     .unwrap() = Value::Null;
             }
             state
                 .completed_required_fields
-                .retain(|(first, _)| first != &state.missing_field_pointer);
+                .retain(|(first, _)| first != &state.required_field_pointer);
         } else {
             if state
                 .resolved_subsets
@@ -499,8 +501,6 @@ pub fn clear_button(state: &mut AppState) {
                 .retain(|(first, _)| first != &state.optional_field_pointer);
         }
 
-        // todo: check if set_output_pointer can simply only be called whener update_path is called
-        set_output_pointer(state);
         state
             .repository
             .clear_mapping(state.output_pointer.clone(), state.mapping);
@@ -527,7 +527,7 @@ pub fn confirm_mapping(state: &mut AppState) {
 
 fn update_resolved_subset(state: &mut AppState) {
     if state.page == Pages::RequiredDataP2 {
-        let output_map = state.resolved_subsets.get_mut(&state.missing_field_pointer).unwrap();
+        let output_map = state.resolved_subsets.get_mut(&state.required_field_pointer).unwrap();
         *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone().unwrap());
     } else if state.page == Pages::OptionalDataP3 {
         let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
@@ -540,18 +540,18 @@ fn save_completed_fields(state: &mut AppState) {
         if !state
             .completed_required_fields
             .iter()
-            .any(|(first, _)| first == &state.missing_field_pointer)
+            .any(|(first, _)| first == &state.required_field_pointer)
         {
             state.completed_required_fields.push((
-                state.missing_field_pointer.clone(),
+                state.required_field_pointer.clone(),
                 state.input_fields[state.selected_input_field].0.clone(),
             )); // todo: also here we still need to refactor input fields according to the outputfields
         } else {
             // Find the old mapping tuple and replace
             for tuple in &mut state.completed_required_fields {
-                if tuple.0 == state.missing_field_pointer {
+                if tuple.0 == state.required_field_pointer {
                     *tuple = (
-                        state.missing_field_pointer.clone(),
+                        state.required_field_pointer.clone(),
                         state.input_fields[state.selected_input_field].0.clone(),
                     );
                     break;

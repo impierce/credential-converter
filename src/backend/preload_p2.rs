@@ -8,7 +8,7 @@ use crate::{
     trace_dbg,
 };
 
-use super::desm_mapping::apply_desm_mapping;
+use super::{candidate_value::set_output_pointer, desm_mapping::apply_desm_mapping};
 
 pub fn preload_p2(state: &mut AppState) {
     get_missing_data_fields(state);
@@ -156,13 +156,13 @@ pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String,
 }
 
 #[allow(clippy::collapsible_else_if)]
-pub fn update_path(state: &mut AppState, forward_back: bool) {
+pub fn update_pointer(state: &mut AppState, forward_back: bool) {
     if forward_back {
         if state.page == Pages::RequiredDataP2
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
             && state.output_display_subset[state.selected_output_field].1 == "<Object>"
         {
-            state.missing_field_pointer = state.missing_field_pointer.to_owned()
+            state.required_field_pointer = state.required_field_pointer.to_owned()
                 + "/"
                 + state.output_display_subset[state.selected_output_field].0.as_str();
             state.selected_output_field = 1;
@@ -183,16 +183,16 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
     } else {
         if state.page == Pages::RequiredDataP2
             && state.p2_p3_tabs == P2P3Tabs::OutputFields
-            && state.missing_field_pointer != "/required"
+            && state.required_field_pointer != "/required"
         {
-            state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
-            if state.missing_field_pointer.ends_with("allOf")
-                || state.missing_field_pointer.ends_with("anyOf")
-                || state.missing_field_pointer.ends_with("oneOf")
-                || state.missing_field_pointer.ends_with("not")
+            state.required_field_pointer = truncate_until_char(&state.required_field_pointer, '/').to_string();
+            if state.required_field_pointer.ends_with("allOf")
+                || state.required_field_pointer.ends_with("anyOf")
+                || state.required_field_pointer.ends_with("oneOf")
+                || state.required_field_pointer.ends_with("not")
             {
                 // todo could be done more elegantly
-                state.missing_field_pointer = truncate_until_char(&state.missing_field_pointer, '/').to_string();
+                state.required_field_pointer = truncate_until_char(&state.required_field_pointer, '/').to_string();
             }
             state.selected_output_field = 1;
         } else if state.page == Pages::OptionalDataP3
@@ -214,6 +214,8 @@ pub fn update_path(state: &mut AppState, forward_back: bool) {
              // state.selected_input_field = 1;
         }
     }
+
+    set_output_pointer(state);
 }
 
 pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
@@ -225,18 +227,19 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         get_required_fields(&mut state.target_schema, &mut tmp_map);
         resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
         path = "/required";
-        state.missing_field_pointer = path.to_string();
+        state.required_field_pointer = path.to_string();
     } else if preload_p3 {
         get_optional_fields(&mut state.target_schema, &mut tmp_map);
         resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
         path = "/optional";
         state.optional_field_pointer = path.to_string();
+        state.output_pointer = "".to_string();
     } else if state.page == Pages::RequiredDataP2 {
-        if state.resolved_subsets.contains_key(&state.missing_field_pointer) {
+        if state.resolved_subsets.contains_key(&state.required_field_pointer) {
             return;
         }
 
-        path = &state.missing_field_pointer;
+        path = &state.required_field_pointer;
         let mut subset_path = truncate_until_char(path, '/');
         if subset_path.ends_with("allOf")
             || subset_path.ends_with("anyOf")

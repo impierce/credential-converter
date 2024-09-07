@@ -1,4 +1,4 @@
-use crate::state::{translate, AppState};
+use crate::state::{translate, AppState, Pages};
 
 use ratatui::{
     buffer::Buffer,
@@ -6,6 +6,7 @@ use ratatui::{
     prelude::*,
     widgets::*,
 };
+use serde_json::to_string_pretty;
 
 pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppState) {
     area = area.inner(&Margin {
@@ -25,6 +26,19 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
     state.popup_output_path = right_top;
     state.popup_value_area = left_bottom;
     state.popup_output_result = right_bottom;
+
+    let mut output_value_title = format!("  {}  ", translate("output_result"));
+    let mut output_value_txt = state.candidate_output_value.as_ref().unwrap().clone();
+    if state.output_display_subset[1].0 != "Your input >>" || state.selected_output_field != 1 {
+        output_value_title = format!("  {}  ", translate("output_field_info"));
+        let selected_key = state.output_display_subset[state.selected_output_field].0.clone();
+        if state.page == Pages::RequiredDataP2 {
+            output_value_txt = to_string_pretty(state.resolved_subsets.get(&state.required_field_pointer).unwrap().get(&selected_key).unwrap()).unwrap();
+        }
+        else if state.page == Pages::OptionalDataP3 {
+            output_value_txt = to_string_pretty(state.resolved_subsets.get(&state.optional_field_pointer).unwrap().get(&selected_key).unwrap()).unwrap();
+        }
+    }
 
     Block::new()
         .title(format!("  {}  ", translate("input_path")))
@@ -52,7 +66,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         .border_type(BorderType::Thick)
         .render(left_bottom, buf);
     Block::new()
-        .title(format!("  {}  ", translate("output_result")))
+        .title(output_value_title)
         .add_modifier(Modifier::BOLD)
         .title_alignment(Alignment::Center)
         .render(right_bottom, buf);
@@ -64,11 +78,11 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
         state.popup_amount_lines_output_path =
-            (state.missing_field_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0)
+            (state.output_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0)
                 .len()
-                / (right.width as usize - 2); // todo: need to refactor
+                / (right.width as usize - 2);
         state.popup_amount_lines_result =
-            state.candidate_output_value.as_ref().unwrap().len() / (right.width as usize - 2);
+            length_with_newline(&output_value_txt, right.width as usize - 2) / (right.width as usize - 2);
     }
 
     Paragraph::new(state.input_fields[state.selected_input_field].0.as_str())
@@ -95,9 +109,13 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
             buf,
         );
 
-    Paragraph::new(
-        state.missing_field_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0,
-    )
+    let mut output_pointer = state.output_pointer.clone();
+    if state.output_display_subset[state.selected_output_field].0 != "Your input >>" {
+        output_pointer.push('/');
+        output_pointer.push_str(&state.output_display_subset[state.selected_output_field].0);
+    }
+
+    Paragraph::new(output_pointer)
     .wrap(Wrap { trim: false })
     .remove_modifier(Modifier::BOLD)
     .scroll((state.popup_offset_output_path, 0))
@@ -109,7 +127,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         buf,
     );
 
-    Paragraph::new(state.candidate_output_value.as_ref().unwrap().as_str())
+    Paragraph::new(output_value_txt)
         .wrap(Wrap { trim: false })
         .remove_modifier(Modifier::BOLD)
         .scroll((state.popup_offset_result, 0))
@@ -121,13 +139,14 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
             buf,
         );
 
+    let confirm_txt = format!(" {} ", translate("confirm"));
     let [_top, confirm_area] =
         Layout::vertical([Constraint::Percentage(100), Constraint::Length(1)]).areas(right_bottom);
     let [_left, confirm_area] =
-        Layout::horizontal([Constraint::Percentage(100), Constraint::Length(9)]).areas(confirm_area);
+        Layout::horizontal([Constraint::Percentage(100), Constraint::Length(confirm_txt.len() as u16)]).areas(confirm_area);
 
     state.confirm_button = confirm_area;
-    Paragraph::new(format!(" {} ", translate("confirm")))
+    Paragraph::new(confirm_txt)
         .style(Style::new().fg(Color::Black).bg(Color::Green))
         .render(confirm_area, buf);
 }
@@ -271,4 +290,19 @@ pub fn render_popup_lose_progress_warning(mut area: Rect, buf: &mut Buffer) {
             }),
             buf,
         );
+}
+
+
+/////// HELPERS ///////
+
+fn length_with_newline(s: &str, width: usize) -> usize {
+    let mut i = 0;
+    s.chars().map(|c| {
+        i += 1;
+        if c == '\n' {
+            width - (i % width) + 2
+        } else {
+            1
+        }
+    }).sum()
 }

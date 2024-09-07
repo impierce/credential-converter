@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Information om utmatningsfält",
     "intro": "\nDet här verktyget är gjort för att konvertera referenser mellan OpenBadges och ELM-formaten.\n\nDet tar en json-fil som inmatning och ger ut en ny, kartlagd json-fil. För DESM-kartläggningar skriv bara 'DESM' i kartläggningsfilens prompt, annars ange en sökväg. Okartlagda fält kan kartläggas manuellt. Manuella kartläggningar kan sparas till en anpassad kartläggningsfil för framtida användning.\n\nFör absoluta sökvägar börja med '/', för relativa sökvägar är den aktuella katalogen: %{pwd}",
     "input_path": "Inmatningsväg",
     "output_path": "Utmatningsväg",
