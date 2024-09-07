@@ -266,9 +266,10 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 } else {
                     update_pointer(state, true);
                     update_display_section(state, false);
-                    if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: tmp fix until input fields also implemented similar to output fields.
+                    if state.p2_p3_tabs == P2P3Tabs::InputFields {
+                        // todo: tmp fix until input fields also implemented similar to output fields.
                         state.p2_p3_tabs.next();
-                    } 
+                    }
                 }
             }
         }
