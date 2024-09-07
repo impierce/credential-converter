@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Tulostekentän tiedot",
     "intro": "\nTämä työkalu on tehty tunnusten muuntamiseen OpenBadges- ja ELM-muotojen välillä.\n\nSe ottaa json-tiedoston syötteenä ja tuottaa uuden, kartoitetun json-tiedoston. DESM-kartoituksia varten kirjoita 'DESM' kartoitustiedostokenttään, muuten määritä polku. Kartoittamattomat kentät voidaan kartoittaa manuaalisesti. Manuaaliset kartoitukset voidaan tallentaa mukautettuun kartoitustiedostoon tulevaa käyttöä varten.\n\nAbsoluuttisille poluille aloita '/'-merkillä, suhteellisille poluille nykyinen hakemisto on: %{pwd}",
     "input_path": "Syöttöpolku",
     "output_path": "Tulostuspolku",

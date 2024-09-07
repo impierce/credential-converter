@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informacije o izhodnem polju",
     "intro": "\nTa orodje je namenjeno pretvarjanju poverilnic med formatoma OpenBadges in ELM.\n\nKot vhod sprejme json datoteko in izvozi nov, preslikan json datoteko. Za DESM preslikave preprosto vnesite 'DESM' v polje za datoteko preslikave, sicer navedite pot. Nepreslikana polja je mogoče preslikati ročno. Ročne preslikave je mogoče shraniti v prilagojeno datoteko preslikave za prihodnjo uporabo.\n\nZa absolutne poti začnite z '/', za relativne poti je trenutni imenik: %{pwd}",
     "input_path": "Vhodna pot",
     "output_path": "Izhodna pot",

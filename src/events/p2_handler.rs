@@ -81,7 +81,7 @@ pub fn clear_progress(state: &mut AppState) {
     state.input_field_pointer.clear();
     state.resolved_subsets.clear();
     state.output_display_subset.clear();
-    state.missing_field_pointer.clear();
+    state.required_field_pointer.clear();
     state.output_display_subset.clear();
     state.optional_field_pointer.clear();
 }

@@ -174,7 +174,6 @@ pub fn merge(a: &mut Value, b: Value) {
 }
 
 pub fn update_repository(state: &mut AppState) {
-    // set_output_pointer(state) has already been set in set_candidate_output_value(state)
     let output_pointer = state.output_pointer.clone();
     let output_format = state.mapping.output_format();
 

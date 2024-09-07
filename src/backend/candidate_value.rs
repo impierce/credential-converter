@@ -19,8 +19,6 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
 
     trace_dbg!(&state.selected_transformations);
 
-    set_output_pointer(state);
-
     for transformation in selected_transformations.iter() {
         let transformation = define_transformation(state, *transformation);
 
@@ -89,7 +87,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
 }
 
 pub fn set_output_pointer(state: &mut AppState) {
-    let mut output_pointer = state.missing_field_pointer.trim_start_matches("/required").to_string();
+    let mut output_pointer = state.required_field_pointer.trim_start_matches("/required").to_string();
     if state.page == Pages::OptionalDataP3 {
         output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
     }

@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informacije o izlaznom polju",
     "intro": "\nOvaj alat je napravljen za konvertiranje vjerodajnica između formata OpenBadges i ELM.\n\nPrihvaća json datoteku kao ulaz i izlazi novu, mapiranu json datoteku. Za DESM mapiranja jednostavno upišite 'DESM' u polje za mapiranje, inače navedite putanju. Nemapirana polja mogu se mapirati ručno. Ručna mapiranja mogu se spremiti u prilagođenu datoteku mapiranja za buduću upotrebu.\n\nZa apsolutne putanje započnite s '/', za relativne putanje trenutni direktorij je: %{pwd}",
     "input_path": "Ulazni put",
     "output_path": "Izlazni put",

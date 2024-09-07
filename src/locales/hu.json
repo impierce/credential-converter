@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Kimeneti mező információ",
     "intro": "\nEz az eszköz az OpenBadges és az ELM formátumok közötti hitelesítő adatok konvertálására készült.\n\nEgy json fájlt vesz bemenetként, és új, leképezett json fájlt ad ki. DESM leképezések esetén egyszerűen írja be a 'DESM' szót a leképezési fájl felugró ablakában, egyébként adja meg az útvonalat. A nem leképezett mezőket kézzel is leképezheti. A kézi leképezéseket egy egyedi leképezési fájlba mentheti a későbbi használat érdekében.\n\nAbszolút útvonalak esetén kezdje a '/' karakterrel, a relatív útvonalak esetén a jelenlegi könyvtár: %{pwd}",
     "input_path": "Bemeneti útvonal",
     "output_path": "Kimeneti útvonal",

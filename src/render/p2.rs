@@ -97,7 +97,7 @@ pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppStat
     ////
     state.output_display_subset = state
         .resolved_subsets
-        .get(&state.missing_field_pointer)
+        .get(&state.required_field_pointer)
         .and_then(|v| v.as_object())
         .expect("error: couldn't retrieve required fields from Json Schema.")
         .iter()
@@ -122,8 +122,8 @@ pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppStat
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
             if state.completed_required_fields.iter().any(|(first, _)| {
-                *first == state.missing_field_pointer
-                    || *first == state.missing_field_pointer.as_str().to_owned() + "/" + key.as_str()
+                *first == state.required_field_pointer
+                    || *first == state.required_field_pointer.as_str().to_owned() + "/" + key.as_str()
             })
             // this checks wether to pointer (equal to the breadcrumb in the CLI) has already been entered as completed, or that any in the fields under the current pointer have been completed
             {

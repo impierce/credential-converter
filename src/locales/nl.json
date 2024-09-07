@@ -1,4 +1,5 @@
 {
+    "output_field_info": "Informatie over uitvoerveld",
     "intro": "\nDeze tool is gemaakt voor het converteren van credentials tussen de OpenBadges en de ELM formatten.\n\nHet neemt een json-bestand als invoer en geeft het nieuwe, gemapte json-bestand als uitvoer. Voor DESM-mappingen typt u eenvoudigweg 'DESM' in het mappingbestandprompt, anders specificeert u een pad. Niet-gemapte velden kunnen handmatig worden gemapt. Handmatige mappings kunnen worden opgeslagen in een aangepast mappingbestand voor toekomstig gebruik.\n\nVoor absolute paden begin met '/', voor relatieve paden is de huidige map: %{pwd}",
     "input_path": "Invoerpad",
     "output_path": "Uitvoerpad",
