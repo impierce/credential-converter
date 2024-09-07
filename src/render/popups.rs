@@ -111,7 +111,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
 
     let mut output_pointer = state.output_pointer.clone();
     if state.output_display_subset[state.selected_output_field].0 != "Your input >>" {
-        output_pointer.push_str("/");
+        output_pointer.push('/');
         output_pointer.push_str(&state.output_display_subset[state.selected_output_field].0);
     }
 
@@ -127,31 +127,17 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         buf,
     );
 
-    if state.output_display_subset[1].0 == "Your input >>" && state.selected_output_field == 1 {
-        Paragraph::new(output_value_txt)
-            .wrap(Wrap { trim: false })
-            .remove_modifier(Modifier::BOLD)
-            .scroll((state.popup_offset_result, 0))
-            .render(
-                right_bottom.inner(&Margin {
-                    horizontal: 1,
-                    vertical: 1,
-                }),
-                buf,
-            );
-    } else {
-        Paragraph::new(output_value_txt)
-            .wrap(Wrap { trim: false })
-            .remove_modifier(Modifier::BOLD)
-            .scroll((state.popup_offset_result, 0))
-            .render(
-                right_bottom.inner(&Margin {
-                    horizontal: 1,
-                    vertical: 1,
-                }),
-                buf,
-            );
-    }
+    Paragraph::new(output_value_txt)
+        .wrap(Wrap { trim: false })
+        .remove_modifier(Modifier::BOLD)
+        .scroll((state.popup_offset_result, 0))
+        .render(
+            right_bottom.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
 
     let confirm_txt = format!(" {} ", translate("confirm"));
     let [_top, confirm_area] =
