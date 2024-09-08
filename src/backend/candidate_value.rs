@@ -22,7 +22,7 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
     for transformation in selected_transformations.iter() {
         let transformation = define_transformation(state, *transformation);
 
-        // todo: Can we we just get the key pointed to instead of copynig the entire repository?
+        // todo: Can we just get the key pointed to instead of copynig the entire repository?
         let mut temp_repository = state.repository.clone();
         temp_repository.apply_transformation(transformation.clone(), state.mapping);
 

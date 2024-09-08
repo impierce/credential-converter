@@ -113,43 +113,34 @@ pub fn get_optional_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>)
     }
 }
 
-pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String, Value>) {
-    if let Some(schema) = schema.pointer(path) {
-        if let Some(all_of) = schema.get("allOf") {
-            // Logical construct keys always consist of one array containing single objects
-            if let Some(all_of_elmnts) = all_of.as_array() {
-                for (i, e) in all_of_elmnts.iter().enumerate() {
-                    for (_key, value) in e.as_object().unwrap() {
-                        trace_dbg!(value);
-                        // if let Some(value) = value.as_str() {
-                        //     map.insert("allOf[".to_owned() + value + "]", e.clone()); // perhaps inserting it as such could be problematic when using the pointer in a later stage
-                        // }
-                        // else {
-                        map.insert("allOf/".to_owned() + &i.to_string(), e.clone());
-                        // }
-                    }
-                }
+pub fn resolve_logic_construct(schema: &Value, map: &mut Map<String, Value>) {
+    // Logical construct keys always consist of one array containing single objects
+    if let Some(all_of) = schema.get("allOf") {
+        if let Some(all_of_elmnts) = all_of.as_array() {
+            for (i, e) in all_of_elmnts.iter().enumerate() {
+                map.insert("allOf/".to_owned() + &i.to_string(), e.clone());
             }
         }
-        if let Some(any_of) = schema.get("anyOf") {
-            if let Some(any_of_elmnts) = any_of.as_array() {
-                for i in 0..any_of_elmnts.len() {
-                    map.insert(path.to_owned() + "anyOf/" + i.to_string().as_str(), Value::Null);
-                }
+    }
+    if let Some(any_of) = schema.get("anyOf") {
+        trace_dbg!("anyOf");
+        if let Some(any_of_elmnts) = any_of.as_array() {
+            for (i, e) in any_of_elmnts.iter().enumerate() {
+                map.insert("anyOf/".to_owned() + &i.to_string(), e.clone());
             }
         }
-        if let Some(one_of) = schema.get("oneOf") {
-            if let Some(one_of_elmnts) = one_of.as_array() {
-                for i in 0..one_of_elmnts.len() {
-                    map.insert(path.to_owned() + "oneOf/" + i.to_string().as_str(), Value::Null);
-                }
+    }
+    if let Some(one_of) = schema.get("oneOf") {
+        if let Some(one_of_elmnts) = one_of.as_array() {
+            for (i, e) in one_of_elmnts.iter().enumerate() {
+                map.insert("oneOf/".to_owned() + &i.to_string(), e.clone());
             }
         }
-        if let Some(not) = schema.get("not") {
-            if let Some(not_elmnts) = not.as_array() {
-                for i in 0..not_elmnts.len() {
-                    map.insert(path.to_owned() + "not/" + i.to_string().as_str(), Value::Null);
-                }
+    }
+    if let Some(not) = schema.get("not") {
+        if let Some(not_elmnts) = not.as_array() {
+            for (i, e) in not_elmnts.iter().enumerate() {
+                map.insert("not/".to_owned() + &i.to_string(), e.clone());
             }
         }
     }
@@ -225,12 +216,12 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     // Custom logic needed for preloading page 2 & 3
     if state.page == Pages::InputPromptsP1 {
         get_required_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, &mut tmp_map);
         path = "/required";
         state.required_field_pointer = path.to_string();
     } else if preload_p3 {
         get_optional_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, &mut tmp_map);
         path = "/optional";
         state.optional_field_pointer = path.to_string();
         state.output_pointer = "".to_string();
@@ -255,7 +246,8 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
         get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
-        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+        trace_dbg!("hiero");
+        resolve_logic_construct(subset.get_mut(key).unwrap(), &mut tmp_map);
 
         // When a key-value contains no required field nor any logical construct, also not in a $ref or $def,
         // then we are left with 2 possibilities: either just the key is required but all fields within the key are optional, --> what to do?
@@ -278,7 +270,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
         get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
-        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+        resolve_logic_construct(subset.get_mut(key).unwrap(), &mut tmp_map);
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
 
         if tmp_map.is_empty() {

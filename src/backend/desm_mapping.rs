@@ -66,7 +66,7 @@ pub fn build_transformations_from_csv_parsed(
     for src_e in source_csv_mapping {
         for outp_e in &output_csv_mapping {
             if src_e.spine_term_name == outp_e.spine_term_name {
-                // Todo: please note that also this hardcoded pathbuilding with "$." is terrible, but as long as DESM remains path agnostic, we can only work with the assertion at the root level.
+                // Todo: please note that also this hardcoded pathbuilding with "$." is terrible, but as long as DESM remains path agnostic, we can only work with the assertion (root) at the root level.
                 transformations.push(Transformation::OneToOne {
                     type_: OneToOne::copy,
                     source: DataLocation {
