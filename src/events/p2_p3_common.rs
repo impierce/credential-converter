@@ -266,9 +266,10 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                 } else {
                     update_pointer(state, true);
                     update_display_section(state, false);
-                    if state.p2_p3_tabs == P2P3Tabs::InputFields { // todo: tmp fix until input fields also implemented similar to output fields.
+                    if state.p2_p3_tabs == P2P3Tabs::InputFields {
+                        // todo: tmp fix until input fields also implemented similar to output fields.
                         state.p2_p3_tabs.next();
-                    } 
+                    }
                 }
             }
         }
@@ -346,14 +347,15 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-        if state.output_display_subset.len() - 1 == state.completed_required_fields.len() {
-            next_page(state);
-            update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
+        // Currently we don't validate yet, so we can only give an orange warning to the user to double check the required fields.
+        if state.page == Pages::RequiredDataP2 && !state.uncompleted_warning {
+            state.uncompleted_warning = true;
         } else if state.page == Pages::OptionalDataP3 {
             next_page(state);
             create_output_files(state);
         } else {
-            state.uncompleted_warning = true;
+            next_page(state);
+            update_display_section(state, true); // feels a bit off being outside of the next_p fn, but also inside the next_p fn it feels off.
         }
     } else if is_mouse_over_area(state.view_button, mouse_event.column, mouse_event.row) {
         set_candidate_output_value(state, false);
@@ -479,7 +481,7 @@ pub fn clear_button(state: &mut AppState) {
                     .unwrap() = Value::Null;
             }
             state
-                .completed_required_fields
+                .completed_fields
                 .retain(|(first, _)| first != &state.required_field_pointer);
         } else {
             if state
@@ -497,7 +499,7 @@ pub fn clear_button(state: &mut AppState) {
                     .unwrap() = Value::Null;
             }
             state
-                .completed_optional_fields
+                .completed_fields
                 .retain(|(first, _)| first != &state.optional_field_pointer);
         }
 
@@ -516,7 +518,6 @@ pub fn confirm_mapping(state: &mut AppState) {
     save_completed_fields(state);
     move_active_fields(state);
 
-    trace_dbg!(&state.completed_optional_fields);
     trace_dbg!(state.candidate_output_value.as_ref().unwrap());
 
     clear_popup(state);
@@ -536,51 +537,33 @@ fn update_resolved_subset(state: &mut AppState) {
 }
 
 fn save_completed_fields(state: &mut AppState) {
-    if state.page == Pages::RequiredDataP2 {
-        if !state
-            .completed_required_fields
-            .iter()
-            .any(|(first, _)| first == &state.required_field_pointer)
-        {
-            state.completed_required_fields.push((
-                state.required_field_pointer.clone(),
-                state.input_fields[state.selected_input_field].0.clone(),
-            )); // todo: also here we still need to refactor input fields according to the outputfields
-        } else {
-            // Find the old mapping tuple and replace
-            for tuple in &mut state.completed_required_fields {
-                if tuple.0 == state.required_field_pointer {
-                    *tuple = (
-                        state.required_field_pointer.clone(),
-                        state.input_fields[state.selected_input_field].0.clone(),
-                    );
-                    break;
-                }
-            }
-        }
-    } else if state.page == Pages::OptionalDataP3 {
-        if !state
-            .completed_optional_fields
-            .iter()
-            .any(|(first, _)| first == &state.optional_field_pointer)
-        {
-            state.completed_optional_fields.push((
-                state.optional_field_pointer.clone(),
-                state.input_fields[state.selected_input_field].0.clone(),
-            ));
-        } else {
-            // Find the old mapping tuple and replace
-            for tuple in &mut state.completed_optional_fields {
-                if tuple.0 == state.optional_field_pointer {
-                    *tuple = (
-                        state.optional_field_pointer.clone(),
-                        state.input_fields[state.selected_input_field].0.clone(),
-                    );
-                    break;
-                }
+    let mut output_field_pointer = &state.required_field_pointer;
+    if state.page == Pages::OptionalDataP3 {
+        output_field_pointer = &state.optional_field_pointer;
+    }
+
+    if !state
+        .completed_fields
+        .iter()
+        .any(|(first, _)| first == output_field_pointer)
+    {
+        state.completed_fields.push((
+            output_field_pointer.clone(),
+            state.input_fields[state.selected_input_field].0.clone(),
+        )); // todo: also here we still need to refactor input fields according to the outputfields
+    } else {
+        // Find the old mapping tuple and replace
+        for tuple in &mut state.completed_fields {
+            if &tuple.0 == output_field_pointer {
+                *tuple = (
+                    output_field_pointer.clone(),
+                    state.input_fields[state.selected_input_field].0.clone(),
+                );
+                break;
             }
         }
     }
+    trace_dbg!(&state.completed_fields);
 }
 
 fn move_active_fields(state: &mut AppState) {

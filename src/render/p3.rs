@@ -72,9 +72,7 @@ pub fn render_optional_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppStat
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.as_str(), value.as_str()]);
-            if state.completed_required_fields.iter().any(|(_, second)| second == key)
-                || state.completed_optional_fields.iter().any(|(_, second)| second == key)
-            {
+            if state.completed_fields.iter().any(|(_, second)| second == key) {
                 row = row.style(Style::default().fg(Color::Green));
             }
             row
@@ -122,7 +120,7 @@ pub fn render_optional_data_p3(area: Rect, buf: &mut Buffer, state: &mut AppStat
         .iter()
         .map(|(key, value)| {
             let mut row = Row::new(vec![key.deref(), value.deref()]);
-            if state.completed_optional_fields.iter().any(|(first, _)| {
+            if state.completed_fields.iter().any(|(first, _)| {
                 *first == state.optional_field_pointer
                     || *first == state.optional_field_pointer.as_str().to_owned() + "/" + key.as_str()
             })

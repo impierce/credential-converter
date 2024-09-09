@@ -33,10 +33,25 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         output_value_title = format!("  {}  ", translate("output_field_info"));
         let selected_key = state.output_display_subset[state.selected_output_field].0.clone();
         if state.page == Pages::RequiredDataP2 {
-            output_value_txt = to_string_pretty(state.resolved_subsets.get(&state.required_field_pointer).unwrap().get(&selected_key).unwrap()).unwrap();
-        }
-        else if state.page == Pages::OptionalDataP3 {
-            output_value_txt = to_string_pretty(state.resolved_subsets.get(&state.optional_field_pointer).unwrap().get(&selected_key).unwrap()).unwrap();
+            output_value_txt = to_string_pretty(
+                state
+                    .resolved_subsets
+                    .get(&state.required_field_pointer)
+                    .unwrap()
+                    .get(&selected_key)
+                    .unwrap(),
+            )
+            .unwrap();
+        } else if state.page == Pages::OptionalDataP3 {
+            output_value_txt = to_string_pretty(
+                state
+                    .resolved_subsets
+                    .get(&state.optional_field_pointer)
+                    .unwrap()
+                    .get(&selected_key)
+                    .unwrap(),
+            )
+            .unwrap();
         }
     }
 
@@ -78,8 +93,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
         state.popup_amount_lines_value =
             state.input_fields[state.selected_input_field].1.len() / (right.width as usize - 2);
         state.popup_amount_lines_output_path =
-            (state.output_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0)
-                .len()
+            (state.output_pointer.clone() + "/" + &state.output_display_subset[state.selected_output_field].0).len()
                 / (right.width as usize - 2);
         state.popup_amount_lines_result =
             length_with_newline(&output_value_txt, right.width as usize - 2) / (right.width as usize - 2);
@@ -116,16 +130,16 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
     }
 
     Paragraph::new(output_pointer)
-    .wrap(Wrap { trim: false })
-    .remove_modifier(Modifier::BOLD)
-    .scroll((state.popup_offset_output_path, 0))
-    .render(
-        right_top.inner(&Margin {
-            horizontal: 1,
-            vertical: 1,
-        }),
-        buf,
-    );
+        .wrap(Wrap { trim: false })
+        .remove_modifier(Modifier::BOLD)
+        .scroll((state.popup_offset_output_path, 0))
+        .render(
+            right_top.inner(&Margin {
+                horizontal: 1,
+                vertical: 1,
+            }),
+            buf,
+        );
 
     Paragraph::new(output_value_txt)
         .wrap(Wrap { trim: false })
@@ -142,8 +156,11 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
     let confirm_txt = format!(" {} ", translate("confirm"));
     let [_top, confirm_area] =
         Layout::vertical([Constraint::Percentage(100), Constraint::Length(1)]).areas(right_bottom);
-    let [_left, confirm_area] =
-        Layout::horizontal([Constraint::Percentage(100), Constraint::Length(confirm_txt.len() as u16)]).areas(confirm_area);
+    let [_left, confirm_area] = Layout::horizontal([
+        Constraint::Percentage(100),
+        Constraint::Length(confirm_txt.len() as u16),
+    ])
+    .areas(confirm_area);
 
     state.confirm_button = confirm_area;
     Paragraph::new(confirm_txt)
@@ -292,17 +309,18 @@ pub fn render_popup_lose_progress_warning(mut area: Rect, buf: &mut Buffer) {
         );
 }
 
-
 /////// HELPERS ///////
 
 fn length_with_newline(s: &str, width: usize) -> usize {
     let mut i = 0;
-    s.chars().map(|c| {
-        i += 1;
-        if c == '\n' {
-            width - (i % width) + 2
-        } else {
-            1
-        }
-    }).sum()
+    s.chars()
+        .map(|c| {
+            i += 1;
+            if c == '\n' {
+                width - (i % width) + 2
+            } else {
+                1
+            }
+        })
+        .sum()
 }

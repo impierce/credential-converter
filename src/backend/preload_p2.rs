@@ -329,7 +329,6 @@ pub fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
 where
     T: DeserializeOwned,
 {
-    trace_dbg!(std::env::current_dir().unwrap());
     let file = File::open(path).expect("failed to open file");
     let reader = BufReader::new(file);
 

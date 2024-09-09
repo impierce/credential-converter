@@ -74,8 +74,7 @@ pub fn clear_progress(state: &mut AppState) {
     state.selected_output_field = 1;
     state.selected_output_field = 1;
     state.select_mapping_option = true;
-    state.completed_required_fields.clear();
-    state.completed_optional_fields.clear();
+    state.completed_fields.clear();
     state.input_fields.clear();
     state.input_display_section.clear();
     state.input_field_pointer.clear();

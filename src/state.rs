@@ -54,12 +54,12 @@ pub struct AppState {
     pub output_display_subset: Vec<(String, String)>,
     pub selected_output_field: usize,
     pub amount_output_fields: usize,
-    pub output_pointer: String,
 
     pub required_field_pointer: String,
     pub optional_field_pointer: String,
-    pub completed_required_fields: Vec<(String, String)>, // (required_field_path, input_field_path)
-    pub completed_optional_fields: Vec<(String, String)>, // (optional_field_path, input_field_path)
+    pub output_pointer: String,
+
+    pub completed_fields: Vec<(String, String)>, // (output_field_path, input_field_path)
 
     // Backend
     pub target_schema: Value,
