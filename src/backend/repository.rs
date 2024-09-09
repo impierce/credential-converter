@@ -119,6 +119,7 @@ impl Repository {
 
             _ => todo!(),
         }
+        // todo: falty dbg msg, also when opening popup on information field
         trace_dbg!("Successfully completed transformation");
     }
 
@@ -129,17 +130,12 @@ impl Repository {
     }
 
     pub fn clear_mapping(&mut self, mut output_pointer: String, mapping: Mapping) {
-        trace_dbg!(&output_pointer);
-
         let output_json = self.get_mut(&mapping.output_format()).unwrap();
-        trace_dbg!(&output_json);
 
         output_pointer = output_pointer.trim_start_matches("/").to_string();
         let keys: Vec<String> = output_pointer.split('/').map(|s| s.to_string()).collect();
-        trace_dbg!(&keys);
 
         remove_key_recursive(output_json, &keys);
-        trace_dbg!(&output_json);
     }
 }
 

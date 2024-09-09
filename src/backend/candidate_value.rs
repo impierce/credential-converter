@@ -91,28 +91,8 @@ pub fn set_output_pointer(state: &mut AppState) {
     if state.page == Pages::OptionalDataP3 {
         output_pointer = state.optional_field_pointer.trim_start_matches("/optional").to_string();
     }
-    output_pointer = get_clean_pointer(output_pointer.to_string());
-    state.output_pointer = output_pointer.clone();
-}
+    let regex = Regex::new(r"/(allOf|anyOf|oneOf|not)/\d+").unwrap();
+    output_pointer = regex.replace_all(&output_pointer, "").to_string();
 
-/// Remove logical construct path segments from pointer
-pub fn get_clean_pointer(mut pointer: String) -> String {
-    if pointer.contains("/allOf") {
-        let regex_allof = Regex::new(r"allOf/.*/").unwrap();
-        pointer = regex_allof.replace_all(&pointer, "").to_string();
-    }
-    if pointer.contains("/anyOf") {
-        let re_anyof = Regex::new(r"anyOf/.*/").unwrap();
-        pointer = re_anyof.replace_all(&pointer, "").to_string();
-    }
-    if pointer.contains("/oneOf") {
-        let re_oneof = Regex::new(r"oneOf/.*/").unwrap();
-        pointer = re_oneof.replace_all(&pointer, "").to_string();
-    }
-    if pointer.contains("/not") {
-        let re_not = Regex::new(r"not/.*/").unwrap();
-        pointer = re_not.replace_all(&pointer, "").to_string();
-    }
-
-    pointer
+    state.output_pointer = output_pointer;
 }

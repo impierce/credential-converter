@@ -295,6 +295,7 @@ pub fn resolve_ref(schema: &mut Value, root: Value) {
             if let Some(ref_str) = ref_.as_str() {
                 // at this point it's fair to assume the json schema ref is invalid if it contains something else than a string.
                 if ref_str.starts_with("#/") {
+                    // todo: this "#" pointer can actually point to the root of the ref schema in the logical construct and not the root of the main schema, hence it errors at times.
                     let tmp = root.pointer(ref_str.trim_start_matches('#')).unwrap().clone();
                     *schema = tmp;
                 } else {
