@@ -66,7 +66,7 @@ For a written walkthrough, including screenshots, and explanation on the keyboar
 ### Page 1, setting program arguments
 Upon starting the application, you'll be presented with a terminal interface to select the input file, mapping file, output file paths and the conversion. You can also pick your preferred language and a file path to save your manual mappings to, for future use. 
 
-All files/paths must be .json files/paths. The "Choose Mapping File" and the "Save Custom Mapping To" must be .json files be created by or in the same structure as this program generates, otherwise deserialization will error. When entering existing custom mapping file into "Save Custom Mapping To" it will be extended if new mappings are performed. Enter "DESM" in the "Choose Mapping File" prompt if you wish to make use of their mappings.
+All files/paths must be .json files/paths. The "Choose Mapping File" and the "Save Custom Mapping To" must be .json files created by or in the same structure as this program generates, otherwise deserialization will error. You can choose to leave these paths empty as well. When entering an existing custom mapping file into "Save Custom Mapping To" it will be extended if new mappings are performed. Enter "DESM" in the "Choose Mapping File" prompt if you wish to make use of their mappings. These mappings will automatically be saved to your "Custom Mapping" file, if you entered a valid path there.
 
 Yellow highlights the active field. Green indicates a valid path. Orange means a given output path will wipe and overwrite an existing file in that location. Red means it's invalid, which disables you from continuing to the next page.
 On the bottom you'll find a bar explaining the basic keys as well.

@@ -28,6 +28,7 @@ pub fn apply_desm_mapping(state: &mut AppState) {
 
     trace_dbg!(&transformations);
 
+    state.performed_mappings.extend( transformations.clone());
     state.repository.apply_transformations(transformations, state.mapping);
 }
 
