@@ -44,10 +44,10 @@ pub fn preload_p2(state: &mut AppState) {
                 trace_dbg!("Empty input file");
             }
         } else {
-            trace_dbg!("Input file is not a .json file or invalid");
+            trace_dbg!("Input file is not a valid .json file");
         }
     } else {
-        trace_dbg!("File in input path doesnt exist or could not be read");
+        trace_dbg!("File in input path could not be read");
     }
 
     // Load the mapping file
@@ -123,7 +123,6 @@ pub fn resolve_logic_construct(schema: &Value, map: &mut Map<String, Value>) {
         }
     }
     if let Some(any_of) = schema.get("anyOf") {
-        trace_dbg!("anyOf");
         if let Some(any_of_elmnts) = any_of.as_array() {
             for (i, e) in any_of_elmnts.iter().enumerate() {
                 map.insert("anyOf/".to_owned() + &i.to_string(), e.clone());
@@ -246,7 +245,6 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
         get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
-        trace_dbg!("hiero");
         resolve_logic_construct(subset.get_mut(key).unwrap(), &mut tmp_map);
 
         // When a key-value contains no required field nor any logical construct, also not in a $ref or $def,
@@ -281,8 +279,6 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     }
 
     state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
-    // state.missing_display_subset = value_to_str(state.resolved_subsets.get(path).unwrap());
-    // trace_dbg!(&state.resolved_subsets);
 }
 
 /// This function takes a ref and replaces the subschema/Value with the resolved ref, entirely.

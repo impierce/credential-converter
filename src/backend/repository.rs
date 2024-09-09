@@ -119,8 +119,7 @@ impl Repository {
 
             _ => todo!(),
         }
-        // todo: falty dbg msg, also when opening popup on information field
-        trace_dbg!("Successfully completed transformation");
+        trace_dbg!("Successfully applied transformation to candidate value");
     }
 
     pub fn apply_transformations(&mut self, transformations: Vec<Transformation>, mapping: Mapping) {
@@ -136,6 +135,8 @@ impl Repository {
         let keys: Vec<String> = output_pointer.split('/').map(|s| s.to_string()).collect();
 
         remove_key_recursive(output_json, &keys);
+
+        trace_dbg!("Successfully cleared mapping");
     }
 }
 

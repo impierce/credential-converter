@@ -517,7 +517,6 @@ pub fn confirm_mapping(state: &mut AppState) {
     save_completed_fields(state);
     move_active_fields(state);
 
-    trace_dbg!(&state.completed_optional_fields);
     trace_dbg!(state.candidate_output_value.as_ref().unwrap());
 
     clear_popup(state);
