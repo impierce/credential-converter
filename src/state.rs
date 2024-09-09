@@ -64,7 +64,7 @@ pub struct AppState {
     // Backend
     pub target_schema: Value,
     pub resolved_subsets: HashMap<String, Value>, // <JsonPointer, Value> JsonPointers is unnecessary complexity for now.
-    pub candidate_output_value: Option<String>,
+    pub candidate_output_value: String,
     pub repository: Repository,
     pub performed_mappings: Vec<Transformation>,
 

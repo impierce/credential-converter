@@ -518,7 +518,7 @@ pub fn confirm_mapping(state: &mut AppState) {
     save_completed_fields(state);
     move_active_fields(state);
 
-    trace_dbg!(state.candidate_output_value.as_ref().unwrap());
+    trace_dbg!(&state.candidate_output_value);
 
     clear_popup(state);
     clear_mapping_options(state);
@@ -529,10 +529,10 @@ pub fn confirm_mapping(state: &mut AppState) {
 fn update_resolved_subset(state: &mut AppState) {
     if state.page == Pages::RequiredDataP2 {
         let output_map = state.resolved_subsets.get_mut(&state.required_field_pointer).unwrap();
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone().unwrap());
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone());
     } else if state.page == Pages::OptionalDataP3 {
         let output_map = state.resolved_subsets.get_mut(&state.optional_field_pointer).unwrap();
-        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone().unwrap());
+        *output_map.get_mut("Your input >>").unwrap() = Value::from(state.candidate_output_value.clone());
     }
 }
 

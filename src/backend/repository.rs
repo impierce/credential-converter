@@ -177,7 +177,7 @@ pub fn update_repository(state: &mut AppState) {
     let output_pointer = state.output_pointer.clone();
     let output_format = state.mapping.output_format();
 
-    let source_value = state.candidate_output_value.clone().unwrap();
+    let source_value = state.candidate_output_value.clone();
     let output_json = state.repository.get_mut(&output_format).unwrap();
 
     let mut leaf_node = construct_leaf_node(&output_pointer);
