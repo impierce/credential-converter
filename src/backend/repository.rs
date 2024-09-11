@@ -89,7 +89,7 @@ impl Repository {
                 merge(destination_credential, leaf_node);
 
                 trace_dbg!("Successfully completed transformation");
-                return Some((destination_path, source_path));
+                Some((destination_path, source_path))
             }
             Transformation::ManyToOne {
                 type_: transformation,
@@ -124,7 +124,7 @@ impl Repository {
                 merge(destination_credential, leaf_node);
 
                 trace_dbg!("Successfully completed transformation");
-                return None; // Todo: this is not implemented yet, so returns None for now
+                None // Todo: this is not implemented yet, so returns None for now
             }
 
             _ => todo!(),
