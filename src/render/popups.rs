@@ -211,11 +211,11 @@ pub fn render_popup_uncompleted_warning_p2(mut area: Rect, buf: &mut Buffer) {
     });
     Clear.render(area, buf);
     Block::new()
-        .style(Style::default().fg(Color::Red).bg(Color::Black))
+        .style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
         .borders(Borders::ALL)
         .render(area, buf);
 
-    let mut txt = translate("required_fields_incomplete");
+    let mut txt = translate("required_fields_incomplete"); // todo: refactor warning translation.
     let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;

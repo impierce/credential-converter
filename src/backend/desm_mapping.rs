@@ -29,7 +29,13 @@ pub fn apply_desm_mapping(state: &mut AppState) {
     trace_dbg!(&transformations);
 
     state.performed_mappings.extend(transformations.clone());
-    state.repository.apply_transformations(transformations, state.mapping);
+    let mut completed_fields = state.repository.apply_transformations(transformations, state.mapping);
+    for tuple in &mut completed_fields {
+        tuple.0 = tuple.0.trim_start_matches('$').replace('.', "/");
+        tuple.1 = tuple.1.trim_start_matches('$').replace('.', "/");
+    }
+    state.completed_fields.append(&mut completed_fields);
+    trace_dbg!(&state.completed_fields);
 }
 
 pub fn desm_csv_parser(path: &str) -> Vec<DesmCSVParsed> {
@@ -95,7 +101,7 @@ pub struct DesmCSVParsed {
     #[serde(rename = "Mapping predicate label")]
     mapping_predicate_label: String,
     #[serde(rename = "Mapped term origin")]
-    mapped_schema: String,
+    mapped_schema: String, // todo: This field currently is used as an extra check to see if the mapping comes from the correct schema, need to discuss further with desm to see if this is really necessary.
 }
 
 // HELPER
@@ -104,16 +110,19 @@ fn to_camel_case(input: &str) -> String {
     let mut result = String::new();
     let mut capitalize_next = false;
 
-    for c in input.chars() {
-        if c.is_whitespace() {
-            capitalize_next = true;
-        } else if capitalize_next {
-            result.push(c.to_ascii_uppercase());
-            capitalize_next = false;
-        } else {
-            result.push(c.to_ascii_lowercase());
+    if input.contains(" ") {
+        for c in input.chars() {
+            if c.is_whitespace() {
+                capitalize_next = true;
+            } else if capitalize_next {
+                result.push(c.to_ascii_uppercase());
+                capitalize_next = false;
+            } else {
+                result.push(c.to_ascii_lowercase());
+            }
         }
+        result
+    } else {
+        input.to_string()
     }
-
-    result
 }
