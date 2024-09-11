@@ -272,12 +272,21 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         }
 
         path = &state.optional_field_pointer;
-        let subset_path = truncate_until_char(path, '/');
+        let mut subset_path = truncate_until_char(path, '/');
+        if subset_path.ends_with("allOf")
+            || subset_path.ends_with("anyOf")
+            || subset_path.ends_with("oneOf")
+            || subset_path.ends_with("not")
+        {
+            // todo could be done more elegantly
+            subset_path = truncate_until_char(subset_path, '/');
+        }
+        
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
-        get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
+        get_optional_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
         resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
 
