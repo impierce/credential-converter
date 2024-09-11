@@ -64,6 +64,24 @@ pub fn preload_p2(state: &mut AppState) {
             // todo: add applied transformation to completed fields
         }
     }
+
+    // Enter fixed values into '@context' field, as demanded by the respective json-schema
+    if state.mapping.output_format() == "ELM" {
+        let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
+        output_elm.insert(
+            "@context".to_string(),
+            Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+        );
+    } else if state.mapping.output_format() == "OBv3" {
+        let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
+        output_obv3.insert(
+            "@context".to_string(),
+            Value::Array(vec![
+                json!("https://www.w3.org/ns/credentials/v2"),
+                json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
+            ]),
+        );
+    }
 }
 
 pub fn get_missing_data_fields(state: &mut AppState) {
