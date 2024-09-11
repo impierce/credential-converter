@@ -179,6 +179,7 @@ pub enum MappingOptions {
     Transformations,
     OneToMany,
     ManyToOne,
+    StringToOne,
 }
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
@@ -188,6 +189,7 @@ pub enum Transformations {
     UpperCase,
     Slice,
     Regex,
+    StringToOne,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]

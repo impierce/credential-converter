@@ -1,7 +1,7 @@
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, Transformation},
+        transformations::{DataLocation, StringValue, Transformation},
     },
     state::{AppState, Mapping},
     trace_dbg,
@@ -117,6 +117,36 @@ impl Repository {
                 merge(destination_credential, leaf_node);
             }
 
+            Transformation::StringToOne {
+                type_: transformation,
+                source:
+                    StringValue {
+                        value: source_value,
+                    },
+                destination:
+                    DataLocation {
+                        format: destination_format,
+                        path: destination_path,
+                    },
+            } => {
+                if destination_format != mapping.output_format() {
+                    return;
+                }
+
+
+                let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
+                let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
+
+                let mut leaf_node = construct_leaf_node(&pointer);
+
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(source_value);
+                }
+
+                merge(destination_credential, leaf_node);
+            }
+
+            
             _ => todo!(),
         }
         trace_dbg!("Successfully completed transformation");

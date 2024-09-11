@@ -158,6 +158,7 @@ pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppStat
             match state.mapping_option {
                 MappingOptions::Transformations => render_popup_mapping(area, buf, state),
                 MappingOptions::OneToMany => render_popup_mapping(area, buf, state), // todo
+                MappingOptions::StringToOne => render_popup_mapping(area, buf, state), // todo
                 MappingOptions::ManyToOne => render_manytoone_bar(area, buf, state), // todo
                 MappingOptions::DirectCopy => {}                                     // DirectCopy
             }

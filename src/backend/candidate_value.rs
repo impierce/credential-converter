@@ -3,11 +3,12 @@ use regex::Regex;
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, OneToOne, Transformation},
+        transformations::{DataLocation, OneToOne, StringToOne, StringValue, Transformation},
     },
     state::{AppState, Pages, Transformations},
     trace_dbg,
 };
+
 
 pub fn set_candidate_output_value(state: &mut AppState, push_transformation: bool) {
     // todo: is it needed to add directcopy to the start?
@@ -44,10 +45,10 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
 pub fn define_transformation(state: &mut AppState, transformation: Transformations) -> Transformation {
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
     let source_pointer: JsonPath = JsonPointer(state.input_fields[state.selected_input_field].0.clone()).into();
-
+    let input_value: String = state.input_fields[state.selected_input_field].0.clone();
     let destination_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
-    match transformation {
+    let transformation = match transformation {
         Transformations::LowerCase => Transformation::OneToOne {
             type_: OneToOne::toLowerCase,
             source: DataLocation {
@@ -72,6 +73,16 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
         },
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
+        Transformations::StringToOne => Transformation::StringToOne {
+            type_: StringToOne::stringit,
+            source: StringValue {
+                value: input_value.clone()
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
         Transformations::DirectCopy | _ => Transformation::OneToOne {
             type_: OneToOne::copy,
             source: DataLocation {
@@ -83,7 +94,9 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
                 path: destination_path.to_string(),
             },
         },
-    }
+    };
+    let transformation = transformation;
+    transformation
 }
 
 pub fn set_output_pointer(state: &mut AppState) {
