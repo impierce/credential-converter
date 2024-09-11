@@ -68,36 +68,19 @@ pub fn preload_p2(state: &mut AppState) {
     // Enter fixed values into '@context' field, as demanded by the respective json-schema
     if state.mapping.output_format() == "ELM" {
         let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
-        if output_elm.contains_key("@context") {
-            let output_elm_context = output_elm.get_mut("@context").unwrap().as_array_mut().unwrap();
-            if !output_elm_context.contains(&json!("https://www.w3.org/ns/credentials/v2")) {
-                output_elm_context.insert(0, json!("https://www.w3.org/ns/credentials/v2"));
-            }
-        } else {
-            output_elm.insert(
-                "@context".to_string(),
-                Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
-            );
-        }
+        output_elm.insert(
+            "@context".to_string(),
+            Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+        );
     } else if state.mapping.output_format() == "OBv3" {
         let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
-        if output_obv3.contains_key("@context") {
-            let output_obv3_context = output_obv3.get_mut("@context").unwrap().as_array_mut().unwrap();
-            if !output_obv3_context.contains(&json!("https://www.w3.org/ns/credentials/v2")) {
-                output_obv3_context.insert(0, json!("https://www.w3.org/ns/credentials/v2"));
-            }
-            if !output_obv3_context.contains(&json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json")) {
-                output_obv3_context.insert(1, json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"));
-            }
-        } else {
-            output_obv3.insert(
-                "@context".to_string(),
-                Value::Array(vec![
-                    json!("https://www.w3.org/ns/credentials/v2"),
-                    json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
-                ]),
-            );
-        }
+        output_obv3.insert(
+            "@context".to_string(),
+            Value::Array(vec![
+                json!("https://www.w3.org/ns/credentials/v2"),
+                json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
+            ]),
+        );
     }
 }
 
