@@ -112,8 +112,8 @@ The `Clear` button will close either the popup first if this is open. Then, it w
 The `Complete` button in the top right will move you to the next page. If not all fields on the right are green, this will render a popup warning informing you the output file will be invalid.
 
 `DirectCopy` does a direct copy from the selected input value to the selected output result-value (both yellow).
-`Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
-*Currently `Slice`, `Regex`, `ManytoOne` and `OnetoMany` are not functional yet*.  
+`Transformations` takes you to a new mapping bar allowing you to choose from multiple transformation options. `Lowercase` and `Uppercase` will transform the input value as such. `TakeIndex` takes exactly the index given, this can be an item from an array or a char from a string. `Slice` takes a slice from an array or a string from 0 to the given index. Chosen transformations will be shown on the right of the mapping bar, where they can be deleted from as well.  
+*Currently `Regex`, `ManytoOne` and `OnetoMany` are not functional yet*.  
 
 
 ![credential-converter_P2.png](https://github.com/impierce/credential-converter/raw/main/.github/credential-converter_P2.png)
