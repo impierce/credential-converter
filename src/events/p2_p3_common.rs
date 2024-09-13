@@ -192,7 +192,12 @@ pub fn handle_right(state: &mut AppState) {
 }
 
 pub fn handle_char(state: &mut AppState, char: char) {
-    if state.popup_mapping_p2_p3 && state.mapping_option == MappingOptions::OneToMany {
+    if state.p2_p3_tabs == P2P3Tabs::MappingOptions
+        && (state.transformations == Transformations::TakeIndex || state.transformations == Transformations::Slice)
+        && char.is_ascii_digit()
+    {
+        state.transformation_index = Some(char as usize - 48);
+    } else if state.popup_mapping_p2_p3 && state.mapping_option == MappingOptions::OneToMany {
         state.dividers.push(char);
     }
 }
@@ -233,7 +238,15 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     && !state.selected_transformations_tab
                     && !state.selected_transformations.contains(&state.transformations)
                 {
-                    state.selected_transformations.push(state.transformations);
+                    if state.transformations == Transformations::Slice
+                        || state.transformations == Transformations::TakeIndex
+                    {
+                        if state.transformation_index.is_some() {
+                            state.selected_transformations.push(state.transformations);
+                        }
+                    } else {
+                        state.selected_transformations.push(state.transformations);
+                    }
                 }
                 // If transformation(s) selected open the view popup to show the result.
                 else if state.selected_transformations_tab {
