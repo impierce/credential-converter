@@ -7,7 +7,8 @@ pub enum OneToOne {
     copy,
     toLowerCase,
     toUpperCase,
-    slice,
+    takeIndex { index: usize },
+    slice { index: usize },
 }
 
 impl OneToOne {
@@ -28,7 +29,40 @@ impl OneToOne {
                     value
                 }
             }
-            _ => value,
+            OneToOne::takeIndex { index } => {
+                if let Value::Array(array) = &value {
+                    if let Some(slice) = array.get(*index) {
+                        slice.clone()
+                    } else {
+                        value
+                    }
+                } else if let Value::String(s) = &value {
+                    if let Some(slice) = s.chars().nth(*index) {
+                        Value::String(slice.to_string())
+                    } else {
+                        value
+                    }
+                } else {
+                    value
+                }
+            }
+            OneToOne::slice { index } => {
+                if let Value::Array(array) = &value {
+                    if let Some(slice) = array.get(..*index + 1) {
+                        Value::Array(slice.to_vec())
+                    } else {
+                        value
+                    }
+                } else if let Value::String(s) = &value {
+                    if let Some(slice) = s.get(..*index + 1) {
+                        Value::String(slice.to_string())
+                    } else {
+                        value
+                    }
+                } else {
+                    value
+                }
+            }
         }
     }
 }
