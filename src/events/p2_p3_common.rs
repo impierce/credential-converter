@@ -243,6 +243,7 @@ pub fn handle_enter(state: &mut AppState) -> bool {
                     {
                         if state.transformation_index.is_some() {
                             state.selected_transformations.push(state.transformations);
+                            state.transformations = Transformations::LowerCase;
                         }
                     } else {
                         state.selected_transformations.push(state.transformations);
