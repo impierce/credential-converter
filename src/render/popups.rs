@@ -28,7 +28,7 @@ pub fn render_popup_mapping(mut area: Rect, buf: &mut Buffer, state: &mut AppSta
     state.popup_output_result = right_bottom;
 
     let mut output_value_title = format!("  {}  ", translate("output_result"));
-    let mut output_value_txt = state.candidate_output_value.as_ref().unwrap().clone();
+    let mut output_value_txt = state.candidate_output_value.clone();
     if state.output_display_subset[1].0 != "Your input >>" || state.selected_output_field != 1 {
         output_value_title = format!("  {}  ", translate("output_field_info"));
         let selected_key = state.output_display_subset[state.selected_output_field].0.clone();
@@ -211,7 +211,7 @@ pub fn render_popup_uncompleted_warning_p2(mut area: Rect, buf: &mut Buffer) {
     });
     Clear.render(area, buf);
     Block::new()
-        .style(Style::default().fg(Color::Red).bg(Color::Black))
+        .style(Style::default().fg(Color::Rgb(240, 160, 100)).bg(Color::Black))
         .borders(Borders::ALL)
         .render(area, buf);
 
