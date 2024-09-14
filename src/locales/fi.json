@@ -39,7 +39,7 @@
     "view": "Näytä",
     "field": "Kenttä",
     "value": "Arvo",
-    "required_fields_incomplete": "\nKaikki pakolliset kentät eivät ole täytetty.\nJatkaminen nyt tuottaa virheellisen tulostiedoston.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
+    "required_fields_incomplete": "\n Varmista, että olet täyttänyt kaikki pakolliset kentät.\nKeskeneräisten kenttien kanssa jatkaminen nyt tekee tulostiedostosta virheellisen.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
     "exit_warning": "\n Oletko varma, että haluat lopettaa ohjelman nyt?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin.",
     "return_to_p1_warning": "\n Oletko varma, että haluat palata sivulle 1?\nKaikki edistyminen katoaa.\nPaina 'Enter' jatkaaksesi, 'Esc' palataksesi takaisin."
 }

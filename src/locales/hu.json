@@ -39,7 +39,7 @@
     "view": "Nézet",
     "field": "Mező",
     "value": "Érték",
-    "required_fields_incomplete": "\nNem minden kötelező mezőt töltött ki.\nHa most folytatja, érvénytelen kimeneti fájl jön létre.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
+    "required_fields_incomplete": "\n Győződjön meg róla, hogy minden kötelező mezőt kitöltött.\nA mostani hiányos mezőkkel való folytatás érvénytelen kimeneti fájlt eredményez.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
     "exit_warning": "\n Biztosan ki akarja most lépni a programból?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez.",
     "return_to_p1_warning": "\n Biztosan vissza akar térni az 1. oldalra?\nAz összes előrehaladás elveszik.\nNyomja meg az 'Enter'-t a folytatáshoz, az 'Esc'-et a visszalépéshez."
 }

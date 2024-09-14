@@ -39,7 +39,7 @@
     "view": "Visa",
     "field": "Fält",
     "value": "Värde",
-    "required_fields_incomplete": "\nInte alla obligatoriska fält är ifyllda.\nAtt fortsätta nu kommer att resultera i en ogiltig utmatningsfil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
+    "required_fields_incomplete": "\n Var vänlig kontrollera att du har fyllt i alla obligatoriska fält.\nAtt fortsätta med ofullständiga fält nu kommer att resultera i en ogiltig utmatningsfil.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
     "exit_warning": "\n Är du säker på att du vill avsluta programmet nu?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka.",
     "return_to_p1_warning": "\n Är du säker på att du vill återgå till sida 1?\nAlla framsteg kommer att gå förlorade.\nTryck på 'Enter' för att fortsätta, 'Esc' för att gå tillbaka."
 }

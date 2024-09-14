@@ -39,7 +39,7 @@
     "view": "Skatīt",
     "field": "Lauks",
     "value": "Vērtība",
-    "required_fields_incomplete": "\nVisi nepieciešamie lauki nav aizpildīti.\nTurpinot, tiks izveidots nederīgs izvades fails.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
+    "required_fields_incomplete": "\n Lūdzu, pārliecinieties, ka esat aizpildījis visus nepieciešamos laukus.\nTurpinot ar nepilnīgiem laukiem tagad, izvades fails būs nederīgs.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
     "exit_warning": "\n Vai tiešām vēlaties tagad iziet no programmas?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ.",
     "return_to_p1_warning": "\n Vai tiešām vēlaties atgriezties uz 1. lapu?\nVisa progress tiks zaudēts.\nNospiediet 'Enter', lai turpinātu, vai 'Esc', lai atgrieztos atpakaļ."
 }

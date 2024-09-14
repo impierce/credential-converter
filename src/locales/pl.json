@@ -39,7 +39,7 @@
     "view": "Widok",
     "field": "Pole",
     "value": "Wartość",
-    "required_fields_incomplete": "\nNie wszystkie wymagane pola są wypełnione.\nKontynuacja spowoduje utworzenie nieprawidłowego pliku wynikowego.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
+    "required_fields_incomplete": "\nUpewnij się, że wypełniłeś wszystkie wymagane pola.\nKontynuowanie z niekompletnymi polami spowoduje nieważny plik wynikowy.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
     "exit_warning": "\nCzy na pewno chcesz teraz wyjść z programu?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić.",
     "return_to_p1_warning": "\nCzy na pewno chcesz wrócić do strony 1?\nCały postęp zostanie utracony.\nNaciśnij 'Enter', aby kontynuować, 'Esc', aby wrócić."
 }

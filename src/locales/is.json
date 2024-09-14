@@ -39,7 +39,7 @@
     "view": "Skoða",
     "field": "Reitur",
     "value": "Gildi",
-    "required_fields_incomplete": "\nEkki allir skyldir reitir eru fylltir út.\nAð halda áfram nú mun skila ógildri úttaks skrá.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
+    "required_fields_incomplete": "\n Vinsamlegast athugaðu hvort þú hafir fyllt út öll skyld reiti.\nAð halda áfram með ófullnægjandi reiti mun gera útkomuskjalið ógilt.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
     "exit_warning": "\n Ertu viss um að þú viljir hætta við forritið núna?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka.",
     "return_to_p1_warning": "\n Ertu viss um að þú viljir fara til baka á síðu 1?\nAllur framfarir munu týnast.\nÝttu á 'Enter' til að halda áfram, 'Esc' til að fara til baka."
 }

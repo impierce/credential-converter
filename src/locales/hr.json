@@ -39,7 +39,7 @@
     "view": "Pregled",
     "field": "Polje",
     "value": "Vrijednost",
-    "required_fields_incomplete": "\nNisu sva obavezna polja popunjena.\nNastavljanje sada rezultirat će nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
+    "required_fields_incomplete": "\n Molimo vas da provjerite jeste li ispunili sva obavezna polja.\nNastavak s nepotpunim poljima sada će rezultirati nevažećom izlaznom datotekom.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
     "exit_warning": "\n Jeste li sigurni da želite izaći iz programa sada?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak.",
     "return_to_p1_warning": "\n Jeste li sigurni da želite se vratiti na stranicu 1?\nSav napredak će biti izgubljen.\nPritisnite 'Enter' za nastavak, 'Esc' za povratak."
 }

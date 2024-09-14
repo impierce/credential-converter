@@ -39,7 +39,7 @@
     "view": "Zobrazit",
     "field": "Pole",
     "value": "Hodnota",
-    "required_fields_incomplete": "\nNejsou vyplněna všechna povinná pole.\nPokračování nyní vytvoří neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
+    "required_fields_incomplete": "\n Ujistěte se prosím, že jste vyplnili všechna povinná pole.\nPokud budete nyní pokračovat s neúplnými poli, vygeneruje se neplatný výstupní soubor.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
     "exit_warning": "\n Opravdu chcete nyní ukončit program?\nVeškerý pokrok bude ztracen.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat.",
     "return_to_p1_warning": "\n Opravdu chcete vrátit se na stránku 1?\nVeškerý pokrok bude ztracen.\nStiskněte 'Enter' pro pokračování, 'Esc' pro návrat."
 }

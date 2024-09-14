@@ -39,7 +39,7 @@
     "view": "Vis",
     "field": "Felt",
     "value": "Værdi",
-    "required_fields_incomplete": "\nIkke alle påkrævede felter er udfyldt.\nAt fortsætte nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
+    "required_fields_incomplete": "\n Sørg for, at du har udfyldt alle påkrævede felter.\nAt fortsætte med ufuldstændige felter nu vil resultere i en ugyldig outputfil.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
     "exit_warning": "\n Er du sikker på, at du vil afslutte programmet nu?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage.",
     "return_to_p1_warning": "\n Er du sikker på, at du vil vende tilbage til side 1?\nAl fremdrift vil gå tabt.\nTryk på 'Enter' for at fortsætte, 'Esc' for at gå tilbage."
 }

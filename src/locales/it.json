@@ -39,7 +39,7 @@
     "view": "Visualizza",
     "field": "Campo",
     "value": "Valore",
-    "required_fields_incomplete": "\nNon tutti i campi richiesti sono stati completati.\nContinuare ora produrrà un file di output non valido.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro.",
+    "required_fields_incomplete": "\nAssicurati di aver completato tutti i campi obbligatori.\nContinuare con campi incompleti ora renderà un file di output non valido.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro.",
     "exit_warning": "\nSei sicuro di voler uscire dal programma ora?\nTutti i progressi verranno persi.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro.",
     "return_to_p1_warning": "\nSei sicuro di voler tornare alla pagina 1?\nTutti i progressi verranno persi.\nPremi 'Invio' per continuare, 'Esc' per tornare indietro."
 }
