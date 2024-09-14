@@ -361,7 +361,7 @@ pub fn handle_scroll_up(state: &mut AppState, mouse_event: MouseEvent) {
 
 pub fn handle_mouse_up(state: &mut AppState, mouse_event: MouseEvent) {
     if is_mouse_over_area(state.complete_button, mouse_event.column, mouse_event.row) {
-        // Currently we don't validate yet, so we can only give an orange warning to the user to double check the required fields.
+        // todo: add actual validation here in the future
         if state.page == Pages::RequiredDataP2 && !state.uncompleted_warning {
             state.uncompleted_warning = true;
         } else if state.page == Pages::OptionalDataP3 {

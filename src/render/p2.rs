@@ -132,7 +132,6 @@ pub fn render_required_data_p2(area: Rect, buf: &mut Buffer, state: &mut AppStat
                     .is_some()
                     || (key == "Your input >>" && output_repository.pointer(&state.output_pointer).is_some())
                 // todo: validfrom can't be seen as green since 'up' scrolls the list up immediately.
-                // from there we can also load premapped data for display.
                 {
                     row = row.style(Style::default().fg(Color::Green));
                 }

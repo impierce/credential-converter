@@ -215,7 +215,7 @@ pub fn render_popup_uncompleted_warning_p2(mut area: Rect, buf: &mut Buffer) {
         .borders(Borders::ALL)
         .render(area, buf);
 
-    let mut txt = translate("required_fields_incomplete"); // todo: refactor warning translation.
+    let mut txt = translate("required_fields_incomplete");
     let width: f32 = 50. / (area.width as f32 - 2.0);
 
     let vertical_margin;
