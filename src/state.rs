@@ -41,7 +41,10 @@ pub struct AppState {
     pub transformations: Transformations,
     pub selected_transformation: usize,
     pub selected_transformations: Vec<Transformations>,
+
+    // Transformation data, this can't be added to the Transformations enum since this will break it's loopability in the UI.
     pub dividers: String,
+    pub transformation_index: Option<usize>,
 
     // Fields extracted from the input json file.
     pub input_fields: Vec<(String, String)>,
@@ -186,7 +189,8 @@ pub enum Transformations {
     #[default]
     LowerCase,
     UpperCase,
-    Slice,
+    TakeIndex, // should be included in Slice
+    Slice,     // Slice should accept indexing singular points and ranges in the future, e.g. (9) or (1..9)
     Regex,
 }
 

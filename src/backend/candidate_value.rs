@@ -70,6 +70,32 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
                 path: destination_path.to_string(),
             },
         },
+        Transformations::TakeIndex => Transformation::OneToOne {
+            type_: OneToOne::takeIndex {
+                index: state.transformation_index.unwrap(),
+            },
+            source: DataLocation {
+                format: input_format.clone(),
+                path: source_pointer.to_string(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
+        Transformations::Slice => Transformation::OneToOne {
+            type_: OneToOne::slice {
+                index: state.transformation_index.unwrap(),
+            },
+            source: DataLocation {
+                format: input_format.clone(),
+                path: source_pointer.to_string(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
         Transformations::DirectCopy | _ => Transformation::OneToOne {
