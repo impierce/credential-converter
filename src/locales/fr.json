@@ -41,7 +41,7 @@
     "view": "Voir",
     "field": "Champ",
     "value": "Valeur",
-    "required_fields_incomplete": "\nTous les champs requis ne sont pas remplis.\nContinuer maintenant produira un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
+    "required_fields_incomplete": "\n Assurez-vous d'avoir rempli tous les champs requis.\nContinuer avec des champs incomplets rendra un fichier de sortie invalide.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
     "exit_warning": "\n Êtes-vous sûr de vouloir quitter le programme maintenant ?\nTout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir.",
     "return_to_p1_warning": "\n Êtes-vous sûr de vouloir revenir à la page 1 ?\n Tout le progrès sera perdu.\nAppuyez sur 'Entrée' pour continuer, 'Échap' pour revenir."
 }

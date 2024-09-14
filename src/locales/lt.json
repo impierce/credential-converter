@@ -41,7 +41,7 @@
     "view": "Peržiūra",
     "field": "Laukas",
     "value": "Vertė",
-    "required_fields_incomplete": "\nNe visi privalomi laukai užpildyti.\nTęsiant dabar bus sugeneruotas netinkamas išvesties failas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
+    "required_fields_incomplete": "\n Įsitikinkite, kad užpildėte visus privalomus laukus.\nTęsti su nepilnais laukais dabar pavers išvesties failą netinkamu.\nPaspauskite 'Enter', jei norite tęsti, 'Esc', jei norite grįžti atgal.",
     "exit_warning": "\n Ar tikrai norite dabar išeiti iš programos?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal.",
     "return_to_p1_warning": "\n Ar tikrai norite grįžti į 1 puslapį?\nVisas progresas bus prarastas.\nPaspauskite 'Enter' tęsti, 'Esc' grįžti atgal."
 }

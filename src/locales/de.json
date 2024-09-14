@@ -41,7 +41,7 @@
     "view": "Ansicht",
     "field": "Feld",
     "value": "Wert",
-    "required_fields_incomplete": "\nNicht alle erforderlichen Felder sind ausgefüllt.\nEin Fortfahren jetzt würde eine ungültige Ausgabedatei erzeugen.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
+    "required_fields_incomplete": "\nBitte stellen Sie sicher, dass Sie alle erforderlichen Felder ausgefüllt haben.\nDas Fortfahren mit unvollständigen Feldern führt zu einer ungültigen Ausgabedatei.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
     "exit_warning": "\n Möchten Sie das Programm jetzt wirklich beenden?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen.",
     "return_to_p1_warning": "\n Möchten Sie wirklich zur Seite 1 zurückkehren?\nAlle Fortschritte gehen verloren.\nDrücken Sie 'Enter', um fortzufahren, 'Esc', um zurückzugehen."
 }

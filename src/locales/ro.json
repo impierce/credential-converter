@@ -41,7 +41,7 @@
     "view": "Vizualizare",
     "field": "Câmp",
     "value": "Valoare",
-    "required_fields_incomplete": "\nNu toate câmpurile necesare sunt completate.\nContinuarea acum va produce un fișier de ieșire nevalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
+    "required_fields_incomplete": "\nAsigurați-vă că ați completat toate câmpurile necesare.\nContinuarea cu câmpuri incomplete acum va duce la un fișier de ieșire invalid.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
     "exit_warning": "\nSunteți sigur că doriți să ieșiți din program acum?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni.",
     "return_to_p1_warning": "\nSunteți sigur că doriți să reveniți la pagina 1?\nToate progresele vor fi pierdute.\nApăsați 'Enter' pentru a continua, 'Esc' pentru a reveni."
 }

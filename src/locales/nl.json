@@ -41,7 +41,7 @@
     "view": "Weergeven",
     "field": "Veld",
     "value": "Waarde",
-    "required_fields_incomplete": "\nNiet alle vereiste velden zijn ingevuld.\nDoorgaan zal een ongeldig uitvoerbestand opleveren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
+    "required_fields_incomplete": "\n Zorg ervoor dat u alle vereiste velden hebt ingevuld.\nDoorgaan met onvolledige velden zal nu een ongeldig uitvoerbestand opleveren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
     "exit_warning": "\n Weet u zeker dat u het programma nu wilt afsluiten?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan.",
     "return_to_p1_warning": "\n Weet u zeker dat u terug wilt naar pagina 1?\nAlle voortgang gaat verloren.\nDruk op 'Enter' om door te gaan, 'Esc' om terug te gaan."
 }

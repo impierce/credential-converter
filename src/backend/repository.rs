@@ -37,7 +37,11 @@ impl From<HashMap<String, Value>> for Repository {
 }
 
 impl Repository {
-    pub fn apply_transformation(&mut self, transformation: Transformation, mapping: Mapping) {
+    pub fn apply_transformation(
+        &mut self,
+        transformation: Transformation,
+        mapping: Mapping,
+    ) -> Option<(String, String)> {
         match transformation {
             Transformation::OneToOne {
                 type_: transformation,
@@ -53,7 +57,7 @@ impl Repository {
                     },
             } => {
                 if source_format != mapping.input_format() || destination_format != mapping.output_format() {
-                    return;
+                    return None;
                 }
 
                 let source_credential = self.get(&source_format).unwrap();
@@ -69,12 +73,12 @@ impl Repository {
                     // todo: still need to investigate other find() return types
                     Some(array) => array.first().unwrap().clone(),
                     None => {
-                        return;
+                        return None;
                     }
                 };
 
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
-                let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
+                let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
@@ -83,6 +87,9 @@ impl Repository {
                 }
 
                 merge(destination_credential, leaf_node);
+
+                trace_dbg!("Successfully completed transformation");
+                Some((destination_path, source_path))
             }
             Transformation::ManyToOne {
                 type_: transformation,
@@ -92,7 +99,7 @@ impl Repository {
                 if sources.iter().any(|source| source.format != mapping.input_format())
                     || destination.format != mapping.output_format()
                 {
-                    return;
+                    return None;
                 }
 
                 let source_values = sources
@@ -115,6 +122,9 @@ impl Repository {
                 }
 
                 merge(destination_credential, leaf_node);
+
+                trace_dbg!("Successfully completed transformation");
+                None // Todo: this is not implemented yet, so returns None for now
             }
 
             Transformation::StringToOne {
@@ -149,27 +159,32 @@ impl Repository {
             
             _ => todo!(),
         }
-        trace_dbg!("Successfully completed transformation");
     }
 
-    pub fn apply_transformations(&mut self, transformations: Vec<Transformation>, mapping: Mapping) {
+    pub fn apply_transformations(
+        &mut self,
+        transformations: Vec<Transformation>,
+        mapping: Mapping,
+    ) -> Vec<(String, String)> {
+        let mut completed_fields: Vec<(String, String)> = Vec::new();
+
         for transformation in transformations {
-            self.apply_transformation(transformation, mapping);
+            if let Some(completed_field) = self.apply_transformation(transformation, mapping) {
+                trace_dbg!(&completed_field);
+                completed_fields.push(completed_field);
+            }
         }
+
+        completed_fields
     }
 
     pub fn clear_mapping(&mut self, mut output_pointer: String, mapping: Mapping) {
-        trace_dbg!(&output_pointer);
-
         let output_json = self.get_mut(&mapping.output_format()).unwrap();
-        trace_dbg!(&output_json);
 
         output_pointer = output_pointer.trim_start_matches("/").to_string();
         let keys: Vec<String> = output_pointer.split('/').map(|s| s.to_string()).collect();
-        trace_dbg!(&keys);
 
         remove_key_recursive(output_json, &keys);
-        trace_dbg!(&output_json);
     }
 }
 
@@ -207,7 +222,7 @@ pub fn update_repository(state: &mut AppState) {
     let output_pointer = state.output_pointer.clone();
     let output_format = state.mapping.output_format();
 
-    let source_value = state.candidate_output_value.clone().unwrap();
+    let source_value = state.candidate_output_value.clone();
     let output_json = state.repository.get_mut(&output_format).unwrap();
 
     let mut leaf_node = construct_leaf_node(&output_pointer);

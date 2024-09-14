@@ -281,8 +281,16 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         if tmp_map.is_empty() {
             // this should actually also check that type != object, if it is an object then it might be the case where an object (key) is required but all fields within the object are optional
             tmp_map.clone_from(subset.get_mut(key).unwrap().as_object().unwrap()); // todo remove unwrap
-            tmp_map.insert("Your input >>".to_string(), Value::Null);
-            // resolve_leaf_node(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+            if let Some(value) = state
+                .repository
+                .get(&state.mapping.output_format())
+                .unwrap()
+                .pointer(&state.output_pointer)
+            {
+                tmp_map.insert("Your input >>".to_string(), value.clone());
+            } else {
+                tmp_map.insert("Your input >>".to_string(), Value::Null);
+            }
         }
     } else if state.page == Pages::OptionalDataP3 {
         if state.resolved_subsets.contains_key(&state.optional_field_pointer) {
@@ -290,25 +298,41 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         }
 
         path = &state.optional_field_pointer;
-        let subset_path = truncate_until_char(path, '/');
+        let mut subset_path = truncate_until_char(path, '/');
+        if subset_path.ends_with("allOf")
+            || subset_path.ends_with("anyOf")
+            || subset_path.ends_with("oneOf")
+            || subset_path.ends_with("not")
+        {
+            // todo could be done more elegantly
+            subset_path = truncate_until_char(subset_path, '/');
+        }
+
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
-        get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
+        get_optional_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
         resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
 
         if tmp_map.is_empty() {
             // this should actually also check that type != object, if it is an object then it might be the edge case where an object (key) is required but all fields within the object are optional
             tmp_map.clone_from(subset.get_mut(key).unwrap().as_object().unwrap()); // todo remove unwrap
-            tmp_map.insert("Your input >>".to_string(), Value::Null);
+            if let Some(value) = state
+                .repository
+                .get(&state.mapping.output_format())
+                .unwrap()
+                .pointer(&state.output_pointer)
+            {
+                tmp_map.insert("Your input >>".to_string(), value.clone());
+            } else {
+                tmp_map.insert("Your input >>".to_string(), Value::Null);
+            }
         }
     }
 
     state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
-    // state.missing_display_subset = value_to_str(state.resolved_subsets.get(path).unwrap());
-    // trace_dbg!(&state.resolved_subsets);
 }
 
 /// This function takes a ref and replaces the subschema/Value with the resolved ref, entirely.
@@ -347,7 +371,6 @@ pub fn get_json<T>(path: impl AsRef<Path>) -> Result<T, serde_json::Error>
 where
     T: DeserializeOwned,
 {
-    trace_dbg!(std::env::current_dir().unwrap());
     let file = File::open(path).expect("failed to open file");
     let reader = BufReader::new(file);
 

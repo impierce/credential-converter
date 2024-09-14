@@ -33,7 +33,7 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
             .pointer(&state.output_pointer)
             .unwrap();
 
-        state.candidate_output_value = Some(candidate_output_value.to_string());
+        state.candidate_output_value = candidate_output_value.to_string();
 
         // if the candidate_output_value is only loaded for display in the popup, we don't want to push the transformation just yet.
         if push_transformation {
