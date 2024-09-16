@@ -9,6 +9,7 @@
         "narrative": "- **id**:\n        urn:epass:learningOutcome:2\n\n    **relatedSkill**:\n        - **id**:\n                https://publications.europa.eu/resource/authority/snb/dcf/860966ekgo\n\n            **inScheme**:\n                **id**:\n                    https://publications.europa.eu/resource/authority/snb/dcf/25831c2\n\n                **type**:\n                    ConceptScheme\n\n\n            **prefLabel**:\n                **en**:\n                    - 5.4 Identifying digital competence gaps\n\n\n            **type**:\n                Concept\n\n    **title**:\n        **en**:\n            - Name of DigiComp Competence\n\n\n    **type**:\n        LearningOutcome\n- **id**:\n        urn:epass:learningOutcome:3\n\n    **relatedSkill**:\n        - **id**:\n                http://data.europa.eu/snb/dcf/34v10n662m\n\n            **inScheme**:\n                **id**:\n                    https://publications.europa.eu/resource/authority/snb/dcf/25831c2\n\n                **type**:\n                    ConceptScheme\n\n\n            **prefLabel**:\n                **en**:\n                    - 3.1 Proficiency Level Foundation 2\n\n\n            **type**:\n                Concept\n\n    **title**:\n        **en**:\n            - Name of DigiComp Competence 2\n\n\n    **type**:\n        LearningOutcome\n"
       },
       "id": "urn:epass:learningAchievement:2",
+      "name": "Title of Achievement",
       "type": [
         "Achievement"
       ]

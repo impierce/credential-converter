@@ -100,7 +100,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title[0]"
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.*.[0]"
     },
     "destination": {
       "format": "OBv3",
