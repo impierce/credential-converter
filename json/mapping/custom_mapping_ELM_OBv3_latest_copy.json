@@ -111,6 +111,17 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.criteria.narrative"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
       "path": "$.validFrom"
     },
     "destination": {
@@ -170,17 +181,6 @@
     "destination": {
       "format": "OBv3",
       "path": "$.proof"
-    }
-  },
-  {
-    "type_": "markdownit",
-    "source": {
-      "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
-    },
-    "destination": {
-      "format": "OBv3",
-      "path": "$.credentialSubject.achievement.criteria.narrative"
     }
   }
 

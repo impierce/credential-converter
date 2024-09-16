@@ -110,6 +110,35 @@ impl StringToOne {
 }
 
 
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum JsonToMarkdown {
+    jsonToMarkdown,
+}
+
+impl JsonToMarkdown {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            JsonToMarkdown::jsonToMarkdown => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum MarkdownToJson {
+    markdownToJson,
+}
+
+impl MarkdownToJson {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            MarkdownToJson::markdownToJson => value,
+        }
+    }
+}
+
+
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
@@ -122,6 +151,16 @@ pub enum Transformation {
     StringToOne {
         type_: StringToOne,
         source: StringValue,
+        destination: DataLocation,
+    },
+    MarkdownToJson {
+        type_: MarkdownToJson,
+        source: DataLocation,
+        destination: DataLocation,
+    },
+    JsonToMarkdown {
+        type_: JsonToMarkdown,
+        source: DataLocation,
         destination: DataLocation,
     },
     OneToMany {
