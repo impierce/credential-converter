@@ -38,9 +38,9 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
                     "{}{}_{}.json",
                     cli_args.output_directory.clone().unwrap(),
                     path.file_name()
-                    .and_then(|s| s.to_str())
-                    .map(|s| s.strip_suffix(".json").unwrap_or(s))
-                    .unwrap(),
+                        .and_then(|s| s.to_str())
+                        .map(|s| s.strip_suffix(".json").unwrap_or(s))
+                        .unwrap(),
                     state.mapping.output_format()
                 );
                 load_files_apply_transformations(state);

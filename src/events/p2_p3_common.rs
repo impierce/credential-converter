@@ -6,11 +6,11 @@ use std::{char, fs::File};
 
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::backend::preload_p2::get_json;
+use crate::backend::update_display::{update_display_section, update_pointer};
 use crate::{
     backend::{
         candidate_value::set_candidate_output_value,
         jsonpointer::{JsonPath, JsonPointer},
-        preload_p2::{update_display_section, update_pointer},
         repository::update_repository,
         transformations::Transformation,
     },

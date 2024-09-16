@@ -8,3 +8,4 @@ pub mod preload_p2;
 pub mod repository;
 pub mod resolve;
 pub mod transformations;
+pub mod update_display;
