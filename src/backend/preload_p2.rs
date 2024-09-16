@@ -3,12 +3,14 @@ use serde_json::{json, Map, Value};
 use std::{collections::HashMap, fs::File, io::BufReader, path::Path};
 
 use crate::{
-    backend::{leaf_nodes::get_leaf_nodes, repository::Repository, transformations::Transformation},
+    backend::{
+        leaf_nodes::get_leaf_nodes, repository::Repository, resolve::resolve_ref, transformations::Transformation,
+    },
     state::{AppState, Mapping, P2P3Tabs, Pages},
     trace_dbg,
 };
 
-use super::{candidate_value::set_output_pointer, desm_mapping::apply_desm_mapping};
+use super::{candidate_value::set_output_pointer, desm_mapping::apply_desm_mapping, resolve::resolve_logic_construct};
 
 pub fn preload_p2(state: &mut AppState) {
     get_missing_data_fields(state);
@@ -131,48 +133,6 @@ pub fn get_optional_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>)
     }
 }
 
-pub fn resolve_logic_construct(schema: &Value, path: &str, map: &mut Map<String, Value>) {
-    if let Some(schema) = schema.pointer(path) {
-        if let Some(all_of) = schema.get("allOf") {
-            // Logical construct keys always consist of one array containing single objects
-            if let Some(all_of_elmnts) = all_of.as_array() {
-                for (i, e) in all_of_elmnts.iter().enumerate() {
-                    for (_key, value) in e.as_object().unwrap() {
-                        trace_dbg!(value);
-                        // if let Some(value) = value.as_str() {
-                        //     map.insert("allOf[".to_owned() + value + "]", e.clone()); // perhaps inserting it as such could be problematic when using the pointer in a later stage
-                        // }
-                        // else {
-                        map.insert("allOf/".to_owned() + &i.to_string(), e.clone());
-                        // }
-                    }
-                }
-            }
-        }
-        if let Some(any_of) = schema.get("anyOf") {
-            if let Some(any_of_elmnts) = any_of.as_array() {
-                for i in 0..any_of_elmnts.len() {
-                    map.insert(path.to_owned() + "anyOf/" + i.to_string().as_str(), Value::Null);
-                }
-            }
-        }
-        if let Some(one_of) = schema.get("oneOf") {
-            if let Some(one_of_elmnts) = one_of.as_array() {
-                for i in 0..one_of_elmnts.len() {
-                    map.insert(path.to_owned() + "oneOf/" + i.to_string().as_str(), Value::Null);
-                }
-            }
-        }
-        if let Some(not) = schema.get("not") {
-            if let Some(not_elmnts) = not.as_array() {
-                for i in 0..not_elmnts.len() {
-                    map.insert(path.to_owned() + "not/" + i.to_string().as_str(), Value::Null);
-                }
-            }
-        }
-    }
-}
-
 #[allow(clippy::collapsible_else_if)]
 pub fn update_pointer(state: &mut AppState, forward_back: bool) {
     if forward_back {
@@ -243,12 +203,12 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     // Custom logic needed for preloading page 2 & 3
     if state.page == Pages::InputPromptsP1 {
         get_required_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, &mut tmp_map);
         path = "/required";
         state.required_field_pointer = path.to_string();
     } else if preload_p3 {
         get_optional_fields(&mut state.target_schema, &mut tmp_map);
-        resolve_logic_construct(&state.target_schema, path, &mut tmp_map);
+        resolve_logic_construct(&state.target_schema, &mut tmp_map);
         path = "/optional";
         state.optional_field_pointer = path.to_string();
         state.output_pointer = "".to_string();
@@ -271,9 +231,13 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         let subset = state.resolved_subsets.get_mut(subset_path).unwrap(); // todo remove unwrap
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
 
+        trace_dbg!(&subset);
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
+        trace_dbg!(&subset);
+        resolve_logic_construct(subset.get_mut(key).unwrap(), &mut tmp_map);
+        trace_dbg!(&subset);
         get_required_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
-        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
+        trace_dbg!(&subset);
 
         // When a key-value contains no required field nor any logical construct, also not in a $ref or $def,
         // then we are left with 2 possibilities: either just the key is required but all fields within the key are optional, --> what to do?
@@ -312,8 +276,8 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
         let key = path.trim_start_matches((subset_path.to_owned() + "/").as_str());
 
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
+        resolve_logic_construct(subset.get_mut(key).unwrap(), &mut tmp_map);
         get_optional_fields(subset.get_mut(key).unwrap(), &mut tmp_map); // todo remove unwrap
-        resolve_logic_construct(subset.get_mut(key).unwrap(), key, &mut tmp_map);
         resolve_ref(subset.get_mut(key).unwrap(), state.target_schema.clone()); // this should loop until there are no more refs
 
         if tmp_map.is_empty() {
@@ -335,30 +299,7 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
 }
 
-/// This function takes a ref and replaces the subschema/Value with the resolved ref, entirely.
-/// All specs until the latest haven't allowed any additional fields inside the ref object.
-/// So practically this function is not fully compliant with the latest specs.
-/// However, additional fields inside a ref object in the latest draft are quite complex to utilize and still strongly discouraged.
-pub fn resolve_ref(schema: &mut Value, root: Value) {
-    if let Some(schema_obj) = schema.as_object() {
-        if let Some(ref_) = schema_obj.get("$ref") {
-            if let Some(ref_str) = ref_.as_str() {
-                // at this point it's fair to assume the json schema ref is invalid if it contains something else than a string.
-                if ref_str.starts_with("#/") {
-                    let tmp = root.pointer(ref_str.trim_start_matches('#')).unwrap().clone();
-                    *schema = tmp;
-                } else {
-                    let mut path = truncate_until_char(root["$id"].as_str().unwrap(), '/').to_owned()
-                        + ref_str.trim_start_matches('.'); // relative paths are valid as "/xx/yy/zz" as well as "./xx/yy/zz" in both cases the root-id folder path is prepended.
-                    path = path.trim_start_matches("file://").to_string(); // todo: this is hard-coded logic assuming we will ship the schemas as well, not allowing for http:// paths.
-                    trace_dbg!(&path);
-                    let tmp = get_json(path).unwrap();
-                    *schema = tmp;
-                }
-            }
-        }
-    }
-}
+////////     HELPERS     ////////
 
 pub fn truncate_until_char(s: &str, ch: char) -> &str {
     match s.rfind(ch) {
