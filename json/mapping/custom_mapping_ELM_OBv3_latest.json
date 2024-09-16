@@ -173,7 +173,7 @@
     }
   },
   {
-    "type_": "markdownit",
+    "type_": "jsonToMarkdown",
     "source": {
       "format": "ELM",
       "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
