@@ -171,7 +171,17 @@
       "format": "OBv3",
       "path": "$.credentialSubject.id"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.proof"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.proof"
+    }
   }
-
 
 ]
