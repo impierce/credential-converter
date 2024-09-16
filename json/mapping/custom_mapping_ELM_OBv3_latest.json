@@ -36,7 +36,7 @@
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].awardedBy.awardingBody[0].id"
+      "path": "$.issuer.id"
     },
     "destination": {
       "format": "OBv3",
@@ -50,14 +50,14 @@
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.issuer.type.[0]"
+      "path": "$.issuer.type[]"
     }
   },
   {
     "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].awardedBy.awardingBody[0].legalName.en[0]"
+      "path": "$.issuer.legalName.en"
     },
     "destination": {
       "format": "OBv3",
@@ -65,18 +65,57 @@
     }
   },
   {
-    "type_": {
-      "takeIndex": {
-        "index": 1
-      }
-    },
+    "type_": "copy",
     "source": {
       "format": "ELM",
-      "path": "$.@context"
+      "path": "$.credentialSubject.hasClaim[0].id"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.@context"
+      "path": "$.credentialSubject.achievement.id"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "Achievement"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.type[]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.id"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.name"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.criteria.narrative"
     }
   },
   {
@@ -100,5 +139,39 @@
       "format": "OBv3",
       "path": "$.name"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.id"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "AchievementSubject"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.type[]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.id"
+    }
   }
+
+
 ]

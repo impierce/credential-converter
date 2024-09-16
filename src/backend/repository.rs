@@ -140,20 +140,30 @@ impl Repository {
                     },
             } => {
                 if destination_format != mapping.output_format() {
-                    return;
+                    return None;
                 }
 
-
+                let dest  = destination_path.clone(); 
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
-
-                if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    *value = transformation.apply(source_value);
+                if dest.contains("[]") {
+                    // Deserialize the JSON string into a MyStruct
+                    // remove the array element from the destantation and reuse this new pointer
+                    // fill the array with the new value
+                    let array_pointer = &pointer[..pointer.len()-2];
+                    if let Some(array) = leaf_node.pointer_mut(&array_pointer) .and_then(|v| v.as_array_mut())  {
+                        // Push a new string to the array
+                            array.push(Value::String(source_value));
+                    }
+                }
+                else if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                   *value = transformation.apply(source_value);
                 }
 
                 merge(destination_credential, leaf_node);
+                None
             }
 
             
@@ -195,12 +205,37 @@ pub fn construct_leaf_node(path: &str) -> Value {
     // Initialize the root of the JSON structure as null // todo: isn't this actually the value of the leaf node, not the root?
     let mut current_value = Value::Null;
 
+
     // Iterate through the parts in reverse order to build the nested structure
     for part in parts.into_iter().rev() {
-        let mut new_object = Map::new();
-        new_object.insert(part.to_string(), current_value);
-        current_value = Value::Object(new_object);
+        // handle arrays differnt 
+        if part.contains("[]") {
+            let part_array: &str = &part[..part.len()-2];
+
+            let v: Vec<Value> = Vec::new();
+
+            // // ... fill in the vec with some Value::Object's as you like it ...
+            // // ... in our case its one or more strings 
+            
+            let a = Value::Array(v);
+            // let mut map: serde_json::Map<String,Value> = serde_json::Map::new();
+            // map.insert("person",a);
+            // let o = Value::Object(map);
+
+            let mut new_object = Map::new();
+            new_object.insert(part_array.to_string(),a);
+            current_value = Value::Object(new_object);
+        }
+        else {
+            let mut new_object = Map::new();
+            new_object.insert(part.to_string(), current_value);
+            current_value = Value::Object(new_object);
+                
+        }
     }
+
+    // if the end of the path indicates an array than add an array to the leaf and return the array to be filled with a value
+
 
     current_value
 }

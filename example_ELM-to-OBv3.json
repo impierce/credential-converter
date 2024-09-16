@@ -1,12 +1,79 @@
 {
-  "@context": "http://data.europa.eu/snb/model/context/edc-ap",
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
+  ],
+  "credentialSubject": {
+    "achievement": {
+      "criteria": {
+        "narrative": [
+          {
+            "id": "urn:epass:learningOutcome:2",
+            "relatedSkill": [
+              {
+                "id": "https://publications.europa.eu/resource/authority/snb/dcf/860966ekgo",
+                "inScheme": {
+                  "id": "https://publications.europa.eu/resource/authority/snb/dcf/25831c2",
+                  "type": "ConceptScheme"
+                },
+                "prefLabel": {
+                  "en": [
+                    "5.4 Identifying digital competence gaps"
+                  ]
+                },
+                "type": "Concept"
+              }
+            ],
+            "title": {
+              "en": [
+                "Name of DigiComp Competence"
+              ]
+            },
+            "type": "LearningOutcome"
+          },
+          {
+            "id": "urn:epass:learningOutcome:3",
+            "relatedSkill": [
+              {
+                "id": "http://data.europa.eu/snb/dcf/34v10n662m",
+                "inScheme": {
+                  "id": "https://publications.europa.eu/resource/authority/snb/dcf/25831c2",
+                  "type": "ConceptScheme"
+                },
+                "prefLabel": {
+                  "en": [
+                    "3.1 Proficiency Level Foundation 2"
+                  ]
+                },
+                "type": "Concept"
+              }
+            ],
+            "title": {
+              "en": [
+                "Name of DigiComp Competence 2"
+              ]
+            },
+            "type": "LearningOutcome"
+          }
+        ]
+      },
+      "id": "urn:epass:learningAchievement:2",
+      "type": [
+        "Achievement"
+      ]
+    },
+    "id": "did:key:afsdlkj34134",
+    "type": [
+      "AchievementSubject"
+    ]
+  },
   "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",
   "issuer": {
-    "id": "urn:epass:org:1",
-    "name": "University of Life",
-    "type": {
-      "[0]": "Profile"
-    }
+    "id": "did:ebsi:org:12345689",
+    "name": "ORGANIZACION TEST",
+    "type": [
+      "Profile"
+    ]
   },
   "name": "TITLE OF PROGRAMME",
   "type": [
