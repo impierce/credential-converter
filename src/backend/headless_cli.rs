@@ -13,7 +13,7 @@ use super::init_conversion::load_input_file;
 pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     check_args(cli_args)?;
     trace_dbg!(&cli_args);
-    complete_appstate_headless(cli_args, state);
+    init_appstate_headless(cli_args, state);
 
     if cli_args.input_file.is_some() {
         load_files_apply_transformations(state);
@@ -49,6 +49,12 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn load_files_apply_transformations(state: &mut AppState) {
+    load_input_file(state, true);
+    load_mapping_file(state);
+    create_output_files(state);
 }
 
 pub fn check_args(cli_args: &Args) -> Result<()> {
@@ -88,12 +94,6 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
     Ok(())
 }
 
-pub fn load_files_apply_transformations(state: &mut AppState) {
-    load_input_file(state, true);
-    load_mapping_file(state);
-    create_output_files(state);
-}
-
 pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
     for entry in read_dir(input_dir).unwrap() {
         let entry = entry.unwrap();
@@ -110,7 +110,7 @@ pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
     *json_count
 }
 
-pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
+pub fn init_appstate_headless(args: &Args, state: &mut AppState) {
     state.mapping = args.conversion.unwrap();
     state.mapping_path = args.mapping_file.clone().unwrap();
     if let Some(input_f) = args.input_file.clone() {
