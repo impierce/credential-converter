@@ -1,4 +1,4 @@
-use crate::backend::preload_p2::preload_p2;
+use crate::backend::init_conversion::init_conversion;
 use crate::state::{AppState, P1Prompts};
 use crossterm::event::{self, Event, KeyCode::*, KeyEventKind};
 use std::path::Path;
@@ -110,7 +110,7 @@ pub fn p1_handler(event: Event, state: &mut AppState) -> Result<bool, std::io::E
                     && (state.custom_mapping_path.is_empty() || state.custom_mapping_path.ends_with(".json"))
                     && !state.overwrite_warning
                 {
-                    preload_p2(state);
+                    init_conversion(state);
                     state.page.next();
                 }
             }
@@ -145,7 +145,7 @@ fn handle_enter_p1(state: &mut AppState) -> bool {
         && (state.custom_mapping_path.is_empty() || state.custom_mapping_path.ends_with(".json"))
         && !state.overwrite_warning
     {
-        preload_p2(state);
+        init_conversion(state);
         state.page.next();
     }
     // Close overwrite warning if user is not at the end of the prompts or some prompts are valid and stay on page.
