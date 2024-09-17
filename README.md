@@ -105,6 +105,8 @@ Page 2 is focused on the output file. Every standard has a minimum set of mandat
 
 Navigating through the output fields is done by hitting enter to open the folder or escape to go back. Only fields denoted by `<object>` open up like folders. Only the field denoted by `Your input >>` allows entering values. `Your input >>` fields are always accompanied by fields giving information about the input expected. Completed output fields and used input fields turn green upon completion. `<object>`'s turn green when they contain one or more completed fields, this doesn't mean all of it's fields have been completed.
 
+The TUI breaks up logical construct arrays automatically into [`allOf/`, `anyOf/`, `oneOf/`, `not/`] followed by `/[0-9]`, listing the elements of the logical construct. Please refer to the Json Schema documentation for a better understanding of logical constructs: https://json-schema.org/understanding-json-schema/reference/combining 
+
 The `View` button will open the mapping popup, allowing you to view the selected fields in full length in a popup, as the main page will truncate long texts. The tabs in the popup are scrollable. On the top left you will see the `Input Path` and below the `Input Value`. On the top right you will see the `Output Path` and below either the `Result Value` or the `Output Field Information`. The former displays the candidate value which is ready to be mapped by clicking `Confirm`. The latter displays the informational/non_input field content.Transformations will also be displayed immediately. Navigation on the main page is still possible when the popup is open.
 
 
