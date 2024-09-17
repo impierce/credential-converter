@@ -8,7 +8,7 @@ use ratatui::{
 };
 
 use crate::{
-    backend::resolve::value_to_str,
+    backend::getters_resolvers::value_to_str,
     mapping_bars::{render_manytoone_bar, render_mapping_bar},
     popups::{render_popup_exit_warning, render_popup_mapping},
     render_breadcrumbs,

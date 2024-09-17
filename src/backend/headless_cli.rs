@@ -1,22 +1,19 @@
-use crate::backend::desm_mapping::apply_desm_mapping;
-use crate::backend::preload_p2::get_json;
-use crate::backend::repository::Repository;
-use crate::backend::transformations::Transformation;
+use crate::backend::init_conversion::load_mapping_file;
 use crate::p2_p3_common::create_output_files;
 use crate::state::{AppState, Mapping};
 use crate::trace_dbg;
 
 use clap::Parser;
-use serde_json::json;
-use std::collections::HashMap;
 use std::fs::read_dir;
 use std::io::Result;
 use std::path::Path;
 
+use super::init_conversion::load_input_file;
+
 pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     check_args(cli_args)?;
     trace_dbg!(&cli_args);
-    complete_appstate_headless(cli_args, state);
+    init_appstate_headless(cli_args, state);
 
     if cli_args.input_file.is_some() {
         load_files_apply_transformations(state);
@@ -38,9 +35,9 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
                     "{}{}_{}.json",
                     cli_args.output_directory.clone().unwrap(),
                     path.file_name()
-                    .and_then(|s| s.to_str())
-                    .map(|s| s.strip_suffix(".json").unwrap_or(s))
-                    .unwrap(),
+                        .and_then(|s| s.to_str())
+                        .map(|s| s.strip_suffix(".json").unwrap_or(s))
+                        .unwrap(),
                     state.mapping.output_format()
                 );
                 load_files_apply_transformations(state);
@@ -52,6 +49,12 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn load_files_apply_transformations(state: &mut AppState) {
+    load_input_file(state, true);
+    load_mapping_file(state);
+    create_output_files(state);
 }
 
 pub fn check_args(cli_args: &Args) -> Result<()> {
@@ -91,32 +94,6 @@ pub fn check_args(cli_args: &Args) -> Result<()> {
     Ok(())
 }
 
-pub fn load_files_apply_transformations(state: &mut AppState) {
-    state.repository = Repository::from(HashMap::from_iter(vec![
-        (
-            state.mapping.input_format(),
-            get_json(&state.input_path).expect("No source file found"),
-        ),
-        (state.mapping.output_format(), json!({})),
-    ]));
-
-    trace_dbg!("Successfully loaded the input file");
-
-    if state.mapping_path == "DESM" {
-        apply_desm_mapping(state);
-    } else {
-        // todo: remove unwrap
-        let rdr = std::fs::File::open(&state.mapping_path).unwrap();
-        let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-
-        trace_dbg!("Successfully loaded the mapping file");
-
-        state.repository.apply_transformations(transformations, state.mapping);
-    }
-
-    create_output_files(state);
-}
-
 pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
     for entry in read_dir(input_dir).unwrap() {
         let entry = entry.unwrap();
@@ -133,7 +110,7 @@ pub fn check_input_dir(input_dir: &str, json_count: &mut usize) -> usize {
     *json_count
 }
 
-pub fn complete_appstate_headless(args: &Args, state: &mut AppState) {
+pub fn init_appstate_headless(args: &Args, state: &mut AppState) {
     state.mapping = args.conversion.unwrap();
     state.mapping_path = args.mapping_file.clone().unwrap();
     if let Some(input_f) = args.input_file.clone() {
