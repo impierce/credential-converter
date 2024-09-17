@@ -1,15 +1,13 @@
 use serde_json::Value;
 
 use crate::{
-    backend::preload_p2::{get_required_fields, truncate_until_char},
     state::{AppState, P2P3Tabs, Pages},
     trace_dbg,
 };
 
 use super::{
     candidate_value::set_output_pointer,
-    preload_p2::get_optional_fields,
-    resolve::{resolve_logic_construct, resolve_ref},
+    getters_resolvers::{get_optional_fields, get_required_fields, resolve_logic_construct, resolve_ref},
 };
 
 #[allow(clippy::collapsible_else_if)]
@@ -176,4 +174,13 @@ pub fn update_display_section(state: &mut AppState, preload_p3: bool) {
     }
 
     state.resolved_subsets.insert(path.to_string(), Value::from(tmp_map));
+}
+
+///// HELPERS /////
+
+pub fn truncate_until_char(s: &str, ch: char) -> &str {
+    match s.rfind(ch) {
+        Some(pos) => &s[..pos],
+        None => s,
+    }
 }

@@ -1,9 +1,34 @@
 use serde_json::{Map, Value};
 
 use crate::{
-    backend::preload_p2::{get_json, truncate_until_char},
+    backend::{init_conversion::get_json, update_display::truncate_until_char},
     trace_dbg,
 };
+
+pub fn get_required_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>) {
+    if let Some(properties) = schema.get("properties") {
+        if let Some(required) = schema.get("required") {
+            if let Some(required) = required.as_array() {
+                for key in required {
+                    if let Some(key) = key.as_str() {
+                        tmp_map.insert(key.to_string(), properties[key].clone());
+                    }
+                }
+            }
+        }
+    }
+}
+
+pub fn get_optional_fields(schema: &mut Value, tmp_map: &mut Map<String, Value>) {
+    if let Some(properties) = schema.get("properties") {
+        for key in properties
+            .as_object()
+            .expect("error: invalid property key-value pair in schema")
+        {
+            tmp_map.insert(key.0.clone(), key.1.clone());
+        }
+    }
+}
 
 /// This function takes a ref and replaces the subschema/Value with the resolved ref, entirely.
 /// All specs until the latest haven't allowed any additional fields inside the ref object.
