@@ -1,13 +1,12 @@
 use crate::{
     backend::{
-        jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, StringValue, Transformation},
+        jsonpointer::{JsonPath, JsonPointer}, leaf_nodes::construct_leaf_node, transformations::{DataLocation, StringValue, Transformation}
     },
     state::{AppState, Mapping},
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
-use serde_json::{json, Map, Value};
+use serde_json::{json, Value};
 use std::{
     collections::HashMap,
     ops::{Deref, DerefMut},
@@ -296,48 +295,6 @@ impl Repository {
 
         remove_key_recursive(output_json, &keys);
     }
-}
-
-pub fn construct_leaf_node(path: &str) -> Value {
-    // Split the input string by '/' and filter out any empty parts
-    let parts: Vec<&str> = path.split('/').filter(|&s| !s.is_empty()).collect();
-
-    // Initialize the root of the JSON structure as null // todo: isn't this actually the value of the leaf node, not the root?
-    let mut current_value = Value::Null;
-
-
-    // Iterate through the parts in reverse order to build the nested structure
-    for part in parts.into_iter().rev() {
-        // handle arrays differnt 
-        if part.contains("[]") {
-            let part_array: &str = &part[..part.len()-2];
-
-            let v: Vec<Value> = Vec::new();
-
-            // // ... fill in the vec with some Value::Object's as you like it ...
-            // // ... in our case its one or more strings 
-            
-            let a = Value::Array(v);
-            // let mut map: serde_json::Map<String,Value> = serde_json::Map::new();
-            // map.insert("person",a);
-            // let o = Value::Object(map);
-
-            let mut new_object = Map::new();
-            new_object.insert(part_array.to_string(),a);
-            current_value = Value::Object(new_object);
-        }
-        else {
-            let mut new_object = Map::new();
-            new_object.insert(part.to_string(), current_value);
-            current_value = Value::Object(new_object);
-                
-        }
-    }
-
-    // if the end of the path indicates an array than add an array to the leaf and return the array to be filled with a value
-
-
-    current_value
 }
 
 pub fn merge(a: &mut Value, b: Value) {
