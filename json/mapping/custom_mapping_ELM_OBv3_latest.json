@@ -182,6 +182,17 @@
       "format": "OBv3",
       "path": "$.credentialSubject.achievement.criteria.narrative"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSchema"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSchema"
+    }
   }
 
 ]

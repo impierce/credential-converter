@@ -3,6 +3,16 @@
     "https://www.w3.org/ns/credentials/v2",
     "http://data.europa.eu/snb/model/context/edc-ap"
   ],
+  "credentialSchema": [
+    {
+      "id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "type": "ShaclValidator2017"
+    },
+    {
+      "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"
+    }
+  ],
   "credentialSubject": {
     "achievement": {
       "criteria": {

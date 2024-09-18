@@ -1,0 +1,46 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
+  ],
+  "credentialSchema": [
+    {
+      "id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "type": "ShaclValidator2017"
+    },
+    {
+      "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"
+    }
+  ],
+  "credentialSubject": {
+    "hasClaim[0]": {
+      "id": "urn:epass:learningAchievement:2",
+      "specifiedBy": {
+        "learningOutcome": {},
+        "title": {
+          "en": {
+            "[0]": "Title of Achievement"
+          }
+        }
+      },
+      "title": {
+        "en[0]": "TITLE OF PROGRAMME"
+      }
+    },
+    "id": "did:key:afsdlkj34134"
+  },
+  "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",
+  "issuer": {
+    "id": "did:ebsi:org:12345689",
+    "legalName": {
+      "en": "ORGANIZACION TEST"
+    }
+  },
+  "type": [
+    "VerifiableCredential",
+    "VerifiableAttestation",
+    "EuropeanDigitalCredential"
+  ],
+  "validFrom": "2019-09-20T00:00:00+02:00"
+}
