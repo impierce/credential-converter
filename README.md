@@ -80,7 +80,7 @@ On the bottom you'll find a bar explaining the basic keys as well.
 `res/output_credential.json`: Example output file for the converted JSON.  
 `res/custom_mapping.json`: Example custom mapping file.  
 
-Logs are kept in `logging_folder/credential-converter.log`. This file is overwritten upon each startup of the program.
+Logs are kept in `logging_folder/credential-converter.log`. This file is overwritten upon each startup of the program. Use the macro `trace_dbg!()` to add debug messages in the code.
 
 To remove the default file paths remove lines 34 - 38 from the `main.rs`:
 ```sh
