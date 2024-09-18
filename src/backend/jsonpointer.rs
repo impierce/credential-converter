@@ -37,7 +37,7 @@ impl TryFrom<JsonPath> for JsonPointer {
     fn try_from(value: JsonPath) -> Result<Self, Self::Error> {
         Ok(JsonPointer({
             let mut value = value.0.trim_start_matches('$').replace('.', "/");
-            
+
             // Check if the JsonPath contains arrays and convert them as well
             let regx = Regex::new(r"\[(\d+)\]").unwrap();
 

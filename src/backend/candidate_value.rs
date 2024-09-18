@@ -9,7 +9,6 @@ use crate::{
     trace_dbg,
 };
 
-
 pub fn set_candidate_output_value(state: &mut AppState, push_transformation: bool) {
     // todo: is it needed to add directcopy to the start?
     let selected_transformations = [
@@ -48,7 +47,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
     let input_value: String = state.input_fields[state.selected_input_field].0.clone();
     let destination_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
-    let transformation = match transformation {
+    match transformation {
         Transformations::LowerCase => Transformation::OneToOne {
             type_: OneToOne::toLowerCase,
             source: DataLocation {
@@ -102,7 +101,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
         Transformations::StringToOne => Transformation::StringToOne {
             type_: StringToOne::stringit,
             source: StringValue {
-                value: input_value.clone()
+                value: input_value.clone(),
             },
             destination: DataLocation {
                 format: output_format.clone(),
@@ -120,9 +119,7 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
                 path: destination_path.to_string(),
             },
         },
-    };
-    let transformation = transformation;
-    transformation
+    }
 }
 
 pub fn set_output_pointer(state: &mut AppState) {

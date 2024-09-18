@@ -35,7 +35,6 @@ pub fn construct_leaf_node(path: &str) -> Value {
     // Initialize the leaf_node value to Null, the actual value will be inserted later by the apply_transformation function
     let mut current_value = Value::Null;
 
-
     // Iterate through the parts in reverse order to build the nested structure
     for part in parts.into_iter().rev() {
         // Check if the part is an array index
@@ -49,12 +48,10 @@ pub fn construct_leaf_node(path: &str) -> Value {
                 new_array.insert(part_array_index, current_value);
                 current_value = Value::Array(new_array);
             }
-        }
-        else {
+        } else {
             let mut new_object = Map::new();
             new_object.insert(part.to_string(), current_value);
             current_value = Value::Object(new_object);
-                
         }
     }
 

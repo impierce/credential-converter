@@ -11,6 +11,7 @@ use jsonpath_rust::JsonPathFinder;
 use regex::Regex;
 use serde_json::{json, Value};
 use std::{
+    cmp::Ordering,
     collections::HashMap,
     ops::{Deref, DerefMut},
 };
@@ -153,7 +154,7 @@ impl Repository {
                     // remove the array element from the destantation and reuse this new pointer
                     // fill the array with the new value
                     let array_pointer = &pointer[..pointer.len() - 2];
-                    if let Some(array) = leaf_node.pointer_mut(&array_pointer).and_then(|v| v.as_array_mut()) {
+                    if let Some(array) = leaf_node.pointer_mut(array_pointer).and_then(|v| v.as_array_mut()) {
                         // Push a new string to the array
                         array.push(Value::String(source_value));
                     }
@@ -394,7 +395,7 @@ fn json_to_markdown(json: &Value, indent_level: usize) -> String {
 }
 
 fn markdown_to_json(markdown: &str) -> Value {
-    let mut lines = markdown.lines().peekable();
+    let lines = markdown.lines().peekable();
     let mut current_indent = 0;
     let mut stack: Vec<Value> = vec![Value::Object(Default::default())];
     let mut current_key: Option<String> = None;
@@ -403,7 +404,7 @@ fn markdown_to_json(markdown: &str) -> Value {
     let bold_regex = Regex::new(r"^\s*\*\*(.+?)\*\*\s*:$").unwrap();
     let list_item_regex = Regex::new(r"^\s*-\s*(.+)").unwrap();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line_indent = line.chars().take_while(|c| c.is_whitespace()).count();
         let line = line.trim();
 
@@ -412,18 +413,20 @@ fn markdown_to_json(markdown: &str) -> Value {
         }
 
         // Adjust stack based on indentation
-        if line_indent > current_indent {
-            stack.push(Value::Object(Default::default()));
-        } else if line_indent < current_indent {
-            let value = stack.pop().unwrap();
-            let parent = stack.last_mut().unwrap();
-            if let Some(key) = current_key.take() {
-                if let Value::Object(ref mut obj) = parent {
-                    obj.insert(key, value);
+        match line_indent.cmp(&current_indent) {
+            Ordering::Greater => stack.push(Value::Object(Default::default())),
+            Ordering::Less => {
+                let value = stack.pop().unwrap();
+                let parent = stack.last_mut().unwrap();
+                if let Some(key) = current_key.take() {
+                    if let Value::Object(ref mut obj) = parent {
+                        obj.insert(key, value);
+                    }
+                } else if let Value::Array(ref mut arr) = parent {
+                    arr.push(value);
                 }
-            } else if let Value::Array(ref mut arr) = parent {
-                arr.push(value);
             }
+            _ => {}
         }
 
         current_indent = line_indent;
