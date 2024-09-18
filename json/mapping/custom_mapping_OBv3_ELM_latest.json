@@ -58,44 +58,11 @@
     "type_": "copy",
     "source": {
       "format": "OBv3",
-      "path": "$.credentialSubject.achievement.id"
-    },
-    "destination": {
-      "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].id"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "OBv3",
-      "path": "$.credentialSubject.achievement.name"
-    },    
-    "destination": {
-      "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.en.[0]"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "OBv3",
       "path": "$.validFrom"
     },
     "destination": {
       "format": "ELM",
       "path": "$.validFrom"
-    }
-  },
-  {
-    "type_": "copy",
-    "source": {
-      "format": "OBv3",
-      "path": "$.name"
-    },
-    "destination": {
-      "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].title.en[0]"
     }
   },
   {
@@ -141,6 +108,38 @@
       "format": "ELM",
       "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.name"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].title.en[0]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.id"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].id"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.name"
+    },    
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.en[0]"
+    }
   }
-
 ]

@@ -14,20 +14,24 @@
     }
   ],
   "credentialSubject": {
-    "hasClaim[0]": {
-      "id": "urn:epass:learningAchievement:2",
-      "specifiedBy": {
-        "learningOutcome": {},
-        "title": {
-          "en": {
-            "[0]": "Title of Achievement"
+    "hasClaim": [
+      {
+        "id": "urn:epass:learningAchievement:2",
+        "specifiedBy": {
+          "learningOutcome": {},
+          "title": {
+            "en": [
+              "Title of Achievement"
+            ]
           }
+        },
+        "title": {
+          "en": [
+            "TITLE OF PROGRAMME"
+          ]
         }
-      },
-      "title": {
-        "en[0]": "TITLE OF PROGRAMME"
       }
-    },
+    ],
     "id": "did:key:afsdlkj34134"
   },
   "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",

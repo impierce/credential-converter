@@ -73,7 +73,7 @@
     },    
     "destination": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.en.[0]"
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.en[0]"
     }
   },
   {

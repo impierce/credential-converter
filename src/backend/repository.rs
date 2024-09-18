@@ -1,17 +1,19 @@
 use crate::{
     backend::{
-        jsonpointer::{JsonPath, JsonPointer}, leaf_nodes::construct_leaf_node, transformations::{DataLocation, StringValue, Transformation}
+        jsonpointer::{JsonPath, JsonPointer},
+        leaf_nodes::construct_leaf_node,
+        transformations::{DataLocation, StringValue, Transformation},
     },
     state::{AppState, Mapping},
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
+use regex::Regex;
 use serde_json::{json, Value};
 use std::{
     collections::HashMap,
     ops::{Deref, DerefMut},
 };
-use regex::Regex;
 
 #[derive(Debug, Default, Clone)]
 pub struct Repository(HashMap<String, Value>);
@@ -78,6 +80,7 @@ impl Repository {
                 };
 
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
+
                 let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
@@ -129,10 +132,7 @@ impl Repository {
 
             Transformation::StringToOne {
                 type_: transformation,
-                source:
-                    StringValue {
-                        value: source_value,
-                    },
+                source: StringValue { value: source_value },
                 destination:
                     DataLocation {
                         format: destination_format,
@@ -143,7 +143,7 @@ impl Repository {
                     return None;
                 }
 
-                let dest  = destination_path.clone(); 
+                let dest = destination_path.clone();
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
@@ -152,14 +152,13 @@ impl Repository {
                     // Deserialize the JSON string into a MyStruct
                     // remove the array element from the destantation and reuse this new pointer
                     // fill the array with the new value
-                    let array_pointer = &pointer[..pointer.len()-2];
-                    if let Some(array) = leaf_node.pointer_mut(&array_pointer) .and_then(|v| v.as_array_mut())  {
+                    let array_pointer = &pointer[..pointer.len() - 2];
+                    if let Some(array) = leaf_node.pointer_mut(&array_pointer).and_then(|v| v.as_array_mut()) {
                         // Push a new string to the array
-                            array.push(Value::String(source_value));
+                        array.push(Value::String(source_value));
                     }
-                }
-                else if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                   *value = transformation.apply(source_value);
+                } else if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(source_value);
                 }
 
                 merge(destination_credential, leaf_node);
@@ -203,7 +202,6 @@ impl Repository {
                 // run the source value through a markdown converter to fit the nested objects into a markdown string
                 let markdown_source_value = json!(json_to_markdown(&source_value, 0));
 
-
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(markdown_source_value);
                 }
@@ -243,7 +241,6 @@ impl Repository {
                     }
                 };
 
-
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
 
@@ -251,7 +248,6 @@ impl Repository {
 
                 // run the source value through a markdown converter to fit the nested objects into a markdown string
                 let json_source_value = json!(markdown_to_json(&source_value.to_string()));
-
 
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(json_source_value);
@@ -262,9 +258,6 @@ impl Repository {
                 trace_dbg!("Successfully completed transformation");
                 Some((destination_path, source_path))
             }
-
-
-            
 
             _ => todo!(),
         }
@@ -298,13 +291,28 @@ impl Repository {
 }
 
 pub fn merge(a: &mut Value, b: Value) {
-    // todo: here anything non object is actually simply overwritten. So here we need to introduce type checking of the Value b.
     match (a, b) {
         (a @ &mut Value::Object(_), Value::Object(b)) => {
             let a = a.as_object_mut().unwrap();
             for (k, v) in b {
-                merge(a.entry(k).or_insert(Value::Null), v); //
+                merge(a.entry(k).or_insert(Value::Null), v);
             }
+        }
+        (a @ &mut Value::Array(_), Value::Array(b_arr)) => {
+            let a_arr = a.as_array_mut().unwrap();
+            let a_len = a_arr.len();
+            let b_iter = b_arr.into_iter();
+
+            for (i, b_val) in b_iter.enumerate() {
+                if i < a_len {
+                    merge(&mut a_arr[i], b_val);
+                } else {
+                    a_arr.push(b_val);
+                }
+            }
+        }
+        (_, Value::Null) => {
+            // If the incoming merge Json Value is `Value::Null`, do nothing to the existing Json Value,the current repository, `a`
         }
         (a, b) => *a = b,
     }
@@ -361,7 +369,11 @@ fn json_to_markdown(json: &Value, indent_level: usize) -> String {
         }
         Value::Array(arr) => {
             for item in arr {
-                markdown.push_str(&format!("{}- {}\n", indent, json_to_markdown(item, indent_level + 1).trim()));
+                markdown.push_str(&format!(
+                    "{}- {}\n",
+                    indent,
+                    json_to_markdown(item, indent_level + 1).trim()
+                ));
             }
         }
         Value::String(s) => {
@@ -380,8 +392,6 @@ fn json_to_markdown(json: &Value, indent_level: usize) -> String {
 
     markdown
 }
-
-
 
 fn markdown_to_json(markdown: &str) -> Value {
     let mut lines = markdown.lines().peekable();

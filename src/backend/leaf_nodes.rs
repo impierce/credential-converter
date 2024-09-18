@@ -32,26 +32,23 @@ pub fn construct_leaf_node(path: &str) -> Value {
     // Split the input string by '/' and filter out any empty parts
     let parts: Vec<&str> = path.split('/').filter(|&s| !s.is_empty()).collect();
 
-    // Initialize the root of the JSON structure as null
+    // Initialize the leaf_node value to Null, the actual value will be inserted later by the apply_transformation function
     let mut current_value = Value::Null;
 
 
     // Iterate through the parts in reverse order to build the nested structure
     for part in parts.into_iter().rev() {
-        // handle arrays differnt 
-        if part.contains("[]") { // todo: this should include the number ofcourse
-            let part_array: &str = &part[..part.len()-2];
+        // Check if the part is an array index
+        if part.chars().all(|c| c.is_numeric()) {
+            if let Ok(part_array_index) = part.parse::<usize>() {
+                let mut new_array = Vec::new();
+                for i in 0..part_array_index {
+                    new_array.insert(i, Value::Null);
+                }
 
-            let v: Vec<Value> = Vec::new();
-
-            // // ... fill in the vec with some Value::Object's as you like it ...
-            // // ... in our case its one or more strings 
-            
-            let a = Value::Array(v);
-
-            let mut new_object = Map::new();
-            new_object.insert(part_array.to_string(),a);
-            current_value = Value::Object(new_object);
+                new_array.insert(part_array_index, current_value);
+                current_value = Value::Array(new_array);
+            }
         }
         else {
             let mut new_object = Map::new();
@@ -60,8 +57,6 @@ pub fn construct_leaf_node(path: &str) -> Value {
                 
         }
     }
-
-    // if the end of the path indicates an array than add an array to the leaf and return the array to be filled with a value
 
     current_value
 }
