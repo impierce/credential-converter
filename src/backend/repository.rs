@@ -8,8 +8,7 @@ use crate::{
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
-use serde_json::{json, Value, Map};
-use tracing::debug;
+use serde_json::{json, Value};
 use std::{
     collections::HashMap,
     ops::{Deref, DerefMut},
@@ -571,7 +570,7 @@ fn evaluate_line(line_to_test: &str) -> (String, usize) {
         .count()
         / 2;
     //test type
-    let mut line_type = "";
+    let line_type;
     let trimmed = line_to_test.trim();
     if line_to_test.is_empty() {
         // Handle list as object items of previous depth
