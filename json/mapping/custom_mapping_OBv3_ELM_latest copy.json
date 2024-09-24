@@ -128,7 +128,7 @@
     },
     "destination": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome[0]"
     }
   }
 

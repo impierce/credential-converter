@@ -50,7 +50,7 @@
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.issuer.type[]"
+      "path": "$.issuer.type[0]"
     }
   },
   {
@@ -82,7 +82,7 @@
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.credentialSubject.achievement.type[]"
+      "path": "$.credentialSubject.achievement.type[0]"
     }
   },
   {
@@ -147,7 +147,7 @@
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.credentialSubject.type[]"
+      "path": "$.credentialSubject.type[0]"
     }
   },
   {
@@ -176,7 +176,7 @@
     "type_": "jsonToMarkdown",
     "source": {
       "format": "ELM",
-      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome"
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome[0]"
     },
     "destination": {
       "format": "OBv3",

@@ -8,10 +8,9 @@ use crate::{
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
-use regex::Regex;
-use serde_json::{json, Value};
+use serde_json::{json, Value, Map};
+use tracing::debug;
 use std::{
-    cmp::Ordering,
     collections::HashMap,
     ops::{Deref, DerefMut},
 };
@@ -144,21 +143,11 @@ impl Repository {
                     return None;
                 }
 
-                let dest = destination_path.clone();
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
-                if dest.contains("[]") {
-                    // Deserialize the JSON string into a MyStruct
-                    // remove the array element from the destantation and reuse this new pointer
-                    // fill the array with the new value
-                    let array_pointer = &pointer[..pointer.len() - 2];
-                    if let Some(array) = leaf_node.pointer_mut(array_pointer).and_then(|v| v.as_array_mut()) {
-                        // Push a new string to the array
-                        array.push(Value::String(source_value));
-                    }
-                } else if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(source_value);
                 }
 
@@ -247,12 +236,23 @@ impl Repository {
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-                // run the source value through a markdown converter to fit the nested objects into a markdown string
-                let json_source_value = json!(markdown_to_json(&source_value.to_string()));
 
-                if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    *value = transformation.apply(json_source_value);
+                if let Some(inner_string) = &source_value.as_str() {
+                    let mut lines: Vec<&str> = inner_string.lines().collect();
+
+                    lines.insert(0, "");
+
+                    // Split the string by newlines and collect into Vec<&str>
+                    let markdown_function_result = markdown_to_json(&lines);
+                    
+                    if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                        *value = transformation.apply(markdown_function_result);
+                    }
                 }
+
+  
+                
+
 
                 merge(destination_credential, leaf_node);
 
@@ -358,125 +358,253 @@ fn remove_key_recursive(current_json: &mut Value, keys: &[String]) -> bool {
 
 fn json_to_markdown(json: &Value, indent_level: usize) -> String {
     let mut markdown = String::new();
-    let indent = "    ".repeat(indent_level);
+    let indent = "  ".repeat(indent_level);
 
     match json {
+        // Handle JSON objects (key-value pairs)
         Value::Object(map) => {
             for (key, value) in map {
+                // Add the key as a bold label
                 markdown.push_str(&format!("{}**{}**:\n", indent, key));
+                // Recursively handle the value
                 markdown.push_str(&json_to_markdown(value, indent_level + 1));
-                markdown.push('\n');
             }
         }
-        Value::Array(arr) => {
-            for item in arr {
-                markdown.push_str(&format!(
-                    "{}- {}\n",
-                    indent,
-                    json_to_markdown(item, indent_level + 1).trim()
-                ));
+
+        // Handle JSON arrays
+        Value::Array(array) => {
+            for item in array {
+                // Add each array item as a list item
+                markdown.push_str(&format!("{}- ", indent));
+                markdown.push_str(&json_to_markdown(item, indent_level + 1));
             }
         }
-        Value::String(s) => {
-            markdown.push_str(&format!("{}{}\n", indent, s));
-        }
-        Value::Number(n) => {
-            markdown.push_str(&format!("{}{}\n", indent, n));
-        }
-        Value::Bool(b) => {
-            markdown.push_str(&format!("{}{}\n", indent, b));
-        }
-        Value::Null => {
-            markdown.push_str(&format!("{}null\n", indent));
-        }
+
+        // Handle primitive types: strings, numbers, booleans, and null
+        Value::String(s) => markdown.push_str(&format!("{}{}\n", indent, s)),
+        Value::Number(n) => markdown.push_str(&format!("{}{}\n", indent, n)),
+        Value::Bool(b) => markdown.push_str(&format!("{}{}\n", indent, b)),
+        Value::Null => markdown.push_str(&format!("{}null\n", indent)),
     }
 
     markdown
 }
 
-fn markdown_to_json(markdown: &str) -> Value {
-    let lines = markdown.lines().peekable();
-    let mut current_indent = 0;
-    let mut stack: Vec<Value> = vec![Value::Object(Default::default())];
-    let mut current_key: Option<String> = None;
 
-    let heading_regex = Regex::new(r"^#+ (.+)").unwrap();
-    let bold_regex = Regex::new(r"^\s*\*\*(.+?)\*\*\s*:$").unwrap();
-    let list_item_regex = Regex::new(r"^\s*-\s*(.+)").unwrap();
 
-    for line in lines {
-        let line_indent = line.chars().take_while(|c| c.is_whitespace()).count();
-        let line = line.trim();
 
-        if line.is_empty() {
-            continue;
+/// Recursively converts indented lines of Markdown into a JSON structure.
+fn markdown_to_json(lines: &[&str]) -> Value {
+    let mut i = 0;
+    let mut position: Vec<String> = Vec::new();
+
+    //lets create a string to which we will concatenate new lines based on the markdown lines
+    position.insert(0, "".to_string());
+    let mut json_string = String::from("");
+
+    while i < lines.len() {
+        let line = lines[i];
+
+        // Handle key-value pairs (e.g., **key**: value)
+        let (obj_type, depth) = evaluate_line(line);
+        if obj_type == "E" && i == 0 {
+            // open a json object
+            json_string.push_str("{\n");
         }
 
-        // Adjust stack based on indentation
-        match line_indent.cmp(&current_indent) {
-            Ordering::Greater => stack.push(Value::Object(Default::default())),
-            Ordering::Less => {
-                let value = stack.pop().unwrap();
-                let parent = stack.last_mut().unwrap();
-                if let Some(key) = current_key.take() {
-                    if let Value::Object(ref mut obj) = parent {
-                        obj.insert(key, value);
+        if obj_type == "O" {
+            while depth < position.len() - 1 {
+                // we need to close the positions
+                if let Some(last_value) = position.last() {
+                    if last_value == "O" {
+                        // The last value is O we can now close this object
+                        if let Some(_last_value) = position.pop() {
+                            json_string.pop();
+                            json_string = json_string.trim_end_matches(',').to_string();
+                            json_string.push_str("},\n");
+                        }
+                    } else if last_value == "A" {
+                        // close value A
+                        if let Some(_last_value) = position.pop() {
+                            json_string.push_str("]\n");
+                        }
+                    } else if last_value == "OA" && depth < position.len() - 1 {
+                        //The last value is OA
+                        if let Some(_last_value) = position.pop() {
+                            // first close the array
+                            json_string.pop();
+                            json_string = json_string.trim_end_matches(',').to_string();
+                            json_string.push_str("],\n");
+                            if depth > 0 {
+                                if let Some(_last_value) = position.pop() {
+                                    // then close the object
+                                    json_string.push_str("},\n");
+                                }
+                            } else {
+                                //"The vector was empty, nothing to remove.");
+                            }
+                        } else {
+                            // ("The vector was empty, nothing to remove.");
+                        }
+                    } else {
+                        // we have a different last value we will remove it from tha vector
+                        if let Some(_last_value) = position.pop() {
+                            // json_string.push_str("]\n");
+                        }
                     }
-                } else if let Value::Array(ref mut arr) = parent {
-                    arr.push(value);
+                } else {
+                    // println!("The vector is empty.");
                 }
             }
-            _ => {}
-        }
 
-        current_indent = line_indent;
-
-        if let Some(caps) = heading_regex.captures(line) {
-            let heading = caps.get(1).unwrap().as_str().trim().to_string();
-            current_key = Some(heading);
-        } else if let Some(caps) = bold_regex.captures(line) {
-            let key = caps.get(1).unwrap().as_str().trim().to_string();
-            let parent = stack.last_mut().unwrap();
-            if let Value::Object(ref mut obj) = parent {
-                obj.insert(key.clone(), Value::Null);
-            }
-            current_key = Some(key);
-        } else if let Some(caps) = list_item_regex.captures(line) {
-            let item = caps.get(1).unwrap().as_str().trim().to_string();
-            let parent = stack.last_mut().unwrap();
-            if let Value::Array(ref mut arr) = parent {
-                arr.push(Value::String(item));
-            } else {
-                let arr = vec![Value::String(item)];
-                stack.push(Value::Array(arr));
-            }
-        } else {
-            let parent = stack.last_mut().unwrap();
-            if let Some(key) = current_key.take() {
-                if let Value::Object(ref mut obj) = parent {
-                    obj.insert(key, Value::String(line.to_string()));
+            // setup the vector array for the right value and position
+            if depth >= position.len() - 1 && i >0 {
+                //test previous line to see is we might have a nested object
+                let (last_obj_type, _new_depth) = evaluate_line(lines[i - 1]);
+                if last_obj_type == "O" {
+                    json_string.push('{');
+                    json_string.push_str(&cleanup_string(line));
+                    json_string.push(':');
+                    position.insert(depth, "O".to_string());
+                } else if let Some(last_value) = position.last() {
+                    if last_value == "OA" && depth == position.len() - 1 {
+                        json_string.push_str(&cleanup_string(line));
+                        json_string.push(':');
+                    } else if depth > position.len() - 1 {
+                        json_string.push('{');
+                        json_string.push_str(&cleanup_string(line));
+                        json_string.push(':');
+                        position.insert(depth, "O".to_string());
+                    } else {
+                        json_string.push_str(&cleanup_string(line));
+                        json_string.push(':');
+                        position[depth] = "O".to_string();
+                    }
                 }
-            } else if let Value::Array(ref mut arr) = parent {
-                arr.push(Value::String(line.to_string()));
             }
+        } else if obj_type == "A" {
+            while depth < position.len() - 1 {
+                // we need to close the positions
+                if let Some(last_value) = position.last() {
+                    if last_value == "O" {
+                        if let Some(_last_value) = position.pop() {
+                            json_string.push_str("},\n");
+                        }
+                    } else if last_value == "A" {
+                        if let Some(_last_value) = position.pop() {
+                            json_string.push_str("]\n");
+                        }
+                    } else {
+                        // The last value is something leave it
+                    }
+                } else {
+                    // The vector is empty.
+                }
+            }
+
+            // setup the vector array for the right value and position
+            if depth >= position.len() - 1 {
+                if let Some(last_value) = position.last() {
+                    if last_value == "OA" {
+                        json_string.push('[');
+                    } else if last_value == "A" && depth == position.len() - 1 {
+                        position.insert(depth, "A".to_string());
+                    } else {
+                        position.insert(depth, "A".to_string());
+                        json_string.push('[');
+                    }
+                }
+                json_string.push_str(&cleanup_string(line));
+            }
+        } else if obj_type == "OA" {
+            while depth < position.len() - 1 {
+                // we need to close the positions
+                if let Some(last_value) = position.last() {
+                    if last_value == "O" {
+                        if let Some(_last_value) = position.pop() {
+                            json_string.pop();
+                            json_string.pop();
+                            json_string.push_str("},\n");
+                        }
+                    } else if last_value == "A" {
+                        if let Some(_last_value) = position.pop() {
+                            json_string.push_str("]\n");
+                        } else {
+                            // The vector was empty, nothing to remove.
+                        }
+                    } else {
+                        // The last value is something else leave it
+                    }
+                } else {
+                    // The vector is empty
+                }
+            }
+
+            // we are creating a new array that will contain objects of the same type
+            json_string.push_str("[ \n {");
+            json_string.push_str(&cleanup_string(line));
+            json_string.push(':');
+            // test if extra handling is needed for closing
+            position.insert(depth - 1, "OA".to_string());
+            position.insert(depth, "O".to_string());
+        } else if obj_type == "V" {
+            json_string.push_str(&cleanup_string(line));
+            json_string.push_str(",\n");
         }
+
+        i += 1;
     }
 
-    // Handle remaining items in the stack
-    while stack.len() > 1 {
-        let value = stack.pop().unwrap();
-        let parent = stack.last_mut().unwrap();
-        if let Some(key) = current_key.take() {
-            if let Value::Object(ref mut obj) = parent {
-                obj.insert(key, value);
-            }
-        } else if let Value::Array(ref mut arr) = parent {
-            arr.push(value);
-        }
-    }
-
-    stack.pop().unwrap()
+    // Finalize the string to which we will concatenate new lines based on the markdown lines
+    json_string.pop();
+    json_string = json_string.trim_end_matches(',').to_string();
+    json_string.push_str("\n}");
+    let parsed_json: Value = serde_json::from_str(&json_string).unwrap();
+    parsed_json
 }
+
+fn evaluate_line(line_to_test: &str) -> (String, usize) {
+    //test depth
+    let mut depth = line_to_test
+        .chars()
+        .take_while(|c| c.is_whitespace())
+        .count()
+        / 2;
+    //test type
+    let mut line_type = "";
+    let trimmed = line_to_test.trim();
+    if line_to_test.is_empty() {
+        // Handle list as object items of previous depth
+        line_type = "E";
+    } else if trimmed.starts_with("-") && trimmed.ends_with("**:") {
+        // Handle list as object items of previous depth
+        line_type = "OA";
+        depth += 1;
+    } else if trimmed.starts_with("**") {
+        // Handle list as object items of previous depth
+        line_type = "O";
+    } else if trimmed.starts_with("-") {
+        // Handle as array items of previous depth
+        line_type = "A";
+    } else {
+        // Handle value of previous depth
+        line_type = "V";
+    }
+
+    (line_type.to_string(), depth)
+}
+
+fn cleanup_string(string_to_clean: &str) -> String {
+    //trim the string
+    let string_to_clean1 = string_to_clean.trim();
+    let string_to_clean2 = string_to_clean1.replace("-", "");
+    let string_to_clean3 = string_to_clean2.trim();
+    let string_to_clean4 = string_to_clean3.replace("**:", "");
+    let cleaned_string = string_to_clean4.trim().trim_matches('*').to_string();
+    // Add quotes around the cleaned string
+    format!("\"{}\"", cleaned_string)
+}
+
 
 // 1.	Parsing Markdown:
 // •	Headings (#): These are treated as keys in the resulting JSON object.

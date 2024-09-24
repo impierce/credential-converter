@@ -18,7 +18,32 @@
       {
         "id": "urn:epass:learningAchievement:2",
         "specifiedBy": {
-          "learningOutcome": {},
+          "learningOutcome": [
+            {
+              "id": "urn:epass:learningOutcome:2",
+              "relatedSkill": [
+                {
+                  "id": "https://publications.europa.eu/resource/authority/snb/dcf/860966ekgo",
+                  "inScheme": {
+                    "id": "https://publications.europa.eu/resource/authority/snb/dcf/25831c2",
+                    "type": "ConceptScheme"
+                  },
+                  "prefLabel": {
+                    "en": [
+                      "5.4 Identifying digital competence gaps"
+                    ]
+                  },
+                  "type": "Concept"
+                }
+              ],
+              "title": {
+                "en": [
+                  "Name of DigiComp Competence"
+                ]
+              },
+              "type": "LearningOutcome"
+            }
+          ],
           "title": {
             "en": [
               "Title of Achievement"
