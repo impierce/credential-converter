@@ -131,7 +131,6 @@ fn enter_fixed_schema_values(state: &mut AppState) {
                 json!({"id": "https://accrediter.edu/schema/endorsementcredential.json","type": "1EdTechJsonSchemaValidator2019"})]),
         );
     }
-
 }
 
 
