@@ -1,7 +1,6 @@
 {
   "@context": [
-    "https://www.w3.org/ns/credentials/v2",
-    "http://data.europa.eu/snb/model/context/edc-ap"
+    "https://www.w3.org/ns/credentials/v2"
   ],
   "credentialSchema": [
     {
@@ -68,8 +67,7 @@
   },
   "type": [
     "VerifiableCredential",
-    "VerifiableAttestation",
-    "EuropeanDigitalCredential"
+    "OpenBadgeCredential"
   ],
   "validFrom": "2019-09-20T00:00:00+02:00"
 }

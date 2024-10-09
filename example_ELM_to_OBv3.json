@@ -1,0 +1,49 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"
+  ],
+  "credentialSchema": [
+    {
+      "id": "https://purl.imsglobal.org/spec/ob/v3p0/schema/json/ob_v3p0_endorsementcredential_schema.json",
+      "type": "1EdTechJsonSchemaValidator2019"
+    },
+    {
+      "id": "https://accrediter.edu/schema/endorsementcredential.json",
+      "type": "1EdTechJsonSchemaValidator2019"
+    }
+  ],
+  "credentialSubject": {
+    "achievement": {
+      "criteria": {
+        "narrative": "**id**:\n  urn:epass:learningOutcome:2\n**relatedSkill**:\n  -     **id**:\n      https://publications.europa.eu/resource/authority/snb/dcf/860966ekgo\n    **inScheme**:\n      **id**:\n        https://publications.europa.eu/resource/authority/snb/dcf/25831c2\n      **type**:\n        ConceptScheme\n    **prefLabel**:\n      **en**:\n        -           5.4 Identifying digital competence gaps\n    **type**:\n      Concept\n**title**:\n  **en**:\n    -       Name of DigiComp Competence\n**type**:\n  LearningOutcome\n"
+      },
+      "id": "urn:epass:learningAchievement:2",
+      "name": "Title of Achievement",
+      "type": [
+        "Achievement"
+      ]
+    },
+    "id": "did:key:afsdlkj34134",
+    "type": [
+      "AchievementSubject"
+    ]
+  },
+  "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",
+  "issuer": {
+    "address": {
+      "addressCountryCode": "http://publications.europa.eu/resource/authority/country/ESP"
+    },
+    "id": "did:ebsi:org:12345689",
+    "name": "ORGANIZACION TEST",
+    "type": [
+      "Profile"
+    ]
+  },
+  "name": "TITLE OF PROGRAMME",
+  "type": [
+    "VerifiableCredential",
+    "OpenBadgeCredential"
+  ],
+  "validFrom": "2019-09-20T00:00:00+02:00"
+}

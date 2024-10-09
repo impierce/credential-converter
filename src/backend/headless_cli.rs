@@ -1,4 +1,5 @@
 use crate::backend::init_conversion::load_mapping_file;
+use crate::backend::init_conversion::init_conversion;
 use crate::p2_p3_common::create_output_files;
 use crate::state::{AppState, Mapping};
 use crate::trace_dbg;
@@ -54,6 +55,7 @@ pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
 pub fn load_files_apply_transformations(state: &mut AppState) {
     load_input_file(state, true);
     load_mapping_file(state);
+    init_conversion(state);
     create_output_files(state);
 }
 

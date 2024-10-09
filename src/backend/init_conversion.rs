@@ -15,7 +15,7 @@ pub fn init_conversion(state: &mut AppState) {
     load_input_file(state, false);
     load_mapping_file(state);
     enter_fixed_context_values(state);
-
+    enter_fixed_schema_values(state);
     update_display_section(state, false);
 }
 
@@ -92,7 +92,10 @@ fn enter_fixed_context_values(state: &mut AppState) {
         let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
         output_elm.insert(
             "@context".to_string(),
-            Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+            Value::Array(vec![
+                json!("https://www.w3.org/ns/credentials/v2"),
+                json!("http://data.europa.eu/snb/model/context/edc-ap"),
+                ]),
         );
     } else if state.mapping.output_format() == "OBv3" {
         let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
@@ -104,7 +107,33 @@ fn enter_fixed_context_values(state: &mut AppState) {
             ]),
         );
     }
+
 }
+
+
+/// Enter fixed values into '@context' field, as demanded by the respective json-schema
+fn enter_fixed_schema_values(state: &mut AppState) {
+    if state.mapping.output_format() == "ELM" {
+        let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
+        output_elm.insert(
+            "credentialSchema".to_string(),
+            Value::Array(vec![
+                json!({"id": "http://data.europa.eu/snb/model/ap/edc-generic-full","type": "ShaclValidator2017"}), 
+                json!({"id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"})]),
+        );
+    } else if state.mapping.output_format() == "OBv3" {
+        let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
+        output_obv3.insert(
+            "credentialSchema".to_string(),
+            Value::Array(vec![
+                json!({"id": "https://purl.imsglobal.org/spec/ob/v3p0/schema/json/ob_v3p0_endorsementcredential_schema.json", "type": "1EdTechJsonSchemaValidator2019"}),
+                json!({"id": "https://accrediter.edu/schema/endorsementcredential.json","type": "1EdTechJsonSchemaValidator2019"})]),
+        );
+    }
+
+}
+
 
 ////////     HELPERS     ////////
 

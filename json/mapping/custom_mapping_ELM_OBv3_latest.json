@@ -22,14 +22,23 @@
     }
   },
   {
-    "type_": "copy",
+    "type_": "stringit",
     "source": {
-      "format": "ELM",
-      "path": "$.type"
+      "value": "VerifiableCredential"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.type"
+      "path": "$.type[0]"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "OpenBadgeCredential"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.type[1]"
     }
   },
   {
@@ -62,6 +71,28 @@
     "destination": {
       "format": "OBv3",
       "path": "$.issuer.name"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.location[0].address.fullAddress.noteLiteral.en"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.address.streetAddress"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.location[0].address.countryCode.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.address.addressCountryCode"
     }
   },
   {
