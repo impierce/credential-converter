@@ -95,11 +95,68 @@ impl ManyToOne {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum StringToOne {
+    stringit,
+}
+
+impl StringToOne {
+    pub fn apply(&self, value: String) -> Value {
+        match self {
+            StringToOne::stringit => Value::String(value),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum JsonToMarkdown {
+    jsonToMarkdown,
+}
+
+impl JsonToMarkdown {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            JsonToMarkdown::jsonToMarkdown => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum MarkdownToJson {
+    markdownToJson,
+}
+
+impl MarkdownToJson {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            MarkdownToJson::markdownToJson => value,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum Transformation {
     OneToOne {
         type_: OneToOne,
+        source: DataLocation,
+        destination: DataLocation,
+    },
+    StringToOne {
+        type_: StringToOne,
+        source: StringValue,
+        destination: DataLocation,
+    },
+    MarkdownToJson {
+        type_: MarkdownToJson,
+        source: DataLocation,
+        destination: DataLocation,
+    },
+    JsonToMarkdown {
+        type_: JsonToMarkdown,
         source: DataLocation,
         destination: DataLocation,
     },
@@ -119,4 +176,9 @@ pub enum Transformation {
 pub struct DataLocation {
     pub format: String,
     pub path: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StringValue {
+    pub value: String,
 }
