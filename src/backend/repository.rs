@@ -2,13 +2,14 @@ use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
         leaf_nodes::construct_leaf_node,
-        transformations::{DataLocation, StringValue, Transformation},
+        transformations::{DataLocation, DataTypeLocation, StringValue, Transformation},
     },
     state::{AppState, Mapping},
     trace_dbg,
 };
 use jsonpath_rust::JsonPathFinder;
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
+//use tracing_subscriber::fmt::format;
 use std::{
     collections::HashMap,
     ops::{Deref, DerefMut},
@@ -249,9 +250,52 @@ impl Repository {
                     }
                 }
 
-  
-                
+                merge(destination_credential, leaf_node);
 
+                trace_dbg!("Successfully completed transformation");
+                Some((destination_path, source_path))
+            }
+
+
+            Transformation::AddIdentifier {
+                type_: transformation,
+                source:
+                    DataTypeLocation {
+                        format: source_format,
+                        datatype: source_type, 
+                        path: source_path,
+                    },
+                destination:
+                    DataLocation {
+                        format: destination_format,
+                        path: destination_path,
+                    },
+            } => {
+                if source_format != mapping.input_format() || destination_format != mapping.output_format() {
+                    return None;
+                }
+
+                let source_credential = self.get(&source_format).unwrap();
+
+                let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
+
+                let source_value = match finder.find().as_array() {
+                    // todo: still need to investigate other find() return types
+                    Some(array) => array.first().unwrap().clone(),
+                    None => {
+                        return None;
+                    }
+                };
+                
+                let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
+                let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
+
+                let mut leaf_node = construct_leaf_node(&pointer);
+                let identifier_function_result = values_to_identity(&source_type, source_value);
+                
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(identifier_function_result);
+                }
 
                 merge(destination_credential, leaf_node);
 
@@ -259,9 +303,63 @@ impl Repository {
                 Some((destination_path, source_path))
             }
 
+            Transformation::IdentifierToObject {
+                type_: transformation,
+                source:
+                    DataTypeLocation {
+                        format: source_format,
+                        datatype: source_type, 
+                        path: source_path,
+                    },
+                destination:
+                    DataLocation {
+                        format: destination_format,
+                        path: destination_path,
+                    },
+            } => {
+                if source_format != mapping.input_format() || destination_format != mapping.output_format() {
+                    return None;
+                }
+
+                let source_credential = self.get(&source_format).unwrap();
+
+                let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
+
+                let source_value = match finder.find().as_array() {
+                    // todo: still need to investigate other find() return types
+                    Some(array) => array.first().unwrap().clone(),
+                    None => {
+                        return None;
+                    }
+                };
+                
+                let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
+                let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
+
+                let mut leaf_node = construct_leaf_node(&pointer);
+                let identifier_function_result = identity_to_object(&source_type, source_value);
+                
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                    *value = transformation.apply(identifier_function_result);
+                }
+
+                merge(destination_credential, leaf_node);
+
+                trace_dbg!("Successfully completed transformation");
+                Some((destination_path, source_path))
+            }
+
+
+
             _ => todo!(),
         }
     }
+
+
+
+
+    
+
 
     pub fn apply_transformations(
         &mut self,
@@ -355,6 +453,80 @@ fn remove_key_recursive(current_json: &mut Value, keys: &[String]) -> bool {
     false
 }
 
+
+fn values_to_identity(identity_type: &str, identity_value: Value) -> Value {
+    
+    //Create a new identity object that is fit for puprose in OBv3 (so not to lose information)
+
+    let mut new_object = Map::new();
+    new_object.insert("type".to_string(), Value::String("IdentityObject".to_string()));
+    new_object.insert("identityHash".to_string(), identity_value);
+    new_object.insert("identityType".to_string(), Value::String(identity_type.to_string()));
+    new_object.insert("hashed".to_string(), Value::Bool(false));
+    new_object.insert("salt".to_string(), Value::String("not-used".to_string()));
+    let _current_value = Value::Object(new_object);
+    _current_value
+}
+
+fn identity_to_object(identity_type: &str, identity_value: Value) -> Value {
+    
+    //inspect the identity object and re write it so it can be reused in ELM
+    
+    //we need to achieve the followin structures:
+    // "identifier": [
+    //     {
+    //       "id": "urn:epass:identifier:2",
+    //       "type": "Identifier",
+    //       "notation": "75541452",
+    //       "schemeName": "Student ID"
+    //     }
+    //   ],
+
+    // and for example
+    // "givenName": {
+    //     "en": ["David"]
+    //   },
+
+
+    if let Some(id_value)= identity_value.get("identityHash") {
+        if identity_type.eq(&"Student ID".to_string()){
+            let mut new_object = Map::new();
+            new_object.insert("id".to_string(), Value::String("urn:epass:identifier:2".to_string()));
+            new_object.insert("type".to_string(), Value::String("Identifier".to_string()));
+            new_object.insert("notation".to_string(), id_value.clone());
+            new_object.insert("schemeName".to_string(), Value::String(identity_type.to_string()));
+            let _current_value = Value::Object(new_object);
+            _current_value
+        }
+        else {
+        id_value.clone()
+        }
+    }
+    else {
+        Value::String("".to_string())
+    }
+
+
+    // if identity_type.eq(&"Student ID".to_string()){
+    //     let mut new_object = Map::new();
+    //     new_object.insert("id".to_string(), Value::String("urn:epass:identifier:2".to_string()));
+    //     new_object.insert("type".to_string(), Value::String("Identifier".to_string()));
+    //     new_object.insert("notation".to_string(), identity_value);
+    //     new_object.insert("schemeName".to_string(), Value::String(identity_type.to_string()));
+    //     let _current_value = Value::Object(new_object);
+    //     _current_value
+    // }
+    // else {
+    //     if let Some(id_value)= identity_value.get("identityHash") {
+    //         id_value.clone()
+    //     }
+    //     else {
+    //         Value::String("".to_string())
+    //     }  
+    // }
+}
+
+
 fn json_to_markdown(json: &Value, indent_level: usize) -> String {
     let mut markdown = String::new();
     let indent = "  ".repeat(indent_level);
@@ -388,9 +560,6 @@ fn json_to_markdown(json: &Value, indent_level: usize) -> String {
 
     markdown
 }
-
-
-
 
 /// Recursively converts indented lines of Markdown into a JSON structure.
 fn markdown_to_json(lines: &[&str]) -> Value {

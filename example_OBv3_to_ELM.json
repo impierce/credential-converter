@@ -1,6 +1,7 @@
 {
   "@context": [
-    "https://www.w3.org/ns/credentials/v2"
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
   ],
   "credentialSchema": [
     {
@@ -13,6 +14,16 @@
     }
   ],
   "credentialSubject": {
+    "fullName": {
+      "en": [
+        "David Smith"
+      ]
+    },
+    "givenName": {
+      "en": [
+        "Smith"
+      ]
+    },
     "hasClaim": [
       {
         "id": "urn:epass:learningAchievement:2",
@@ -56,7 +67,13 @@
         }
       }
     ],
-    "id": "did:key:afsdlkj34134"
+    "id": "did:key:afsdlkj34134",
+    "identifier": {
+      "id": "urn:epass:identifier:2",
+      "notation": "545465468",
+      "schemeName": "Student ID",
+      "type": "Identifier"
+    }
   },
   "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",
   "issuer": {

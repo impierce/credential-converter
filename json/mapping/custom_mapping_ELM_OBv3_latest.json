@@ -224,6 +224,66 @@
       "format": "OBv3",
       "path": "$.credentialSchema"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialStatus"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialStatus"
+    }
+  },
+  {
+    "type_": "addIdentifier",
+    "source": {
+      "format": "ELM",
+      "datatype": "ext:studentID",
+      "path": "$.credentialSubject.identifier[0].notation"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.identifier[0]"
+    }
+  },
+  {
+    "type_": "addIdentifier",
+    "source": {
+      "format": "ELM",
+      "datatype": "ext:givenName",
+      "path": "$.credentialSubject.givenName"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.identifier[1]"
+    }
+  },
+  {
+    "type_": "addIdentifier",
+    "source": {
+      "format": "ELM",
+      "datatype": "ext:familyName",
+      "path": "$.credentialSubject.familyName"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.identifier[2]"
+    }
+  },
+  {
+    "type_": "addIdentifier",
+    "source": {
+      "format": "ELM",
+      "datatype": "ext:fullName",
+      "path": "$.credentialSubject.fullName"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.identifier[3]"
+    }
   }
+
 
 ]

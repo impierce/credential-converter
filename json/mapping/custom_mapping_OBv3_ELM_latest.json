@@ -88,17 +88,6 @@
     }
   },
   {
-    "type_": "copy",
-    "source": {
-      "format": "OBv3",
-      "path": "$.credentialSchema"
-    },
-    "destination": {
-      "format": "ELM",
-      "path": "$.credentialSchema"
-    }
-  },
-  {
     "type_": "markdownToJson",
     "source": {
       "format": "OBv3",
@@ -141,5 +130,76 @@
       "format": "ELM",
       "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.en[0]"
     }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.credentialSchema"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSchema"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "OBv3",
+      "path": "$.credentialStatus"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialStatus"
+    }
+  },
+  {
+    "type_": "identifierToObject",
+    "source": {
+      "format": "OBv3",
+      "datatype": "Student ID",
+      "path": "$.credentialSubject.identifier[0]"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.identifier"
+    }
+  },
+  {
+    "type_": "identifierToObject",
+    "source": {
+      "format": "OBv3",
+      "datatype": "ext:givenName",
+      "path": "$.credentialSubject.identifier[1]"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.givenName"
+    }
+  },
+  {
+    "type_": "identifierToObject",
+    "source": {
+      "format": "OBv3",
+      "datatype": "ext:familyName",
+      "path": "$.credentialSubject.identifier[2]"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.givenName"
+    }
+  },
+  {
+    "type_": "identifierToObject",
+    "source": {
+      "format": "OBv3",
+      "datatype": "ext:fullName",
+      "path": "$.credentialSubject.identifier[3]"
+    },
+    "destination": {
+      "format": "ELM",
+      "path": "$.credentialSubject.fullName"
+    }
   }
+
 ]

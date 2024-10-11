@@ -137,6 +137,37 @@ impl MarkdownToJson {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum AddIdentifier {
+    addIdentifier,
+}
+
+impl AddIdentifier {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            AddIdentifier::addIdentifier => value,
+        }
+    }
+}
+
+
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum IdentifierToObject {
+    identifierToObject,
+}
+
+impl IdentifierToObject {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            IdentifierToObject::identifierToObject => value,
+        }
+    }
+}
+
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum Transformation {
@@ -160,6 +191,16 @@ pub enum Transformation {
         source: DataLocation,
         destination: DataLocation,
     },
+    AddIdentifier {
+        type_: AddIdentifier,
+        source: DataTypeLocation,
+        destination: DataLocation,
+    },
+    IdentifierToObject {
+        type_: IdentifierToObject,
+        source: DataTypeLocation,
+        destination: DataLocation,
+    },
     OneToMany {
         type_: OneToMany,
         source: DataLocation,
@@ -177,6 +218,14 @@ pub struct DataLocation {
     pub format: String,
     pub path: String,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DataTypeLocation {
+    pub format: String,
+    pub datatype: String, 
+    pub path: String,
+}
+
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StringValue {

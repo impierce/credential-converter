@@ -25,6 +25,48 @@
       ]
     },
     "id": "did:key:afsdlkj34134",
+    "identifier": [
+      {
+        "hashed": false,
+        "identityHash": "545465468",
+        "identityType": "ext:studentID",
+        "salt": "not-used",
+        "type": "IdentityObject"
+      },
+      {
+        "hashed": false,
+        "identityHash": {
+          "en": [
+            "David"
+          ]
+        },
+        "identityType": "ext:givenName",
+        "salt": "not-used",
+        "type": "IdentityObject"
+      },
+      {
+        "hashed": false,
+        "identityHash": {
+          "en": [
+            "Smith"
+          ]
+        },
+        "identityType": "ext:familyName",
+        "salt": "not-used",
+        "type": "IdentityObject"
+      },
+      {
+        "hashed": false,
+        "identityHash": {
+          "en": [
+            "David Smith"
+          ]
+        },
+        "identityType": "ext:fullName",
+        "salt": "not-used",
+        "type": "IdentityObject"
+      }
+    ],
     "type": [
       "AchievementSubject"
     ]
