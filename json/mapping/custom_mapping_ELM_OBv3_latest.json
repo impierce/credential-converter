@@ -172,13 +172,13 @@
     }
   },
   {
-    "type_": "stringit",
+    "type_": "stringArrayIt",
     "source": {
-      "value": "AchievementSubject"
+      "value": ["AchievementSubject", "profile"] 
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.credentialSubject.type[0]"
+      "path": "$.credentialSubject.type"
     }
   },
   {
@@ -249,39 +249,36 @@
     }
   },
   {
-    "type_": "addIdentifier",
+    "type_": "copy",
     "source": {
       "format": "ELM",
-      "datatype": "ext:givenName",
+      "path": "$.credentialSubject.givenName.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
       "path": "$.credentialSubject.givenName"
-    },
-    "destination": {
-      "format": "OBv3",
-      "path": "$.credentialSubject.identifier[1]"
     }
   },
   {
-    "type_": "addIdentifier",
+    "type_": "copy",
     "source": {
       "format": "ELM",
-      "datatype": "ext:familyName",
+      "path": "$.credentialSubject.familyName.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
       "path": "$.credentialSubject.familyName"
-    },
-    "destination": {
-      "format": "OBv3",
-      "path": "$.credentialSubject.identifier[2]"
     }
   },
   {
-    "type_": "addIdentifier",
+    "type_": "copy",
     "source": {
       "format": "ELM",
-      "datatype": "ext:fullName",
-      "path": "$.credentialSubject.fullName"
+      "path": "$.credentialSubject.fullName.en[0]"
     },
     "destination": {
       "format": "OBv3",
-      "path": "$.credentialSubject.identifier[3]"
+      "path": "$.credentialSubject.fullName"
     }
   }
 

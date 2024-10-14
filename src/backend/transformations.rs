@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OneToOne {
@@ -109,6 +110,21 @@ impl StringToOne {
     }
 }
 
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum StringArrayToOne {
+    stringArrayIt,
+}
+
+impl StringArrayToOne {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            StringArrayToOne::stringArrayIt => value,
+        }
+    }
+}
+
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum JsonToMarkdown {
@@ -181,6 +197,11 @@ pub enum Transformation {
         source: StringValue,
         destination: DataLocation,
     },
+    StringArrayToOne {
+        type_: StringArrayToOne,
+        source: StringArrayValue,
+        destination: DataLocation,
+    },
     MarkdownToJson {
         type_: MarkdownToJson,
         source: DataLocation,
@@ -230,4 +251,10 @@ pub struct DataTypeLocation {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StringValue {
     pub value: String,
+}
+
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StringArrayValue {
+    pub value: Vec<String>,
 }
