@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum OneToOne {
@@ -110,7 +109,6 @@ impl StringToOne {
     }
 }
 
-
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum StringArrayToOne {
@@ -167,8 +165,6 @@ impl AddIdentifier {
     }
 }
 
-
-
 #[allow(non_camel_case_types)]
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum IdentifierToObject {
@@ -182,7 +178,6 @@ impl IdentifierToObject {
         }
     }
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
@@ -243,16 +238,14 @@ pub struct DataLocation {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DataTypeLocation {
     pub format: String,
-    pub datatype: String, 
+    pub datatype: String,
     pub path: String,
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StringValue {
     pub value: String,
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StringArrayValue {

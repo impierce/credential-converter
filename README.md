@@ -50,6 +50,20 @@ Or find the executable in the `/target/debug` folder named after the repo name `
 ./target/debug/credential-converter -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
 ```
 
+For headless/webservice execution:
+
+Run with -w 
+The default address and port for the application are 127.0.0.1:3000 but you can also specify the address and port yourself
+
+```sh
+cargo run -- -w
+```
+example for running on 192.168.1.1:5000
+```sh
+cargo run -- -w 192.168.1.1:5000
+```
+
+a webpage displaying a form can be found at the root of the project a webservice api can be found at /translate_file
 
 
 *Warning: the ratatui library does not seem to handle different color settings in your terminal perfectly. This causes the colors to differ slightly between builds in different terminals. For reference please continue reading the readme, colors will be explained accompanied by screenshots.*

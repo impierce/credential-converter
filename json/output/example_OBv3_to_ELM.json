@@ -14,16 +14,6 @@
     }
   ],
   "credentialSubject": {
-    "fullName": {
-      "en": [
-        "David Smith"
-      ]
-    },
-    "givenName": {
-      "en": [
-        "Smith"
-      ]
-    },
     "hasClaim": [
       {
         "id": "urn:epass:learningAchievement:6",

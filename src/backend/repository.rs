@@ -2,7 +2,7 @@ use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
         leaf_nodes::construct_leaf_node,
-        transformations::{DataLocation, DataTypeLocation, StringValue, StringArrayValue, Transformation},
+        transformations::{DataLocation, DataTypeLocation, StringArrayValue, StringValue, Transformation},
     },
     state::{AppState, Mapping},
     trace_dbg,
@@ -147,7 +147,7 @@ impl Repository {
                 let pointer = JsonPointer::try_from(JsonPath(destination_path)).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
-                if let Some(value) = leaf_node.pointer_mut(&pointer) {  
+                if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(source_value);
                 }
 
@@ -173,9 +173,10 @@ impl Repository {
                 let mut leaf_node = construct_leaf_node(&pointer);
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     let json_value: Value = Value::Array(
-                        source_value.into_iter()
-                            .map(Value::String)  // Convert each String into serde_json::Value::String
-                            .collect()
+                        source_value
+                            .into_iter()
+                            .map(Value::String) // Convert each String into serde_json::Value::String
+                            .collect(),
                     );
                     *value = transformation.apply(json_value);
                 }
@@ -183,9 +184,6 @@ impl Repository {
                 merge(destination_credential, leaf_node);
                 None
             }
-
-
-
 
             Transformation::JsonToMarkdown {
                 type_: transformation,
@@ -268,7 +266,6 @@ impl Repository {
 
                 let mut leaf_node = construct_leaf_node(&pointer);
 
-
                 if let Some(inner_string) = &source_value.as_str() {
                     let mut lines: Vec<&str> = inner_string.lines().collect();
 
@@ -276,7 +273,7 @@ impl Repository {
 
                     // Split the string by newlines and collect into Vec<&str>
                     let markdown_function_result = markdown_to_json(&lines);
-                    
+
                     if let Some(value) = leaf_node.pointer_mut(&pointer) {
                         *value = transformation.apply(markdown_function_result);
                     }
@@ -288,13 +285,12 @@ impl Repository {
                 Some((destination_path, source_path))
             }
 
-
             Transformation::AddIdentifier {
                 type_: transformation,
                 source:
                     DataTypeLocation {
                         format: source_format,
-                        datatype: source_type, 
+                        datatype: source_type,
                         path: source_path,
                     },
                 destination:
@@ -318,13 +314,13 @@ impl Repository {
                         return None;
                     }
                 };
-                
+
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
                 let identifier_function_result = values_to_identity(&source_type, source_value);
-                
+
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(identifier_function_result);
                 }
@@ -340,7 +336,7 @@ impl Repository {
                 source:
                     DataTypeLocation {
                         format: source_format,
-                        datatype: source_type, 
+                        datatype: source_type,
                         path: source_path,
                     },
                 destination:
@@ -364,13 +360,13 @@ impl Repository {
                         return None;
                     }
                 };
-                
+
                 let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
                 let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
 
                 let mut leaf_node = construct_leaf_node(&pointer);
                 let identifier_function_result = identity_to_object(&source_type, source_value);
-                
+
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
                     *value = transformation.apply(identifier_function_result);
                 }
@@ -381,17 +377,9 @@ impl Repository {
                 Some((destination_path, source_path))
             }
 
-
-
             _ => todo!(),
         }
     }
-
-
-
-
-    
-
 
     pub fn apply_transformations(
         &mut self,
@@ -485,9 +473,7 @@ fn remove_key_recursive(current_json: &mut Value, keys: &[String]) -> bool {
     false
 }
 
-
 fn values_to_identity(identity_type: &str, identity_value: Value) -> Value {
-    
     //Create a new identity object that is fit for puprose in OBv3 (so not to lose information)
 
     let mut new_object = Map::new();
@@ -501,9 +487,8 @@ fn values_to_identity(identity_type: &str, identity_value: Value) -> Value {
 }
 
 fn identity_to_object(identity_type: &str, identity_value: Value) -> Value {
-    
     //inspect the identity object and re write it so it can be reused in ELM
-    
+
     //we need to achieve the followin structures:
     // "identifier": [
     //     {
@@ -519,9 +504,8 @@ fn identity_to_object(identity_type: &str, identity_value: Value) -> Value {
     //     "en": ["David"]
     //   },
 
-
-    if let Some(id_value)= identity_value.get("identityHash") {
-        if identity_type.eq(&"Student ID".to_string()){
+    if let Some(id_value) = identity_value.get("identityHash") {
+        if identity_type.eq(&"Student ID".to_string()) {
             let mut new_object = Map::new();
             new_object.insert("id".to_string(), Value::String("urn:epass:identifier:2".to_string()));
             new_object.insert("type".to_string(), Value::String("Identifier".to_string()));
@@ -529,17 +513,13 @@ fn identity_to_object(identity_type: &str, identity_value: Value) -> Value {
             new_object.insert("schemeName".to_string(), Value::String(identity_type.to_string()));
             let _current_value = Value::Object(new_object);
             _current_value
+        } else {
+            id_value.clone()
         }
-        else {
-        id_value.clone()
-        }
-    }
-    else {
+    } else {
         Value::String("".to_string())
     }
-
 }
-
 
 fn json_to_markdown(json: &Value, indent_level: usize) -> String {
     let mut markdown = String::new();
@@ -640,7 +620,7 @@ fn markdown_to_json(lines: &[&str]) -> Value {
             }
 
             // setup the vector array for the right value and position
-            if depth >= position.len() - 1 && i >0 {
+            if depth >= position.len() - 1 && i > 0 {
                 //test previous line to see is we might have a nested object
                 let (last_obj_type, _new_depth) = evaluate_line(lines[i - 1]);
                 if last_obj_type == "O" {
@@ -747,11 +727,7 @@ fn markdown_to_json(lines: &[&str]) -> Value {
 
 fn evaluate_line(line_to_test: &str) -> (String, usize) {
     //test depth
-    let mut depth = line_to_test
-        .chars()
-        .take_while(|c| c.is_whitespace())
-        .count()
-        / 2;
+    let mut depth = line_to_test.chars().take_while(|c| c.is_whitespace()).count() / 2;
     //test type
     let line_type;
     let trimmed = line_to_test.trim();
@@ -786,7 +762,6 @@ fn cleanup_string(string_to_clean: &str) -> String {
     // Add quotes around the cleaned string
     format!("\"{}\"", cleaned_string)
 }
-
 
 // 1.	Parsing Markdown:
 // •	Headings (#): These are treated as keys in the resulting JSON object.

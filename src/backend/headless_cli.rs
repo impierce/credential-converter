@@ -1,5 +1,5 @@
-use crate::backend::init_conversion::load_mapping_file;
 use crate::backend::init_conversion::init_conversion;
+use crate::backend::init_conversion::load_mapping_file;
 use crate::p2_p3_common::create_output_files;
 use crate::state::{AppState, Mapping};
 use crate::trace_dbg;
@@ -149,6 +149,9 @@ pub struct Args {
 
     #[arg(short, long, value_enum, required_if_eq_any = [("mapping_file", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
     conversion: Option<Mapping>,
+
+    #[arg(short, long)]
+    web_service: Option<Option<String>>,
     // #[arg(short, long)] // todo: nice feature for in the future
     // prefix_output: String,
 
