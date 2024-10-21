@@ -1,0 +1,54 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
+  ],
+  "credentialSchema": [
+    {
+      "id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "type": "ShaclValidator2017"
+    },
+    {
+      "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"
+    }
+  ],
+  "credentialSubject": {
+    "hasClaim": [
+      {
+        "id": "urn:epass:learningAchievement:6",
+        "specifiedBy": {
+          "title": {
+            "en": [
+              "German International Abitur"
+            ]
+          }
+        },
+        "title": {
+          "en": [
+            "Higher  Education Entrance Qualification - German International ABITUR School"
+          ]
+        }
+      }
+    ],
+    "id": "did:key:afsdlkj34134",
+    "identifier": {
+      "id": "urn:epass:identifier:2",
+      "notation": "5547554",
+      "schemeName": "Student ID",
+      "type": "Identifier"
+    }
+  },
+  "id": "urn:credential:87ddce4d-de74-4838-b7a4-1f14d9c614ec",
+  "issuer": {
+    "id": "did:ebsi:org:12345689",
+    "legalName": {
+      "en": "ORGANIZACION TEST"
+    }
+  },
+  "type": [
+    "VerifiableCredential",
+    "OpenBadgeCredential"
+  ],
+  "validFrom": "2020-07-20T00:00:00+02:00"
+}

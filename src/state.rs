@@ -182,6 +182,7 @@ pub enum MappingOptions {
     Transformations,
     OneToMany,
     ManyToOne,
+    StringToOne,
 }
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, Display)]
 pub enum Transformations {
@@ -192,6 +193,7 @@ pub enum Transformations {
     TakeIndex, // should be included in Slice
     Slice,     // Slice should accept indexing singular points and ranges in the future, e.g. (9) or (1..9)
     Regex,
+    StringToOne,
 }
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq)]

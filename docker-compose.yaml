@@ -1,0 +1,10 @@
+services:
+  credential-converter:
+    container_name: credential-converter
+    image: credential-converter:latest
+    build: .
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+

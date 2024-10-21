@@ -95,12 +95,126 @@ impl ManyToOne {
     }
 }
 
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum StringToOne {
+    stringit,
+}
+
+impl StringToOne {
+    pub fn apply(&self, value: String) -> Value {
+        match self {
+            StringToOne::stringit => Value::String(value),
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum StringArrayToOne {
+    stringArrayIt,
+}
+
+impl StringArrayToOne {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            StringArrayToOne::stringArrayIt => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum JsonToMarkdown {
+    jsonToMarkdown,
+}
+
+impl JsonToMarkdown {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            JsonToMarkdown::jsonToMarkdown => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum MarkdownToJson {
+    markdownToJson,
+}
+
+impl MarkdownToJson {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            MarkdownToJson::markdownToJson => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum AddIdentifier {
+    addIdentifier,
+}
+
+impl AddIdentifier {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            AddIdentifier::addIdentifier => value,
+        }
+    }
+}
+
+#[allow(non_camel_case_types)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum IdentifierToObject {
+    identifierToObject,
+}
+
+impl IdentifierToObject {
+    pub fn apply(&self, value: Value) -> Value {
+        match self {
+            IdentifierToObject::identifierToObject => value,
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum Transformation {
     OneToOne {
         type_: OneToOne,
         source: DataLocation,
+        destination: DataLocation,
+    },
+    StringToOne {
+        type_: StringToOne,
+        source: StringValue,
+        destination: DataLocation,
+    },
+    StringArrayToOne {
+        type_: StringArrayToOne,
+        source: StringArrayValue,
+        destination: DataLocation,
+    },
+    MarkdownToJson {
+        type_: MarkdownToJson,
+        source: DataLocation,
+        destination: DataLocation,
+    },
+    JsonToMarkdown {
+        type_: JsonToMarkdown,
+        source: DataLocation,
+        destination: DataLocation,
+    },
+    AddIdentifier {
+        type_: AddIdentifier,
+        source: DataTypeLocation,
+        destination: DataLocation,
+    },
+    IdentifierToObject {
+        type_: IdentifierToObject,
+        source: DataTypeLocation,
         destination: DataLocation,
     },
     OneToMany {
@@ -119,4 +233,21 @@ pub enum Transformation {
 pub struct DataLocation {
     pub format: String,
     pub path: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DataTypeLocation {
+    pub format: String,
+    pub datatype: String,
+    pub path: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StringValue {
+    pub value: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StringArrayValue {
+    pub value: Vec<String>,
 }

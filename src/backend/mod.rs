@@ -7,5 +7,7 @@ pub mod jsonpointer;
 pub mod leaf_nodes;
 pub mod logging;
 pub mod repository;
+pub mod routes;
 pub mod transformations;
 pub mod update_display;
+pub mod web;

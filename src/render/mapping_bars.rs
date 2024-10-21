@@ -38,6 +38,7 @@ pub fn render_mapping_bar(bottom: Rect, buf: &mut Buffer, state: &mut AppState, 
         match state.mapping_option {
             MappingOptions::Transformations => render_transformations_bar(bottom, buf, state),
             MappingOptions::OneToMany => render_onetomany_bar(bottom, buf, state),
+            MappingOptions::StringToOne => render_onetomany_bar(bottom, buf, state),
             MappingOptions::ManyToOne => render_manytoone_bar(bottom, buf, state),
             MappingOptions::DirectCopy => {}
         }
