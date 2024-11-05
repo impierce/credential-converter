@@ -1,5 +1,7 @@
 use std::ops::Deref;
 
+use regex::Regex;
+
 #[derive(Debug)]
 // TODO: add validation
 pub struct JsonPath(pub String);
@@ -33,6 +35,17 @@ impl TryFrom<JsonPath> for JsonPointer {
     type Error = String;
 
     fn try_from(value: JsonPath) -> Result<Self, Self::Error> {
-        Ok(JsonPointer(value.0.trim_start_matches('$').replace('.', "/")))
+        Ok(JsonPointer({
+            let mut value = value.0.trim_start_matches('$').replace('.', "/");
+
+            // Check if the JsonPath contains arrays and convert them as well
+            let regx = Regex::new(r"\[(\d+)\]").unwrap();
+
+            while regx.is_match(&value) {
+                value = regx.replace(&value, "/$1").to_string();
+            }
+
+            value
+        }))
     }
 }

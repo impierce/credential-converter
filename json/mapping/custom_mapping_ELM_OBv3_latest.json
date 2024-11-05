@@ -1,0 +1,286 @@
+[
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.@context"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.@context"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.id"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "VerifiableCredential"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.type[0]"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "OpenBadgeCredential"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.type[1]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.id"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "Profile"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.type[0]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.legalName.en"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.name"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.location[0].address.fullAddress.noteLiteral.en"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.address.streetAddress"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.issuer.location[0].address.countryCode.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.issuer.address.addressCountryCode"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.id"
+    }
+  },
+  {
+    "type_": "stringit",
+    "source": {
+      "value": "Achievement"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.type[0]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.id"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.title.*.[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.name"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.validFrom"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.validFrom"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].title.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.name"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.id"
+    }
+  },
+  {
+    "type_": "stringArrayIt",
+    "source": {
+      "value": ["AchievementSubject", "profile"] 
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.type"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.id"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.id"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.proof"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.proof"
+    }
+  },
+  {
+    "type_": "jsonToMarkdown",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.hasClaim[0].specifiedBy.learningOutcome[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.achievement.criteria.narrative"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSchema"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSchema"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialStatus"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialStatus"
+    }
+  },
+  {
+    "type_": "addIdentifier",
+    "source": {
+      "format": "ELM",
+      "datatype": "ext:studentID",
+      "path": "$.credentialSubject.identifier[0].notation"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.identifier[0]"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.givenName.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.givenName"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.familyName.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.familyName"
+    }
+  },
+  {
+    "type_": "copy",
+    "source": {
+      "format": "ELM",
+      "path": "$.credentialSubject.fullName.en[0]"
+    },
+    "destination": {
+      "format": "OBv3",
+      "path": "$.credentialSubject.fullName"
+    }
+  }
+
+
+]

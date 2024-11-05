@@ -17,6 +17,7 @@ use crossterm::execute;
 use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen};
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use std::io::{stdout, Result};
+use std::net::SocketAddr;
 
 // Load I18n macro, for allow you use `t!` macro in anywhere.
 #[macro_use]
@@ -29,11 +30,27 @@ fn main() -> Result<()> {
 
     let mut state = AppState::default();
 
+    // if arguments are passed we are working headless
+    // two options:
+    // 1. headless CLI (with arguments -o -i -m)
+    // 2. headless webservice (with argument -w)
     if std::env::args().len() > 1 {
         trace_dbg!("Arguments detected, running headless conversion");
-
         let mut cli_args = Args::parse();
-        run_headless(&mut cli_args, &mut state)?;
+        println!("Arguments detected, running headless conversion");
+        let args: Vec<String> = std::env::args().collect();
+        if args.contains(&"-w".to_string()) {
+            println!("Let's run the webservice!!!");
+            if args[args.len() - 1].parse::<SocketAddr>().is_ok() {
+                println!("Let's use {}", args[2].clone());
+                crate::backend::web::api_service(Some(args[args.len() - 1].clone()));
+            } else {
+                println!("The webservice runs default 127.0.0.1:3000");
+                crate::backend::web::api_service(None);
+            }
+        } else {
+            run_headless(&mut cli_args, &mut state)?;
+        }
     } else {
         trace_dbg!("No arguments detected, starting the TUI");
 

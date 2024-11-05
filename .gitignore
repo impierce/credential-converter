@@ -1,2 +1,5 @@
 target/
 logging_folder
+.vscode/launch.json
+json/.DS_Store
+.DS_Store

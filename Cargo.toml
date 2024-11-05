@@ -28,3 +28,6 @@ jsonpath-rust = "0.5"
 strum = "0.26.2"
 digital-credential-data-models = { git = "https://github.com/impierce/digital-credential-data-models.git", rev = "9f16c27" }
 csv = "1.3.0"
+axum = { version = "0.7.7", features = ["macros", "multipart"] }
+eyre = "0.6.8"
+tower-http = { version = "0.6.1", features = ["limit", "trace"] }
