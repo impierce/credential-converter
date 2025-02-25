@@ -15,7 +15,8 @@ pub fn init_conversion(state: &mut AppState) {
     load_input_file(state, false);
     load_mapping_file(state);
     enter_fixed_context_values(state);
-
+    enter_fixed_schema_values(state);
+    enter_credential_profile_values(state);
     update_display_section(state, false);
 }
 
@@ -78,11 +79,16 @@ pub fn load_mapping_file(state: &mut AppState) {
     } else {
         let rdr = std::fs::File::open(&state.mapping_path).unwrap();
         let transformations: Vec<Transformation> = serde_json::from_reader(rdr).unwrap();
-
         trace_dbg!("Successfully loaded the mapping file");
-
-        state.repository.apply_transformations(transformations, state.mapping);
+        let result = state.repository.apply_transformations(transformations, state.mapping);
+        match result {
+            Ok(_value) => {}
+            Err(_error) => {
+                state.exit_warning = true;
+            }
+        }
         // todo: add applied transformation to completed fields
+        //println!("state: {:#?}", state.mapping);
     }
 }
 
@@ -92,7 +98,10 @@ fn enter_fixed_context_values(state: &mut AppState) {
         let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
         output_elm.insert(
             "@context".to_string(),
-            Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+            Value::Array(vec![
+                json!("https://www.w3.org/2018/credentials/v1"),
+                json!("http://data.europa.eu/snb/model/context/edc-ap"),
+            ]),
         );
     } else if state.mapping.output_format() == "OBv3" {
         let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
@@ -103,6 +112,49 @@ fn enter_fixed_context_values(state: &mut AppState) {
                 json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
             ]),
         );
+    }
+}
+
+/// Enter fixed values into '@context' field, as demanded by the respective json-schema
+fn enter_fixed_schema_values(state: &mut AppState) {
+    if state.mapping.output_format() == "ELM" {
+        let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
+        output_elm.insert(
+            "credentialSchema".to_string(),
+            Value::Array(vec![
+                json!({"id": "http://data.europa.eu/snb/model/ap/edc-generic-full","type": "ShaclValidator2017"}), 
+                json!({"id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"})]),
+        );
+    } else if state.mapping.output_format() == "OBv3" {
+        let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
+        output_obv3.insert(
+            "credentialSchema".to_string(),
+            Value::Array(vec![
+                json!({"id": "https://purl.imsglobal.org/spec/ob/v3p0/schema/json/ob_v3p0_endorsementcredential_schema.json", "type": "1EdTechJsonSchemaValidator2019"}),
+                json!({"id": "https://accrediter.edu/schema/endorsementcredential.json","type": "1EdTechJsonSchemaValidator2019"})]),
+        );
+    }
+}
+
+/// Enter fixed values into 'credentialProfile' field, as demanded by the respective json-schema
+fn enter_credential_profile_values(state: &mut AppState) {
+    if state.mapping.output_format() == "ELM" {
+        let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
+        output_elm.insert(
+            "credentialProfiles".to_string(),
+            Value::Array(vec![
+                json!({"id": "http://data.europa.eu/snb/credential/e34929035b","type": "Concept",
+                "inScheme": {
+                  "id": "http://data.europa.eu/snb/credential/25831c2",
+                  "type": "ConceptScheme"
+                },
+                "prefLabel": {"en": ["Generic"]}
+                }),
+            ]),
+        );
+    } else if state.mapping.output_format() == "OBv3" {
+        let _output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
     }
 }
 

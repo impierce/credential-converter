@@ -3,7 +3,7 @@ use regex::Regex;
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, OneToOne, Transformation},
+        transformations::{DataLocation, OneToOne, StringToOne, StringValue, Transformation},
     },
     state::{AppState, Pages, Transformations},
     trace_dbg,
@@ -24,7 +24,7 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
 
         // todo: Can we we just get the key pointed to instead of copynig the entire repository?
         let mut temp_repository = state.repository.clone();
-        temp_repository.apply_transformation(transformation.clone(), state.mapping);
+        let _ = temp_repository.apply_transformation(transformation.clone(), state.mapping);
 
         let candidate_output_value = temp_repository
             .get(&state.mapping.output_format())
@@ -44,7 +44,7 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
 pub fn define_transformation(state: &mut AppState, transformation: Transformations) -> Transformation {
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
     let source_pointer: JsonPath = JsonPointer(state.input_fields[state.selected_input_field].0.clone()).into();
-
+    let input_value: String = state.input_fields[state.selected_input_field].0.clone();
     let destination_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
     match transformation {
@@ -98,6 +98,16 @@ pub fn define_transformation(state: &mut AppState, transformation: Transformatio
         },
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
+        Transformations::StringToOne => Transformation::StringToOne {
+            type_: StringToOne::stringit,
+            source: StringValue {
+                value: input_value.clone(),
+            },
+            destination: DataLocation {
+                format: output_format.clone(),
+                path: destination_path.to_string(),
+            },
+        },
         Transformations::DirectCopy | _ => Transformation::OneToOne {
             type_: OneToOne::copy,
             source: DataLocation {

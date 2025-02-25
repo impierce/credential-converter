@@ -1,0 +1,151 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
+  ],
+  "id": "urn:credential:dffc6c22-1421-4df2-b0e4-2b9d17aa0a6b",
+  "type": [
+    "VerifiableCredential",
+    "VerifiableAttestation",
+    "EuropeanDigitalCredential"
+  ],
+  "credentialSchema": [
+    {
+      "id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "type": "ShaclValidator2017"
+    },
+    {
+      "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"
+    }
+  ],
+  "credentialSubject": {
+    "id": "did:key:afsdlkj34134",
+    "type": "Person",
+    "identifier": [
+      {
+        "id": "urn:epass:identifier:2",
+        "type": "Identifier",
+        "notation": "545465468",
+        "schemeName": "Student ID"
+      }
+    ],
+
+    "fullName": {
+      "en": ["David Smith"]
+    },
+    "hasClaim": [
+      {
+        "id": "urn:epass:learningAchievement:2",
+        "type": "LearningAchievement",
+        "awardedBy": {
+          "id": "urn:epass:awardingProcess:1",
+          "type": "AwardingProcess",
+          "awardingBody": [
+            {
+              "id": "urn:epass:org:1",
+              "type": "Organisation",
+
+              "legalName": {
+                "en": ["University of Life"]
+              }
+            }
+          ]
+        },
+        "title": {
+          "en": ["TITLE OF PROGRAMME"]
+        }
+      }
+    ]
+  },
+  "issuer": {
+    "id": "did:ebsi:org:12345689",
+    "type": "Organisation",
+    "identifier": {
+      "id": "urn:epass:identifier:2",
+      "type": "Identifier",
+      "schemeName": "University Aliance ID",
+      "notation": "73737373"
+    },
+    "legalName": { "en": "ORGANIZACION TEST" }
+  },
+  "issuanceDate": "2024-03-26T16:06:50+01:00",
+  "issued": "2024-03-26T16:06:50+01:00",
+  "validFrom": "2019-09-20T00:00:00+02:00",
+  "credentialProfiles": [
+    {
+      "id": "http://data.europa.eu/snb/credential/e34929035b",
+      "type": "Concept",
+      "inScheme": {
+        "id": "http://data.europa.eu/snb/credential/25831c2",
+        "type": "ConceptScheme"
+      },
+      "prefLabel": {
+        "en": ["Generic"]
+      }
+    }
+  ],
+  "displayParameter": {
+    "id": "urn:epass:displayParameter:1",
+    "type": "DisplayParameter",
+    "language": [
+      {
+        "id": "http://publications.europa.eu/resource/authority/language/ENG",
+        "type": "Concept",
+        "inScheme": {
+          "id": "http://publications.europa.eu/resource/authority/language",
+          "type": "ConceptScheme"
+        },
+        "prefLabel": {
+          "en": ["English"]
+        },
+        "notation": "language"
+      }
+    ],
+    "description": {
+      "en": [
+        "EBSI Example https://github.com/Knowledge-Innovation-Centre/ESBI-JSON-schemas/blob/main/examples%20of%20credentials/DigiComp%20Generic.json"
+      ]
+    },
+    "individualDisplay": [
+      {
+        "id": "urn:epass:individualDisplay:c05743e7-9f9d-4e0b-899b-7ae6514c7a02",
+        "type": "IndividualDisplay",
+        "language": {
+          "id": "http://publications.europa.eu/resource/authority/language/ENG",
+          "type": "Concept",
+          "inScheme": {
+            "id": "http://publications.europa.eu/resource/authority/language",
+            "type": "ConceptScheme"
+          },
+          "prefLabel": {
+            "en": ["English"]
+          },
+          "notation": "language"
+        },
+        "displayDetail": [
+          {
+            "id": "urn:epass:displayDetail:2804bbf5-ab29-4972-9202-71af0f85316b",
+            "type": "DisplayDetail",
+            "image": {"content": "1"}
+          }
+        ]
+      }
+    ],
+    "primaryLanguage": {
+      "id": "http://publications.europa.eu/resource/authority/language/ENG",
+      "type": "Concept",
+      "inScheme": {
+        "id": "http://publications.europa.eu/resource/authority/language",
+        "type": "ConceptScheme"
+      },
+      "prefLabel": {
+        "en": ["English"]
+      },
+      "notation": "language"
+    },
+    "title": {
+      "en": ["DigiComp Generic"]
+    }
+  }
+}

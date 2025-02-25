@@ -29,13 +29,20 @@ pub fn apply_desm_mapping(state: &mut AppState) {
     trace_dbg!(&transformations);
 
     state.performed_mappings.extend(transformations.clone());
-    let mut completed_fields = state.repository.apply_transformations(transformations, state.mapping);
-    for tuple in &mut completed_fields {
-        tuple.0 = tuple.0.trim_start_matches('$').replace('.', "/");
-        tuple.1 = tuple.1.trim_start_matches('$').replace('.', "/");
+    let result = state.repository.apply_transformations(transformations, state.mapping);
+    match result {
+        Ok(mut completed_fields) => {
+            for tuple in &mut completed_fields {
+                tuple.0 = tuple.0.trim_start_matches('$').replace('.', "/");
+                tuple.1 = tuple.1.trim_start_matches('$').replace('.', "/");
+            }
+            state.completed_fields.append(&mut completed_fields);
+            trace_dbg!(&state.completed_fields);
+        }
+        Err(_error) => {
+            //to handle
+        }
     }
-    state.completed_fields.append(&mut completed_fields);
-    trace_dbg!(&state.completed_fields);
 }
 
 pub fn desm_csv_parser(path: &str) -> Vec<DesmCSVParsed> {

@@ -39,7 +39,7 @@ cargo run -- -h
 
 example:
 ```sh
-cargo run -- -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
+cargo run -- -i ./test/OBv3_example.json -o ./test/ELM_export_example.json -m ./json/mapping/custom_mapping_example_OB2ELM.json -c OBv3toELM
 ```
 
 Or find the executable in the `/target/debug` folder named after the repo name `credential-converter`.
@@ -47,12 +47,45 @@ Or find the executable in the `/target/debug` folder named after the repo name `
 ./target/debug/credential-converter
 ```
 ```sh
-./target/debug/credential-converter -i example.json -o example_123.json -m example_mapping.json -c o-bv3-to-elm
+./target/debug/credential-converter -i example.json -o example_123.json -m example_mapping.json -c OBv3toELM
 ```
 
-
-
 *Warning: the ratatui library does not seem to handle different color settings in your terminal perfectly. This causes the colors to differ slightly between builds in different terminals. For reference please continue reading the readme, colors will be explained accompanied by screenshots.*
+
+## Setup webservice
+For headless/webservice execution:
+
+Run with -w 
+The default address and port for the application are 127.0.0.1:3000 but you can also specify the address and port yourself
+
+```sh
+cargo run -- -w
+```
+example for running on 192.168.1.1:5000
+```sh
+cargo run -- -w 192.168.1.1:5000
+```
+
+## Usage of webservice (client-side)
+A webpage displaying a form can be found at the root of the project a webservice api can be found at /translate_file
+you could use the website to translate the files by surfing to 127.0.0.1:3000/translate_file and providing information in the form presented.
+
+An other option is POSTING to the page directly in a multipart format:
+```curl 127.0.0.1:3000/translate_file -F translation=OBv3ToELM -F input_file=@test/OBv3_example.json``` 
+
+There is also the option to POST direclty in json format:
+```curl 127.0.0.1:3000/api -H "Content-Type: application/json" --data @test/encoded_test.json```
+
+The data format for this json is:
+```json 
+{
+        "From": {"Name": "OB", "Version": "3.0"},
+        "To": {"Name": "elm", "Version": "3.2"},
+        "Parameters": { "PreferredLanguages": ["en", "sv"]},
+        "Content": "Base 64 encoded content in From format"
+}
+
+```
 
 ## Usage
 
@@ -80,7 +113,7 @@ On the bottom you'll find a bar explaining the basic keys as well.
 `res/output_credential.json`: Example output file for the converted JSON.  
 `res/custom_mapping.json`: Example custom mapping file.  
 
-Logs are kept in `logging_folder/credential-converter.log`. This file is overwritten upon each startup of the program.
+Logs are kept in `logging_folder/credential-converter.log`. This file is overwritten upon each startup of the program. Use the macro `trace_dbg!()` to add debug messages in the code.
 
 To remove the default file paths remove lines 34 - 38 from the `main.rs`:
 ```sh

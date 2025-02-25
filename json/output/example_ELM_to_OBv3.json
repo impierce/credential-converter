@@ -1,0 +1,59 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"
+  ],
+  "credentialSchema": [
+    {
+      "id": "https://purl.imsglobal.org/spec/ob/v3p0/schema/json/ob_v3p0_endorsementcredential_schema.json",
+      "type": "1EdTechJsonSchemaValidator2019"
+    },
+    {
+      "id": "https://accrediter.edu/schema/endorsementcredential.json",
+      "type": "1EdTechJsonSchemaValidator2019"
+    }
+  ],
+  "credentialSubject": {
+    "achievement": {
+      "id": "urn:epass:learningAchievement:6",
+      "name": "German International Abitur",
+      "type": [
+        "Achievement"
+      ]
+    },
+    "familyName": "Smith",
+    "fullName": "David Smith",
+    "givenName": "David",
+    "id": "did:key:afsdlkj34134",
+    "identifier": [
+      {
+        "hashed": false,
+        "identityHash": "5547554",
+        "identityType": "ext:studentID",
+        "salt": "not-used",
+        "type": "IdentityObject"
+      }
+    ],
+    "type": [
+      "AchievementSubject",
+      "profile"
+    ]
+  },
+  "id": "urn:credential:87ddce4d-de74-4838-b7a4-1f14d9c614ec",
+  "issuer": {
+    "address": {
+      "addressCountryCode": "http://publications.europa.eu/resource/authority/country/ESP"
+    },
+    "id": "did:ebsi:org:12345689",
+    "name": "ORGANIZACION TEST",
+    "type": [
+      "Profile"
+    ]
+  },
+  "name": "Higher  Education Entrance Qualification - German International ABITUR School",
+  "type": [
+    "VerifiableCredential",
+    "OpenBadgeCredential"
+  ],
+  "validFrom": "2020-07-20T00:00:00+02:00"
+}

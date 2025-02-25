@@ -1,0 +1,213 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "http://data.europa.eu/snb/model/context/edc-ap"
+  ],
+  "credentialProfiles": [
+    {
+      "id": "http://data.europa.eu/snb/credential/e34929035b",
+      "inScheme": {
+        "id": "http://data.europa.eu/snb/credential/25831c2",
+        "type": "ConceptScheme"
+      },
+      "prefLabel": {
+        "en": [
+          "Generic"
+        ]
+      },
+      "type": "Concept"
+    }
+  ],
+  "credentialSchema": [
+    {
+      "id": "http://data.europa.eu/snb/model/ap/edc-generic-full",
+      "type": "ShaclValidator2017"
+    },
+    {
+      "id": "https://api-pilot.ebsi.eu/trusted-schemas-registry/v3/schemas/0x7ff3bc76bd5e37b3d29721b8698646a722a24a4f4ab0a0ba63d4bbbe0ef9758d",
+      "type": "JsonSchema"
+    }
+  ],
+  "credentialSubject": {
+    "fullName": {
+      "en": [
+        "somebody@gmail.com"
+      ]
+    },
+    "hasClaim": [
+      {
+        "awardedBy": {
+          "awardingBody": [
+            {
+              "id": "https://1edtech.edu/issuers/565049",
+              "legalName": {
+                "en": [
+                  "1EdTech University"
+                ]
+              },
+              "type": "Organisation"
+            }
+          ],
+          "id": "urn:epass:awardingProcess:1",
+          "type": "AwardingProcess"
+        },
+        "id": "https://1edtech.edu/achievements/degree",
+        "title": {
+          "en": [
+            "1EdTech University Degree for Example Student"
+          ]
+        },
+        "type": "LearningAchievement"
+      }
+    ],
+    "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "identifier": [
+      {
+        "id": "urn:epass:identifier:2",
+        "notation": "student@1edtech.edu",
+        "schemeName": "Student ID",
+        "type": "Identifier"
+      }
+    ],
+    "type": "Person"
+  },
+  "displayParameter": {
+    "description": {
+      "en": [
+        "EBSI Example https://github.com/Knowledge-Innovation-Centre/ESBI-JSON-schemas/blob/main/examples%20of%20credentials/DigiComp%20Generic.json"
+      ]
+    },
+    "id": "urn:epass:displayParameter:1",
+    "individualDisplay": [
+      {
+        "displayDetail": [
+          {
+            "id": "urn:epass:displayDetail:123",
+            "image": {
+              "content": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAznpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjabVFBDgMhCLzzij5BGVR8jtvdJv1Bn19Uuq2bTuKAjBlB6Xg9H3TrYChJKpprzsEgVSo3SzRMtMExyOCBLK7FtU6nwFaCRcytZj//qcfTYIZmWfox0rsL2ypUv4D1YuQXoXfEluxuVN0IPIXoBq35KFXL7wjbEVboXNQJZXifJte9FHu9PVkRzAcigjGgswH0lQjNkjhY7WBAtVwsDvZR7EH+vVPoP+Pd0vIT+ApL3UFvDxlivyntNoEAAAGEaUNDUElDQyBwcm9maWxlAAB4nH2RPUjDUBSFT1PFIhUHO4g4ZGidLIiKONYqFKFCqBVadTB56R80aUhSXBwF14KDP4tVBxdnXR1cBUHwB8RdcFJ0kRLvSwotYrzhkY/z7jm8dx8gNKtMs3oSgKbbZiaVFHP5VbHvFQGE6IthQmaWMSdJafjW1z11U93FeZZ/3581oBYsBgRE4gQzTJt4g3hm0zY47xNHWFlWic+Jx006IPEj1xWP3ziXXBZ4ZsTMZuaJI8RiqYuVLmZlUyOeJo6qmk75Qs5jlfMWZ61aZ+1z8huGC/rKMtdpjSKFRSxBgggFdVRQhY04/XVSLGRoP+njH3H9ErkUclXAyLGAGjTIrh/8DX7P1ipOTXpJ4STQ++I4HzGgbxdoNRzn+9hxWidA8Bm40jv+WhOY/SS90dGiR8DgNnBx3dGUPeByBxh+MmRTdqUgLaFYBN7P6JnywNAt0L/mza29j9MHIEuzSt8AB4fAWImy133uHeqe27897fn9AJ6icrg0Y35bAAANemlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNC40LjAtRXhpdjIiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgeG1sbnM6R0lNUD0iaHR0cDovL3d3dy5naW1wLm9yZy94bXAvIgogICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgeG1sbnM6dGlmZj0iaHR0cDovL25zLmFkb2JlLmNvbS90aWZmLzEuMC8iCiAgICB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iCiAgIHhtcE1NOkRvY3VtZW50SUQ9ImdpbXA6ZG9jaWQ6Z2ltcDowNDE4ODNhMy0zYjAzLTQyNDctYjc2My05MDk4ODYxMGZiNjIiCiAgIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZWNiZWZmYTQtMmVmOS00M2FjLTkxOWUtNTE0MDE5NzBkMjVkIgogICB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6NGI1YmIyNmEtMDRiZi00NDFlLTljOGMtYzZiY2EwZmQ0YWJhIgogICBHSU1QOkFQST0iMi4wIgogICBHSU1QOlBsYXRmb3JtPSJNYWMgT1MiCiAgIEdJTVA6VGltZVN0YW1wPSIxNzM2MzI1NjUxMzI2NjIxIgogICBHSU1QOlZlcnNpb249IjIuMTAuMzgiCiAgIGRjOkZvcm1hdD0iaW1hZ2UvcG5nIgogICB0aWZmOk9yaWVudGF0aW9uPSIxIgogICB4bXA6Q3JlYXRvclRvb2w9IkdJTVAgMi4xMCIKICAgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyNTowMTowOFQwOTo0MDo0MCswMTowMCIKICAgeG1wOk1vZGlmeURhdGU9IjIwMjU6MDE6MDhUMDk6NDA6NDArMDE6MDAiPgogICA8eG1wTU06SGlzdG9yeT4KICAgIDxyZGY6U2VxPgogICAgIDxyZGY6bGkKICAgICAgc3RFdnQ6YWN0aW9uPSJzYXZlZCIKICAgICAgc3RFdnQ6Y2hhbmdlZD0iLyIKICAgICAgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo3NzlmOWRkMy1kNzAxLTQ0ZGUtYmI2Ny1mYmMxZDkzYjIzYmQiCiAgICAgIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkdpbXAgMi4xMCAoTWFjIE9TKSIKICAgICAgc3RFdnQ6d2hlbj0iMjAyNS0wMS0wOFQwOTo0MDo1MSswMTowMCIvPgogICAgPC9yZGY6U2VxPgogICA8L3htcE1NOkhpc3Rvcnk+CiAgPC9yZGY6RGVzY3JpcHRpb24+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz7aFa8HAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH6QEICCgz6dV/sQAAIABJREFUeNrtnXmUXVWZ6H97n+nOt+akKnMqIQmZKgQkiYYxPgaBIPYKdtOI2srThrYbbEQE7QfKAhTxRX3oWqI+29Y8QSGMCi2BMIkQEhkyBypJkaEy1HSr6t57hr3fH/feU7dSVUlloJHV9a1Vqdxzz9ln728e9v4KRmAERmAERmAERmAERmAERmAERuADD0/+vZK//eSvxbE8a4yg78TBH6/dJs8+c5IwY2aDFUnmLvj893XTKXGeXb1q2GOIETQeH6z4txUinU8J18kgchMTuS7vRqGMa33cP8Tisa/1JsR2tu1i15gt6obvfEWPEOQ9gjeuf0Nu3rVFBuOqtdbOJJ3zrpaevNL18rVKKykQ2jadvG8Hj5tK/MQ7pebZt59t9RvHVYtP3dUUDDWuOYLaw8N/fOopaTVaYteLru588SV9a8+t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",
+              "contentEncoding": {
+                "id": "http://data.europa.eu/snb/encoding/6146cde7dd",
+                "inScheme": {
+                  "id": "http://data.europa.eu/snb/encoding/25831c2",
+                  "type": "ConceptScheme"
+                },
+                "prefLabel": {
+                  "en": [
+                    "base64"
+                  ]
+                },
+                "type": "Concept"
+              },
+              "contentType": {
+                "id": "http://publications.europa.eu/resource/authority/file-type/PNG",
+                "inScheme": {
+                  "id": "http://publications.europa.eu/resource/authority/file-type",
+                  "type": "ConceptScheme"
+                },
+                "notation": "file-type",
+                "prefLabel": {
+                  "en": [
+                    "PNG"
+                  ]
+                },
+                "type": "Concept"
+              },
+              "id": "urn:epass:mediaObject:https://avatars.githubusercontent.com/u/22613412?v=4",
+              "page": 1,
+              "type": "MediaObject"
+            },
+            "type": "DisplayDetail"
+          }
+        ],
+        "id": "urn:epass:individualDisplay:c05743e7-9f9d-4e0b-899b-7ae6514c7a02",
+        "language": {
+          "id": "http://publications.europa.eu/resource/authority/language/ENG",
+          "inScheme": {
+            "id": "http://publications.europa.eu/resource/authority/language",
+            "type": "ConceptScheme"
+          },
+          "notation": "language",
+          "prefLabel": {
+            "en": [
+              "English"
+            ]
+          },
+          "type": "Concept"
+        },
+        "type": "IndividualDisplay"
+      }
+    ],
+    "language": [
+      {
+        "id": "http://publications.europa.eu/resource/authority/language/ENG",
+        "inScheme": {
+          "id": "http://publications.europa.eu/resource/authority/language",
+          "type": "ConceptScheme"
+        },
+        "notation": "language",
+        "prefLabel": {
+          "en": [
+            "English"
+          ]
+        },
+        "type": "Concept"
+      }
+    ],
+    "primaryLanguage": {
+      "id": "http://publications.europa.eu/resource/authority/language/ENG",
+      "inScheme": {
+        "id": "http://publications.europa.eu/resource/authority/language",
+        "type": "ConceptScheme"
+      },
+      "notation": "language",
+      "prefLabel": {
+        "en": [
+          "English"
+        ]
+      },
+      "type": "Concept"
+    },
+    "title": {
+      "en": [
+        "DigiComp Generic"
+      ]
+    },
+    "type": "DisplayParameter"
+  },
+  "id": "http://1edtech.edu/credentials/3732",
+  "issuanceDate": "2010-01-01T00:00:00Z",
+  "issued": "2010-01-01T00:00:00Z",
+  "issuer": {
+    "id": "https://1edtech.edu/issuers/565049",
+    "legalName": {
+      "en": "1EdTech University"
+    },
+    "location": {
+      "address": {
+        "countryCode": {
+          "id": "http://publications.europa.eu/resource/authority/language/USA",
+          "inScheme": {
+            "id": "http://publications.europa.eu/resource/authority/country",
+            "type": "ConceptScheme"
+          },
+          "notation": "country",
+          "prefLabel": {
+            "en": "the United States of America"
+          },
+          "type": "Concept"
+        },
+        "id": "urn:epass:certificateAddress:1",
+        "type": "Address"
+      },
+      "id": "urn:epass:certificateLocation:1",
+      "type": "Location"
+    },
+    "type": "Organisation"
+  },
+  "type": [
+    "VerifiableCredential",
+    "VerifiableAttestation",
+    "EuropeanDigitalCredential"
+  ],
+  "validFrom": "2010-01-01T00:00:00Z"
+}
