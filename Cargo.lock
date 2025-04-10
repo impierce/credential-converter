@@ -418,7 +418,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "credential-converter"
+name = "credential_converter"
 version = "0.1.0"
 dependencies = [
  "anyhow",
