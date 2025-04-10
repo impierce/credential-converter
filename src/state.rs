@@ -3,6 +3,7 @@ use ratatui::layout::Rect;
 use serde_json::Value;
 use std::{borrow::Cow, collections::HashMap};
 use strum::{AsRefStr, Display, FromRepr};
+use rust_i18n::t;
 
 use crate::backend::{repository::Repository, transformations::Transformation};
 
@@ -206,7 +207,7 @@ pub enum Pages {
 //////////      HELPERS     //////////
 
 pub fn translate(tag: &str) -> Cow<str> {
-    rust_i18n::t!(tag, pwd = std::env::current_dir().unwrap().display())
+    t!(tag, pwd = std::env::current_dir().unwrap().display())
 }
 
 #[macro_export]

@@ -1,5 +1,5 @@
 use crate::{
-    p2_p3_common::{
+    events::p2_p3_common::{
         handle_backspace, handle_char, handle_down, handle_enter, handle_esc, handle_f2, handle_left, handle_mouse_up,
         handle_right, handle_scroll_down, handle_scroll_up, handle_tab, handle_up,
     },

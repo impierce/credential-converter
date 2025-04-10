@@ -3,6 +3,9 @@ name = "credential-converter"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 jsonschema = "0.17"
@@ -20,7 +23,7 @@ tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 directories = "5.0.1"
 lazy_static = "1.4.0"
 regex = "1.10"
-rust-i18n = "3.0"
+rust-i18n = "3.1"
 config = "0.14"
 serde_path_to_error = "0.1"
 jsonpath-rust = "0.5"

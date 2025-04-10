@@ -18,7 +18,7 @@ use crossterm::terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScree
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use std::io::{stdout, Result};
 
-// Load I18n macro, for allow you use `t!` macro in anywhere.
+// Load I18n macro, to allow use of the `t!` macro in anywhere.
 #[macro_use]
 extern crate rust_i18n;
 i18n!("src/locales", fallback = "en");
