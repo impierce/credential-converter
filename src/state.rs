@@ -1,9 +1,9 @@
 use clap::ValueEnum;
 use ratatui::layout::Rect;
+use rust_i18n::t;
 use serde_json::Value;
 use std::{borrow::Cow, collections::HashMap};
 use strum::{AsRefStr, Display, FromRepr};
-use rust_i18n::t;
 
 use crate::backend::{repository::Repository, transformations::Transformation};
 
