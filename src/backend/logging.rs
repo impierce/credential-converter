@@ -1,6 +1,5 @@
-use std::path::PathBuf;
+use std::{io::Error, path::PathBuf};
 
-use color_eyre::eyre::Result;
 use directories::ProjectDirs;
 use lazy_static::lazy_static;
 use tracing_error::ErrorLayer;
@@ -31,7 +30,7 @@ pub fn get_data_dir() -> PathBuf {
     directory
 }
 
-pub fn initialize_logging() -> Result<()> {
+pub fn initialize_logging() -> Result<(), Error> {
     let directory = get_data_dir();
     std::fs::create_dir_all(directory.clone())?;
     let log_path = directory.join(LOG_FILE.clone());
