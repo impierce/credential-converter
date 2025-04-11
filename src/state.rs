@@ -1,6 +1,7 @@
 use clap::ValueEnum;
 use ratatui::layout::Rect;
 use rust_i18n::t;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{borrow::Cow, collections::HashMap};
 use strum::{AsRefStr, Display, FromRepr};
@@ -151,7 +152,7 @@ pub enum P1Prompts {
     CustomMapping,
 }
 
-#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, ValueEnum, Display)]
+#[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, ValueEnum, Display, Serialize, Deserialize)]
 pub enum Mapping {
     #[clap(name = "OBv3toELM")]
     OBv3ToELM = 0,

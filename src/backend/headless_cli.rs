@@ -4,6 +4,7 @@ use crate::state::{AppState, Mapping};
 use crate::trace_dbg;
 
 use clap::Parser;
+use serde::{Deserialize, Serialize};
 use std::fs::read_dir;
 use std::io::Result;
 use std::path::Path;
@@ -125,7 +126,7 @@ pub fn init_appstate_headless(args: &Args, state: &mut AppState) {
 
 ///// STRUCTS /////
 
-#[derive(Parser, Debug, Default)]
+#[derive(Parser, Debug, Default, Serialize, Deserialize)]
 #[command(
     version = "1.0.0",
     about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert file to file in .json format.\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with \"_<conversion_destination_format>\"\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nPassing incorrect arguments will return helpful error messages.\nRead more below:"
