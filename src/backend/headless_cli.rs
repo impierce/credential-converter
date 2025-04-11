@@ -125,7 +125,7 @@ pub fn init_appstate_headless(args: &Args, state: &mut AppState) {
 
 ///// STRUCTS /////
 
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, Default)]
 #[command(
     version = "1.0.0",
     about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert file to file in .json format.\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with \"_<conversion_destination_format>\"\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nPassing incorrect arguments will return helpful error messages.\nRead more below:"
@@ -160,7 +160,6 @@ pub struct Args {
 
 impl Args {
     pub fn validate(&self) -> Result<()> {
-        println!("Validating arguments...\n\n");
         let file_pair = self.input_file.is_some() && self.output_file.is_some();
         let dir_pair = self.input_directory.is_some() && self.output_directory.is_some();
         let conversion_mapping = self.conversion.is_some() && self.mapping_file.is_some();
