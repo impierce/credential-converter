@@ -12,6 +12,7 @@ use super::init_conversion::load_input_file;
 
 pub fn run_headless(cli_args: &mut Args, state: &mut AppState) -> Result<()> {
     check_args(cli_args)?;
+    cli_args.validate()?;
     trace_dbg!(&cli_args);
     init_appstate_headless(cli_args, state);
 
@@ -130,23 +131,23 @@ pub fn init_appstate_headless(args: &Args, state: &mut AppState) {
     about = "This is the executable for the Credential Converter built by Impierce Technologies.\nWhen running without arguments it will start the Terminal User Interface.\nHere you can add, edit, save and tweak all the conversions manually\nFor headless conversion there are 2 options:\nConvert file to file in .json format.\nBatch conversion, convert all .json files in a given directory, also nested directories.\nFiles being output to an output directory will have the original name appended with \"_<conversion_destination_format>\"\nPaths to existing output files/directories will be overwritten.\nFor DESM Mappings simply enter 'DESM' as the mappping file (-m)\nPassing incorrect arguments will return helpful error messages.\nRead more below:"
 )]
 pub struct Args {
-    #[arg(short, long, requires_all = ["mapping_file", "output_file"], conflicts_with_all = ["input_directory", "output_directory"])]
-    input_file: Option<String>,
+    #[arg(short, long)]
+    pub input_file: Option<String>,
 
-    #[arg(short = 'b', long, requires_all = ["mapping_file", "output_directory"], conflicts_with_all = ["input_file", "output_file"])]
-    input_directory: Option<String>,
+    #[arg(short = 'b', long)]
+    pub input_directory: Option<String>,
 
-    #[arg(short, long, requires_all = ["mapping_file", "input_file"], conflicts_with_all = ["input_directory", "output_directory"])]
-    output_file: Option<String>,
+    #[arg(short, long)]
+    pub output_file: Option<String>,
 
-    #[arg(short = 'd', long, requires_all = ["mapping_file", "input_directory"], conflicts_with_all = ["input_file", "output_file"])]
-    output_directory: Option<String>,
+    #[arg(short = 'd', long)]
+    pub output_directory: Option<String>,
 
-    #[arg(short, long, required_if_eq_any = [("conversion", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")], requires = "conversion")]
-    mapping_file: Option<String>,
+    #[arg(short, long)]
+    pub mapping_file: Option<String>,
 
-    #[arg(short, long, value_enum, required_if_eq_any = [("mapping_file", "Some"), ("input_file", "Some"), ("input_directory", "Some"), ("output_file", "Some"), ("output_directory", "Some")])]
-    conversion: Option<Mapping>,
+    #[arg(short, long, value_enum)]
+    pub conversion: Option<Mapping>,
     // #[arg(short, long)] // todo: nice feature for in the future
     // prefix_output: String,
 
@@ -155,4 +156,22 @@ pub struct Args {
 
     // #[arg(short, long)] // opt for going into nested directories or not
     // nested: bool,
+}
+
+impl Args {
+    pub fn validate(&self) -> Result<()> {
+        println!("Validating arguments...\n\n");
+        let file_pair = self.input_file.is_some() && self.output_file.is_some();
+        let dir_pair = self.input_directory.is_some() && self.output_directory.is_some();
+        let conversion_mapping = self.conversion.is_some() && self.mapping_file.is_some();
+
+        if !conversion_mapping {
+            panic!("You must supply a --conversion and a --mapping-file");
+        }
+        if !(file_pair || dir_pair) {
+            panic!("You must supply either:\n- both --input-file and --output-file\nOR\n- both --input-directory and --output-directory");
+        }
+
+        Ok(())
+    }
 }
