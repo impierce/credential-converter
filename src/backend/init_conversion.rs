@@ -84,10 +84,12 @@ pub fn load_mapping_file(state: &mut AppState) {
         state.repository.apply_transformations(transformations, state.mapping);
         // todo: add applied transformation to completed fields
     }
+
+    enter_fixed_context_values(state);
 }
 
 /// Enter fixed values into '@context' field, as demanded by the respective json-schema
-fn enter_fixed_context_values(state: &mut AppState) {
+pub fn enter_fixed_context_values(state: &mut AppState) {
     if state.mapping.output_format() == "ELM" {
         let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
         output_elm.insert(

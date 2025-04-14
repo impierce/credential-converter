@@ -35,6 +35,7 @@ pub fn apply_desm_mapping(state: &mut AppState) {
         tuple.1 = tuple.1.trim_start_matches('$').replace('.', "/");
     }
     state.completed_fields.append(&mut completed_fields);
+
     trace_dbg!(&state.completed_fields);
 }
 
