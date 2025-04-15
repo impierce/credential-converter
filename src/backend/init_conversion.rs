@@ -14,7 +14,7 @@ pub fn init_conversion(state: &mut AppState) {
     init_schema(state);
     load_input_file(state, false);
     load_mapping_file(state);
-    enter_fixed_context_values(state);
+    enter_fixed_context_type_values(state);
 
     update_display_section(state, false);
 }
@@ -85,16 +85,24 @@ pub fn load_mapping_file(state: &mut AppState) {
         // todo: add applied transformation to completed fields
     }
 
-    enter_fixed_context_values(state);
+    enter_fixed_context_type_values(state);
 }
 
 /// Enter fixed values into '@context' field, as demanded by the respective json-schema
-pub fn enter_fixed_context_values(state: &mut AppState) {
+pub fn enter_fixed_context_type_values(state: &mut AppState) {
     if state.mapping.output_format() == "ELM" {
         let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
         output_elm.insert(
             "@context".to_string(),
             Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+        );
+        output_elm.insert(
+            "type".to_string(),
+            Value::Array(vec![
+                json!("VerifiableCredential"),
+                json!("VerifiableAttestation"),
+                json!("EuropeanDigitalCredential"),
+            ]),
         );
     } else if state.mapping.output_format() == "OBv3" {
         let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
@@ -104,6 +112,10 @@ pub fn enter_fixed_context_values(state: &mut AppState) {
                 json!("https://www.w3.org/ns/credentials/v2"),
                 json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
             ]),
+        );
+        output_obv3.insert(
+            "type".to_string(),
+            Value::Array(vec![json!("VerifiableCredential"), json!("OpenBadgeCredential")]),
         );
     }
 }
