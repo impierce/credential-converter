@@ -94,34 +94,37 @@ pub fn load_mapping_file(state: &mut AppState) {
 
 /// Enter fixed values into '@context' field, as demanded by the respective json-schema
 pub fn enter_fixed_context_type_values(state: &mut AppState) {
-    if state.mapping.output_format() == "ELM" {
-        let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
-        output_elm.insert(
-            "@context".to_string(),
-            Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
-        );
-        output_elm.insert(
-            "type".to_string(),
-            Value::Array(vec![
-                json!("VerifiableCredential"),
-                json!("VerifiableAttestation"),
-                json!("EuropeanDigitalCredential"),
-            ]),
-        );
-    } else if state.mapping.output_format() == "OBv3" {
-        let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
-        output_obv3.insert(
-            "@context".to_string(),
-            Value::Array(vec![
-                json!("https://www.w3.org/ns/credentials/v2"),
-                json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
-            ]),
-        );
-        output_obv3.insert(
-            "type".to_string(),
-            Value::Array(vec![json!("VerifiableCredential"), json!("OpenBadgeCredential")]),
-        );
-    }
+    match state.mapping.output_format().as_str() {
+        "ELM" => {
+            let output_elm = state.repository.get_mut("ELM").unwrap().as_object_mut().unwrap();
+            output_elm.insert(
+                "@context".to_string(),
+                Value::Array(vec![json!("https://www.w3.org/ns/credentials/v2")]),
+            );
+            output_elm.insert(
+                "type".to_string(),
+                Value::Array(vec![
+                    json!("VerifiableCredential"),
+                    json!("VerifiableAttestation"),
+                    json!("EuropeanDigitalCredential"),
+                ]),
+            );
+        } "OBv3" => {
+            let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
+            output_obv3.insert(
+                "@context".to_string(),
+                Value::Array(vec![
+                    json!("https://www.w3.org/ns/credentials/v2"),
+                    json!("https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json"),
+                ]),
+            );
+            output_obv3.insert(
+                "type".to_string(),
+                Value::Array(vec![json!("VerifiableCredential"), json!("OpenBadgeCredential")]),
+            );
+        }
+        _ => {}  
+    } 
 }
 
 ////////     HELPERS     ////////
