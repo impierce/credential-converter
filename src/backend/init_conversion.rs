@@ -26,9 +26,13 @@ fn init_schema(state: &mut AppState) {
             state.target_schema = get_json("json/ebsi-elm/vcdm2.0-europass-edc-schema/schema.json")
                 .expect("error: couldn't retrieve Europass EDC ELM schema");
         }
-        Mapping::ELMToOBv3 => {
+        Mapping::ELMToOBv3 | Mapping::OBv2ToOBv3 => {
             state.target_schema =
                 get_json("json/obv3/obv3_schema.json").expect("error: couldn't retrieve OpenBadges version 3 schema");
+        }
+        Mapping::OBv3ToOBv2 => {
+            state.target_schema =
+                get_json("json/obv2/obv2_schema.json").expect("error: couldn't retrieve OpenBadges version 2 schema");
         }
     }
 }

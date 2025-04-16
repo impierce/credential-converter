@@ -154,11 +154,15 @@ pub enum P1Prompts {
 
 #[derive(Clone, Copy, FromRepr, Debug, Default, PartialEq, ValueEnum, Display, Serialize, Deserialize)]
 pub enum Mapping {
+    #[default]
     #[clap(name = "OBv3toELM")]
     OBv3ToELM = 0,
-    #[default]
     #[clap(name = "ELMtoOBv3")]
     ELMToOBv3,
+    #[clap(name = "OBv2toOBv3")]
+    OBv2ToOBv3,
+    #[clap(name = "OBv3toOBv2")]
+    OBv3ToOBv2,
 }
 
 impl Mapping {
@@ -166,6 +170,8 @@ impl Mapping {
         match self {
             Mapping::OBv3ToELM => "OBv3".to_string(),
             Mapping::ELMToOBv3 => "ELM".to_string(),
+            Mapping::OBv2ToOBv3 => "OBv2".to_string(),
+            Mapping::OBv3ToOBv2 => "OBv3".to_string(),
         }
     }
 
@@ -173,6 +179,8 @@ impl Mapping {
         match self {
             Mapping::OBv3ToELM => "ELM".to_string(),
             Mapping::ELMToOBv3 => "OBv3".to_string(),
+            Mapping::OBv2ToOBv3 => "OBv3".to_string(),
+            Mapping::OBv3ToOBv2 => "OBv2".to_string(),
         }
     }
 }
@@ -263,7 +271,7 @@ macro_rules! next_prev {
 // }
 
 next_prev!(Languages, Languages::EN, Languages::SV);
-next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::ELMToOBv3);
+next_prev!(Mapping, Mapping::OBv3ToELM, Mapping::OBv3ToOBv2);
 next_prev!(Pages, Pages::InputPromptsP1, Pages::EndP4);
 next_prev!(P1Prompts, P1Prompts::Language, P1Prompts::CustomMapping);
 next_prev!(Transformations, Transformations::LowerCase, Transformations::Regex);

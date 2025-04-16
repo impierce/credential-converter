@@ -17,13 +17,22 @@ use super::transformations::{DataLocation, OneToOne};
 pub fn apply_desm_mapping(state: &mut AppState) {
     let elm_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser(
         "desm/assertion_csvs/Microcredential+Mapping_Assertion_ELM+Micro-Credential_20240208063519.csv",
+        Format::ELM,
     );
-    let obv3_spine_mapping: Vec<DesmCSVParsed> =
-        desm_csv_parser("desm/assertion_csvs/Microcredential+Mapping_Assertion_Open+Badges+3.0_3.0_20240301181832.csv");
+    let obv3_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser(
+        "desm/assertion_csvs/Microcredential+Mapping_Assertion_Open+Badges+3.0_3.0_20240301181832.csv",
+        Format::OBv3,
+    );
+    let obv2_spine_mapping: Vec<DesmCSVParsed> = desm_csv_parser(
+        "desm/assertion_csvs/Microcredential+Mapping_Assertion_Open+Badges+2.0_2.0_20240221174535.csv",
+        Format::OBv2,
+    );
 
     let transformations: Vec<Transformation> = match state.mapping {
         Mapping::ELMToOBv3 => build_transformations_from_csv_parsed(elm_spine_mapping, obv3_spine_mapping),
         Mapping::OBv3ToELM => build_transformations_from_csv_parsed(obv3_spine_mapping, elm_spine_mapping),
+        Mapping::OBv2ToOBv3 => build_transformations_from_csv_parsed(obv2_spine_mapping, obv3_spine_mapping),
+        Mapping::OBv3ToOBv2 => build_transformations_from_csv_parsed(obv3_spine_mapping, obv2_spine_mapping),
     };
 
     trace_dbg!(&transformations);
@@ -39,24 +48,28 @@ pub fn apply_desm_mapping(state: &mut AppState) {
     trace_dbg!(&state.completed_fields);
 }
 
-pub fn desm_csv_parser(path: &str) -> Vec<DesmCSVParsed> {
+pub fn desm_csv_parser(path: &str, format: Format) -> Vec<DesmCSVParsed> {
     let mut ret: Vec<DesmCSVParsed> = Vec::new();
 
-    let elm_rdr = File::open(path).expect("error: wrong path hardcoded in the backend");
-    let mut elm_rdr = ReaderBuilder::new().has_headers(true).from_reader(elm_rdr);
+    let rdr = File::open(path).expect("error: wrong path hardcoded in the backend");
+    let mut rdr = ReaderBuilder::new().has_headers(true).from_reader(rdr);
 
-    for line in elm_rdr.deserialize() {
+    for line in rdr.deserialize() {
         let result: Result<DesmCSVParsed, csv::Error> = line;
         if let Ok(mut entry) = result {
-            // Todo: ugly hardcode, but can only develop this further in tandem with DESM when their output is more mature.
-            if entry.mapped_schema == "ELM Micro-Credential" {
-                entry.mapped_schema = "ELM".to_string();
-            } else if entry.mapped_schema.starts_with("ob:") || entry.mapped_schema == "Open Badges 3.0 (3.0)" {
-                entry.mapped_schema = "OBv3".to_string();
-            }
-
-            // We could add "Similar" here as well. Right now it doesnt mean much as DESM currently only maps Properties and doesnt go down to the field level.
             if &entry.mapping_predicate_label == "Identical" || &entry.mapping_predicate_label == "Reworded" {
+                match format {
+                    Format::OBv3 => {
+                        entry.mapped_schema = "OBv3".to_string();
+                    }
+                    Format::OBv2 => {
+                        entry.mapped_schema = "OBv2".to_string();
+                    }
+                    Format::ELM => {
+                        entry.mapped_schema = "ELM".to_string();
+                    }
+                }
+
                 ret.push(entry);
             }
         }
@@ -126,4 +139,13 @@ fn to_camel_case(input: &str) -> String {
     } else {
         input.to_string()
     }
+}
+
+/////////      STRUCTS     //////////
+
+pub enum Format {
+    OBv3,
+    OBv2,
+    #[allow(clippy::upper_case_acronyms)]
+    ELM,
 }

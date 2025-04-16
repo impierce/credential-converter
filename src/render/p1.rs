@@ -134,10 +134,10 @@ pub fn render_description_input_p1(area: Rect, buf: &mut Buffer, state: &mut App
         horizontal: 0,
     });
 
-    let tabs = vec![" OBv3 -> ELM ", " ELM -> OBv3 "];
+    let tabs = vec![" OBv3 -> ELM ", " ELM -> OBv3 ", " OBv2 -> OBv3 ", " OBv3 -> OBv2 "];
     let [_left, tabs_center, _right] = Layout::horizontal(vec![
         Constraint::Min(1),
-        Constraint::Max(tabs.concat().len() as u16 + 2),
+        Constraint::Max(tabs.concat().len() as u16 + 6),
         Constraint::Min(1),
     ])
     .areas(mapping_prompt_inner);
