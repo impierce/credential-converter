@@ -109,7 +109,8 @@ pub fn enter_fixed_context_type_values(state: &mut AppState) {
                     json!("EuropeanDigitalCredential"),
                 ]),
             );
-        } "OBv3" => {
+        }
+        "OBv3" => {
             let output_obv3 = state.repository.get_mut("OBv3").unwrap().as_object_mut().unwrap();
             output_obv3.insert(
                 "@context".to_string(),
@@ -123,8 +124,8 @@ pub fn enter_fixed_context_type_values(state: &mut AppState) {
                 Value::Array(vec![json!("VerifiableCredential"), json!("OpenBadgeCredential")]),
             );
         }
-        _ => {}  
-    } 
+        _ => {}
+    }
 }
 
 ////////     HELPERS     ////////

@@ -4,164 +4,688 @@
     "description": "The 1.1 OBI specification mandates that the baked assertion be an object with linked Badge Class and that JSON-LD context and type declarations be present",
     "type": "object",
     "definitions": {
-        "JsonLdContext": {
-            "description": "A link to a valid JSON-LD context file, that maps term names to contexts. Open Badges contexts may also define JSON-schema to validate Badge Objects against. In an Open Badges Object, this will almost always be a string:uri to a single context file, but might rarely be an array of links or context objects instead. This schema also allows direct mapping of terms to IRIs by using an object as an option within an array.",
-            "oneOf": [
+      "JsonLdContext": {
+        "description": "A link to a valid JSON-LD context file, that maps term names to contexts. Open Badges contexts may also define JSON-schema to validate Badge Objects against. In an Open Badges Object, this will almost always be a string:uri to a single context file, but might rarely be an array of links or context objects instead. This schema also allows direct mapping of terms to IRIs by using an object as an option within an array.",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "array",
+            "items": {
+              "oneOf": [
                 {
-                    "type": "string"
+                  "type": "string"
                 },
                 {
-                    "type": "array",
-                    "items": { "oneOf": 
-                      [   
-                        { "type": "string" },
-                        { "type": "object" },
-                        { "type": "array" }
-                      ]
-                    }
-                }
-            ]
-        },
-        "JsonLdType": {
-            "description": "A type or an array of types that the badge object represents. The first or only item should be 'assertion', and any others should each be an IRI (usually a URL) corresponding to a definition of the type itself. In almost all cases, an assertion will only have one type: 'assertion'",
-            "oneOf": [
-                {
-                    "type": "string"
+                  "type": "object"
                 },
                 {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
+                  "type": "array"
                 }
-            ]
-        },
-        "ISODateTime": {
-            "description": "ISO 8601 date format string yyyy-MM-dd'T'HH:mm:ss.SSS with optional .SSS milliseconds",
+              ]
+            }
+          }
+        ]
+      },
+      "BadgeClassJsonLdType": {
+        "description": "valid JSON-LD representation of the BadgeClass type. In most cases, this will simply be the string BadgeClass. An array including BadgeClass and other string elements that are either URLs or compact IRIs within the current context are allowed.",
+        "oneOf": [
+          {
             "type": "string",
-            "pattern": "^\\d{4}-[01]\\d-[0-3]\\d(T[0-2]\\d:[0-5]\\d(:[0-5]\\d)?([\\.,]\\d{1,3})?(Z|[+-][0-2]\\d(:?[0-5]\\d)?)?)?$"
-        },
-        "UNIXTimeStamp": {
-            "description": "10-digit UNIX timestamp, epoch time",
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 9999999999
-        },
-        "DateTime": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/ISODateTime"
-                },
-                {
-                    "$ref": "#/definitions/UNIXTimeStamp"
-                }
-            ]
-        },
-        "IdentityType": {
-            "type": "string",
-            "enum": [
-                "email"
-            ]
-        },
-        "HashString": {
-            "allOf": [
-                {
-                    "type": "string"
-                }
-            ],
-            "oneOf": [
-                {
-                    "title": "Open Badges SHA-1 Hash",
-                    "pattern": "^sha1\\$[a-fA-F0-9]{40}$"
-                },
-                {
-                    "title": "Open Badges SHA-256 Hash",
-                    "pattern": "^sha256\\$[a-fA-F0-9]{64}$"
-                }
-            ]
-        },
-        "IdentityObject": {
-            "title": "Badge Identity Object",
-            "type": "object",
-            "properties": {
-                "identity": {
-                    "oneOf": [
-                        {
-                            "$ref": "#/definitions/HashString"
-                        },
-                        {
-                            "type": "string",
-                            "format": "email"
-                        }
-                    ]
-                },
-                "type": {
-                    "$ref": "#/definitions/IdentityType"
-                },
-                "hashed": {
-                    "type": "boolean"
-                },
-                "salt": {
-                    "type": "string"
-                }
+            "const": "assertion"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
             },
-            "required": [
-                "identity",
-                "type",
-                "hashed"
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "assertion"
+              }
             ]
+          }
+        ]
+      },
+      "AssertionJsonLdType": {
+        "description": "A type or an array of types that the badge object represents. The first or only item should be 'assertion', and any others should each be an IRI (usually a URL) corresponding to a definition of the type itself. In almost all cases, an assertion will only have one type: 'assertion'",
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "assertion"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "assertion"
+              }
+            ]
+          }
+        ]
+      },
+      "GeneralProfileJsonLdType": {
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "Profile"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "Profile"
+              }
+            ]
+          }
+        ]
+      },
+      "IssuerProfileJsonLdType": {
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "Issuer"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "Issuer"
+              }
+            ]
+          }
+        ]
+      },
+      "ImageObjectJsonLdType": {
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "schema:ImageObject"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "schema:ImageObject"
+              }
+            ]
+          }
+        ]
+      },
+      "CriteriaJsonLdType": {
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "Criteria"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "Criteria"
+              }
+            ]
+          }
+        ]
+      },
+      "CryptographicKeyJsonLdType": {
+        "oneOf": [
+          {
+            "type": "string",
+            "const": "CryptographicKey"
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "additionalItems": true,
+            "prefixItems": [
+              {
+                "type": "string",
+                "const": "CryptographicKey"
+              }
+            ]
+          }
+        ]
+      },
+      "ISODateTime": {
+        "description": "ISO 8601 date format string yyyy-MM-dd'T'HH:mm:ss.SSS with optional .SSS milliseconds",
+        "type": "string",
+        "pattern": "^\\d{4}-[01]\\d-[0-3]\\d(T[0-2]\\d:[0-5]\\d(:[0-5]\\d)?([\\.,]\\d{1,3})?(Z|[+-][0-2]\\d(:?[0-5]\\d)?)?)?$"
+      },
+      "IdentityType": {
+        "type": "string",
+        "enum": [
+          "email",
+          "url",
+          "telephone"
+        ]
+      },
+      "HashString": {
+        "allOf": [
+          {
+            "type": "string"
+          }
+        ],
+        "oneOf": [
+          {
+            "title": "Open Badges SHA-1 Hash",
+            "pattern": "^sha1\\$[a-fA-F0-9]{40}$"
+          },
+          {
+            "title": "Open Badges SHA-256 Hash",
+            "pattern": "^sha256\\$[a-fA-F0-9]{64}$"
+          }
+        ]
+      },
+      "Telephone": {
+        "description": "A phone number for the entity in E.164 format, like +16175551212. Must start with '+' and contain country code followed by the number with no spaces or punctuation.",
+        "type": "string",
+        "pattern": "^\\+[1-9]\\d{1,14}$"
+      },
+      "IdentityObject": {
+        "title": "Badge Identity Object",
+        "type": "object",
+        "properties": {
+          "identity": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/HashString"
+              },
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "$ref": "#/definitions/Telephone"
+              }
+            ]
+          },
+          "type": {
+            "$ref": "#/definitions/IdentityType"
+          },
+          "hashed": {
+            "type": "boolean"
+          },
+          "salt": {
+            "type": "string"
+          }
         },
-        "VerificationObject": {
+        "required": [
+          "identity",
+          "type",
+          "hashed"
+        ]
+      },
+      "VerificationObject": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/GeneralVerificationObject"
+          },
+          {
+            "$ref": "#/definitions/SignedBadgeVerificationObject"
+          }
+        ]
+      },
+      "GeneralVerificationObject": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "VerificationType",
+            "description": "The type of verification method. Supported values for single assertion verification are HostedBadge and SignedBadge (aliases in context are available: hosted and signed). For instances used in Profiles, the type VerificationObject should be used",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              }
+            ]
+          },
+          "verificationProperty": {},
+          "startsWith": {
+            "$ref": "#/definitions/StartsWith"
+          },
+          "allowedOrigins": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "SignedBadgeVerificationObject": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "title": "VerificationType",
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "signed",
+                  "SignedBadge"
+                ]
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "signed",
+                    "SignedBadge"
+                  ]
+                },
+                "minItems": 1,
+                "additionalItems": true
+              }
+            ]
+          },
+          "creator": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "StartsWith": {
+        "description": "The URI fragment that the verification property must start with. Valid Assertions must have an id within this scope. Multiple values allowed, and Assertions will be considered valid if their id starts with one of these values.",
+        "type": [
+          "string",
+          "array"
+        ],
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1
+      },
+      "CryptographicKey": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/CryptographicKeyJsonLdType"
+          },
+          "id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "owner": {
+            "$ref": "#/definitions/Profile"
+          },
+          "publicKeyPem": {
+            "type": "string"
+          }
+        }
+      },
+      "BadgeClass": {
+        "title": "1.1-compliant Badge Class with linked Issuer",
+        "description": "The 1.1 OBI specification mandates that a hosted Badge Class be a valid JSON-LD object with linked Issuer",
+        "type": "object",
+        "properties": {
+          "@context": {
+            "$ref": "#/definitions/JsonLdContext"
+          },
+          "id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "$ref": "#/definitions/BadgeClassJsonLdType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "$ref": "#/definitions/BadgeImage"
+          },
+          "criteria": {
+            "$ref": "#/definitions/Criteria"
+          },
+          "issuer": {
+            "$ref": "#/definitions/Profile"
+          },
+          "alignment": {
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/AlignmentObject"
+                }
+              },
+              {
+                "$ref": "#/definitions/AlignmentObject"
+              }
+            ]
+          },
+          "tags": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "image",
+          "criteria",
+          "issuer"
+        ],
+        "additionalProperties": true
+      },
+      "Criteria": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/definitions/CriteriaJsonLdType"
+          },
+          "id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "narrative": {
+            "description": "Text or Markdown text. A narrative of what is needed to earn the badge.",
+            "type": "string"
+          }
+        }
+      },
+      "ImageDataUrl": {
+        "type": "string",
+        "pattern": "^data:"
+      },
+      "BadgeImage": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ImageDataUrl"
+          },
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
             "type": "object",
             "properties": {
-                "type": {
-                    "title": "VerificationType",
-                    "type": "string",
-                    "enum": [
-                        "hosted",
-                        "signed"
-                    ]
-                },
-                "url": {
+              "type": {
+                "$ref": "#/definitions/ImageObjectJsonLdType"
+              },
+              "id": {
+                "oneOf": [
+                  {
+                    "$ref": "#/definitions/ImageDataUrl"
+                  },
+                  {
                     "type": "string",
                     "format": "uri"
-                }
+                  }
+                ]
+              },
+              "caption": {
+                "type": "string"
+              },
+              "author": {
+                "$ref": "#/definitions/Profile"
+              }
             },
             "required": [
-                "type"
+              "id"
             ]
-        }
+          }
+        ]
+      },
+      "AlignmentObject": {
+        "description": "An object describing which objectives or educational standards this badge aligns to, if any.",
+        "type": "object",
+        "properties": {
+          "targetName": {
+            "type": "string"
+          },
+          "targetUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "targetDescription": {
+            "type": "string"
+          },
+          "targetFramework": {
+            "type": "string"
+          },
+          "targetCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "targetName",
+          "targetUrl"
+        ]
+      },
+      "Profile": {
+        "oneOf": [
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
+            "$ref": "#/definitions/IssuerProfile"
+          },
+          {
+            "$ref": "#/definitions/GeneralProfile"
+          }
+        ]
+      },
+      "IssuerProfile": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "$ref": "#/definitions/JsonLdContext"
+          },
+          "id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "$ref": "#/definitions/IssuerProfileJsonLdType"
+          },
+          "name": {
+            "description": "Human-readable name of the issuing entity",
+            "type": "string"
+          },
+          "url": {
+            "description": "The URL of the issuer's website or homepage",
+            "type": "string",
+            "format": "uri"
+          },
+          "telephone": {
+            "$ref": "#/definitions/Telephone"
+          },
+          "description": {
+            "description": "A text description of the issuing organization",
+            "type": "string"
+          },
+          "image": {
+            "$ref": "#/definitions/BadgeImage"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "publicKey": {
+            "$ref": "#/definitions/CryptographicKey"
+          },
+          "verification": {
+            "$ref": "#/definitions/VerificationObject"
+          },
+          "revocationList": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "name",
+          "url",
+          "email"
+        ]
+      },
+      "GeneralProfile": {
+        "type": "object",
+        "properties": {
+          "@context": {
+            "$ref": "#/definitions/JsonLdContext"
+          },
+          "id": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "$ref": "#/definitions/IssuerProfileJsonLdType"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "telephone": {
+            "$ref": "#/definitions/Telephone"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "$ref": "#/definitions/BadgeImage"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "publicKey": {
+            "$ref": "#/definitions/CryptographicKey"
+          },
+          "verification": {
+            "$ref": "#/definitions/VerificationObject"
+          },
+          "revocationList": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": true
+      }
     },
     "properties": {
-        "@context": { "$ref": "#/definitions/JsonLdContext" },
-        "type": { "$ref": "#/definitions/JsonLdType" },
-        "id": { "type": "string", "format": "uri" },
-        "uid": {
-            "type": "string"
-        },
-        "recipient": {
-            "$ref": "#/definitions/IdentityObject"
-        },
-        "badge": {
+      "@context": {
+        "$ref": "#/definitions/JsonLdContext"
+      },
+      "type": {
+        "$ref": "#/definitions/AssertionJsonLdType"
+      },
+      "id": {
+        "type": "string",
+        "format": "uri"
+      },
+      "uid": {
+        "type": "string"
+      },
+      "recipient": {
+        "$ref": "#/definitions/IdentityObject"
+      },
+      "badge": {
+        "oneOf": [
+          {
             "type": "string",
             "format": "uri"
-        },
-        "verify": {
-            "$ref": "#/definitions/VerificationObject"
-        },
-        "issuedOn": {
-            "$ref": "#/definitions/DateTime"
-        },
-        "evidence": {
-            "type": "string",
-            "format": "uri"
-        },
-        "expires": {
-            "$ref": "#/definitions/DateTime"
-        }
+          },
+          {
+            "$ref": "#/definitions/BadgeClass"
+          }
+        ]
+      },
+      "verify": {
+        "$ref": "#/definitions/VerificationObject"
+      },
+      "issuedOn": {
+        "$ref": "#/definitions/ISODateTime"
+      },
+      "evidence": {
+        "type": "string",
+        "format": "uri"
+      },
+      "expires": {
+        "$ref": "#/definitions/ISODateTime"
+      }
     },
     "required": [
-        "@context", "type", "uid", "recipient", "badge", "verify", "issuedOn"
+      "@context",
+      "type",
+      "uid",
+      "recipient",
+      "badge",
+      "verify",
+      "issuedOn"
     ],
     "additionalProperties": true
 }
