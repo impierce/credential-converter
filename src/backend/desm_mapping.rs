@@ -9,7 +9,7 @@ use crate::{
 use csv::ReaderBuilder;
 use serde::Deserialize;
 
-use super::transformations::{DataLocation, OneToOne};
+use super::transformations::{DataLocation, DataLocations, Multiplicity, OneToOneType};
 
 /// Currently DESM only works at the Property level without considering the fields within a property.
 /// This basically renders the mapping useless as for us only the field level really matters.
@@ -87,18 +87,54 @@ pub fn build_transformations_from_csv_parsed(
     for src_e in source_csv_mapping {
         for outp_e in &output_csv_mapping {
             if src_e.spine_term_name == outp_e.spine_term_name {
-                // Todo: please note that also this hardcoded pathbuilding with "$." is terrible, but as long as DESM remains path agnostic, we can only work with the assertion at the root level.
-                transformations.push(Transformation::OneToOne {
-                    type_: OneToOne::copy,
-                    source: DataLocation {
+                // Todo: please note that also this hardcoded pathbuilding with "$." is bad, but as long as DESM remains path agnostic, we can only work with the assertion at the root level.
+                transformations.push(Transformation {
+                    type_: Multiplicity::OneToOne(OneToOneType::copy),
+                    source: DataLocations(vec![DataLocation {
                         format: src_e.mapped_schema.clone(),
                         path: "$.".to_owned() + to_camel_case(&src_e.mapped_term_name).as_str(),
-                    },
-                    destination: DataLocation {
+                    }]),
+                    destination: DataLocations(vec![DataLocation {
                         format: outp_e.mapped_schema.clone(),
                         path: "$.".to_owned() + to_camel_case(&outp_e.mapped_term_name).as_str(),
-                    },
+                    }]),
                 });
+
+                // Remove any duplicates or subsets which have been moved out of it's parent by adding a delete type to the transformation vec
+                for i in 0..transformations.len() {
+                    // Due to this first(), we only check the first path, thereby ManyToOne transformations are not handled properly.
+                    for j in 0..transformations.len() {
+                        if i == j {
+                            continue;
+                        }
+
+                        // src_i will be the child, src_j the parent
+                        let src_i = transformations[i].source.first_index();
+                        let src_j = transformations[j].source.first_index();
+
+                        // The second condition prefends looping over the newly added `delete` transformations.
+                        if src_i.path.starts_with(&(src_j.path.clone() + "."))
+                            && transformations[i].type_ != Multiplicity::OneToOne(OneToOneType::delete)
+                        {
+                            let destination_path = transformations[j].destination.first_index().path.clone()
+                                + transformations[i]
+                                    .destination
+                                    .first_index()
+                                    .path
+                                    .clone()
+                                    .trim_start_matches("$");
+
+                            transformations.push(Transformation {
+                                type_: Multiplicity::OneToOne(OneToOneType::delete),
+                                source: DataLocations(vec![src_i.clone()]),
+                                destination: DataLocations(vec![DataLocation {
+                                    format: transformations[i].destination.first_index().format.clone(),
+                                    path: destination_path,
+                                }]),
+                            });
+                        }
+                    }
+                }
             }
         }
     }

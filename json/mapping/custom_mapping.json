@@ -1,1 +1,206 @@
-[]
+[
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.id"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.id"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.credentialSchema"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.credentialSchema"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.credentialStatus"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.credentialStatus"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.credentialSubject"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.credentialSubject"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.Evidence"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.evidence"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.issuanceDate"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.issuanceDate"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.issuer"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.issuer"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.proof"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.proof"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.termsOfUse"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.termsOfUse"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.validFrom"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.validFrom"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.validUntil"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.expirationDate"
+      }
+    ]
+  },
+  {
+    "type_": {
+      "OneToOne": "copy"
+    },
+    "source": [
+      {
+        "format": "ELM",
+        "path": "$.refreshService"
+      }
+    ],
+    "destination": [
+      {
+        "format": "OBv3",
+        "path": "$.refreshService"
+      }
+    ]
+  }
+]

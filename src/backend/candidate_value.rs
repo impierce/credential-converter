@@ -3,11 +3,13 @@ use regex::Regex;
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, OneToOne, Transformation},
+        transformations::{DataLocation, DataLocations, Transformation},
     },
     state::{AppState, Pages, Transformations},
     trace_dbg,
 };
+
+use super::transformations::{Multiplicity, OneToOneType};
 
 pub fn set_candidate_output_value(state: &mut AppState, push_transformation: bool) {
     // todo: is it needed to add directcopy to the start?
@@ -43,71 +45,71 @@ pub fn set_candidate_output_value(state: &mut AppState, push_transformation: boo
 
 pub fn define_transformation(state: &mut AppState, transformation: Transformations) -> Transformation {
     let (input_format, output_format) = (state.mapping.input_format(), state.mapping.output_format());
-    let source_pointer: JsonPath = JsonPointer(state.input_fields[state.selected_input_field].0.clone()).into();
+    let source_path: JsonPath = JsonPointer(state.input_fields[state.selected_input_field].0.clone()).into();
 
     let destination_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
     match transformation {
-        Transformations::LowerCase => Transformation::OneToOne {
-            type_: OneToOne::toLowerCase,
-            source: DataLocation {
+        Transformations::LowerCase => Transformation {
+            type_: Multiplicity::OneToOne(OneToOneType::toLowerCase),
+            source: DataLocations(vec![DataLocation {
                 format: input_format.clone(),
-                path: source_pointer.to_string(),
-            },
-            destination: DataLocation {
+                path: source_path.to_string(),
+            }]),
+            destination: DataLocations(vec![DataLocation {
                 format: output_format.clone(),
                 path: destination_path.to_string(),
-            },
+            }]),
         },
-        Transformations::UpperCase => Transformation::OneToOne {
-            type_: OneToOne::toUpperCase,
-            source: DataLocation {
+        Transformations::UpperCase => Transformation {
+            type_: Multiplicity::OneToOne(OneToOneType::toUpperCase),
+            source: DataLocations(vec![DataLocation {
                 format: input_format.clone(),
-                path: source_pointer.to_string(),
-            },
-            destination: DataLocation {
+                path: source_path.to_string(),
+            }]),
+            destination: DataLocations(vec![DataLocation {
                 format: output_format.clone(),
                 path: destination_path.to_string(),
-            },
+            }]),
         },
-        Transformations::TakeIndex => Transformation::OneToOne {
-            type_: OneToOne::takeIndex {
+        Transformations::TakeIndex => Transformation {
+            type_: Multiplicity::OneToOne(OneToOneType::takeIndex {
                 index: state.transformation_index.unwrap(),
-            },
-            source: DataLocation {
+            }),
+            source: DataLocations(vec![DataLocation {
                 format: input_format.clone(),
-                path: source_pointer.to_string(),
-            },
-            destination: DataLocation {
+                path: source_path.to_string(),
+            }]),
+            destination: DataLocations(vec![DataLocation {
                 format: output_format.clone(),
                 path: destination_path.to_string(),
-            },
+            }]),
         },
-        Transformations::Slice => Transformation::OneToOne {
-            type_: OneToOne::slice {
+        Transformations::Slice => Transformation {
+            type_: Multiplicity::OneToOne(OneToOneType::slice {
                 index: state.transformation_index.unwrap(),
-            },
-            source: DataLocation {
+            }),
+            source: DataLocations(vec![DataLocation {
                 format: input_format.clone(),
-                path: source_pointer.to_string(),
-            },
-            destination: DataLocation {
+                path: source_path.to_string(),
+            }]),
+            destination: DataLocations(vec![DataLocation {
                 format: output_format.clone(),
                 path: destination_path.to_string(),
-            },
+            }]),
         },
         // todo: This clippy warning is known, this body is for 'DirectCopy' and all others until they
         // get their own branches
-        Transformations::DirectCopy | _ => Transformation::OneToOne {
-            type_: OneToOne::copy,
-            source: DataLocation {
+        Transformations::DirectCopy | _ => Transformation {
+            type_: Multiplicity::OneToOne(OneToOneType::copy),
+            source: DataLocations(vec![DataLocation {
                 format: input_format.clone(),
-                path: source_pointer.to_string(),
-            },
-            destination: DataLocation {
+                path: source_path.to_string(),
+            }]),
+            destination: DataLocations(vec![DataLocation {
                 format: output_format.clone(),
                 path: destination_path.to_string(),
-            },
+            }]),
         },
     }
 }

@@ -6,6 +6,7 @@ use std::{char, fs::File};
 
 use super::{is_mouse_over_area, p2_handler::clear_progress};
 use crate::backend::init_conversion::get_json;
+use crate::backend::transformations::Multiplicity;
 use crate::backend::update_display::{update_display_section, update_pointer};
 use crate::{
     backend::{
@@ -599,9 +600,11 @@ fn move_active_fields(state: &mut AppState) {
 fn clear_performed_transformation(state: &mut AppState) {
     let output_path: JsonPath = JsonPointer(state.output_pointer.clone()).into();
 
-    state.performed_mappings.retain(|transformation| match transformation {
-        Transformation::OneToOne { destination, .. } => destination.path != output_path.to_string(),
-        // other Transformations are not implemented yet
-        _ => false,
-    });
+    state
+        .performed_mappings
+        .retain(|transformation| match transformation.type_ {
+            Multiplicity::OneToOne(_) => transformation.destination.first_index().path != output_path.to_string(),
+            // other Transformations are not implemented yet
+            _ => todo!(),
+        });
 }

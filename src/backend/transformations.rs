@@ -2,34 +2,36 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 #[allow(non_camel_case_types)]
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum OneToOne {
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum OneToOneType {
     copy,
     toLowerCase,
     toUpperCase,
     takeIndex { index: usize },
     slice { index: usize },
+    delete,
+    regex, // TODO
 }
 
-impl OneToOne {
+impl OneToOneType {
     pub fn apply(&self, value: Value) -> Value {
         match self {
-            OneToOne::copy => value,
-            OneToOne::toLowerCase => {
+            OneToOneType::copy => value,
+            OneToOneType::toLowerCase => {
                 if let Value::String(s) = value {
                     Value::String(s.to_lowercase())
                 } else {
                     value
                 }
             }
-            OneToOne::toUpperCase => {
+            OneToOneType::toUpperCase => {
                 if let Value::String(s) = value {
                     Value::String(s.to_uppercase())
                 } else {
                     value
                 }
             }
-            OneToOne::takeIndex { index } => {
+            OneToOneType::takeIndex { index } => {
                 if let Value::Array(array) = &value {
                     if let Some(slice) = array.get(*index) {
                         slice.clone()
@@ -46,7 +48,7 @@ impl OneToOne {
                     value
                 }
             }
-            OneToOne::slice { index } => {
+            OneToOneType::slice { index } => {
                 if let Value::Array(array) = &value {
                     if let Some(slice) = array.get(..*index + 1) {
                         Value::Array(slice.to_vec())
@@ -63,26 +65,28 @@ impl OneToOne {
                     value
                 }
             }
+            OneToOneType::delete => Value::Null,
+            _ => value, // remaining arms are handled under different multiplicity implementations
         }
     }
 }
 
 #[allow(non_camel_case_types)]
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum OneToMany {
-    split,
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum OneToManyType {
+    split, // TODO
 }
 
 #[allow(non_camel_case_types)]
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum ManyToOne {
-    concat,
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum ManyToOneType {
+    concat, // TODO
 }
 
-impl ManyToOne {
+impl ManyToOneType {
     pub fn apply(&self, values: Vec<Value>) -> Value {
         match self {
-            ManyToOne::concat => {
+            &ManyToOneType::concat => {
                 let mut s = String::new();
                 for value in values {
                     if let Value::String(string) = value {
@@ -95,28 +99,31 @@ impl ManyToOne {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
+pub enum Multiplicity {
+    OneToOne(OneToOneType),
+    OneToMany(OneToManyType),
+    ManyToOne(ManyToOneType),
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
-#[serde(untagged)]
-pub enum Transformation {
-    OneToOne {
-        type_: OneToOne,
-        source: DataLocation,
-        destination: DataLocation,
-    },
-    OneToMany {
-        type_: OneToMany,
-        source: DataLocation,
-        destinations: Vec<DataLocation>,
-    },
-    ManyToOne {
-        type_: ManyToOne,
-        sources: Vec<DataLocation>,
-        destination: DataLocation,
-    },
+pub struct Transformation {
+    pub type_: Multiplicity,
+    pub source: DataLocations,
+    pub destination: DataLocations,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DataLocation {
     pub format: String,
     pub path: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DataLocations(pub Vec<DataLocation>);
+
+impl DataLocations {
+    pub fn first_index(&self) -> &DataLocation {
+        self.0.first().expect("No value provided in Vec<DataLocation>")
+    }
 }

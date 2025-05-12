@@ -72,7 +72,6 @@ pub fn resolve_logic_construct(schema: &Value, map: &mut Map<String, Value>) {
         }
     }
     if let Some(one_of) = schema.get("oneOf") {
-        trace_dbg!(3);
         if let Some(one_of_elmnts) = one_of.as_array() {
             for (i, e) in one_of_elmnts.iter().enumerate() {
                 map.insert("oneOf/".to_owned() + &i.to_string(), e.clone());

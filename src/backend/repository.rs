@@ -1,7 +1,7 @@
 use crate::{
     backend::{
         jsonpointer::{JsonPath, JsonPointer},
-        transformations::{DataLocation, Transformation},
+        transformations::{OneToOneType, Transformation},
     },
     state::{AppState, Mapping},
     trace_dbg,
@@ -12,6 +12,8 @@ use std::{
     collections::HashMap,
     ops::{Deref, DerefMut},
 };
+
+use super::{leaf_nodes::delete_leaf_node, transformations::Multiplicity};
 
 #[derive(Debug, Default, Clone)]
 pub struct Repository(HashMap<String, Value>);
@@ -42,67 +44,72 @@ impl Repository {
         transformation: Transformation,
         mapping: Mapping,
     ) -> Option<(String, String)> {
-        match transformation {
-            Transformation::OneToOne {
-                type_: transformation,
-                source:
-                    DataLocation {
-                        format: source_format,
-                        path: mut source_path,
-                    },
-                destination:
-                    DataLocation {
-                        format: destination_format,
-                        path: destination_path,
-                    },
-            } => {
-                if source_format != mapping.input_format() || destination_format != mapping.output_format() {
-                    return None;
-                }
+        match transformation.type_ {
+            Multiplicity::OneToOne(type_) => {
+                match type_ {
+                    OneToOneType::delete => {
+                        let destination_format = transformation.destination.first_index().format.clone();
+                        let destination_value = self.get_mut(&destination_format).unwrap();
+                        let path = transformation.destination.first_index().path.clone();
 
-                let source_credential = self.get(&source_format).unwrap();
+                        delete_leaf_node(destination_value, path);
 
-                // custom code to handle the special character '@' in the source_path
-                if source_path == "$.@context" {
-                    source_path = r#"$["@context"]"#.to_string();
-                };
-
-                let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
-
-                let source_value = match finder.find().as_array() {
-                    // todo: still need to investigate other find() return types
-                    Some(array) => array.first().unwrap().clone(),
-                    None => {
-                        return None;
+                        None
                     }
-                };
+                    _ => {
+                        let source_format = transformation.source.first_index().format.clone();
+                        let mut source_path = transformation.source.first_index().path.clone();
+                        let destination_format = transformation.destination.first_index().format.clone();
+                        let destination_path = transformation.destination.first_index().path.clone();
 
-                let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
-                let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
+                        if source_format != mapping.input_format() || destination_format != mapping.output_format() {
+                            return None;
+                        }
 
-                let mut leaf_node = construct_leaf_node(&pointer);
+                        let source_credential = self.get(&source_format).unwrap();
 
-                if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    *value = transformation.apply(source_value);
+                        // custom code to handle the special character '@' in the source_path
+                        if source_path == "$.@context" {
+                            source_path = r#"$["@context"]"#.to_string();
+                        };
+
+                        let finder = JsonPathFinder::from_str(&source_credential.to_string(), &source_path).unwrap();
+
+                        let source_value = match finder.find().as_array() {
+                            // todo: still need to investigate other find() return types
+                            Some(array) => array.first().unwrap().clone(),
+                            None => {
+                                return None;
+                            }
+                        };
+
+                        let destination_credential = self.entry(destination_format).or_insert(json!({})); // or_insert should never happen, since repository is initialized with all formats, incl empty json value when not present.
+                        let pointer = JsonPointer::try_from(JsonPath(destination_path.clone())).unwrap();
+
+                        let mut leaf_node = construct_leaf_node(&pointer);
+
+                        if let Some(value) = leaf_node.pointer_mut(&pointer) {
+                            *value = type_.apply(source_value);
+                        }
+
+                        merge(destination_credential, leaf_node);
+
+                        trace_dbg!("Successfully completed transformation");
+                        Some((destination_path, source_path))
+                    }
                 }
-
-                merge(destination_credential, leaf_node);
-
-                trace_dbg!("Successfully completed transformation");
-                Some((destination_path, source_path))
             }
-            Transformation::ManyToOne {
-                type_: transformation,
-                sources,
-                destination,
-            } => {
-                if sources.iter().any(|source| source.format != mapping.input_format())
+            Multiplicity::ManyToOne(type_) => {
+                let sources = transformation.source;
+                let destination = transformation.destination.first_index().clone();
+                if sources.0.iter().any(|source| source.format != mapping.input_format())
                     || destination.format != mapping.output_format()
                 {
                     return None;
                 }
 
                 let source_values = sources
+                    .0
                     .iter()
                     .map(|source| {
                         let source_credential = self.get(&source.format).unwrap();
@@ -118,7 +125,7 @@ impl Repository {
                 let mut leaf_node = construct_leaf_node(&pointer);
 
                 if let Some(value) = leaf_node.pointer_mut(&pointer) {
-                    *value = transformation.apply(source_values);
+                    *value = type_.apply(source_values);
                 }
 
                 merge(destination_credential, leaf_node);
@@ -126,7 +133,7 @@ impl Repository {
                 trace_dbg!("Successfully completed transformation");
                 None // Todo: this is not implemented yet, so returns None for now
             }
-
+            // Multiplicity::OneToMany
             _ => todo!(),
         }
     }

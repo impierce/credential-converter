@@ -42,7 +42,7 @@ fn main() -> Result<()> {
             "json/ebsi-elm/vcdm2.0-europass-edc-schema/examples/Bengales_highSchoolDiploma.json".to_string();
         // state.mapping_path = "json/mapping/mapping_empty.json".to_string();
         state.mapping_path = "DESM".to_string();
-        state.output_path = "json/output_credential.json".to_string();
+        state.output_path = "logging_folder/output_credential.json".to_string();
         state.custom_mapping_path = "json/mapping/custom_mapping.json".to_string();
 
         // Currently it's set to 1 due to the empty line added above the field lists for spacing
